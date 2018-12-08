@@ -1,0 +1,7 @@
+.idea/
+__pycache__/
+*.sw[op]
+*.out
+*.o
+*.gch
+*.pyc
