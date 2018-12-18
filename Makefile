@@ -29,6 +29,15 @@ libs=-lsfml-graphics -lsfml-window -lsfml-system
 utils.o: utils.cpp utils.hpp
 	$(cc) $(flags) -c $(filter %.cpp, $^)
 
+test.out: test-main.o test-utils.o utils.o
+	$(cc) $(flags) -o test.out $(filter %.cpp %.o, $^)
+
+test-main.o: test/test-main.cpp
+	$(cc) $(flags) -c $^
+
+test-utils.o: test/test-utils.cpp
+	$(cc) $(flags) -c $^
+
 
 clear:
 	rm -rf *.out *.o *.gch
