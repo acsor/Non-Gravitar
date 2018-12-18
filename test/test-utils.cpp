@@ -20,7 +20,7 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 #include "../utils.hpp"
-#include <catch2/catch.hpp>
+#include "../catch.hpp"
 
 using namespace gravit;
 
