@@ -19,43 +19,27 @@
 // LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
-#include "../utils.hpp"
-#include "../catch.hpp"
+#include "Observer.hpp"
 
 using namespace gravit;
 
 
-/**
- * @brief Simple `Observer' implementation incrementing a counter at each new
- * notification.
- */
-class CounterObserver: public Observer {
-	private:
-		unsigned int c {0};
-	public:
-		void onChange(Observable const *o) override {
-			c++;
-		}
-		unsigned int count() {
-			return c;
-		}
-};
+Observable::~Observable() {
+}
 
+void Observable::notify() const {
+	for (auto i = watchers.begin(); i != watchers.end(); i++) {
+		(*i)->onChange(this);
+	}
+}
 
-TEST_CASE("CounterObserver", "[Observer][Observable]") {
-	Observable s;
-	CounterObserver o;
-	const size_t times = 1E3;
+void Observable::attach(Observer *o) {
+	watchers.insert(o);
+}
 
-	s.attach(&o);
-	for (size_t i = 0; i < times; i++)
-		s.notify();
-	REQUIRE(o.count() == times);
+void Observable::detach(Observer *o) {
+	watchers.erase(o);
+}
 
-	s.detach(&o);
-	for (size_t i = 0; i < times; i++)
-		s.notify();
-	// We detached `o' from `s' and expect to receive no more notifications
-	// from it.
-	REQUIRE(o.count() == times);
+Observer::~Observer() {
 }

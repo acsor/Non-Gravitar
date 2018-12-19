@@ -26,16 +26,16 @@ libs=-lsfml-graphics -lsfml-window -lsfml-system
 .PHONY: clear
 
 
-utils.o: utils.cpp utils.hpp
+Observer.o: Observer.cpp Observer.hpp
 	$(cc) $(flags) -c $(filter %.cpp, $^)
 
-test.out: test-main.o test-utils.o utils.o
+test.out: test-main.o test-observer.o Observer.o
 	$(cc) $(flags) -o test.out $(filter %.cpp %.o, $^)
 
 test-main.o: test/test-main.cpp
 	$(cc) $(flags) -c $^
 
-test-utils.o: test/test-utils.cpp
+test-observer.o: test/test-observer.cpp
 	$(cc) $(flags) -c $^
 
 
