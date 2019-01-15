@@ -1,8 +1,21 @@
+# Directory section
 .idea/
+CMakeFiles/
 __pycache__/
+
+
+# Glob style general files section
 *.sw[op]
 *.out
-*.o
+*.[ao]
 *.gch
 *.pyc
+
+
+# Individual files section
+CMakeCache.txt
+cmake_install.cmake
+Makefile
+
+test-all
 Session.vim
