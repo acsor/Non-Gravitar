@@ -15,7 +15,7 @@ set(VERSION_PATCH 0)
 
 
 include_directories("${DIR_SRC}")
-add_library(Observer ${DIR_SRC}/Observer.cpp)
+add_library(Observer "${DIR_SRC}/Observer.cpp")
 
 
 add_subdirectory(test)
