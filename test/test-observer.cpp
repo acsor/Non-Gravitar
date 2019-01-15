@@ -22,7 +22,7 @@
 #include "../Observer.hpp"
 #include "../catch.hpp"
 
-using namespace gravit;
+using namespace gvt;
 
 
 /**
@@ -36,7 +36,7 @@ class CounterObserver: public Observer {
 		void onChange(Observable const *o) override {
 			c++;
 		}
-		unsigned int count() {
+		unsigned int count() const {
 			return c;
 		}
 };
@@ -58,4 +58,56 @@ TEST_CASE("CounterObserver", "[Observer][Observable]") {
 	// We detached `o' from `s' and expect to receive no more notifications
 	// from it.
 	REQUIRE(o.count() == times);
+}
+
+
+TEST_CASE("Observable::resumeObseve()", "[Observable][Observer]") {
+	Observable s;
+	CounterObserver o;
+	const size_t times = 1E3;
+
+	s.attach(&o);
+
+	SECTION("Toggling off the \"observable\" flag") {
+		s.pauseNotify();
+		for (size_t i = 0; i < times; i++)
+			s.notify();
+		REQUIRE(o.count() == 0);
+		s.resumeNotify();
+	}
+
+	SECTION("Toggling off and on the \"observable\" flag") {
+		s.pauseNotify();
+		for (size_t i = 0; i < times; i++)
+			s.notify();
+		REQUIRE(o.count() == 0);
+
+		s.resumeNotify();
+		for (size_t i = 0; i < times; i++)
+			s.notify();
+		REQUIRE(o.count() == times);
+	}
+
+	SECTION("Nesting the suspension flag primitives") {
+		s.pauseNotify();
+		s.pauseNotify();
+		s.pauseNotify();
+
+		for (size_t i = 0; i < times; i++)
+			s.notify();
+		REQUIRE(o.count() == 0);
+
+		s.resumeNotify();
+		s.resumeNotify();
+
+		for (size_t i = 0; i < times; i++)
+			s.notify();
+		REQUIRE(o.count() == 0);
+
+		s.resumeNotify();
+
+		for (size_t i = 0; i < times; i++)
+			s.notify();
+		REQUIRE(o.count() == times);
+	}
 }
