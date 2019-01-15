@@ -30,10 +30,15 @@ namespace gvt {
 class Observer;
 
 /**
- * @brief A Subject base class as defined in the `Observer' pattern of the
- * GOF book `Design Patterns'.
- *
- * TO-DO Document more, according to Doxygen.
+ * @brief A Subject base class as defined in the Observer pattern of the
+ * GOF book <i>Design Patterns</i>. This popular framework is utilized to
+ * transmit a state change from an Observable class (formally termed Subject)
+ * to one or multiple Observer classes, that can accordingly update their own
+ * status. A common use of the Observer pattern is in the relationship between
+ * model and view classes in the MVC pattern.
+ * @see <a href="https://en.wikipedia.org/wiki/Observer_pattern">Observer
+ * pattern<a/>, <a href="https://en.wikipedia.org/wiki/MVC_Pattern">MVC
+ * pattern<a/>
  */
 class Observable {
 	private:
@@ -42,19 +47,53 @@ class Observable {
 	public:
 		virtual ~Observable();
 
+		/**
+		 * @brief Attaches a new Observer instance to the queue of notifiable
+		 * watchers.
+		 */
 		void virtual attach(Observer *o) final;
+		/**
+		 * @brief Removes a given Observer instance from the queue, if found.
+		 */
 		void virtual detach(Observer *o) final;
+		/**
+		 * @brief Notifies all the registered observer in the queue. Note that
+		 * memory management is up to the user to the library, and that the
+		 * Observable class is not liable for any dangling pointer.
+		 */
 		void virtual notify() const final;
+		/**
+		 * @brief Suspends notification to Observer instances. That is, upon
+		 * a call to Observable::notify(), if a call to
+		 * Observable::pauseNotify() hasn't yet been matched by a call to
+		 * Observable::resumeNotify(), none of the observers are notified.
+		 * Calls can be nested.
+		 * @throw std::logic_error if pauseNotify() was overused.
+		 * @see Observable::resumeNotify()
+		 */
 		void pauseNotify();
+		/**
+		 * @breif Dual of Observable::pauseNotify(). Since the calls of these
+		 * two methods can nest and interleave, a single call to
+		 * Observable::resumeNotify() doesn't undo all the previous ones to
+		 * Observable::pauseNotify().
+		 */
 		void resumeNotify();
 };
 
 /**
- * TO-DO Document.
+ * @brief Class receiving change updates from a linked Observer instance.
+ * @see <a href="https://en.wikipedia.org/wiki/Observer_pattern">Observer
+ * pattern<a/>
  */
 class Observer {
 	public:
 		virtual ~Observer();
+		/**
+		 * @brief Called when an Observable instance to which the current
+		 * Observer instance is bound fires a notification event.
+		 * @param o Observable instance notying an internal change.
+		 */
 		void virtual onChange(Observable const *o) = 0;
 };
 
