@@ -19,18 +19,32 @@
 // LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
+#include <stdexcept>
 #include "Observer.hpp"
 
-using namespace gravit;
+using namespace gvt;
 
 
 Observable::~Observable() {
 }
 
 void Observable::notify() const {
+	if (toggleNotify > 0)
+		return;
+	else if (toggleNotify < 0)
+		throw std::logic_error("resumeNotify() overused too many times");
+
 	for (auto i = watchers.begin(); i != watchers.end(); i++) {
 		(*i)->onChange(this);
 	}
+}
+
+void Observable::pauseNotify() {
+	toggleNotify++;
+}
+
+void Observable::resumeNotify() {
+	toggleNotify--;
 }
 
 void Observable::attach(Observer *o) {
@@ -40,6 +54,7 @@ void Observable::attach(Observer *o) {
 void Observable::detach(Observer *o) {
 	watchers.erase(o);
 }
+
 
 Observer::~Observer() {
 }
