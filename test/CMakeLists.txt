@@ -1,3 +1,4 @@
+# TO-DO Make executable output name end in `.out'
 add_executable(
 	test-all
 	$<TARGET_OBJECTS:test-main> $<TARGET_OBJECTS:test-observer>
