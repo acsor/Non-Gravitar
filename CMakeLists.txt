@@ -16,6 +16,8 @@ set(VERSION_PATCH 0)
 
 include_directories("${DIR_SRC}")
 add_library(Observer "${DIR_SRC}/Observer.cpp")
+add_library(Entities "${DIR_SRC}/Entities.cpp")
+add_library(Utils "${DIR_SRC}/Utils.cpp")
 
 
 add_subdirectory(test)
