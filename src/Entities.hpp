@@ -181,4 +181,9 @@ namespace std {
 };
 
 
+// Definitions of constructs to be kept in the local translation-unit.
+// The `i' in `.ipp' stands for "implementation".
+#include "Entities.ipp"
+
+
 #endif

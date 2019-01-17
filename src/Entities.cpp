@@ -42,28 +42,6 @@ bool PlaneObject::clashes(PlaneObject const &o) const {
     return collisionBox().clashes(o.collisionBox());
 }
 
-void PlaneObject::x(float xcoord) {
-    mX = xcoord;
-
-    if (mPlane != nullptr)
-        mPlane->updateCollisions();
-}
-
-void PlaneObject::y(float ycoord) {
-    mY = ycoord;
-
-    if (mPlane != nullptr)
-        mPlane->updateCollisions();
-}
-
-float PlaneObject::x() const {
-    return mX;
-}
-
-float PlaneObject::y() const {
-    return mY;
-}
-
 void PlaneObject::move(float xcoord, float ycoord) {
     mX += xcoord;
     mY += ycoord;
@@ -88,9 +66,6 @@ void WidthTrait::width(float w) {
 	mWidth = w;
 }
 
-
-HeightTrait::HeightTrait(float height) {
-	this->height(height);
 }
 
 float HeightTrait::height() const {
