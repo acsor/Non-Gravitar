@@ -55,28 +55,36 @@ WidthTrait::WidthTrait(float width) {
     this->width(width);
 }
 
-float WidthTrait::width() const {
-	return mWidth;
+
+HeightTrait::HeightTrait(float height) {
+	this->height(height);
 }
 
-void WidthTrait::width(float w) {
-	if (w <= 0)
-		throw std::domain_error("the width value is supposed to be > 0");
 
-	mWidth = w;
+Rectangle Line::collisionBox() const {
+	return Rectangle{mX, mY, mWidth, Line::WIDTH_BBOX};
 }
 
+Line::Line(float xcoord, float ycoord, float width):
+	PlaneObject(xcoord, ycoord), WidthTrait(width) {
 }
 
-float HeightTrait::height() const {
-	return mHeight;
+Line& Line::operator* (double factor) {
+	if (factor <= 0)
+		throw std::domain_error("scaling factor cannot be <= 0");
+
+	mWidth *= factor;
+
+	return *this;
 }
 
-void HeightTrait::height(float h) {
-	if (h <= 0)
-		throw std::domain_error("the height value is supposed to be > 0");
+bool Line::operator== (PlaneObject const &o) const {
+	auto other = dynamic_cast<Line const *>(&o);
 
-	mHeight = h;
+	if (other)
+		return mX == other->mX && mY == other->mY && mWidth == other->mWidth;
+
+	return false;
 }
 
 

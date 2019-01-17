@@ -125,6 +125,23 @@ namespace gvt {
 	};
 
 
+	class Line: public PlaneObject, public WidthTrait {
+		protected:
+			Rectangle collisionBox() const override;
+		public:
+			// Default width of the bounding box returned by
+			// Line::collisionBox()
+			double static const constexpr WIDTH_BBOX = 0.0001;
+
+			Line(float xcoord, float ycoord, float width);
+			/**
+			 * @brief Scales the width of the line object by <b>factor</b>.
+			 * @return Stretched out/in Line object
+			 */
+			Line& operator* (double factor);
+			bool operator== (PlaneObject const &o) const;
+	};
+
     class Rectangle: public PlaneObject, public WidthTrait, public HeightTrait
 	{
 		using ostream = std::ostream;

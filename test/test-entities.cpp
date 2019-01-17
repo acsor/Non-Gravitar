@@ -6,7 +6,15 @@ using namespace std;
 using namespace gvt;
 
 
-TEST_CASE("Rectangle::clashes()", "[utils][Rectangle]") {
+TEST_CASE("gvt::Line", "[Entities][Line]") {
+	Line l{1, 2, 4};
+
+	l = l * 4;
+	REQUIRE(l.width() == 16);
+}
+
+
+TEST_CASE("Rectangle::clashes()", "[Entities][Rectangle]") {
 	Rectangle const center{-1, 2, 2, 4};
 	unordered_set<Rectangle> const colliding = unordered_set<Rectangle> {
 		// Left extreme and left very near
