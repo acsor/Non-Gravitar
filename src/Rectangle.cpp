@@ -19,73 +19,11 @@
 // LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
-#include <stdexcept>
-#include "Entities.hpp"
+#include "Rectangle.hpp"
 #include "Utils.hpp"
-
 
 // TO-DO Watch out against such generalized using-declarations.
 using namespace gvt;
-// TO-DO Is this use of `using' caveat-free?
-using string = std::string;
-
-
-void Plane::updateCollisions() {
-
-}
-
-
-PlaneObject::PlaneObject(float x, float y): mX{x}, mY{y} {
-}
-
-bool PlaneObject::clashes(PlaneObject const &o) const {
-    return collisionBox().clashes(o.collisionBox());
-}
-
-void PlaneObject::move(float xcoord, float ycoord) {
-    mX += xcoord;
-    mY += ycoord;
-
-    if (mPlane != nullptr)
-        mPlane->updateCollisions();
-}
-
-
-WidthTrait::WidthTrait(float width) {
-    this->width(width);
-}
-
-
-HeightTrait::HeightTrait(float height) {
-	this->height(height);
-}
-
-
-Rectangle Line::collisionBox() const {
-	return Rectangle{mX, mY, mWidth, Line::WIDTH_BBOX};
-}
-
-Line::Line(float xcoord, float ycoord, float width):
-	PlaneObject(xcoord, ycoord), WidthTrait(width) {
-}
-
-Line& Line::operator* (double factor) {
-	if (factor <= 0)
-		throw std::domain_error("scaling factor cannot be <= 0");
-
-	mWidth *= factor;
-
-	return *this;
-}
-
-bool Line::operator== (PlaneObject const &o) const {
-	auto other = dynamic_cast<Line const *>(&o);
-
-	if (other)
-		return mX == other->mX && mY == other->mY && mWidth == other->mWidth;
-
-	return false;
-}
 
 
 Rectangle::Rectangle(float x, float y, float width, float height):

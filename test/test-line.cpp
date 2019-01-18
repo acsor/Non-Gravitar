@@ -19,4 +19,16 @@
 // LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
-#include "Utils.hpp"
+#include <unordered_set>
+#include "catch.hpp"
+#include "../src/Line.hpp"
+
+using namespace gvt;
+
+
+TEST_CASE("gvt::Line", "[Line]") {
+	Line l{1, 2, 4};
+
+	l = l * 4;
+	REQUIRE(l.width() == 16);
+}

@@ -19,4 +19,35 @@
 // LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
-#include "Utils.hpp"
+#ifndef NON_GRAVITAR_FUEL_HPP
+#define NON_GRAVITAR_FUEL_HPP
+
+#include "PlaneObject.hpp"
+#include "PlaneTraits.hpp"
+#include "Spaceship.hpp"
+
+
+namespace gvt {
+	class Fuel: public PlaneObject, public WidthTrait, public HeightTrait {
+		private:
+			size_t mFuel;
+		public:
+			Fuel(size_t fuel);
+			/**
+			 * @returns The current fuel amount.
+			 */
+			size_t fuel() const;
+			/**
+			 * @brief Recharges the given Spaceship argument by the total
+			 * fuel amount available in the current Fuel instance. After the
+			 * call, this->fuel() == 0.
+			 * @param ship Spaceship instance to recharge.
+			 */
+			void recharge(Spaceship &ship);
+
+			bool operator== (PlaneObject const &o) const override;
+	};
+}
+
+
+#endif

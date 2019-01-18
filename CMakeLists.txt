@@ -15,8 +15,26 @@ set(VERSION_PATCH 0)
 
 
 include_directories("${DIR_SRC}")
+
 add_library(Observer "${DIR_SRC}/Observer.cpp")
-add_library(Entities "${DIR_SRC}/Entities.cpp")
+add_library(Plane "${DIR_SRC}/Plane.cpp")
+add_library(PlaneTraits "${DIR_SRC}/PlaneTraits.cpp")
+
+add_library(PlaneObject "${DIR_SRC}/PlaneObject.cpp")
+target_link_libraries(PlaneObject Plane)
+
+add_library(Line "${DIR_SRC}/Line.cpp")
+target_link_libraries(Line PlaneObject PlaneTraits)
+
+add_library(Rectangle "${DIR_SRC}/Rectangle.cpp")
+target_link_libraries(Rectangle PlaneObject PlaneTraits)
+
+add_library(Spaceship "${DIR_SRC}/Spaceship.cpp")
+target_link_libraries(Spaceship PlaneObject PlaneTraits)
+
+add_library(Fuel "${DIR_SRC}/Fuel.cpp")
+target_link_libraries(Fuel Spaceship)
+
 add_library(Utils "${DIR_SRC}/Utils.cpp")
 
 

@@ -19,4 +19,42 @@
 // LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
-#include "Utils.hpp"
+#ifndef NON_GRAVITAR_PLANE_TRAITS_HPP
+#define NON_GRAVITAR_PLANE_TRAITS_HPP
+
+
+namespace gvt {
+	/**
+	 * Abstract class giving a width trait to derived classes.
+	 */
+	// TO-DO Find a way to make WidthTrait and HeightTrait really abstract
+	class WidthTrait {
+		protected:
+			float mWidth;
+		public:
+			explicit WidthTrait(float width);
+
+			inline float width() const;
+			inline void width(float w);
+	};
+
+	/**
+	 * Abstract class giving an height trait to derived classes.
+	 */
+	class HeightTrait {
+		protected:
+			float mHeight;
+		public:
+			explicit HeightTrait(float height);
+
+			inline float height() const;
+			inline void height(float h);
+	};
+}
+
+
+// Implementation of inline member functions
+#include "PlaneTraits.ipp"
+
+
+#endif

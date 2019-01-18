@@ -19,4 +19,16 @@
 // LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
-#include "Utils.hpp"
+#ifndef NON_GRAVITAR_PLANE_HPP
+#define NON_GRAVITAR_PLANE_HPP
+
+
+namespace gvt {
+	class Plane {
+		public:
+			void updateCollisions();
+	};
+}
+
+
+#endif

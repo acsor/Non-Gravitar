@@ -1,8 +1,28 @@
+// MIT License
+//
+// Copyright (c) 2018 Oscar B. et al.
+//
+// Permission is hereby granted, free of charge, to any person obtaining a copy
+// of this software and associated documentation files (the "Software"), to deal
+// in the Software without restriction, including without limitation the rights
+// to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+// copies of the Software, and to permit persons to whom the Software is
+// furnished to do so, subject to the following conditions:
+//
+// The above copyright notice and this permission notice shall be included in all
+// copies or substantial portions of the Software.
+//
+// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+// IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+// FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+// AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+// LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+// OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+// SOFTWARE.
 #include <unordered_set>
 #include "catch.hpp"
-#include "../src/Entities.hpp"
+#include "../src/Line.hpp"
 
-using namespace std;
 using namespace gvt;
 
 
@@ -11,35 +31,4 @@ TEST_CASE("gvt::Line", "[Entities][Line]") {
 
 	l = l * 4;
 	REQUIRE(l.width() == 16);
-}
-
-
-TEST_CASE("Rectangle::clashes()", "[Entities][Rectangle]") {
-	Rectangle const center{-1, 2, 2, 4};
-	unordered_set<Rectangle> const colliding = unordered_set<Rectangle> {
-		// Left extreme and left very near
-		{-3, 2, 2, 4}, {-2.9, 2, 2, 4},
-		// Top extreme and top very near
-		{-1, 6, 2, 4}, {-1, 5.9, 2, 4},
-		// Right extreme and bottom very near
-		{1, 2, 2, 4}, {0.9, 2, 2, 4},
-		// Bottom extreme and bottom very near
-		{-1, -2, 2, 4}, {-1, -1.9, 2, 4}
-	};
-	unordered_set<Rectangle> const nonColliding = unordered_set<Rectangle> {
-		// From left in clockwise direction
-		{-3.2, 2, 2, 4}, {-1, 6.2, 2, 4}, {1.005, 2, 2, 4}, {-1, -2.005, 2, 4}
-	};
-
-	REQUIRE(center.clashes(center));
-
-	for (auto i = colliding.begin(); i != colliding.end(); i++) {
-		INFO("Center " << center << " should clash with " << *i);
-		REQUIRE(center.clashes(*i));
-	}
-
-	for (auto i = nonColliding.begin(); i != nonColliding.end(); i++) {
-		INFO("Center " << center << " should not clash with " << *i);
-		REQUIRE(!center.clashes(*i));
-	}
 }

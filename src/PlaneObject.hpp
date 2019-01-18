@@ -19,28 +19,16 @@
 // LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
-#ifndef NON_GRAVITAR_ENTITIES_HPP
-#define NON_GRAVITAR_ENTITIES_HPP
+#ifndef NON_GRAVITAR_PLANE_OBJECT_HPP
+#define NON_GRAVITAR_PLANE_OBJECT_HPP
 
 #include <ostream>
+#include "Plane.hpp"
 
 
 namespace gvt {
-	class Plane {
-		public:
-			void updateCollisions();
-	};
-
 	class Rectangle;
-}
 
-
-namespace std {
-	ostream& operator<< (ostream &out, gvt::Rectangle const &r);
-}
-
-
-namespace gvt {
 	/**
 	 * @brief An abstract base class for subsequent plane objects. Note that
 	 * coordinates are taken by default from the <i>top left</i> corner, hence
@@ -83,7 +71,7 @@ namespace gvt {
 			/**
 			 * @return Top-left corner x coordinate.
 			 */
-            inline float x() const;
+			inline float x() const;
 			/**
 			 * @return Top-left corner y coordinate.
 			 */
@@ -96,111 +84,12 @@ namespace gvt {
 
 			virtual bool operator== (PlaneObject const &o) const = 0;
 	};
-
-	/**
-	 * Abstract class giving a width trait to derived classes.
-	 */
-	// TO-DO Find a way to make WidthTrait and HeightTrait really abstract
-	class WidthTrait {
-		protected:
-			float mWidth;
-		public:
-			explicit WidthTrait(float width);
-
-			inline float width() const;
-			inline void width(float w);
-	};
-
-	/**
-	 * Abstract class giving an height trait to derived classes.
-	 */
-	class HeightTrait {
-		protected:
-			float mHeight;
-		public:
-			explicit HeightTrait(float height);
-
-			inline float height() const;
-			inline void height(float h);
-	};
-
-
-	class Line: public PlaneObject, public WidthTrait {
-		protected:
-			Rectangle collisionBox() const override;
-		public:
-			// Default width of the bounding box returned by
-			// Line::collisionBox()
-			double static const constexpr WIDTH_BBOX = 0.0001;
-
-			Line(float xcoord, float ycoord, float width);
-			/**
-			 * @brief Scales the width of the line object by <b>factor</b>.
-			 * @return Stretched out/in Line object
-			 */
-			Line& operator* (double factor);
-			bool operator== (PlaneObject const &o) const;
-	};
-
-    class Rectangle: public PlaneObject, public WidthTrait, public HeightTrait
-	{
-		using ostream = std::ostream;
-
-		friend class std::hash<Rectangle>;
-		friend class std::equal_to<Rectangle>;
-
-		protected:
-			Rectangle collisionBox() const override;
-    	public:
-    		/**
-    		 * @brief Constructs a Rectangle with width > 0 and height > 0.
-    		 * @throw std::domain_error if width < 0 or height < 0.
-    		 */
-			Rectangle(float x, float y, float width, float height);
-			/**
-			 * @param o Other Rectangle instance to detect clashing with.
-			 * @return true if the two Rectangles share an area portion, false
-			 * otherwise.
-			 */
-			bool clashes(Rectangle const &o) const;
-			bool operator==(PlaneObject const &o) const override;
-
-			friend ostream& std::operator<< (ostream &out, Rectangle const &r);
-    };
-
-	class SpaceMissile: public PlaneObject {
-		private:
-			float mRadius;
-
-		protected:
-			Rectangle collisionBox() const override;
-			bool operator== (PlaneObject const &o) const override;
-	};
-
-	class Spaceship: public PlaneObject {
-		protected:
-			Rectangle collisionBox() const override;
-			bool operator== (PlaneObject const &o) const override;
-	};
 }
-
-
-namespace std {
-	using namespace gvt;
-
-
-	template<> struct hash<Rectangle> {
-		size_t operator()(Rectangle const &r) const;
-	};
-	template<> struct equal_to<Rectangle> {
-		bool operator()(Rectangle const &r1, Rectangle const &r2) const;
-	};
-};
 
 
 // Definitions of constructs to be kept in the local translation-unit.
 // The `i' in `.ipp' stands for "implementation".
-#include "Entities.ipp"
+#include "PlaneObject.ipp"
 
 
 #endif

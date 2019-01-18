@@ -19,4 +19,28 @@
 // LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
-#include "Utils.hpp"
+#include <stdexcept>
+
+
+float gvt::WidthTrait::width() const {
+	return mWidth;
+}
+
+void gvt::WidthTrait::width(float w) {
+	if (w <= 0)
+		throw std::domain_error("the width value is supposed to be > 0");
+
+	mWidth = w;
+}
+
+
+float gvt::HeightTrait::height() const {
+	return mHeight;
+}
+
+void gvt::HeightTrait::height(float h) {
+	if (h <= 0)
+		throw std::domain_error("the height value is supposed to be > 0");
+
+	mHeight = h;
+}

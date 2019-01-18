@@ -19,4 +19,32 @@
 // LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
-#include "Utils.hpp"
+#ifndef NON_GRAVITAR_LINE_HPP
+#define NON_GRAVITAR_LINE_HPP
+
+#include "PlaneObject.hpp"
+#include "PlaneTraits.hpp"
+#include "Rectangle.hpp"
+
+
+namespace gvt {
+	class Line: public PlaneObject, public WidthTrait {
+		protected:
+			Rectangle collisionBox() const override;
+		public:
+			// Default width of the bounding box returned by
+			// Line::collisionBox()
+			double static const constexpr WIDTH_BBOX = 0.0001;
+
+			Line(float xcoord, float ycoord, float width);
+			/**
+			 * @brief Scales the width of the line object by <b>factor</b>.
+			 * @return Stretched out/in Line object
+			 */
+			Line& operator* (double factor);
+			bool operator== (PlaneObject const &o) const;
+	};
+}
+
+
+#endif

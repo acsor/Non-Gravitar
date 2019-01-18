@@ -19,4 +19,21 @@
 // LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
-#include "Utils.hpp"
+#include "PlaneObject.hpp"
+#include "Rectangle.hpp"
+
+
+gvt::PlaneObject::PlaneObject(float x, float y): mX{x}, mY{y} {
+}
+
+bool gvt::PlaneObject::clashes(gvt::PlaneObject const &o) const {
+    return collisionBox().clashes(o.collisionBox());
+}
+
+void gvt::PlaneObject::move(float xcoord, float ycoord) {
+    mX += xcoord;
+    mY += ycoord;
+
+    if (mPlane != nullptr)
+        mPlane->updateCollisions();
+}
