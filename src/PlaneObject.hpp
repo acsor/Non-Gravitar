@@ -24,6 +24,7 @@
 
 #include <ostream>
 #include "Plane.hpp"
+#include "Trajectory.hpp"
 
 
 namespace gvt {
@@ -57,7 +58,13 @@ namespace gvt {
 			 * @return <b>true</b> if the boundaries of the current PlaneObject
 			 * clash with those of the object o.
 			 */
-			virtual bool clashes(PlaneObject const &o) const;
+			bool clashes(PlaneObject const &o) const;
+			/**
+			 * @return True if the object at the current position meets the
+			 * other PlaneObject given as argument by following the trajectory
+			 * t
+			 */
+			bool meets(PlaneObject const &o, Trajectory const &t) const;
 			/**
 			 * @param xcoord the value of the new x coordinate of the shape
 			 * top-left corner.
@@ -81,6 +88,12 @@ namespace gvt {
 			 * coordinates.
 			 */
 			void move(float xcoord, float ycoord);
+			/**
+			 * @brief Move the current object along the given trajectory.
+			 * @param t Trajectory to follow
+			 * @param steps Amount of steps to perform in a given metric space
+			 */
+			void move(Trajectory const &t, size_t steps);
 
 			virtual bool operator== (PlaneObject const &o) const = 0;
 	};

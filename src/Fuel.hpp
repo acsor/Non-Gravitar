@@ -24,13 +24,17 @@
 
 #include "PlaneObject.hpp"
 #include "PlaneTraits.hpp"
-#include "Spaceship.hpp"
 
 
 namespace gvt {
+	class Spaceship;
+
+
 	class Fuel: public PlaneObject, public WidthTrait, public HeightTrait {
 		private:
 			size_t mFuel;
+		protected:
+			Rectangle collisionBox() const override;
 		public:
 			Fuel(size_t fuel);
 			/**

@@ -19,45 +19,33 @@
 // LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
-#ifndef NON_GRAVITAR_SPACESHIP_HPP
-#define NON_GRAVITAR_SPACESHIP_HPP
-
-#include "PlaneObject.hpp"
-#include "PlaneTraits.hpp"
-#include "Fuel.hpp"
+#ifndef NON_GRAVITAR_TRAJECTORY_HPP
+#define NON_GRAVITAR_TRAJECTORY_HPP
 
 
 namespace gvt {
-	class Spaceship: public PlaneObject, public WidthTrait, public HeightTrait
-	{
-		private:
-			// Represents the current fuel amount in the ship
-			size_t mFuel;
-		protected:
-			Rectangle collisionBox() const override;
-		public:
-			size_t fuel() const;
-			/**
-			 * @brief Recharges the current Spaceship instance by the fuel
-			 * amount found in <b>fuel</b>.
-			 * @param fuel Fuel instance.
-			 */
-			void recharge(Fuel &fuel);
-			/**
-			 * @brief Discharges the current Spaceship's fuel by <b>amount</b>,
-			 * defaulted to 1.
-			 */
-			// TO-DO Verify that we can specify a default argument value, and
-			// that Spaceship::discharge() can be specified even with no
-			// arguments.
-			void discharge(size_t amount = 1);
-			/**
-			 * @returns true if the current spaceship instance has still fuel
-			 * in it, false othwerise.
-			 */
-			bool charged();
+	/**
+	 * Utility struct to handle missile, particles and other movable objects'
+	 * trajectory.
+	 */
+	struct Trajectory {
+		float x, y;
 
-			bool operator== (PlaneObject const &o) const override;
+		/**
+		 * @brief Instantiates a normalized Trajectory object from the number
+		 * of degrees
+		 * @param degrees Value (specified in radians) in [0, 2π)
+		 */
+		Trajectory(float degrees);
+		/**
+		 * @brief Normalizes the given Trajectory instance such that the module
+		 * of the vector it represents has unitary length
+		 */
+		void normalize();
+		float degrees() const;
+
+		Trajectory operator+ (Trajectory const &o);
+		Trajectory& operator+= (Trajectory const &o);
 	};
 }
 
