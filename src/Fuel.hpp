@@ -36,7 +36,10 @@ namespace gvt {
 		protected:
 			Rectangle collisionBox() const override;
 		public:
-			Fuel(size_t fuel);
+			static float const constexpr DEFAULT_WIDHT = 4;
+			static float const constexpr DEFAULT_HEIGHT = 5;
+
+			Fuel(float xcoord, float ycoord, size_t fuel);
 			/**
 			 * @returns The current fuel amount.
 			 */
