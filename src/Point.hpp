@@ -26,7 +26,7 @@
 namespace gvt {
 	class Point: public PlaneObject {
 		protected:
-			Rectangle boundingBox() const override;
+			Rectangle collisionBox() const override;
 		public:
 			Point(float xcoord, float ycoord);
 
