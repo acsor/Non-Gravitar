@@ -27,34 +27,19 @@ namespace gvt {
 	/**
 	 * Abstract class giving a width trait to derived classes.
 	 */
-	// TO-DO Find a way to make WidthTrait and HeightTrait really abstract
 	class WidthTrait {
-		protected:
-			float mWidth;
 		public:
-			explicit WidthTrait(float width);
-
-			inline float width() const;
-			inline void width(float w);
+			virtual float width() const = 0;
 	};
 
 	/**
 	 * Abstract class giving an height trait to derived classes.
 	 */
 	class HeightTrait {
-		protected:
-			float mHeight;
 		public:
-			explicit HeightTrait(float height);
-
-			inline float height() const;
-			inline void height(float h);
+			virtual float height() const = 0;
 	};
 }
-
-
-// Implementation of inline member functions
-#include "PlaneTraits.ipp"
 
 
 #endif

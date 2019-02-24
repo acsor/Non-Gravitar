@@ -29,6 +29,7 @@
 
 namespace gvt {
 	class Rectangle;
+	class Point;
 
 	/**
 	 * @brief An abstract base class for subsequent plane objects. Note that

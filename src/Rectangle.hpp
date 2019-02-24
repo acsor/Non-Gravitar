@@ -25,6 +25,7 @@
 #include <ostream>
 #include "PlaneObject.hpp"
 #include "PlaneTraits.hpp"
+#include "Point.hpp"
 
 
 namespace gvt {
@@ -53,6 +54,8 @@ namespace gvt {
 		friend struct std::hash<Rectangle>;
 		friend struct std::equal_to<Rectangle>;
 
+		private:
+			Point mEnd{0, 0};
 		protected:
 			Rectangle collisionBox() const override;
     	public:
@@ -60,7 +63,7 @@ namespace gvt {
     		 * @brief Constructs a Rectangle with width > 0 and height > 0.
     		 * @throw std::domain_error if width < 0 or height < 0.
     		 */
-			Rectangle(float x, float y, float width, float height);
+			Rectangle(Point topLeft, Point bottomRight);
 			/**
 			 * @param o Other Rectangle instance to detect clashing with.
 			 * @return true if the two Rectangles share an area portion, false
@@ -68,6 +71,9 @@ namespace gvt {
 			 */
 			bool clashes(Rectangle const &o) const;
 			bool operator==(PlaneObject const &o) const override;
+
+			float width() const override;
+			float height() const override;
 
 			friend ostream& std::operator<< (ostream &out, Rectangle const &r);
     };

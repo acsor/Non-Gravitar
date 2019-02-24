@@ -29,20 +29,24 @@
 
 namespace gvt {
 	class Line: public PlaneObject, public WidthTrait {
+		private:
+			Point mEnd;
 		protected:
 			Rectangle collisionBox() const override;
 		public:
 			// Default width of the bounding box returned by
 			// Line::collisionBox()
-			double static const constexpr WIDTH_BBOX = 0.0001;
+			double static const constexpr WIDTH_BBOX = 1E-3;
 
-			Line(float xcoord, float ycoord, float width);
+			Line(Point const &start, Point const &end);
 			/**
 			 * @brief Scales the width of the line object by <b>factor</b>.
 			 * @return Stretched out/in Line object
 			 */
 			Line& operator* (double factor);
 			bool operator== (PlaneObject const &o) const;
+
+			float width() const override;
 	};
 }
 
