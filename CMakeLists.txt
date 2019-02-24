@@ -5,6 +5,7 @@ project(Non-Gravitar)
 set(CMAKE_CXX_STANDARD 11)
 set(CMAKE_CXX_FLAGS -Wall)
 set(DIR_SRC "src/")
+set(DIR_SAMPLES "samples/")
 
 # The project versionig scheme is Semver: https://semver.org/
 set(VERSION_MAJOR 0)
@@ -44,5 +45,8 @@ target_link_libraries(Bunker PlaneObject PlaneTraits Trajectory)
 
 add_library(Utils "${DIR_SRC}/Utils.cpp")
 
+
+add_executable(SFMLCollision "${DIR_SAMPLES}/SFMLCollision.cpp")
+target_link_libraries(SFMLCollision sfml-window sfml-graphics sfml-system)
 
 add_subdirectory(test)
