@@ -20,20 +20,53 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 #include "PlaneObject.hpp"
+#include "Point.hpp"
 #include "Rectangle.hpp"
 
+using PlaneObject = gvt::PlaneObject;
+using Point = gvt::Point;
 
-gvt::PlaneObject::PlaneObject(float x, float y): mX{x}, mY{y} {
+
+PlaneObject::PlaneObject(float x, float y): mX{x}, mY{y},
+	mOriginX{0}, mOriginY{0} {
 }
 
-bool gvt::PlaneObject::clashes(gvt::PlaneObject const &o) const {
+Point PlaneObject::origin () const {
+	return Point{mOriginX, mOriginY};
+}
+
+void PlaneObject::origin(Point const &p) {
+	mOriginX = p.x();
+	mOriginY = p.y();
+
+	if (mPlane)
+		mPlane->updateCollisions();
+}
+
+float PlaneObject::rotation() const {
+	return mRotation;
+}
+
+void PlaneObject::rotation(unsigned r) {
+	mRotation = r % 360;
+	rotate();
+
+	if (mPlane)
+		mPlane->updateCollisions();
+}
+
+bool PlaneObject::clashes(gvt::PlaneObject const &o) const {
     return collisionBox().clashes(o.collisionBox());
 }
 
-void gvt::PlaneObject::move(float xcoord, float ycoord) {
+void PlaneObject::move(float xcoord, float ycoord) {
     mX += xcoord;
     mY += ycoord;
 
-    if (mPlane != nullptr)
+    if (mPlane)
         mPlane->updateCollisions();
+}
+
+bool PlaneObject::operator!= (PlaneObject const &o) const {
+	return !operator==(o);
 }

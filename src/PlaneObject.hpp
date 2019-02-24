@@ -29,6 +29,7 @@
 
 namespace gvt {
 	class Rectangle;
+	class Point;
 
 	/**
 	 * @brief An abstract base class for subsequent plane objects. Note that
@@ -41,6 +42,8 @@ namespace gvt {
 			// Coordinates of the top-left corner by default, not of an
 			// arbitrary center
 			float mX{0}, mY{0};
+			float mOriginX{0}, mOriginY{0};
+			float mRotation{0};
 			Plane *mPlane{nullptr};
 
 			/**
@@ -48,6 +51,7 @@ namespace gvt {
 			 * detect collision with another PlaneObject.
 			 */
 			virtual Rectangle collisionBox() const = 0;
+			virtual void rotate() = 0;
 		public:
 			using ostream = std::ostream;
 
@@ -55,34 +59,47 @@ namespace gvt {
 			virtual ~PlaneObject() = default;
 
 			/**
-			 * @return <b>true</b> if the boundaries of the current PlaneObject
-			 * clash with those of the object o.
-			 */
-			bool clashes(PlaneObject const &o) const;
-			/**
-			 * @return True if the object at the current position meets the
-			 * other PlaneObject given as argument by following the trajectory
-			 * t
-			 */
-			bool meets(PlaneObject const &o, Trajectory const &t) const;
-			/**
 			 * @param xcoord the value of the new x coordinate of the shape
 			 * top-left corner.
 			 */
-			inline void x(float xcoord);
+			virtual inline void x(float xcoord);
 			/**
 			 * @param ycoord the value of the new y coordinate of the shape
 			 * top-left corner.
 			 */
-			inline void y(float ycoord);
+			virtual inline void y(float ycoord);
 			/**
 			 * @return Top-left corner x coordinate.
 			 */
-			inline float x() const;
+			virtual inline float x() const;
 			/**
 			 * @return Top-left corner y coordinate.
 			 */
-			inline float y() const;
+			virtual inline float y() const;
+			/**
+			 * @return The origin point, used for various geometrical
+			 * transformations (e.g. translation, rotation, ...)
+			 */
+			virtual Point origin() const;
+			/**
+			 * @param p The origin used as a reference for various geometrical
+			 * transformations
+			 */
+			virtual void origin(Point const &p);
+			/**
+			 * @return The angle with respect to the object origin of the
+			 * current PlaneObject instance.
+			 */
+			virtual float rotation() const;
+			/**
+			 * @param r The rotation angle to set for this object
+			 */
+			virtual void rotation(unsigned r);
+			/**
+			 * @return <b>true</b> if the boundaries of the current PlaneObject
+			 * clash with those of the object o.
+			 */
+			bool clashes(PlaneObject const &o) const;
 			/**
 			 * @brief Adds xcoord and ycord to the current space object
 			 * coordinates.
@@ -94,8 +111,15 @@ namespace gvt {
 			 * @param steps Amount of steps to perform in a given metric space
 			 */
 			void move(Trajectory const &t, size_t steps);
+			/**
+			 * @return True if the object at the current position meets the
+			 * other PlaneObject given as argument by following the trajectory
+			 * t
+			 */
+			bool meets(PlaneObject const &o, Trajectory const &t) const;
 
 			virtual bool operator== (PlaneObject const &o) const = 0;
+			virtual bool operator!= (PlaneObject const &o) const;
 	};
 }
 

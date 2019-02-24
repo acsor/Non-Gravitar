@@ -27,7 +27,7 @@ using namespace gvt;
 
 
 TEST_CASE("gvt::Line", "[Line]") {
-	Line l{1, 2, 4};
+	Line l{{0, 0}, {4, 0}};
 
 	l = l * 4;
 	REQUIRE(l.width() == 16);

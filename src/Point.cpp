@@ -21,16 +21,21 @@
 // SOFTWARE.
 #include <cmath>
 #include "Point.hpp"
+#include "Rectangle.hpp"
 
 
 using Point = gvt::Point;
 
 
 gvt::Rectangle gvt::Point::collisionBox() const {
+	Point halfWidth{WIDTH_BBOX / 2.0, WIDTH_BBOX / 2.0};
+
 	// TO-DO Check/unit test this
-	return Rectangle{
-		mX - WIDTH_BBOX / 2, mY - WIDTH_BBOX / 2, WIDTH_BBOX, WIDTH_BBOX
-	};
+	return Rectangle{*this - halfWidth, *this + halfWidth};
+}
+
+void Point::rotate() {
+	// TO-DO Implement
 }
 
 Point::Point(float xcoord, float ycoord): PlaneObject(xcoord, ycoord) {

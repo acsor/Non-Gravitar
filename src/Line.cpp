@@ -23,21 +23,32 @@
 
 using namespace gvt;
 
+using Line = gvt::Line;
+using Point = gvt::Point;
+using Rectangle = gvt::Rectangle;
 
 
 Rectangle Line::collisionBox() const {
-	return Rectangle{mX, mY, mWidth, Line::WIDTH_BBOX};
+	// TO-DO Enhance the collision box creation by minimizing the area covered
+	// by the rectangle
+	return Rectangle({mX, mY}, mEnd);
 }
 
-Line::Line(float xcoord, float ycoord, float width):
-	PlaneObject(xcoord, ycoord), WidthTrait(width) {
+void Line::rotate() {
+	// TO-DO Implement
+}
+
+Line::Line(Point const &start, Point const &end):
+	PlaneObject(start.x(), start.y()), mEnd{end} {
 }
 
 Line& Line::operator* (double factor) {
+	Point start{mX, mY};
+
 	if (factor <= 0)
 		throw std::domain_error("scaling factor cannot be <= 0");
 
-	mWidth *= factor;
+	mEnd = factor * (mEnd - start);
 
 	return *this;
 }
@@ -46,7 +57,11 @@ bool Line::operator== (PlaneObject const &o) const {
 	auto other = dynamic_cast<Line const *>(&o);
 
 	if (other)
-		return mX == other->mX && mY == other->mY && mWidth == other->mWidth;
+		return mX == other->mX && mY == other->mY && mEnd == other->mEnd;
 
 	return false;
+}
+
+float Line::width() const {
+	return Point(mX, mY).distance(mEnd);
 }

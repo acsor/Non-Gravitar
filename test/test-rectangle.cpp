@@ -28,20 +28,21 @@ using namespace gvt;
 
 
 TEST_CASE("Rectangle::clashes()", "[Rectangle]") {
-	Rectangle const center{-1, 2, 2, 4};
+	Rectangle const center{{-1, 2}, {1, 6}};
 	unordered_set<Rectangle> const colliding = unordered_set<Rectangle> {
 		// Left extreme and left very near
-		{-3, 2, 2, 4}, {-2.9, 2, 2, 4},
+		{{-3, 2}, {-1, 6}}, {{-2.9, 2}, {-0.9, 6}},
 		// Top extreme and top very near
-		{-1, 6, 2, 4}, {-1, 5.9, 2, 4},
+		{{-1, 6}, {1, 10}}, {{-1, 5.9}, {1, 9.9}},
 		// Right extreme and bottom very near
-		{1, 2, 2, 4}, {0.9, 2, 2, 4},
+		{{1, 2}, {3, 6}}, {{0.9, 2}, {2.9, 6}},
 		// Bottom extreme and bottom very near
-		{-1, -2, 2, 4}, {-1, -1.9, 2, 4}
+		{{-1, -2}, {1, 2}}, {{-1, -1.9}, {1, 2.1}}
 	};
 	unordered_set<Rectangle> const nonColliding = unordered_set<Rectangle> {
 		// From left in clockwise direction
-		{-3.2, 2, 2, 4}, {-1, 6.2, 2, 4}, {1.005, 2, 2, 4}, {-1, -2.005, 2, 4}
+		{{-3.2, 2}, {-1.2, 6}}, {{-1, 6.2}, {1, 10.1}},
+		{{1.005, 2}, {3.005, 6}}, {{-1, -2.005}, {1, 1.995}}
 	};
 
 	REQUIRE(center.clashes(center));
