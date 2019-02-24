@@ -55,7 +55,7 @@ namespace gvt {
 			 * @returns true if the current spaceship instance has still fuel
 			 * in it, false othwerise.
 			 */
-			bool charged();
+			bool charged() const;
 
 			bool operator== (PlaneObject const &o) const override;
 	};

@@ -58,6 +58,7 @@ namespace gvt {
 			Point mEnd{0, 0};
 		protected:
 			Rectangle collisionBox() const override;
+			void rotate() override;
     	public:
     		/**
     		 * @brief Constructs a Rectangle with width > 0 and height > 0.

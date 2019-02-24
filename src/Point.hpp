@@ -23,13 +23,15 @@
 #define NON_GRAVITAR_POINT_HPP
 
 #include "PlaneObject.hpp"
-#include "Rectangle.hpp"
 
 
 namespace gvt {
+	class Rectangle;
+
 	class Point: public PlaneObject {
 		protected:
 			Rectangle collisionBox() const override;
+			void rotate() override;
 		public:
 			friend Point operator*(float, const Point&);
 

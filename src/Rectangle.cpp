@@ -19,6 +19,7 @@
 // LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
+#include <cmath>
 #include "Rectangle.hpp"
 #include "Utils.hpp"
 
@@ -47,6 +48,8 @@ std::ostream& std::operator<< (std::ostream &out, Rectangle const &r) {
 }
 
 
+void Rectangle::rotate() {
+	// TO-DO Implement
 }
 
 Rectangle Rectangle::collisionBox() const {

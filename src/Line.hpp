@@ -24,6 +24,7 @@
 
 #include "PlaneObject.hpp"
 #include "PlaneTraits.hpp"
+#include "Point.hpp"
 #include "Rectangle.hpp"
 
 
@@ -33,6 +34,7 @@ namespace gvt {
 			Point mEnd;
 		protected:
 			Rectangle collisionBox() const override;
+			void rotate() override;
 		public:
 			// Default width of the bounding box returned by
 			// Line::collisionBox()
