@@ -22,17 +22,28 @@
 #ifndef NON_GRAVITAR_POINT_HPP
 #define NON_GRAVITAR_POINT_HPP
 
+#include "PlaneObject.hpp"
+#include "Rectangle.hpp"
+
 
 namespace gvt {
 	class Point: public PlaneObject {
 		protected:
 			Rectangle collisionBox() const override;
 		public:
-			Point(float xcoord, float ycoord);
+			friend Point operator*(float, const Point&);
 
-			bool operator+ (Point const &o) const;
+			float static const constexpr WIDTH_BBOX = 1E-3;
+
+			Point(float xcoord, float ycoord);
+			float distance(Point const &o) const;
+
+			Point operator+ (Point const &o) const;
+			Point operator- (Point const &o) const;
 			bool operator== (PlaneObject const &o) const override;
 	};
+
+	Point operator* (float factor, Point const &p);
 }
 
 

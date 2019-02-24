@@ -19,4 +19,44 @@
 // LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
+#include <cmath>
 #include "Point.hpp"
+
+
+using Point = gvt::Point;
+
+
+gvt::Rectangle gvt::Point::collisionBox() const {
+	// TO-DO Check/unit test this
+	return Rectangle{
+		mX - WIDTH_BBOX / 2, mY - WIDTH_BBOX / 2, WIDTH_BBOX, WIDTH_BBOX
+	};
+}
+
+Point::Point(float xcoord, float ycoord): PlaneObject(xcoord, ycoord) {
+}
+
+float Point::distance(Point const &o) const {
+	return sqrt(pow(mX - o.mX, 2) + pow(mY - o.mY, 2));
+}
+
+Point gvt::Point::operator+ (Point const &o) const {
+	return Point{mX + o.mX, mY + o.mY};
+}
+
+Point gvt::Point::operator- (Point const &o) const {
+	return Point{mX - o.mX, mY - o.mY};
+}
+
+Point gvt::operator* (float factor, Point const &p) {
+	return Point{factor * p.mX, factor * p.mY};
+}
+
+bool Point::operator== (PlaneObject const &o) const {
+	auto *other = dynamic_cast<Point const *>(&o);
+
+	if (other)
+		return mX == other->mX && mY == other->mY;
+
+	return false;
+}
