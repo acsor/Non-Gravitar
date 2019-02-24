@@ -24,8 +24,11 @@ add_library(Trajectory "${DIR_SRC}/Trajectory.cpp")
 add_library(PlaneObject "${DIR_SRC}/PlaneObject.cpp")
 target_link_libraries(PlaneObject Plane)
 
+add_library(Point "${DIR_SRC}/Point.cpp")
+target_link_libraries(Point PlaneObject)
+
 add_library(Line "${DIR_SRC}/Line.cpp")
-target_link_libraries(Line PlaneObject PlaneTraits)
+target_link_libraries(Line PlaneObject PlaneTraits Point)
 
 add_library(Rectangle "${DIR_SRC}/Rectangle.cpp")
 target_link_libraries(Rectangle PlaneObject PlaneTraits)
