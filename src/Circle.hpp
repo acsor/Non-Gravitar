@@ -19,17 +19,30 @@
 // LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
-#ifndef NON_GRAVITAR_UTILS_HPP
-#define NON_GRAVITAR_UTILS_HPP
+#ifndef NON_GRAVITAR_CIRCLE_HPP
+#define NON_GRAVITAR_CIRCLE_HPP
 
-
-#define IN_CLOSED_INTERVAL(x, a, b)	((a) <= (x) && (x) <= (b))
-#define IN_OPEN_INTERVAL(x, a, b)	((a) < (x) && (x) < (b))
+#include "PlaneObject.hpp"
+#include "Rectangle.hpp"
 
 
 namespace gvt {
-	constexpr const double pi = 3.1415926535897;
-}
+	class Circle: public PlaneObject {
+		protected:
+			float mRadius;
+
+			Rectangle collisionBox() const override;
+			void rotate() override;
+		public:
+			Circle(float xcoord, float ycoord);
+			Circle(float xcoord, float ycoord, float radius);
+
+			float area() const;
+			bool clashes(Circle const &o) const;
+
+			bool operator== (PlaneObject const &o) const override;
+	};
+};
 
 
 #endif

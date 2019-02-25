@@ -54,6 +54,8 @@ namespace gvt {
 		friend struct std::hash<Rectangle>;
 		friend struct std::equal_to<Rectangle>;
 
+		friend ostream& std::operator<< (ostream &out, Rectangle const &r);
+
 		private:
 			Point mEnd{0, 0};
 		protected:
@@ -75,8 +77,6 @@ namespace gvt {
 
 			float width() const override;
 			float height() const override;
-
-			friend ostream& std::operator<< (ostream &out, Rectangle const &r);
     };
 }
 

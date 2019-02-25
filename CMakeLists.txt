@@ -26,10 +26,13 @@ target_link_libraries(PlaneObject Plane)
 add_library(Point "${DIR_SRC}/Point.cpp")
 target_link_libraries(Point PlaneObject)
 
-add_library(Vector "${DIR_SRC}/Vector.cpp")
-
 add_library(Line "${DIR_SRC}/Line.cpp")
-target_link_libraries(Line PlaneObject Point)
+target_link_libraries(Line PlaneObject Point Rectangle)
+
+add_library(Circle "${DIR_SRC}/Circle.cpp")
+target_link_libraries(Circle PlaneObject Rectangle)
+
+add_library(Vector "${DIR_SRC}/Vector.cpp")
 
 add_library(Rectangle "${DIR_SRC}/Rectangle.cpp")
 target_link_libraries(Rectangle PlaneObject)

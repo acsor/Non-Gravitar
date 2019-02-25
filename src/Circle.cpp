@@ -19,17 +19,45 @@
 // LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
-#ifndef NON_GRAVITAR_UTILS_HPP
-#define NON_GRAVITAR_UTILS_HPP
+#include <cmath>
+#include "Circle.hpp"
+#include "Utils.hpp"
+
+using Circle = gvt::Circle;
+using PlaneObject = gvt::PlaneObject;
+using Rectangle = gvt::Rectangle;
 
 
-#define IN_CLOSED_INTERVAL(x, a, b)	((a) <= (x) && (x) <= (b))
-#define IN_OPEN_INTERVAL(x, a, b)	((a) < (x) && (x) < (b))
-
-
-namespace gvt {
-	constexpr const double pi = 3.1415926535897;
+Rectangle Circle::collisionBox() const {
+	// TO-DO Improve by taking into account rotation as well
+	return Rectangle{{mX, mY}, {mX + mRadius, mY + mRadius}};
 }
 
+void Circle::rotate() {
+	// TO-DO Implement
+}
 
-#endif
+Circle::Circle(float xcoord, float ycoord): Circle{xcoord, ycoord, 0} {
+}
+
+Circle::Circle(float xcoord, float ycoord, float radius):
+	PlaneObject{xcoord, ycoord}, mRadius{radius} {
+}
+
+float Circle::area() const {
+	return gvt::pi * pow(mRadius, 2);
+}
+
+bool Circle::clashes(Circle const &o) const {
+	// TO-DO Test
+	return sqrt(pow(mX - o.mX, 2) + pow(mY - o.mY, 2)) <= mRadius + o.mRadius;
+}
+
+bool Circle::operator== (PlaneObject const &o) const {
+	auto *other = dynamic_cast<Circle const *>(&o);
+
+	if (other)
+		return mX == other->mX && mY == other->mY && mRadius == other->mRadius;
+
+	return false;
+}
