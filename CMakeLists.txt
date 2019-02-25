@@ -52,4 +52,7 @@ add_library(Utils "${DIR_SRC}/Utils.cpp")
 add_executable(SFMLCollision "${DIR_SAMPLES}/SFMLCollision.cpp")
 target_link_libraries(SFMLCollision sfml-window sfml-graphics sfml-system)
 
+add_executable(SFMLOrigin "${DIR_SAMPLES}/SFMLOrigin.cpp")
+target_link_libraries(SFMLOrigin sfml-window sfml-graphics sfml-system)
+
 add_subdirectory(test)
