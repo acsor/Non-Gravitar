@@ -19,13 +19,14 @@ include_directories("${DIR_SRC}")
 
 add_library(Observer "${DIR_SRC}/Observer.cpp")
 add_library(Plane "${DIR_SRC}/Plane.cpp")
-add_library(Trajectory "${DIR_SRC}/Trajectory.cpp")
 
 add_library(PlaneObject "${DIR_SRC}/PlaneObject.cpp")
 target_link_libraries(PlaneObject Plane)
 
 add_library(Point "${DIR_SRC}/Point.cpp")
 target_link_libraries(Point PlaneObject)
+
+add_library(Vector "${DIR_SRC}/Vector.cpp")
 
 add_library(Line "${DIR_SRC}/Line.cpp")
 target_link_libraries(Line PlaneObject Point)
@@ -40,7 +41,7 @@ add_library(Fuel "${DIR_SRC}/Fuel.cpp")
 target_link_libraries(Fuel Spaceship)
 
 add_library(Bunker "${DIR_SRC}/Bunker.cpp")
-target_link_libraries(Bunker PlaneObject Trajectory)
+target_link_libraries(Bunker PlaneObject Vector)
 
 add_library(Utils "${DIR_SRC}/Utils.cpp")
 

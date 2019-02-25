@@ -24,7 +24,7 @@
 
 #include <ostream>
 #include "Plane.hpp"
-#include "Trajectory.hpp"
+#include "Vector.hpp"
 
 
 namespace gvt {
@@ -51,6 +51,11 @@ namespace gvt {
 			 * detect collision with another PlaneObject.
 			 */
 			virtual Rectangle collisionBox() const = 0;
+			/**
+			 * @brief Updates the rotation property of the object, typically by
+			 * referring to the mOrigin[XY] attributes. Usually called by
+			 * PlaneObject::rotation(unsigned).
+			 */
 			virtual void rotate() = 0;
 		public:
 			using ostream = std::ostream;

@@ -19,47 +19,57 @@
 // LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
-#include "Line.hpp"
-
-using namespace gvt;
-
-using Line = gvt::Line;
-using Point = gvt::Point;
-using Rectangle = gvt::Rectangle;
+#include <cmath>
 
 
-Rectangle Line::collisionBox() const {
-	// TO-DO Enhance the collision box creation by minimizing the area covered
-	// by the rectangle
-	return Rectangle({mX, mY}, mEnd);
+template<typename T> gvt::Vector<T>::Vector(): Vector(0, 0) {
 }
 
-void Line::rotate() {
-	// TO-DO Implement
+template<typename T> gvt::Vector<T>::Vector(T x, T y) {
+	this->x = x;
+	this->y = y;
 }
 
-Line::Line(Point const &start, Point const &end):
-	PlaneObject(start.x(), start.y()), mEnd{end} {
+template<typename T> gvt::Vector<T>::Vector(T degrees) {
+	x = cos(degrees);
+	y = sin(degrees);
 }
 
-Line& Line::operator* (double factor) {
-	if (factor <= 0)
-		throw std::domain_error("scaling factor cannot be <= 0");
+template<typename T> void gvt::Vector<T>::normalize() {
+	float length = norm();
 
-	mEnd = factor * mEnd;
+	if (length != 0) {
+		x /= length;
+		y /= length;
+	}
+}
+
+template<typename T> double gvt::Vector<T>::norm() const {
+	return sqrt(pow(x, 2) + pow(y, 2));
+}
+
+template<typename T> double gvt::Vector<T>::degrees() const {
+	return acos(x / norm());
+}
+
+template<typename T> gvt::Vector<T> gvt::Vector<T>::operator+ (
+	gvt::Vector<T> const &o
+) const {
+	gvt::Vector<T> out = *this;
+
+	out.x += o.x;
+	out.y += o.y;
+	out.normalize();
+	
+	return out;
+}
+
+template<typename T> gvt::Vector<T>& gvt::Vector<T>::operator+= (
+	gvt::Vector<T> const &o
+) {
+	x += o.x;
+	y += o.y;
+	normalize();
 
 	return *this;
-}
-
-bool Line::operator== (PlaneObject const &o) const {
-	auto other = dynamic_cast<Line const *>(&o);
-
-	if (other)
-		return mX == other->mX && mY == other->mY && mEnd == other->mEnd;
-
-	return false;
-}
-
-float Line::width() const {
-	return Point(mX, mY).distance(mEnd);
 }

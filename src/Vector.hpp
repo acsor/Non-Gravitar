@@ -19,8 +19,8 @@
 // LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
-#ifndef NON_GRAVITAR_TRAJECTORY_HPP
-#define NON_GRAVITAR_TRAJECTORY_HPP
+#ifndef NON_GRAVITAR_VECTOR_HPP
+#define NON_GRAVITAR_VECTOR_HPP
 
 
 namespace gvt {
@@ -28,26 +28,44 @@ namespace gvt {
 	 * Utility struct to handle missile, particles and other movable objects'
 	 * trajectory.
 	 */
-	struct Trajectory {
-		float x, y;
+	template <typename T> struct Vector {
+		T x, y;
 
+		Vector();
 		/**
-		 * @brief Instantiates a normalized Trajectory object from the number
+		 * @brief Instantiates a 2D-vector from its x and y components.
+		 */
+		Vector(T x, T y);
+		/**
+		 * @brief Instantiates a normalized Vector<T> object from the number
 		 * of degrees
 		 * @param degrees Value (specified in radians) in [0, 2π)
 		 */
-		Trajectory(float degrees);
+		Vector(T degrees);
 		/**
-		 * @brief Normalizes the given Trajectory instance such that the module
+		 * @brief Normalizes the given Vector<T> instance such that the module
 		 * of the vector it represents has unitary length
 		 */
 		void normalize();
-		float degrees() const;
+		/**
+		 * @return The norm, aka length, of the given vector
+		 */
+		double inline norm() const;
+		/*
+		 * @return The angle subtended with the x axis (y = 0) by the Vector
+		 */
+		double inline degrees() const;
 
-		Trajectory operator+ (Trajectory const &o);
-		Trajectory& operator+= (Trajectory const &o);
+		Vector operator+ (Vector const &o) const;
+		Vector& operator+= (Vector const &o);
 	};
+
+	using Trajectory = Vector<float>;
 }
+
+
+// Implementation file for inline and template functions
+#include "Vector.ipp"
 
 
 #endif
