@@ -35,9 +35,9 @@ Point PlaneObject::origin () const {
 	return Point{mOriginX, mOriginY};
 }
 
-void PlaneObject::origin(Point const &p) {
-	mOriginX = p.x();
-	mOriginY = p.y();
+void PlaneObject::origin(float xcoord, float ycoord) {
+	mOriginX = xcoord;
+	mOriginY = ycoord;
 
 	if (mPlane)
 		mPlane->updateCollisions();

@@ -90,7 +90,7 @@ namespace gvt {
 			 * @param p The origin used as a reference for various geometrical
 			 * transformations
 			 */
-			virtual void origin(Point const &p);
+			virtual void origin(float xcoord, float ycoord);
 			/**
 			 * @return The angle with respect to the object origin of the
 			 * current PlaneObject instance.
