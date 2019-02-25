@@ -34,7 +34,7 @@ using namespace sf;
  */
 int main (int argc, char *argv[]) {
 	VideoMode const desktopMode = VideoMode::getDesktopMode();
-	RenderWindow w{desktopMode, "Non-Gravitar"};
+	RenderWindow w{desktopMode, "SFML Collision Demo"};
 	Event e;
 
 	CircleShape point{10};
