@@ -56,6 +56,7 @@ namespace gvt {
 		 */
 		double inline degrees() const;
 
+		Vector operator* (double l) const;
 		Vector operator+ (Vector const &o) const;
 		Vector& operator+= (Vector const &o);
 	};

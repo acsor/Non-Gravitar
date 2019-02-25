@@ -19,63 +19,35 @@
 // LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
-#include <cmath>
+#include <set>
+#include <utility>
+#include "catch.hpp"
+#include "../src/Vector.hpp"
+
+template <typename T> using Vector = gvt::Vector<T>;
 
 
-template<typename T> gvt::Vector<T>::Vector(): Vector(0, 0) {
-}
+TEST_CASE("gvt::Vector::Vector(float)", "[Vector]") {
+	double degrees;
 
-template<typename T> gvt::Vector<T>::Vector(T x, T y) {
-	this->x = x;
-	this->y = y;
-}
+	for (unsigned i = 0; i < 360; i++) {
+		degrees = Vector<float>(i).norm();
 
-template<typename T> gvt::Vector<T>::Vector(T degrees) {
-	x = cos(degrees);
-	y = sin(degrees);
-}
-
-template<typename T> void gvt::Vector<T>::normalize() {
-	float length = norm();
-
-	if (length != 0) {
-		x /= length;
-		y /= length;
+		REQUIRE(abs(degrees - 1.0) <= 0.01);
 	}
 }
 
-template<typename T> double gvt::Vector<T>::norm() const {
-	return sqrt(pow(x, 2) + pow(y, 2));
-}
+TEST_CASE("gvt::Vector::normalize()", "[Vector]") {
+	Vector<float> v, u;
+	std::set<std::pair<float, float>> inputs = {
+		{4, 5}, {10, 9}, {1, 1}, {0, 1}, {-10, 4}, {4, -10}
+	};
 
-template<typename T> double gvt::Vector<T>::degrees() const {
-	return acos(x / norm());
-}
+	for (auto i = inputs.cbegin(); i != inputs.cend(); i++) {
+		v = Vector<float>(i->first, i->second);
+		u = v;
+		u.normalize();
 
-template<typename T> gvt::Vector<T> gvt::Vector<T>::operator* (
-	double l
-) const {
-	return Vector(l * x, l * y);
-}
-
-template<typename T> gvt::Vector<T> gvt::Vector<T>::operator+ (
-	gvt::Vector<T> const &o
-) const {
-	gvt::Vector<T> out = *this;
-
-	out.x += o.x;
-	out.y += o.y;
-	out.normalize();
-	
-	return out;
-}
-
-template<typename T> gvt::Vector<T>& gvt::Vector<T>::operator+= (
-	gvt::Vector<T> const &o
-) {
-	x += o.x;
-	y += o.y;
-	normalize();
-
-	return *this;
+		REQUIRE(abs(v.degrees() - u.degrees()) <= 0.001);
+	}
 }
