@@ -30,7 +30,10 @@ using Rectangle = gvt::Rectangle;
 
 Rectangle Circle::collisionBox() const {
 	// TO-DO Improve by taking into account rotation as well
-	return Rectangle{{mX, mY}, {mX + mRadius, mY + mRadius}};
+	return Rectangle{
+		{mX - mOriginX, mY - mOriginY},
+		{mX - mOriginX + 2 * mRadius, mY - mOriginY + 2 * mRadius}
+	};
 }
 
 void Circle::rotate() {
@@ -50,7 +53,10 @@ float Circle::area() const {
 
 bool Circle::clashes(Circle const &o) const {
 	// TO-DO Test
-	return sqrt(pow(mX - o.mX, 2) + pow(mY - o.mY, 2)) <= mRadius + o.mRadius;
+	return sqrt(
+		pow(mX + mRadius - mOriginX - (o.mX + mRadius - o.mOriginX), 2) +
+		pow(mY + mRadius - mOriginY - (o.mY + mRadius - o.mOriginY), 2)
+	) <= mRadius + o.mRadius;
 }
 
 bool Circle::operator== (PlaneObject const &o) const {

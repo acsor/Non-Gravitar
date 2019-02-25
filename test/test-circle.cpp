@@ -33,17 +33,35 @@ TEST_CASE("Circle::clashes(Circle&)", "[Circle]") {
 		{-2, 0, 1}, {0, 2, 1}, {2, 0, 1}, {0, -2, 1},
 	};
 	Circle nonClashing[] = {
-		{-3, 0, 1}, {0, 3, 1}, {3, 0, 1}, {0, -3, 1}
+		{-5.5, 0, 1}, {-5, .5, 1}, {-4.5, 0, 1}, {-5, -.5, 1}
 	};
-	size_t clashingNo = sizeof(clashing) / sizeof(Circle),
+	size_t const clashingNo = sizeof(clashing) / sizeof(Circle),
 		   nonClashingNo = sizeof(nonClashing) / sizeof(Circle);
 
+	main.origin(1, 1);
 
-	for (size_t i = 0; i < clashingNo; i++) {
-		REQUIRE(main.clashes(clashing[i]));
+	for (size_t i = 0; i < clashingNo; i++)
+		clashing[i].origin(1, 1);
+	for (size_t i = 0; i < nonClashingNo; i++)
+		nonClashing[i].origin(1, 1);
+
+	SECTION("Testing with origin == (0, 0)") {
+		for (size_t i = 0; i < clashingNo; i++)
+			REQUIRE(main.clashes(clashing[i]));
+
+		for (size_t i = 0; i < nonClashingNo; i++)
+			REQUIRE(!main.clashes(nonClashing[i]));
 	}
 
-	for (size_t i = 0; i < nonClashingNo; i++) {
-		REQUIRE(!main.clashes(nonClashing[i]));
+	SECTION("Testing with origin != (0, 0)") {
+		// The origin is moved in such a way that the previously clashing
+		// circles no longer clash, and the previously non-clashing circles now
+		// clash
+		main.x(-5);
+
+		for (size_t i = 0; i < clashingNo; i++)
+			REQUIRE(!main.clashes(clashing[i]));
+		for (size_t i = 0; i < nonClashingNo; i++)
+			REQUIRE(main.clashes(nonClashing[i]));
 	}
 }
