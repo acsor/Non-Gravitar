@@ -19,20 +19,17 @@
 // LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
-#ifndef NON_GRAVITAR_MISSILE_HPP
-#define NON_GRAVITAR_MISSILE_HPP
+#ifndef NON_GRAVITAR_ROUND_MISSILE_HPP
+#define NON_GRAVITAR_ROUND_MISSILE_HPP
 
 #include "PlaneObject.hpp"
+#include "Circle.hpp"
 
 
 namespace gvt {
-	class Missile: public PlaneObject {
-		private:
-			float mRadius;
-		protected:
-			Rectangle collisionBox() const override;
+	class RoundMissile: public Circle {
 		public:
-			explicit Missile(float radius);
+			explicit RoundMissile(float radius);
 
 			bool operator== (PlaneObject const &o) const override;
 	};
