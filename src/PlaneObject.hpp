@@ -44,6 +44,7 @@ namespace gvt {
 			float mX{0}, mY{0};
 			float mOriginX{0}, mOriginY{0};
 			float mRotation{0};
+			Trajectory mVelocity{0, 0};
 			Plane *mPlane{nullptr};
 
 			/**
@@ -100,6 +101,20 @@ namespace gvt {
 			 * @param r The rotation angle to set for this object
 			 */
 			virtual void rotation(unsigned r);
+			/**
+			 * @param t Velocity value to set to the current PlaneObject
+			 * instance.
+			 */
+			void velocity(Trajectory const &t);
+			/**
+			 * @return The velocity vector associated with the current
+			 * PlaneObject.
+			 */
+			Trajectory velocity() const;
+			/**
+			 * @return The current PlaneObject speed, as a scalar value.
+			 */
+			float speed() const;
 			/**
 			 * @return <b>true</b> if the boundaries of the current PlaneObject
 			 * clash with those of the object o.

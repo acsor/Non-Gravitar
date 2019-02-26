@@ -25,10 +25,10 @@
 
 using PlaneObject = gvt::PlaneObject;
 using Point = gvt::Point;
+using Trajectory = gvt::Trajectory;
 
 
-PlaneObject::PlaneObject(float x, float y): mX{x}, mY{y},
-	mOriginX{0}, mOriginY{0} {
+PlaneObject::PlaneObject(float x, float y): mX{x}, mY{y} {
 }
 
 Point PlaneObject::origin () const {
@@ -53,6 +53,18 @@ void PlaneObject::rotation(unsigned r) {
 
 	if (mPlane)
 		mPlane->updateCollisions();
+}
+
+void PlaneObject::velocity(Trajectory const &t) {
+	mVelocity = t;
+}
+
+Trajectory PlaneObject::velocity() const {
+	return mVelocity;
+}
+
+float PlaneObject::speed() const {
+	return mVelocity.norm();
 }
 
 bool PlaneObject::clashes(gvt::PlaneObject const &o) const {
