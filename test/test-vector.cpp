@@ -51,3 +51,11 @@ TEST_CASE("gvt::Vector::normalize()", "[Vector]") {
 		REQUIRE(abs(v.degrees() - u.degrees()) <= 0.001);
 	}
 }
+
+TEST_CASE("gvt::Vector::operator==", "[Vector]") {
+	Vector<double> a{1, 2}, b{1.0, 2.0}, c{4.59, 49};
+
+	REQUIRE(a == b);
+	REQUIRE(a != c);
+	REQUIRE(b != c);
+}

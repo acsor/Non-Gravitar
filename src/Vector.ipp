@@ -79,3 +79,10 @@ template<typename T> gvt::Vector<T>& gvt::Vector<T>::operator+= (
 
 	return *this;
 }
+
+template<typename T> bool gvt::Vector::operator==(Vector const &o) const {
+	return x == o.x && y == o.y;
+}
+template<typename T> bool gvt::Vector::operator!=(Vector const &o) const {
+	return x != o.x || y != o.y;
+}

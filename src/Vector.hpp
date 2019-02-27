@@ -59,6 +59,9 @@ namespace gvt {
 		Vector operator* (double l) const;
 		Vector operator+ (Vector const &o) const;
 		Vector& operator+= (Vector const &o);
+
+		bool operator==(Vector const &o) const;
+		bool operator!=(Vector const &o) const;
 	};
 
 	using Trajectory = Vector<float>;
