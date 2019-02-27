@@ -47,6 +47,10 @@ void Fuel::recharge(Spaceship &ship) {
 }
 
 bool Fuel::operator== (PlaneObject const &o) const {
-	// TO-DO Implement
+	auto *other = dynamic_cast<Fuel const *>(&o);
+
+	if (other)
+		return PlaneObject::operator==(*other) && mFuel == other->mFuel;
+
 	return false;
 }

@@ -63,7 +63,7 @@ bool Circle::operator== (PlaneObject const &o) const {
 	auto *other = dynamic_cast<Circle const *>(&o);
 
 	if (other)
-		return mX == other->mX && mY == other->mY && mRadius == other->mRadius;
+		return PlaneObject::operator==(*other) && mRadius == other->mRadius;
 
 	return false;
 }

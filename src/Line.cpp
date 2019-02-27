@@ -55,7 +55,7 @@ bool Line::operator== (PlaneObject const &o) const {
 	auto other = dynamic_cast<Line const *>(&o);
 
 	if (other)
-		return mX == other->mX && mY == other->mY && mEnd == other->mEnd;
+		return PlaneObject::operator==(*other) && mEnd == other->mEnd;
 
 	return false;
 }

@@ -30,9 +30,8 @@ RoundMissile::RoundMissile(radius): Circle(radius) {
 bool RoundMissile::operator== (PlaneObject const &o) const {
 	auto *other = dynamic_cast<RoundMissile const *>(&o);
 
-	if (other) {
+	if (other)
 		return Circle::operator==(o);
-	}
 
 	return false;
 }

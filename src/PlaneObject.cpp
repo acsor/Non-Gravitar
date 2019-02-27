@@ -79,6 +79,12 @@ void PlaneObject::move(float xcoord, float ycoord) {
         mPlane->updateCollisions();
 }
 
+bool PlaneObject::operator== (PlaneObject const &o) const {
+	return mX == o.mX && mY == o.mY && mOriginX == o.mOriginX &&
+			mOriginY == o.mOriginY && mRotation == o.mRotation &&
+			mVelocity == mVelocity && mPlane == o.mPlane;
+}
+
 bool PlaneObject::operator!= (PlaneObject const &o) const {
 	return !operator==(o);
 }

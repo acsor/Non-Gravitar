@@ -138,7 +138,7 @@ namespace gvt {
 			 */
 			bool meets(PlaneObject const &o, Trajectory const &t) const;
 
-			virtual bool operator== (PlaneObject const &o) const = 0;
+			virtual bool operator== (PlaneObject const &o) const;
 			virtual bool operator!= (PlaneObject const &o) const;
 	};
 }

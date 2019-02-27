@@ -69,9 +69,8 @@ bool Rectangle::clashes(Rectangle const &o) const {
 bool Rectangle::operator==(PlaneObject const &o) const {
 	auto *other = dynamic_cast<Rectangle const *>(&o);
 
-	if (other) {
-		return mX == other->mX && mY == other->mY && mEnd == other->mEnd;
-	}
+	if (other)
+		return PlaneObject::operator==(*other) && mEnd == other->mEnd;
 
 	return false;
 }

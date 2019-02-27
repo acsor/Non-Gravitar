@@ -20,3 +20,11 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 #include "Spaceship.hpp"
+bool Spaceship::operator==(PlaneObject const &o) const {
+	auto *other = dynamic_cast<Spaceship const *>(&o);
+
+	if (other)
+		return PlaneObject::operator==(*other) && mFuel == other->mFuel;
+
+	return false;
+}

@@ -61,7 +61,7 @@ bool Point::operator== (PlaneObject const &o) const {
 	auto *other = dynamic_cast<Point const *>(&o);
 
 	if (other)
-		return mX == other->mX && mY == other->mY;
+		return PlaneObject::operator==(*other);
 
 	return false;
 }
