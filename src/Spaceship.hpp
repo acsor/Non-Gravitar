@@ -44,8 +44,8 @@ namespace gvt {
 			 * updated accordingly (gruntwork, but avoids the use of an
 			 * external image library).
 			 */
-			static unsigned const constexpr WIDTH = 42;
-			static unsigned const constexpr HEIGHT = 49;
+			static unsigned const constexpr WIDTH = 46;
+			static unsigned const constexpr HEIGHT = 42;
 
 			unsigned fuel() const;
 			/**
