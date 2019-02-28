@@ -23,6 +23,7 @@
 #define NON_GRAVITAR_PLANE_OBJECT_HPP
 
 #include <ostream>
+#include "Observer.hpp"
 #include "Plane.hpp"
 #include "Vector.hpp"
 
@@ -37,7 +38,7 @@ namespace gvt {
 	 * not an arbitrary center (which may vary from shape to shape).
 	 * @see gvt::Plane
 	 */
-	class PlaneObject {
+	class PlaneObject: public Observable {
 		protected:
 			// Coordinates of the top-left corner by default, not of an
 			// arbitrary center
