@@ -22,8 +22,10 @@
 #ifndef NON_GRAVITAR_SPACESHIP_HPP
 #define NON_GRAVITAR_SPACESHIP_HPP
 
+#include "Fuel.hpp"
 #include "PlaneObject.hpp"
 #include "PlaneTraits.hpp"
+#include "Rectangle.hpp"
 
 
 namespace gvt {
@@ -31,30 +33,41 @@ namespace gvt {
 	{
 		private:
 			// Represents the current fuel amount in the ship
-			size_t mFuel;
+			unsigned mFuel;
 		protected:
 			Rectangle collisionBox() const override;
 		public:
-			size_t fuel() const;
+			/** Width and height properties of any given spaceship. Note that
+			 * these measures depend on the texture data found in
+			 * @c static/graphics/ and when the files herein found are changed
+			 * (in dimension) the static width and height properties should be
+			 * updated accordingly (gruntwork, but avoids the use of an
+			 * external image library).
+			 */
+			static unsigned const constexpr WIDTH = 46;
+			static unsigned const constexpr HEIGHT = 42;
+
+			unsigned fuel() const;
 			/**
-			 * @brief Recharges the current Spaceship instance by the fuel
-			 * amount found in <b>fuel</b>.
-			 * @param fuel Fuel instance.
+			 * @brief Recharges the current @c Spaceship instance by the fuel
+			 * amount found in @c fuel.
+			 * @param fuel @c Fuel object.
 			 */
 			void recharge(Fuel &fuel);
 			/**
-			 * @brief Discharges the current Spaceship's fuel by <b>amount</b>,
-			 * defaulted to 1.
+			 * @brief Discharges the current <tt>Spaceship</tt>'s fuel by @c
+			 * amount, defaulted to @c 1.
+			 *
+			 * @todo Verify that we can specify a default argument value, and
+			 * that Spaceship::discharge() can be specified even with no
+			 * arguments.
 			 */
-			// TO-DO Verify that we can specify a default argument value, and
-			// that Spaceship::discharge() can be specified even with no
-			// arguments.
-			void discharge(size_t amount = 1);
+			void discharge(unsigned amount = 1);
 			/**
-			 * @returns true if the current spaceship instance has still fuel
-			 * in it, false othwerise.
+			 * @returns @c true if the current @c Spaceship instance has still
+			 * fuel in it, @c false othwerise.
 			 */
-			bool charged();
+			bool charged() const;
 
 			bool operator== (PlaneObject const &o) const override;
 	};

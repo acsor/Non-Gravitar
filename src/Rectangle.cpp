@@ -19,42 +19,17 @@
 // LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
+#include <cmath>
 #include "Rectangle.hpp"
 #include "Utils.hpp"
 
-// TO-DO Watch out against such generalized using-declarations.
-using namespace gvt;
-
-
-Rectangle::Rectangle(float x, float y, float width, float height):
-	PlaneObject(x, y), WidthTrait(width), HeightTrait(height) {
-}
-
-Rectangle Rectangle::collisionBox() const {
-	return *this;
-}
-
-bool Rectangle::clashes(Rectangle const &o) const {
-	return IN_CLOSED_INTERVAL(mX - o.mX, -mWidth, o.mWidth) &&
-			IN_CLOSED_INTERVAL(mY - o.mY, -mHeight, o.mHeight);
-}
-
-bool Rectangle::operator==(PlaneObject const &o) const {
-	auto *other = dynamic_cast<Rectangle const *>(&o);
-
-	if (other) {
-		return mX == other->mX && mY == other->mY && mWidth == other->mWidth &&
-				mHeight == other->mHeight;
-	}
-
-	return false;
-}
+using Rectangle = gvt::Rectangle;
 
 
 size_t std::hash<Rectangle>::operator()(Rectangle const &r) const {
 	auto h = hash<float>{};
 
-	return h(r.mX) ^ h(r.mY) ^ h(r.mWidth) ^ h(r.mHeight);
+	return h(r.mX) ^ h(r.mY) ^ h(r.mEnd.x()) ^ h(r.mEnd.y());
 }
 
 bool std::equal_to<Rectangle>::operator()(
@@ -66,8 +41,44 @@ bool std::equal_to<Rectangle>::operator()(
 std::ostream& std::operator<< (std::ostream &out, Rectangle const &r) {
 	// TO-DO Learn and eventually tweak the output conversion of your types.
 	// Also learn to use manipulators
-	out << "{" << r.mX << ", " << r.mY << ", " << r.mWidth << ", " <<
-		r.mHeight << "}";
+	out << "{" << r.mX << ", " << r.mY << ", " << r.mEnd.x() << ", " <<
+		r.mEnd.y() << "}";
 
 	return out;
+}
+
+
+void Rectangle::rotate() {
+	// TO-DO Implement
+}
+
+Rectangle Rectangle::collisionBox() const {
+	return *this;
+}
+
+Rectangle::Rectangle(Point topLeft, Point bottomRight):
+	PlaneObject(topLeft.x(), topLeft.y()), mEnd{bottomRight} {
+}
+
+bool Rectangle::clashes(Rectangle const &o) const {
+	// TO-DO Update with reference to rotation
+	return IN_CLOSED_INTERVAL(mX - o.mX, -width(), o.width()) &&
+			IN_CLOSED_INTERVAL(mY - o.mY, -height(), o.height());
+}
+
+bool Rectangle::operator==(PlaneObject const &o) const {
+	auto *other = dynamic_cast<Rectangle const *>(&o);
+
+	if (other)
+		return PlaneObject::operator==(*other) && mEnd == other->mEnd;
+
+	return false;
+}
+
+float Rectangle::width() const {
+	return abs(mEnd.x() - mX);
+}
+
+float Rectangle::height() const {
+	return abs(mEnd.y() - mY);
 }

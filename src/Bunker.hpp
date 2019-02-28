@@ -19,16 +19,40 @@
 // LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
-#include <unordered_set>
-#include "catch.hpp"
-#include "../src/Line.hpp"
+#ifndef NON_GRAVITAR_BUNKER_HPP
+#define NON_GRAVITAR_BUNKER_HPP
 
-using namespace gvt;
+#include "PlaneObject.hpp"
+#include "PlaneTraits.hpp"
+#include "Missile.hpp"
 
 
-TEST_CASE("gvt::Line", "[Entities][Line]") {
-	Line l{1, 2, 4};
+namespace gvt {
+	enum class BunkerType {
+		DoubleDir, TripleDir
+	};
 
-	l = l * 4;
-	REQUIRE(l.width() == 16);
+	class Bunker: public PlaneObject, public WidthTrait, public HeightTrait {
+		private:
+			Trajectory *mTrajectories;
+		protected:
+			Rectangle collisionBox() const override;
+		public:
+			static float const constexpr	BUNKER_WIDTH = 5;
+			static float const constexpr	BUNKER_HEIGHT = 4;
+
+			BunkerType type;
+
+			Bunker(float xcoord, float ycoord, BunkerType type);
+			virtual ~Bunker();
+			/**
+			 * @return a Missile instance shot by the calling Bunker object.
+			 */
+			virtual Missile shoot() const = 0;
+
+			bool operator== (PlaneObject const &o) const override;
+	};
 }
+
+
+#endif

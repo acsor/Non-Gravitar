@@ -19,25 +19,30 @@
 // LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
-#ifndef NON_GRAVITAR_UTILS_HPP
-#define NON_GRAVITAR_UTILS_HPP
-
+#include <exception>
+#include <list>
 #include <string>
+#include "catch.hpp"
+#include "../src/Utils.hpp"
 
 
-#define IN_CLOSED_INTERVAL(x, a, b)	((a) <= (x) && (x) <= (b))
-#define IN_OPEN_INTERVAL(x, a, b)	((a) < (x) && (x) < (b))
+TEST_CASE("gvt::dirname()", "[Utils]") {
+	std::list<std::string> inputs = {
+		"/", "/a/b/c/d", "/alpha/beta", "/alpha/beta/gamma.theta", "/alpha",
+		"alpha/",
+	}, exp_outputs = {
+		"/", "/a/b/c/", "/alpha/", "/alpha/beta/", "/", "alpha/"
+	}, exceptions = {
+		"", "a", "alpha",
+	};
+	auto j = exp_outputs.cbegin();
 
+	for (auto i = inputs.cbegin(); i != inputs.cend(); i++, j++) {
+		REQUIRE(*j == gvt::dirpath(*i));
+	}
 
-namespace gvt {
-	using string = std::string;
-
-	/**
-	 * @brief Given a fullpath string, returns the portion representing a
-	 * directory entry with a trailing @c / character.
-	 * @throws std::domain_error If @c path contains no slashes
-	 */
-	string dirpath(string const &path);
+	for (auto i = exceptions.cbegin(); i != exceptions.cend(); i++) {
+		INFO("Expecting to raise with " + *i);
+		REQUIRE_THROWS_AS(gvt::dirpath(*i), std::domain_error);
+	}
 }
-
-#endif

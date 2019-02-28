@@ -20,3 +20,43 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 #include "Spaceship.hpp"
+
+using Spaceship = gvt::Spaceship;
+using Rectangle = gvt::Rectangle;
+
+
+Rectangle Spaceship::collisionBox() const {
+	Rectangle r = {
+		{mX - mOriginX, mY - mOriginY},
+		{mX + WIDTH - mOriginX, mY + HEIGHT - mOriginY}
+	};
+	r.rotation(mRotation);
+
+	return r;
+}
+
+unsigned Spaceship::fuel() const {
+	return mFuel;
+}
+
+void Spaceship::recharge(Fuel &fuel) {
+	mFuel += fuel.fuel();
+	fuel.empty();
+}
+
+void Spaceship::discharge(unsigned amount) {
+	mFuel -= amount;
+}
+
+bool Spaceship::charged() const {
+	return mFuel > 0;
+}
+
+bool Spaceship::operator==(PlaneObject const &o) const {
+	auto *other = dynamic_cast<Spaceship const *>(&o);
+
+	if (other)
+		return PlaneObject::operator==(*other) && mFuel == other->mFuel;
+
+	return false;
+}

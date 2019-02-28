@@ -19,25 +19,43 @@
 // LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
-#ifndef NON_GRAVITAR_UTILS_HPP
-#define NON_GRAVITAR_UTILS_HPP
+#include <set>
+#include <utility>
+#include "catch.hpp"
+#include "../src/Vector.hpp"
 
-#include <string>
-
-
-#define IN_CLOSED_INTERVAL(x, a, b)	((a) <= (x) && (x) <= (b))
-#define IN_OPEN_INTERVAL(x, a, b)	((a) < (x) && (x) < (b))
+template <typename T> using Vector = gvt::Vector<T>;
 
 
-namespace gvt {
-	using string = std::string;
+TEST_CASE("gvt::Vector::Vector(float)", "[Vector]") {
+	double degrees;
 
-	/**
-	 * @brief Given a fullpath string, returns the portion representing a
-	 * directory entry with a trailing @c / character.
-	 * @throws std::domain_error If @c path contains no slashes
-	 */
-	string dirpath(string const &path);
+	for (unsigned i = 0; i < 360; i++) {
+		degrees = Vector<float>(i).norm();
+
+		REQUIRE(abs(degrees - 1.0) <= 0.01);
+	}
 }
 
-#endif
+TEST_CASE("gvt::Vector::normalize()", "[Vector]") {
+	Vector<float> v, u;
+	std::set<std::pair<float, float>> inputs = {
+		{4, 5}, {10, 9}, {1, 1}, {0, 1}, {-10, 4}, {4, -10}
+	};
+
+	for (auto i = inputs.cbegin(); i != inputs.cend(); i++) {
+		v = Vector<float>(i->first, i->second);
+		u = v;
+		u.normalize();
+
+		REQUIRE(abs(v.degrees() - u.degrees()) <= 0.001);
+	}
+}
+
+TEST_CASE("gvt::Vector::operator==", "[Vector]") {
+	Vector<double> a{1, 2}, b{1.0, 2.0}, c{4.59, 49};
+
+	REQUIRE(a == b);
+	REQUIRE(a != c);
+	REQUIRE(b != c);
+}

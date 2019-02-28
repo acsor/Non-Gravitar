@@ -20,3 +20,50 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 #include "Fuel.hpp"
+#include "Rectangle.hpp"
+
+using namespace gvt;
+
+
+Rectangle Fuel::collisionBox() const {
+	// TO-DO This implementation is outright wrong, indeed we have yet no
+	// possibility to specify tilted rectangles, but only one whose sides are
+	// perpendicular to the x and y axes
+	Rectangle r =  {
+		{mX - mOriginX, mY - mOriginY},
+		{mX + WIDTH - mOriginX, mY + HEIGHT - mOriginY}
+	};
+	r.rotation(mRotation);
+
+	return r;
+}
+
+Fuel::Fuel(float xcoord, float ycoord, unsigned fuel):
+	PlaneObject(xcoord, ycoord) {
+	mFuel = fuel;
+}
+
+unsigned Fuel::fuel() const {
+	return mFuel;
+}
+
+void Fuel::empty() {
+	mFuel = 0;
+}
+
+float Fuel::width() const {
+	return Fuel::WIDTH;
+}
+
+float Fuel::height() const {
+	return Fuel::HEIGHT;
+}
+
+bool Fuel::operator== (PlaneObject const &o) const {
+	auto *other = dynamic_cast<Fuel const *>(&o);
+
+	if (other)
+		return PlaneObject::operator==(*other) && mFuel == other->mFuel;
+
+	return false;
+}

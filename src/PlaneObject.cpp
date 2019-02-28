@@ -20,20 +20,71 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 #include "PlaneObject.hpp"
+#include "Point.hpp"
 #include "Rectangle.hpp"
 
+using PlaneObject = gvt::PlaneObject;
+using Point = gvt::Point;
+using Trajectory = gvt::Trajectory;
 
-gvt::PlaneObject::PlaneObject(float x, float y): mX{x}, mY{y} {
+
+PlaneObject::PlaneObject(float x, float y): mX{x}, mY{y} {
 }
 
-bool gvt::PlaneObject::clashes(gvt::PlaneObject const &o) const {
+Point PlaneObject::origin () const {
+	return Point{mOriginX, mOriginY};
+}
+
+void PlaneObject::origin(float xcoord, float ycoord) {
+	mOriginX = xcoord;
+	mOriginY = ycoord;
+
+	if (mPlane)
+		mPlane->updateCollisions();
+}
+
+float PlaneObject::rotation() const {
+	return mRotation;
+}
+
+void PlaneObject::rotation(unsigned r) {
+	mRotation = r % 360;
+	rotate();
+
+	if (mPlane)
+		mPlane->updateCollisions();
+}
+
+void PlaneObject::velocity(Trajectory const &t) {
+	mVelocity = t;
+}
+
+Trajectory PlaneObject::velocity() const {
+	return mVelocity;
+}
+
+float PlaneObject::speed() const {
+	return mVelocity.norm();
+}
+
+bool PlaneObject::clashes(gvt::PlaneObject const &o) const {
     return collisionBox().clashes(o.collisionBox());
 }
 
-void gvt::PlaneObject::move(float xcoord, float ycoord) {
+void PlaneObject::move(float xcoord, float ycoord) {
     mX += xcoord;
     mY += ycoord;
 
-    if (mPlane != nullptr)
+    if (mPlane)
         mPlane->updateCollisions();
+}
+
+bool PlaneObject::operator== (PlaneObject const &o) const {
+	return mX == o.mX && mY == o.mY && mOriginX == o.mOriginX &&
+			mOriginY == o.mOriginY && mRotation == o.mRotation &&
+			mVelocity == mVelocity && mPlane == o.mPlane;
+}
+
+bool PlaneObject::operator!= (PlaneObject const &o) const {
+	return !operator==(o);
 }

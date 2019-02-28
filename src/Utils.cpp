@@ -19,4 +19,26 @@
 // LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
+#include <stdexcept>
 #include "Utils.hpp"
+
+using string = std::string;
+
+
+string gvt::dirpath(string const &path) {
+	int length = path.size();
+	auto i = path.crbegin();
+
+	while (i != path.crend() && *i != '/') {
+		i++;
+		length--;
+	}
+
+	if (length > 0) {
+		return path.substr(0, length);
+	} else {
+		throw std::domain_error{
+			"String " + path + " does not contain any valid path value"
+		};
+	}
+}

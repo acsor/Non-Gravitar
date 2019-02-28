@@ -19,25 +19,38 @@
 // LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
-#ifndef NON_GRAVITAR_UTILS_HPP
-#define NON_GRAVITAR_UTILS_HPP
+#include "catch.hpp"
+#include "../src/Point.hpp"
 
-#include <string>
-
-
-#define IN_CLOSED_INTERVAL(x, a, b)	((a) <= (x) && (x) <= (b))
-#define IN_OPEN_INTERVAL(x, a, b)	((a) < (x) && (x) < (b))
+using Point = gvt::Point;
 
 
-namespace gvt {
-	using string = std::string;
+TEST_CASE("gvt::Point::operator==", "[Point]") {
+	Point p{1, 2}, q{1, 2};
 
-	/**
-	 * @brief Given a fullpath string, returns the portion representing a
-	 * directory entry with a trailing @c / character.
-	 * @throws std::domain_error If @c path contains no slashes
-	 */
-	string dirpath(string const &path);
+	REQUIRE(p == q);
 }
 
-#endif
+TEST_CASE("gvt::Point::operator+", "[Point]") {
+	Point p{1, 2}, q{1, 2};
+
+	REQUIRE(p + q == Point{2, 4});
+}
+
+TEST_CASE("gvt::Point::operator-", "[Point]") {
+	Point p{1, 2}, q{1, 2};
+
+	REQUIRE(p - q == Point{0, 0});
+}
+
+TEST_CASE("gvt::Point::operator*", "[Point]") {
+	Point p{1, 2};
+
+	REQUIRE(4 * p == Point{4, 8});
+}
+
+TEST_CASE("gvt::Point::distance()", "[Point]") {
+	Point p{1, 1}, q{2, 1};
+
+	REQUIRE(p.distance(q) == 1);
+}

@@ -24,26 +24,36 @@
 
 #include "PlaneObject.hpp"
 #include "PlaneTraits.hpp"
-#include "Spaceship.hpp"
 
 
 namespace gvt {
+	class Spaceship;
+
 	class Fuel: public PlaneObject, public WidthTrait, public HeightTrait {
 		private:
-			size_t mFuel;
+			unsigned mFuel;
+		protected:
+			Rectangle collisionBox() const override;
 		public:
-			Fuel(size_t fuel);
+			/**
+			 * @brief Width and height measures derived from
+			 * @i static/graphics/.
+			 */
+			static unsigned const constexpr WIDTH = 41;
+			static unsigned const constexpr HEIGHT = 43;
+
+			Fuel(float xcoord, float ycoord, unsigned fuel);
 			/**
 			 * @returns The current fuel amount.
 			 */
-			size_t fuel() const;
+			unsigned fuel() const;
 			/**
-			 * @brief Recharges the given Spaceship argument by the total
-			 * fuel amount available in the current Fuel instance. After the
-			 * call, this->fuel() == 0.
-			 * @param ship Spaceship instance to recharge.
+			 * @brief Empties the fuel amount contained.
 			 */
-			void recharge(Spaceship &ship);
+			void empty();
+			
+			float width() const override;
+			float height() const override;
 
 			bool operator== (PlaneObject const &o) const override;
 	};

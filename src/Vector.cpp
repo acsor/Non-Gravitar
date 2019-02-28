@@ -19,25 +19,3 @@
 // LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
-#ifndef NON_GRAVITAR_UTILS_HPP
-#define NON_GRAVITAR_UTILS_HPP
-
-#include <string>
-
-
-#define IN_CLOSED_INTERVAL(x, a, b)	((a) <= (x) && (x) <= (b))
-#define IN_OPEN_INTERVAL(x, a, b)	((a) < (x) && (x) < (b))
-
-
-namespace gvt {
-	using string = std::string;
-
-	/**
-	 * @brief Given a fullpath string, returns the portion representing a
-	 * directory entry with a trailing @c / character.
-	 * @throws std::domain_error If @c path contains no slashes
-	 */
-	string dirpath(string const &path);
-}
-
-#endif
