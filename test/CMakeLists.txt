@@ -9,8 +9,11 @@ add_executable(
 	$<TARGET_OBJECTS:test-line>
 	$<TARGET_OBJECTS:test-rectangle>
 	$<TARGET_OBJECTS:test-circle>
+	$<TARGET_OBJECTS:test-utils>
 )
-target_link_libraries(test-all Point Vector Line Rectangle Circle Observer)
+target_link_libraries(
+	test-all Point Vector Line Rectangle Circle Observer Utils
+)
 
 add_library(test-main OBJECT test-main.cpp)
 add_library(test-point OBJECT test-point.cpp)
@@ -19,3 +22,4 @@ add_library(test-line OBJECT test-line.cpp)
 add_library(test-rectangle OBJECT test-rectangle.cpp)
 add_library(test-circle OBJECT test-circle.cpp)
 add_library(test-observer OBJECT test-observer.cpp)
+add_library(test-utils OBJECT test-utils.cpp)
