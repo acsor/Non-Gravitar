@@ -64,7 +64,7 @@ namespace gvt {
 			 */
 			void discharge(unsigned amount = 1);
 			/**
-			 * @returns @c true if the current @c Spaceship instance has still
+			 * @return @c true if the current @c Spaceship instance has still
 			 * fuel in it, @c false othwerise.
 			 */
 			bool charged() const;

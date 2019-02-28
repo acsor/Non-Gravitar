@@ -28,6 +28,8 @@
 #define IN_CLOSED_INTERVAL(x, a, b)	((a) <= (x) && (x) <= (b))
 #define IN_OPEN_INTERVAL(x, a, b)	((a) < (x) && (x) < (b))
 
+#define	GVT_STATICS_DIR	"static/"
+
 
 namespace gvt {
 	using string = std::string;
@@ -35,9 +37,24 @@ namespace gvt {
 	/**
 	 * @brief Given a fullpath string, returns the portion representing a
 	 * directory entry with a trailing @c / character.
+	 * @param collapse Whether to collapse (i.e. remove) relative references
+	 * like @c ../
 	 * @throws std::domain_error If @c path contains no slashes
 	 */
-	string dirpath(string const &path);
+	string dirpath(string const &path, bool collapse = true);
+	/**
+	 * @brief Returns the full path of a static element referenced to by the
+	 * local path value @c localPath.
+	 * @param localPath Path value like @c graphics/spaceship.png, referring to
+	 * an element found in the @c static/ project directory
+	 *
+	 * NOTE that this function relies on the preprocessor macro @c __FILE__
+	 * being set to the full path of the current file.
+	 *
+	 * @todo Test
+	 */
+	string staticsGet(string const &localPath);
 }
+
 
 #endif

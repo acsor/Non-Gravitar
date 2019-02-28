@@ -25,7 +25,7 @@
 using string = std::string;
 
 
-string gvt::dirpath(string const &path) {
+string gvt::dirpath(string const &path, bool collapse) {
 	int length = path.size();
 	auto i = path.crbegin();
 
@@ -41,4 +41,8 @@ string gvt::dirpath(string const &path) {
 			"String " + path + " does not contain any valid path value"
 		};
 	}
+}
+
+string gvt::staticsGet(string const &localPath) {
+	return gvt::dirpath(__FILE__, false) + "../" + GVT_STATICS_DIR + localPath;
 }

@@ -44,7 +44,7 @@ namespace gvt {
 
 			Fuel(float xcoord, float ycoord, unsigned fuel);
 			/**
-			 * @returns The current fuel amount.
+			 * @return The current fuel amount.
 			 */
 			unsigned fuel() const;
 			/**

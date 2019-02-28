@@ -25,17 +25,21 @@
 #include "catch.hpp"
 #include "../src/Utils.hpp"
 
+template<typename T> using list = std::list<T>;
+using string = std::string;
 
-TEST_CASE("gvt::dirname()", "[Utils]") {
-	std::list<std::string> inputs = {
-		"/", "/a/b/c/d", "/alpha/beta", "/alpha/beta/gamma.theta", "/alpha",
-		"alpha/",
-	}, exp_outputs = {
-		"/", "/a/b/c/", "/alpha/", "/alpha/beta/", "/", "alpha/"
+
+TEST_CASE("gvt::dirpath()", "[Utils]") {
+	list<string> inputs = {
+		"/", "/a/b/c/d", "/a/b/c/d/", "/alpha/beta", "/alpha/beta/gamma.theta",
+		"/alpha", "alpha/", "a/b/c/d/"
+	}, expOutputs = {
+		"/", "/a/b/c/", "/a/b/c/d/", "/alpha/", "/alpha/beta/", "/", "alpha/",
+		"a/b/c/d/"
 	}, exceptions = {
 		"", "a", "alpha",
 	};
-	auto j = exp_outputs.cbegin();
+	auto j = expOutputs.cbegin();
 
 	for (auto i = inputs.cbegin(); i != inputs.cend(); i++, j++) {
 		REQUIRE(*j == gvt::dirpath(*i));
