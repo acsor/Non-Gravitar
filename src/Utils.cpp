@@ -25,6 +25,10 @@
 using string = std::string;
 
 
+string gvt::collapsePath(string const &path) {
+	throw std::runtime_error("Not implemented");
+}
+
 string gvt::dirpath(string const &path, bool collapse) {
 	int length = path.size();
 	auto i = path.crbegin();

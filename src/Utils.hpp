@@ -35,6 +35,14 @@ namespace gvt {
 	using string = std::string;
 
 	/**
+	 * @param path Path value to collapse
+	 * @return A file path value deprived of @ ../ and @c ./ values when
+	 * possible (i.e. @c /a/b/../c becomes @c /a/c, @c /a/./b/c becomes /a/b/c
+	 * etc.).
+	 * @todo Implement and test
+	 */
+	string collapsePath(string const &path);
+	/**
 	 * @brief Given a fullpath string, returns the portion representing a
 	 * directory entry with a trailing @c / character.
 	 * @param collapse Whether to collapse (i.e. remove) relative references

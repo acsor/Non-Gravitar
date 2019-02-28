@@ -50,3 +50,14 @@ TEST_CASE("gvt::dirpath()", "[Utils]") {
 		REQUIRE_THROWS_AS(gvt::dirpath(*i), std::domain_error);
 	}
 }
+
+// TEST_CASE("gvt::staticsGet()", "[Utils]") {
+// 	list<string> inputs = {
+// 		"graphics/spaceship.png", "sound/start.mp4"
+// 	};
+// 	string const basePath = gvt::dirpath(__FILE__) + "../" + GVT_STATICS_DIR;
+// 
+// 	for (auto i = inputs.cbegin(); i != inputs.cend(); i++) {
+// 		REQUIRE(collapsePath(basePath + *i) == gvt::staticsGet(*i));
+// 	}
+// }
