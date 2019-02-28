@@ -20,6 +20,7 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 #include "catch.hpp"
+#include "cmath"
 #include "../src/Circle.hpp"
 
 using Circle = gvt::Circle;
@@ -64,4 +65,11 @@ TEST_CASE("Circle::clashes(Circle&)", "[Circle]") {
 		for (size_t i = 0; i < nonClashingNo; i++)
 			REQUIRE(main.clashes(nonClashing[i]));
 	}
+}
+
+TEST_CASE("Circle::area()", "[Circle]") {
+	float const radius = 4;
+	Circle c{1, 1, radius};
+
+	REQUIRE(abs(c.area() - M_PI * (pow(radius, 2))) <= 0.001);
 }

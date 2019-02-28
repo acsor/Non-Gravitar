@@ -27,9 +27,4 @@
 #define IN_OPEN_INTERVAL(x, a, b)	((a) < (x) && (x) < (b))
 
 
-namespace gvt {
-	constexpr const double pi = 3.1415926535897;
-}
-
-
 #endif

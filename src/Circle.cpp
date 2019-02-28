@@ -48,7 +48,7 @@ Circle::Circle(float xcoord, float ycoord, float radius):
 }
 
 float Circle::area() const {
-	return gvt::pi * pow(mRadius, 2);
+	return M_PI * pow(mRadius, 2);
 }
 
 bool Circle::clashes(Circle const &o) const {
