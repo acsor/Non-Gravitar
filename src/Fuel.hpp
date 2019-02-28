@@ -36,7 +36,8 @@ namespace gvt {
 			Rectangle collisionBox() const override;
 		public:
 			/**
-			 * @brief Width and height measures derived from static/graphics/.
+			 * @brief Width and height measures derived from
+			 * @i static/graphics/.
 			 */
 			static unsigned const constexpr WIDTH = 41;
 			static unsigned const constexpr HEIGHT = 43;

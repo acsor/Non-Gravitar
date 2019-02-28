@@ -39,8 +39,8 @@ namespace gvt {
 		public:
 			/** Width and height properties of any given spaceship. Note that
 			 * these measures depend on the texture data found in
-			 * static/graphics/ and when the files herein found are changed (in
-			 * dimension) the static width and height properties should be
+			 * @c static/graphics/ and when the files herein found are changed
+			 * (in dimension) the static width and height properties should be
 			 * updated accordingly (gruntwork, but avoids the use of an
 			 * external image library).
 			 */
@@ -49,23 +49,23 @@ namespace gvt {
 
 			unsigned fuel() const;
 			/**
-			 * @brief Recharges the current Spaceship instance by the fuel
-			 * amount found in <b>fuel</b>.
-			 * @param fuel Fuel instance.
+			 * @brief Recharges the current @c Spaceship instance by the fuel
+			 * amount found in @c fuel.
+			 * @param fuel @c Fuel object.
 			 */
 			void recharge(Fuel &fuel);
 			/**
-			 * @brief Discharges the current Spaceship's fuel by <b>amount</b>,
-			 * defaulted to 1.
+			 * @brief Discharges the current <tt>Spaceship</tt>'s fuel by @c
+			 * amount, defaulted to @c 1.
 			 *
-			 * TO-DO Verify that we can specify a default argument value, and
+			 * @todo Verify that we can specify a default argument value, and
 			 * that Spaceship::discharge() can be specified even with no
 			 * arguments.
 			 */
 			void discharge(unsigned amount = 1);
 			/**
-			 * @returns true if the current spaceship instance has still fuel
-			 * in it, false othwerise.
+			 * @returns @c true if the current @c Spaceship instance has still
+			 * fuel in it, @c false othwerise.
 			 */
 			bool charged() const;
 

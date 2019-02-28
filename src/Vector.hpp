@@ -33,18 +33,18 @@ namespace gvt {
 
 		Vector();
 		/**
-		 * @brief Instantiates a 2D-vector from its x and y components.
+		 * @brief Instantiates a 2D-vector from its @a x and @a y components.
 		 */
 		Vector(T x, T y);
 		/**
-		 * @brief Instantiates a normalized Vector<T> object from the number
+		 * @brief Instantiates a normalized @c Vector<T> object from the number
 		 * of degrees
 		 * @param degrees Value (specified in radians) in [0, 2π)
 		 */
 		Vector(T degrees);
 		/**
-		 * @brief Normalizes the given Vector<T> instance such that the module
-		 * of the vector it represents has unitary length
+		 * @brief Normalizes the given @c Vector<T> instance such that the
+		 * module of the vector it represents has unitary length
 		 */
 		void normalize();
 		/**
@@ -52,7 +52,8 @@ namespace gvt {
 		 */
 		double inline norm() const;
 		/*
-		 * @return The angle subtended with the x axis (y = 0) by the Vector
+		 * @return The angle subtended with the @a x axis (<tt>y = 0</tt>) by
+		 * the @c Vector
 		 */
 		double inline degrees() const;
 
