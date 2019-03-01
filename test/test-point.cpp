@@ -20,7 +20,7 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 #include "catch.hpp"
-#include "../src/Point.hpp"
+#include "model/Point.hpp"
 
 using Point = gvt::Point;
 

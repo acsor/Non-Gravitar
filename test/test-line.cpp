@@ -21,7 +21,7 @@
 // SOFTWARE.
 #include <unordered_set>
 #include "catch.hpp"
-#include "../src/Line.hpp"
+#include "model/Line.hpp"
 
 using namespace gvt;
 
