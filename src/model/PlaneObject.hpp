@@ -37,6 +37,9 @@ namespace gvt {
 	 * coordinates are taken by default from the <i>top left</i> corner, hence
 	 * not an arbitrary center (which may vary from shape to shape).
 	 * @see gvt::Plane
+	 * @todo Remove the dependency from @c Plane, in such a way that such an
+	 * instance is notified by state changes through the <i>event listener</i>
+	 * mechanism.
 	 */
 	class PlaneObject: public EventDispatcher {
 		protected:
