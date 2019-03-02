@@ -23,9 +23,16 @@
 #include "Point.hpp"
 #include "Rectangle.hpp"
 
+using Event = gvt::Event;
 using PlaneObject = gvt::PlaneObject;
 using Point = gvt::Point;
 using Trajectory = gvt::Trajectory;
+
+
+const Event PlaneObject::MOVE;
+const Event PlaneObject::ORIGIN;
+const Event PlaneObject::ROTATION;
+const Event PlaneObject::VELOCITY;
 
 
 PlaneObject::PlaneObject(float x, float y): mX{x}, mY{y} {
@@ -38,6 +45,7 @@ Point PlaneObject::origin () const {
 void PlaneObject::origin(float xcoord, float ycoord) {
 	mOriginX = xcoord;
 	mOriginY = ycoord;
+	notify(ORIGIN);
 
 	if (mPlane)
 		mPlane->updateCollisions();
@@ -50,6 +58,7 @@ float PlaneObject::rotation() const {
 void PlaneObject::rotation(unsigned r) {
 	mRotation = r % 360;
 	rotate();
+	notify(ROTATION);
 
 	if (mPlane)
 		mPlane->updateCollisions();
@@ -57,6 +66,7 @@ void PlaneObject::rotation(unsigned r) {
 
 void PlaneObject::velocity(Trajectory const &t) {
 	mVelocity = t;
+	notify(VELOCITY);
 }
 
 Trajectory PlaneObject::velocity() const {
@@ -74,6 +84,7 @@ bool PlaneObject::clashes(gvt::PlaneObject const &o) const {
 void PlaneObject::move(float xcoord, float ycoord) {
     mX += xcoord;
     mY += ycoord;
+	notify(MOVE);
 
     if (mPlane)
         mPlane->updateCollisions();

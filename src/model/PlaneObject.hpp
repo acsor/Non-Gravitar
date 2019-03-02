@@ -23,9 +23,9 @@
 #define NON_GRAVITAR_PLANE_OBJECT_HPP
 
 #include <ostream>
-#include "Observer.hpp"
 #include "Plane.hpp"
-#include "Vector.hpp"
+#include "../Event.hpp"
+#include "../Vector.hpp"
 
 
 namespace gvt {
@@ -38,7 +38,7 @@ namespace gvt {
 	 * not an arbitrary center (which may vary from shape to shape).
 	 * @see gvt::Plane
 	 */
-	class PlaneObject: public Observable {
+	class PlaneObject: public EventDispatcher {
 		protected:
 			// Coordinates of the top-left corner by default, not of an
 			// arbitrary center
@@ -61,6 +61,11 @@ namespace gvt {
 			virtual void rotate() = 0;
 		public:
 			using ostream = std::ostream;
+
+			static const Event MOVE;
+			static const Event ORIGIN;
+			static const Event ROTATION;
+			static const Event VELOCITY;
 
 			PlaneObject(float x, float y);
 			virtual ~PlaneObject() = default;

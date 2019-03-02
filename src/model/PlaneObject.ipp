@@ -21,6 +21,7 @@
 // SOFTWARE.
 void gvt::PlaneObject::x(float xcoord) {
     mX = xcoord;
+	notify(MOVE);
 
     if (mPlane != nullptr)
         mPlane->updateCollisions();
@@ -28,6 +29,7 @@ void gvt::PlaneObject::x(float xcoord) {
 
 void gvt::PlaneObject::y(float ycoord) {
     mY = ycoord;
+	notify(MOVE);
 
     if (mPlane != nullptr)
         mPlane->updateCollisions();
