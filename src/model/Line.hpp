@@ -22,14 +22,14 @@
 #ifndef NON_GRAVITAR_LINE_HPP
 #define NON_GRAVITAR_LINE_HPP
 
-#include "PlaneObject.hpp"
-#include "PlaneTraits.hpp"
+#include "Shape.hpp"
+#include "ShapeTraits.hpp"
 #include "Point.hpp"
 #include "Rectangle.hpp"
 
 
 namespace gvt {
-	class Line: public PlaneObject, public WidthTrait {
+	class Line: public Shape, public WidthTrait {
 		private:
 			Point mEnd;
 		protected:
@@ -46,7 +46,7 @@ namespace gvt {
 			 * @return Stretched out/in Line object
 			 */
 			Line& operator* (double factor);
-			bool operator== (PlaneObject const &o) const;
+			bool operator== (Shape const &o) const override;
 
 			float width() const override;
 	};

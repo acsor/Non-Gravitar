@@ -19,8 +19,8 @@
 // LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
-#ifndef NON_GRAVITAR_PLANE_OBJECT_HPP
-#define NON_GRAVITAR_PLANE_OBJECT_HPP
+#ifndef NON_GRAVITAR_SHAPE_HPP
+#define NON_GRAVITAR_SHAPE_HPP
 
 #include <ostream>
 #include "Plane.hpp"
@@ -33,7 +33,7 @@ namespace gvt {
 	class Point;
 
 	/**
-	 * @brief An abstract base class for subsequent plane objects. Note that
+	 * @brief An abstract base class for subsequent shape objects. Note that
 	 * coordinates are taken by default from the <i>top left</i> corner, hence
 	 * not an arbitrary center (which may vary from shape to shape).
 	 * @see gvt::Plane
@@ -41,7 +41,7 @@ namespace gvt {
 	 * instance is notified by state changes through the <i>event listener</i>
 	 * mechanism.
 	 */
-	class PlaneObject: public EventDispatcher {
+	class Shape: public EventDispatcher {
 		protected:
 			// Coordinates of the top-left corner by default, not of an
 			// arbitrary center
@@ -52,14 +52,14 @@ namespace gvt {
 			Plane *mPlane{nullptr};
 
 			/**
-			 * @return A Rectangle object representing the bounds used to
-			 * detect collision with another PlaneObject.
+			 * @return A @c Rectangle object representing the bounds used to
+			 * detect collision with another @c Shape.
 			 */
 			virtual Rectangle collisionBox() const = 0;
 			/**
 			 * @brief Updates the rotation property of the object, typically by
-			 * referring to the mOrigin[XY] attributes. Usually called by
-			 * PlaneObject::rotation(unsigned).
+			 * referring to the @c mOrigin[XY] attributes. Usually called by
+			 * @c Shape::rotation(unsigned).
 			 */
 			virtual void rotate() = 0;
 		public:
@@ -70,8 +70,8 @@ namespace gvt {
 			static const Event ROTATION;
 			static const Event VELOCITY;
 
-			PlaneObject(float x, float y);
-			virtual ~PlaneObject() = default;
+			Shape(float x, float y);
+			virtual ~Shape() = default;
 
 			/**
 			 * @param xcoord the value of the new x coordinate of the shape
@@ -103,7 +103,7 @@ namespace gvt {
 			virtual void origin(float xcoord, float ycoord);
 			/**
 			 * @return The angle with respect to the object origin of the
-			 * current PlaneObject instance.
+			 * current @c Shape instance.
 			 */
 			virtual float rotation() const;
 			/**
@@ -111,24 +111,23 @@ namespace gvt {
 			 */
 			virtual void rotation(unsigned r);
 			/**
-			 * @param t Velocity value to set to the current PlaneObject
-			 * instance.
+			 * @param t Velocity value to set to the current @c Shape instance.
 			 */
 			void velocity(Trajectory const &t);
 			/**
 			 * @return The velocity vector associated with the current
-			 * PlaneObject.
+			 * @c Shape.
 			 */
 			Trajectory velocity() const;
 			/**
-			 * @return The current PlaneObject speed, as a scalar value.
+			 * @return The current @c Shape speed, as a scalar value.
 			 */
 			float speed() const;
 			/**
-			 * @return <b>true</b> if the boundaries of the current PlaneObject
-			 * clash with those of the object o.
+			 * @return @c true if the boundaries of the current @c Shape clash
+			 * with those of the object @c o.
 			 */
-			bool clashes(PlaneObject const &o) const;
+			bool clashes(Shape const &o) const;
 			/**
 			 * @brief Adds xcoord and ycord to the current space object
 			 * coordinates.
@@ -141,21 +140,21 @@ namespace gvt {
 			 */
 			void move(Trajectory const &t, size_t steps);
 			/**
-			 * @return True if the object at the current position meets the
-			 * other PlaneObject given as argument by following the trajectory
-			 * t
+			 * @return @c true if the object at the current position meets the
+			 * other @c Shape given as argument by following the
+			 * trajectory @c t
 			 */
-			bool meets(PlaneObject const &o, Trajectory const &t) const;
+			bool meets(Shape const &o, Trajectory const &t) const;
 
-			virtual bool operator== (PlaneObject const &o) const;
-			virtual bool operator!= (PlaneObject const &o) const;
+			virtual bool operator== (Shape const &o) const;
+			virtual bool operator!= (Shape const &o) const;
 	};
 }
 
 
 // Definitions of constructs to be kept in the local translation-unit.
 // The `i' in `.ipp' stands for "implementation".
-#include "PlaneObject.ipp"
+#include "Shape.ipp"
 
 
 #endif

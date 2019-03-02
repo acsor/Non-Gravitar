@@ -22,13 +22,13 @@
 #ifndef NON_GRAVITAR_POINT_HPP
 #define NON_GRAVITAR_POINT_HPP
 
-#include "PlaneObject.hpp"
+#include "Shape.hpp"
 
 
 namespace gvt {
 	class Rectangle;
 
-	class Point: public PlaneObject {
+	class Point: public Shape {
 		protected:
 			Rectangle collisionBox() const override;
 			void rotate() override;
@@ -42,7 +42,7 @@ namespace gvt {
 
 			Point operator+ (Point const &o) const;
 			Point operator- (Point const &o) const;
-			bool operator== (PlaneObject const &o) const override;
+			bool operator== (Shape const &o) const override;
 	};
 
 	Point operator* (float factor, Point const &p);

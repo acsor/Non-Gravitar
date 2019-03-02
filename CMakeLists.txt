@@ -22,29 +22,29 @@ add_library(Observer "${DIR_SRC}/Observer.cpp")
 add_library(Event "${DIR_SRC}/Event.cpp")
 add_library(Plane "${DIR_MODELS}/Plane.cpp")
 
-add_library(PlaneObject "${DIR_MODELS}/PlaneObject.cpp")
-target_link_libraries(PlaneObject Event Plane)
+add_library(Shape "${DIR_MODELS}/Shape.cpp")
+target_link_libraries(Shape Event Plane)
 
 add_library(Point "${DIR_MODELS}/Point.cpp")
-target_link_libraries(Point PlaneObject)
+target_link_libraries(Point Shape)
 
 add_library(Line "${DIR_MODELS}/Line.cpp")
-target_link_libraries(Line PlaneObject Point Rectangle)
+target_link_libraries(Line Shape Point Rectangle)
 
 add_library(Circle "${DIR_MODELS}/Circle.cpp")
-target_link_libraries(Circle PlaneObject Rectangle)
+target_link_libraries(Circle Shape Rectangle)
 
 add_library(Rectangle "${DIR_MODELS}/Rectangle.cpp")
-target_link_libraries(Rectangle PlaneObject)
+target_link_libraries(Rectangle Shape)
 
 add_library(Spaceship "${DIR_MODELS}/Spaceship.cpp")
-target_link_libraries(Spaceship PlaneObject)
+target_link_libraries(Spaceship Shape)
 
 add_library(Fuel "${DIR_MODELS}/Fuel.cpp")
 target_link_libraries(Fuel Spaceship)
 
 add_library(Bunker "${DIR_MODELS}/Bunker.cpp")
-target_link_libraries(Bunker PlaneObject)
+target_link_libraries(Bunker Shape)
 
 add_library(Utils "${DIR_SRC}/Utils.cpp")
 

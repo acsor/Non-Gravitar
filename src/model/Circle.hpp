@@ -22,12 +22,12 @@
 #ifndef NON_GRAVITAR_CIRCLE_HPP
 #define NON_GRAVITAR_CIRCLE_HPP
 
-#include "PlaneObject.hpp"
+#include "Shape.hpp"
 #include "Rectangle.hpp"
 
 
 namespace gvt {
-	class Circle: public PlaneObject {
+	class Circle: public Shape {
 		protected:
 			float mRadius;
 
@@ -40,7 +40,7 @@ namespace gvt {
 			float area() const;
 			bool clashes(Circle const &o) const;
 
-			bool operator== (PlaneObject const &o) const override;
+			bool operator== (Shape const &o) const override;
 	};
 };
 

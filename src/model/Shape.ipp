@@ -19,7 +19,7 @@
 // LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
-void gvt::PlaneObject::x(float xcoord) {
+void gvt::Shape::x(float xcoord) {
     mX = xcoord;
 	notify(MOVE);
 
@@ -27,7 +27,7 @@ void gvt::PlaneObject::x(float xcoord) {
         mPlane->updateCollisions();
 }
 
-void gvt::PlaneObject::y(float ycoord) {
+void gvt::Shape::y(float ycoord) {
     mY = ycoord;
 	notify(MOVE);
 
@@ -35,10 +35,10 @@ void gvt::PlaneObject::y(float ycoord) {
         mPlane->updateCollisions();
 }
 
-float gvt::PlaneObject::x() const {
+float gvt::Shape::x() const {
     return mX;
 }
 
-float gvt::PlaneObject::y() const {
+float gvt::Shape::y() const {
     return mY;
 }

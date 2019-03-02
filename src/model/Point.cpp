@@ -38,7 +38,7 @@ void Point::rotate() {
 	// TO-DO Implement
 }
 
-Point::Point(float xcoord, float ycoord): PlaneObject(xcoord, ycoord) {
+Point::Point(float xcoord, float ycoord): Shape(xcoord, ycoord) {
 }
 
 float Point::distance(Point const &o) const {
@@ -57,11 +57,11 @@ Point gvt::operator* (float factor, Point const &p) {
 	return Point{factor * p.mX, factor * p.mY};
 }
 
-bool Point::operator== (PlaneObject const &o) const {
+bool Point::operator== (Shape const &o) const {
 	auto *other = dynamic_cast<Point const *>(&o);
 
 	if (other)
-		return PlaneObject::operator==(*other);
+		return Shape::operator==(*other);
 
 	return false;
 }

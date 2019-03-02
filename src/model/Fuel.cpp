@@ -39,7 +39,7 @@ Rectangle Fuel::collisionBox() const {
 }
 
 Fuel::Fuel(float xcoord, float ycoord, unsigned fuel):
-	PlaneObject(xcoord, ycoord) {
+	Shape(xcoord, ycoord) {
 	mFuel = fuel;
 }
 
@@ -59,11 +59,11 @@ float Fuel::height() const {
 	return Fuel::HEIGHT;
 }
 
-bool Fuel::operator== (PlaneObject const &o) const {
+bool Fuel::operator== (Shape const &o) const {
 	auto *other = dynamic_cast<Fuel const *>(&o);
 
 	if (other)
-		return PlaneObject::operator==(*other) && mFuel == other->mFuel;
+		return Shape::operator==(*other) && mFuel == other->mFuel;
 
 	return false;
 }

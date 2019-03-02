@@ -22,14 +22,14 @@
 #ifndef NON_GRAVITAR_FUEL_HPP
 #define NON_GRAVITAR_FUEL_HPP
 
-#include "PlaneObject.hpp"
-#include "PlaneTraits.hpp"
+#include "Shape.hpp"
+#include "ShapeTraits.hpp"
 
 
 namespace gvt {
 	class Spaceship;
 
-	class Fuel: public PlaneObject, public WidthTrait, public HeightTrait {
+	class Fuel: public Shape, public WidthTrait, public HeightTrait {
 		private:
 			unsigned mFuel;
 		protected:
@@ -55,7 +55,7 @@ namespace gvt {
 			float width() const override;
 			float height() const override;
 
-			bool operator== (PlaneObject const &o) const override;
+			bool operator== (Shape const &o) const override;
 	};
 }
 

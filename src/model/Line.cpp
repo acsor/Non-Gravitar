@@ -39,7 +39,7 @@ void Line::rotate() {
 }
 
 Line::Line(Point const &start, Point const &end):
-	PlaneObject(start.x(), start.y()), mEnd{end} {
+	Shape(start.x(), start.y()), mEnd{end} {
 }
 
 Line& Line::operator* (double factor) {
@@ -51,11 +51,11 @@ Line& Line::operator* (double factor) {
 	return *this;
 }
 
-bool Line::operator== (PlaneObject const &o) const {
+bool Line::operator== (Shape const &o) const {
 	auto other = dynamic_cast<Line const *>(&o);
 
 	if (other)
-		return PlaneObject::operator==(*other) && mEnd == other->mEnd;
+		return Shape::operator==(*other) && mEnd == other->mEnd;
 
 	return false;
 }

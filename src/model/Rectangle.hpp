@@ -23,8 +23,8 @@
 #define NON_GRAVITAR_RECTANGLE_HPP
 
 #include <ostream>
-#include "PlaneObject.hpp"
-#include "PlaneTraits.hpp"
+#include "Shape.hpp"
+#include "ShapeTraits.hpp"
 #include "Point.hpp"
 
 
@@ -47,7 +47,7 @@ namespace std {
 
 
 namespace gvt {
-    class Rectangle: public PlaneObject, public WidthTrait, public HeightTrait
+    class Rectangle: public Shape, public WidthTrait, public HeightTrait
 	{
 		using ostream = std::ostream;
 
@@ -73,7 +73,7 @@ namespace gvt {
 			 * portion, @c false otherwise.
 			 */
 			bool clashes(Rectangle const &o) const;
-			bool operator==(PlaneObject const &o) const override;
+			bool operator==(Shape const &o) const override;
 
 			float width() const override;
 			float height() const override;

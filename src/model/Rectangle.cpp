@@ -57,7 +57,7 @@ Rectangle Rectangle::collisionBox() const {
 }
 
 Rectangle::Rectangle(Point topLeft, Point bottomRight):
-	PlaneObject(topLeft.x(), topLeft.y()), mEnd{bottomRight} {
+	Shape(topLeft.x(), topLeft.y()), mEnd{bottomRight} {
 }
 
 bool Rectangle::clashes(Rectangle const &o) const {
@@ -66,11 +66,11 @@ bool Rectangle::clashes(Rectangle const &o) const {
 			IN_CLOSED_INTERVAL(mY - o.mY, -height(), o.height());
 }
 
-bool Rectangle::operator==(PlaneObject const &o) const {
+bool Rectangle::operator==(Shape const &o) const {
 	auto *other = dynamic_cast<Rectangle const *>(&o);
 
 	if (other)
-		return PlaneObject::operator==(*other) && mEnd == other->mEnd;
+		return Shape::operator==(*other) && mEnd == other->mEnd;
 
 	return false;
 }

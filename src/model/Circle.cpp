@@ -24,7 +24,7 @@
 #include "Utils.hpp"
 
 using Circle = gvt::Circle;
-using PlaneObject = gvt::PlaneObject;
+using Shape = gvt::Shape;
 using Rectangle = gvt::Rectangle;
 
 
@@ -44,7 +44,7 @@ Circle::Circle(float xcoord, float ycoord): Circle{xcoord, ycoord, 0} {
 }
 
 Circle::Circle(float xcoord, float ycoord, float radius):
-	PlaneObject{xcoord, ycoord}, mRadius{radius} {
+	Shape{xcoord, ycoord}, mRadius{radius} {
 }
 
 float Circle::area() const {
@@ -59,11 +59,11 @@ bool Circle::clashes(Circle const &o) const {
 	) <= mRadius + o.mRadius;
 }
 
-bool Circle::operator== (PlaneObject const &o) const {
+bool Circle::operator== (Shape const &o) const {
 	auto *other = dynamic_cast<Circle const *>(&o);
 
 	if (other)
-		return PlaneObject::operator==(*other) && mRadius == other->mRadius;
+		return Shape::operator==(*other) && mRadius == other->mRadius;
 
 	return false;
 }

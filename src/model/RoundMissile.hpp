@@ -22,7 +22,7 @@
 #ifndef NON_GRAVITAR_ROUND_MISSILE_HPP
 #define NON_GRAVITAR_ROUND_MISSILE_HPP
 
-#include "PlaneObject.hpp"
+#include "Shape.hpp"
 #include "Circle.hpp"
 
 
@@ -31,7 +31,7 @@ namespace gvt {
 		public:
 			explicit RoundMissile(float radius);
 
-			bool operator== (PlaneObject const &o) const override;
+			bool operator== (Shape const &o) const override;
 	};
 }
 

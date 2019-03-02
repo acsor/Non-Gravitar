@@ -22,8 +22,8 @@
 #ifndef NON_GRAVITAR_BUNKER_HPP
 #define NON_GRAVITAR_BUNKER_HPP
 
-#include "PlaneObject.hpp"
-#include "PlaneTraits.hpp"
+#include "Shape.hpp"
+#include "ShapeTraits.hpp"
 #include "Missile.hpp"
 
 
@@ -32,7 +32,7 @@ namespace gvt {
 		DoubleDir, TripleDir
 	};
 
-	class Bunker: public PlaneObject, public WidthTrait, public HeightTrait {
+	class Bunker: public Shape, public WidthTrait, public HeightTrait {
 		private:
 			Trajectory *mTrajectories;
 		protected:
@@ -50,7 +50,7 @@ namespace gvt {
 			 */
 			virtual Missile shoot() const = 0;
 
-			bool operator== (PlaneObject const &o) const override;
+			bool operator== (Shape const &o) const override;
 	};
 }
 

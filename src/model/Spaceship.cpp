@@ -52,11 +52,11 @@ bool Spaceship::charged() const {
 	return mFuel > 0;
 }
 
-bool Spaceship::operator==(PlaneObject const &o) const {
+bool Spaceship::operator==(Shape const &o) const {
 	auto *other = dynamic_cast<Spaceship const *>(&o);
 
 	if (other)
-		return PlaneObject::operator==(*other) && mFuel == other->mFuel;
+		return Shape::operator==(*other) && mFuel == other->mFuel;
 
 	return false;
 }

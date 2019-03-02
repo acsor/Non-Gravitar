@@ -19,30 +19,30 @@
 // LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
-#include "PlaneObject.hpp"
+#include "Shape.hpp"
 #include "Point.hpp"
 #include "Rectangle.hpp"
 
 using Event = gvt::Event;
-using PlaneObject = gvt::PlaneObject;
+using Shape = gvt::Shape;
 using Point = gvt::Point;
 using Trajectory = gvt::Trajectory;
 
 
-const Event PlaneObject::MOVE;
-const Event PlaneObject::ORIGIN;
-const Event PlaneObject::ROTATION;
-const Event PlaneObject::VELOCITY;
+const Event Shape::MOVE;
+const Event Shape::ORIGIN;
+const Event Shape::ROTATION;
+const Event Shape::VELOCITY;
 
 
-PlaneObject::PlaneObject(float x, float y): mX{x}, mY{y} {
+Shape::Shape(float x, float y): mX{x}, mY{y} {
 }
 
-Point PlaneObject::origin () const {
+Point Shape::origin () const {
 	return Point{mOriginX, mOriginY};
 }
 
-void PlaneObject::origin(float xcoord, float ycoord) {
+void Shape::origin(float xcoord, float ycoord) {
 	mOriginX = xcoord;
 	mOriginY = ycoord;
 	notify(ORIGIN);
@@ -51,11 +51,11 @@ void PlaneObject::origin(float xcoord, float ycoord) {
 		mPlane->updateCollisions();
 }
 
-float PlaneObject::rotation() const {
+float Shape::rotation() const {
 	return mRotation;
 }
 
-void PlaneObject::rotation(unsigned r) {
+void Shape::rotation(unsigned r) {
 	mRotation = r % 360;
 	rotate();
 	notify(ROTATION);
@@ -64,24 +64,24 @@ void PlaneObject::rotation(unsigned r) {
 		mPlane->updateCollisions();
 }
 
-void PlaneObject::velocity(Trajectory const &t) {
+void Shape::velocity(Trajectory const &t) {
 	mVelocity = t;
 	notify(VELOCITY);
 }
 
-Trajectory PlaneObject::velocity() const {
+Trajectory Shape::velocity() const {
 	return mVelocity;
 }
 
-float PlaneObject::speed() const {
+float Shape::speed() const {
 	return mVelocity.norm();
 }
 
-bool PlaneObject::clashes(gvt::PlaneObject const &o) const {
+bool Shape::clashes(gvt::Shape const &o) const {
     return collisionBox().clashes(o.collisionBox());
 }
 
-void PlaneObject::move(float xcoord, float ycoord) {
+void Shape::move(float xcoord, float ycoord) {
     mX += xcoord;
     mY += ycoord;
 	notify(MOVE);
@@ -90,12 +90,12 @@ void PlaneObject::move(float xcoord, float ycoord) {
         mPlane->updateCollisions();
 }
 
-bool PlaneObject::operator== (PlaneObject const &o) const {
+bool Shape::operator== (Shape const &o) const {
 	return mX == o.mX && mY == o.mY && mOriginX == o.mOriginX &&
 			mOriginY == o.mOriginY && mRotation == o.mRotation &&
 			mVelocity == mVelocity && mPlane == o.mPlane;
 }
 
-bool PlaneObject::operator!= (PlaneObject const &o) const {
+bool Shape::operator!= (Shape const &o) const {
 	return !operator==(o);
 }

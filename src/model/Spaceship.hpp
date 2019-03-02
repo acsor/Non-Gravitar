@@ -23,13 +23,13 @@
 #define NON_GRAVITAR_SPACESHIP_HPP
 
 #include "Fuel.hpp"
-#include "PlaneObject.hpp"
-#include "PlaneTraits.hpp"
+#include "Shape.hpp"
+#include "ShapeTraits.hpp"
 #include "Rectangle.hpp"
 
 
 namespace gvt {
-	class Spaceship: public PlaneObject, public WidthTrait, public HeightTrait
+	class Spaceship: public Shape, public WidthTrait, public HeightTrait
 	{
 		private:
 			// Represents the current fuel amount in the ship
@@ -69,7 +69,7 @@ namespace gvt {
 			 */
 			bool charged() const;
 
-			bool operator== (PlaneObject const &o) const override;
+			bool operator== (Shape const &o) const override;
 	};
 }
 
