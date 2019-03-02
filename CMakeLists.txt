@@ -19,10 +19,11 @@ set(VERSION_PATCH 0)
 include_directories("${DIR_SRC}")
 
 add_library(Observer "${DIR_SRC}/Observer.cpp")
+add_library(Event "${DIR_SRC}/Event.cpp")
 add_library(Plane "${DIR_MODELS}/Plane.cpp")
 
 add_library(PlaneObject "${DIR_MODELS}/PlaneObject.cpp")
-target_link_libraries(PlaneObject Plane)
+target_link_libraries(PlaneObject Event Plane)
 
 add_library(Point "${DIR_MODELS}/Point.cpp")
 target_link_libraries(Point PlaneObject)
