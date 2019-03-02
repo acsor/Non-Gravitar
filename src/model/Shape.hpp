@@ -77,39 +77,44 @@ namespace gvt {
 			 * @param xcoord the value of the new x coordinate of the shape
 			 * top-left corner.
 			 */
-			virtual inline void x(float xcoord);
+			inline void x(float xcoord);
 			/**
 			 * @param ycoord the value of the new y coordinate of the shape
 			 * top-left corner.
 			 */
-			virtual inline void y(float ycoord);
+			inline void y(float ycoord);
 			/**
 			 * @return Top-left corner x coordinate.
 			 */
-			virtual inline float x() const;
+			inline float x() const;
 			/**
 			 * @return Top-left corner y coordinate.
 			 */
-			virtual inline float y() const;
+			inline float y() const;
 			/**
-			 * @return The origin point, used for various geometrical
+			 * @return The origin x coordinate, used for various geometrical
 			 * transformations (e.g. translation, rotation, ...)
 			 */
-			virtual Point origin() const;
+			inline float originX() const;
+			/**
+			 * @return The origin y coordinate, used for various geometrical
+			 * transformations (e.g. translation, rotation, ...)
+			 */
+			inline float originY() const;
 			/**
 			 * @param p The origin used as a reference for various geometrical
 			 * transformations
 			 */
-			virtual void origin(float xcoord, float ycoord);
+			void origin(float xcoord, float ycoord);
 			/**
 			 * @return The angle with respect to the object origin of the
 			 * current @c Shape instance.
 			 */
-			virtual float rotation() const;
+			float rotation() const;
 			/**
 			 * @param r The rotation angle to set for this object
 			 */
-			virtual void rotation(unsigned r);
+			void rotation(unsigned r);
 			/**
 			 * @param t Velocity value to set to the current @c Shape instance.
 			 */

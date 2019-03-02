@@ -42,3 +42,11 @@ float gvt::Shape::x() const {
 float gvt::Shape::y() const {
     return mY;
 }
+
+float gvt::Shape::originX () const {
+	return mOriginX;
+}
+
+float gvt::Shape::originY () const {
+	return mOriginY;
+}

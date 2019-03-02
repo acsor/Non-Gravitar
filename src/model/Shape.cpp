@@ -38,10 +38,6 @@ const Event Shape::VELOCITY;
 Shape::Shape(float x, float y): mX{x}, mY{y} {
 }
 
-Point Shape::origin () const {
-	return Point{mOriginX, mOriginY};
-}
-
 void Shape::origin(float xcoord, float ycoord) {
 	mOriginX = xcoord;
 	mOriginY = ycoord;
