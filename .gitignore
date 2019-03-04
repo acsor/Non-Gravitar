@@ -17,6 +17,7 @@ __pycache__/
 CMakeCache.txt
 cmake_install.cmake
 Makefile
+NonGravitar
 
 test-all
 Session.vim

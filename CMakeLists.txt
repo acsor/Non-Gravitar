@@ -60,4 +60,9 @@ target_link_libraries(SFMLCollision sfml-window sfml-graphics sfml-system)
 add_executable(SFMLOrigin "${DIR_SAMPLES}/SFMLOrigin.cpp")
 target_link_libraries(SFMLOrigin sfml-window sfml-graphics sfml-system)
 
+add_executable(NonGravitar "${DIR_SRC}/NonGravitar.cpp")
+target_link_libraries(
+	NonGravitar sfml-window sfml-graphics sfml-system Spaceship SpaceshipView
+)
+
 add_subdirectory(test)
