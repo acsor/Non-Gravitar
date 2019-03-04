@@ -22,17 +22,11 @@
 void gvt::Shape::x(float xcoord) {
     mX = xcoord;
 	notify(MOVE);
-
-    if (mPlane != nullptr)
-        mPlane->updateCollisions();
 }
 
 void gvt::Shape::y(float ycoord) {
     mY = ycoord;
 	notify(MOVE);
-
-    if (mPlane != nullptr)
-        mPlane->updateCollisions();
 }
 
 float gvt::Shape::x() const {
@@ -54,9 +48,6 @@ float gvt::Shape::originY () const {
 void gvt::Shape::rotation(float r) {
 	mRotation = (int)r % 360;
 	notify(ROTATION);
-
-	if (mPlane)
-		mPlane->updateCollisions();
 }
 
 void gvt::Shape::rotate(float r) {

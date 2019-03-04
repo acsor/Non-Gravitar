@@ -48,7 +48,6 @@ namespace gvt {
 			float mOriginX{0}, mOriginY{0};
 			float mRotation{0};
 			Trajectory mVelocity{0, 0};
-			Plane *mPlane{nullptr};
 
 			/**
 			 * @return A @c Rectangle object representing the bounds used to

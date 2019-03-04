@@ -44,9 +44,6 @@ void Shape::origin(float xcoord, float ycoord) {
 	mOriginX = xcoord;
 	mOriginY = ycoord;
 	notify(ORIGIN);
-
-	if (mPlane)
-		mPlane->updateCollisions();
 }
 
 float Shape::rotation() const {
@@ -73,9 +70,6 @@ void Shape::move(float xcoord, float ycoord) {
     mX += xcoord;
     mY += ycoord;
 	notify(MOVE);
-
-    if (mPlane)
-        mPlane->updateCollisions();
 }
 
 void Shape::moveAlong(Trajectory const &t) {
@@ -87,7 +81,7 @@ void Shape::moveAlong(Trajectory const &t) {
 bool Shape::operator== (Shape const &o) const {
 	return mX == o.mX && mY == o.mY && mOriginX == o.mOriginX &&
 			mOriginY == o.mOriginY && mRotation == o.mRotation &&
-			mVelocity == mVelocity && mPlane == o.mPlane;
+			mVelocity == mVelocity;
 }
 
 bool Shape::operator!= (Shape const &o) const {
