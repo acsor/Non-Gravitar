@@ -30,9 +30,9 @@ template<typename T> gvt::Vector<T>::Vector(T x, T y) {
 	this->y = y;
 }
 
-template<typename T> gvt::Vector<T>::Vector(T degrees) {
-	x = cos(degrees);
-	y = sin(degrees);
+template<typename T> gvt::Vector<T>::Vector(T r) {
+	x = cos(r);
+	y = sin(r);
 }
 
 template<typename T> void gvt::Vector<T>::normalize() {
