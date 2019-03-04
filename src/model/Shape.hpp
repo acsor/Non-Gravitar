@@ -61,10 +61,10 @@ namespace gvt {
 			static const Event MOVE;
 			static const Event ORIGIN;
 			static const Event ROTATION;
-			static const Event VELOCITY;
+			static const Event DESTROIED;
 
 			Shape(float x, float y);
-			virtual ~Shape() = default;
+			virtual ~Shape();
 
 			/**
 			 * @param xcoord the value of the new x coordinate of the shape
@@ -138,9 +138,10 @@ namespace gvt {
 			/**
 			 * @brief Move the current object along the given trajectory.
 			 * @param t Trajectory to follow
-			 * @param steps Amount of steps to perform in a given metric space
+			 * @param factor Amount of "steps" to perform along the given 
+			 * @c Trajectory
 			 */
-			void move(Trajectory const &t, size_t steps);
+			void moveAlong(Trajectory const &t, float factor);
 			/**
 			 * @return @c true if the object at the current position meets the
 			 * other @c Shape given as argument by following the

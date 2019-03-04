@@ -30,10 +30,14 @@ using Trajectory = gvt::Trajectory;
 const Event Shape::MOVE;
 const Event Shape::ORIGIN;
 const Event Shape::ROTATION;
-const Event Shape::VELOCITY;
+const Event Shape::DESTROIED;
 
 
 Shape::Shape(float x, float y): mX{x}, mY{y} {
+}
+
+Shape::~Shape() {
+	notify(DESTROIED);
 }
 
 void Shape::origin(float xcoord, float ycoord) {
