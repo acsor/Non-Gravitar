@@ -62,6 +62,9 @@ namespace gvt {
 	 * @todo Test
 	 */
 	string staticsGet(string const &localPath);
+
+	double rad2deg(double r);
+	double deg2rad(double deg);
 }
 
 

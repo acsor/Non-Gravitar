@@ -19,6 +19,7 @@
 // LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
+#include <cmath>
 #include <stdexcept>
 #include "Utils.hpp"
 
@@ -49,4 +50,13 @@ string gvt::dirpath(string const &path, bool collapse) {
 
 string gvt::staticsGet(string const &localPath) {
 	return gvt::dirpath(__FILE__, false) + "../" + GVT_STATICS_DIR + localPath;
+}
+
+
+double gvt::rad2deg(double r) {
+	return r * 180 / M_PI;
+}
+
+double deg2rad(double deg) {
+	return deg * M_PI / 180.0;
 }
