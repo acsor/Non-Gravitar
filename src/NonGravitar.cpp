@@ -19,11 +19,13 @@
 // LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
+#include <cmath>
 #include <memory>
 #include <SFML/Graphics.hpp>
 #include <SFML/Window.hpp>
 #include "model/Spaceship.hpp"
 #include "view/SpaceshipView.hpp"
+#include "Vector.hpp"
 
 using Event = sf::Event;
 using Keyboard = sf::Keyboard;
@@ -34,7 +36,7 @@ using SpaceshipView = gvt::SpaceshipView;
 
 
 #define STEP_SIZE 5
-#define ANGLE_SIZE 10
+#define ANGLE_SIZE (10 * M_PI / 180.0)
 
 
 int main () {
@@ -57,22 +59,19 @@ int main () {
 				case (Event::KeyPressed):
 					switch (e.key.code) {
 						case (Keyboard::Key::A):
-							ship->move(-STEP_SIZE, 0);
+							ship->rotate(-ANGLE_SIZE);
 							break;
 						case (Keyboard::Key::W):
-							ship->move(0, -STEP_SIZE);
+							ship->moveAlong(
+								gvt::Trajectory(ship->rotation()) * STEP_SIZE
+							);
 							break;
 						case (Keyboard::Key::D):
-							ship->move(STEP_SIZE, 0);
+							ship->rotate(ANGLE_SIZE);
 							break;
 						case (Keyboard::Key::S):
-							ship->move(0, STEP_SIZE);
-							break;
-						case (Keyboard::Key::R):
-							if (e.key.shift)
-								ship->rotation(ship->rotation() - ANGLE_SIZE);
-							else
-								ship->rotation(ship->rotation() + ANGLE_SIZE);
+							// Should activate the shields in a future version
+							// of the codebase
 							break;
 						default:
 							break;

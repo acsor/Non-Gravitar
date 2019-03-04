@@ -44,7 +44,7 @@ SpaceshipView::SpaceshipView(shared_ptr<Spaceship> spaceship, bool debug):
 
 	mSprite.setPosition(spaceship->x(), spaceship->y());
 	mSprite.setOrigin(spaceship->originX(), spaceship->originY());
-	mSprite.setRotation(spaceship->rotation());
+	mSprite.setRotation(gvt::rad2deg(spaceship->rotation()));
 	mSprite.setTexture(mTexture);
 
 	spaceship->attach(*this);
@@ -76,7 +76,7 @@ void SpaceshipView::handle(Event const &e) {
 		} else if (e == Shape::ORIGIN) {
 			mSprite.setOrigin(p->originX(), p->originY());
 		} else if (e == Shape::ROTATION) {
-			mSprite.setRotation(p->rotation());
+			mSprite.setRotation(gvt::rad2deg(p->rotation()));
 		} else if (e == Shape::DESTROIED) {
 			mSprite = sf::Sprite();
 		}
