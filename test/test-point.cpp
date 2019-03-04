@@ -19,11 +19,45 @@
 // LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
+#include <cmath>
+#include <list>
 #include "catch.hpp"
 #include "model/Point.hpp"
+#include "Vector.hpp"
 
 using Point = gvt::Point;
+template<typename T> using list = std::list<T>;
+using Trajectory = gvt::Trajectory;
 
+
+TEST_CASE("Shape::moveAlong()", "[Shape][Point]") {
+	Point p{0, 0};
+	list<Point> expected{
+		{1, 0}, {sqrt(2) / 2.0, sqrt(2) / 2.0}, {0, 1},
+		{-sqrt(2) / 2.0, sqrt(2) / 2.0}, {-1, 0},
+		{-sqrt(2) / 2.0, -sqrt(2) / 2.0}, {0, -1},
+		{sqrt(2) / 2.0, -sqrt(2) / 2.0}, {1, 0}
+	};
+	list<Trajectory> ts = {
+		0, M_PI / 4.0, M_PI / 2.0, M_PI * 3.0 / 4.0, M_PI, M_PI * 5.0 / 4.0,
+		M_PI * 3.0 / 2.0, M_PI * 7.0 / 4.0, 2 * M_PI
+	};
+
+	auto t = ts.cbegin();
+
+	for (auto e = expected.cbegin(); e != expected.cend(); e++, t++) {
+		p.moveAlong(*t);
+
+		INFO(
+			"Expected (" << e->x() << ", " << e->y() << "), got (" << p.x() <<
+			", " << p.y() << ")"
+		);
+		REQUIRE(abs(p.x() - e->x()) <= 1E-6);
+		REQUIRE(abs(p.y() - e->y()) <= 1E-6);
+
+		p = {0, 0};
+	}
+}
 
 TEST_CASE("gvt::Point::operator==", "[Point]") {
 	Point p{1, 2}, q{1, 2};

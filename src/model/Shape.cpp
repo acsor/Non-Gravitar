@@ -78,6 +78,12 @@ void Shape::move(float xcoord, float ycoord) {
         mPlane->updateCollisions();
 }
 
+void Shape::moveAlong(Trajectory const &t) {
+	mX += t.x;
+	mY += t.y;
+	notify(MOVE);
+}
+
 bool Shape::operator== (Shape const &o) const {
 	return mX == o.mX && mY == o.mY && mOriginX == o.mOriginX &&
 			mOriginY == o.mOriginY && mRotation == o.mRotation &&

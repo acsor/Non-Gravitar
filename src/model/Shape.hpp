@@ -138,10 +138,8 @@ namespace gvt {
 			/**
 			 * @brief Move the current object along the given trajectory.
 			 * @param t Trajectory to follow
-			 * @param factor Amount of "steps" to perform along the given 
-			 * @c Trajectory
 			 */
-			void moveAlong(Trajectory const &t, float factor);
+			void moveAlong(Trajectory const &t);
 			/**
 			 * @return @c true if the object at the current position meets the
 			 * other @c Shape given as argument by following the
