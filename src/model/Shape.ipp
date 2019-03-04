@@ -19,6 +19,9 @@
 // LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
+#include <cmath>
+
+
 void gvt::Shape::x(float xcoord) {
     mX = xcoord;
 	notify(MOVE);
@@ -46,7 +49,13 @@ float gvt::Shape::originY () const {
 }
 
 void gvt::Shape::rotation(float r) {
-	mRotation = (int)r % 360;
+	// TO-DO Shorten, if at all possible, this code that I have produced, which
+	// at first sight looks orribly bigger than it ought to be
+	if (r >= 0)
+		mRotation = r - (2.0 * M_PI) * floor(r / (2.0 * M_PI));
+	else
+		mRotation = r - (2.0 * M_PI) * ceil(r / (2.0 * M_PI));
+
 	notify(ROTATION);
 }
 

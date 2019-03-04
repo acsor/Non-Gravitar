@@ -100,15 +100,16 @@ namespace gvt {
 			void origin(float xcoord, float ycoord);
 			/**
 			 * @return The angle with respect to the object origin of the
-			 * current @c Shape instance.
+			 * current @c Shape instance, given in radians.
 			 */
 			float rotation() const;
 			/**
-			 * @param r The rotation angle to set for this object
+			 * @param r The rotation angle to set for this object, in radians
+			 * @todo Test the implementation
 			 */
 			virtual inline void rotation(float r);
 			/**
-			 * @param r Amount of degrees to add to the current degrees value
+			 * @param r Amount of radians to add to the current rotation value
 			 */
 			virtual inline void rotate(float r);
 			/**
