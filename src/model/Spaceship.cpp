@@ -25,6 +25,11 @@ using Spaceship = gvt::Spaceship;
 using Rectangle = gvt::Rectangle;
 
 
+Spaceship::Spaceship(float xcoord, float ycoord, unsigned fuel):
+	Shape::Shape(xcoord, ycoord) {
+	mFuel = fuel;
+}
+
 Rectangle Spaceship::collisionBox() const {
 	Rectangle r = {
 		{mX - mOriginX, mY - mOriginY},

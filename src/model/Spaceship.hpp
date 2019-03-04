@@ -47,6 +47,7 @@ namespace gvt {
 			static unsigned const constexpr WIDTH = 46;
 			static unsigned const constexpr HEIGHT = 42;
 
+			Spaceship(float xcoord, float ycoord, unsigned fuel);
 			unsigned fuel() const;
 			/**
 			 * @brief Recharges the current @c Spaceship instance by the fuel
@@ -69,9 +70,22 @@ namespace gvt {
 			 */
 			bool charged() const;
 
+			inline float width() const override;
+			inline float height() const override;
+
 			bool operator== (Shape const &o) const override;
 	};
 }
+
+
+float gvt::Spaceship::width() const {
+	return WIDTH;
+}
+
+float gvt::Spaceship::height() const {
+	return HEIGHT;
+}
+
 
 
 #endif
