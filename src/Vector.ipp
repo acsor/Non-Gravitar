@@ -49,7 +49,10 @@ template<typename T> double gvt::Vector<T>::norm() const {
 }
 
 template<typename T> double gvt::Vector<T>::degrees() const {
+	// TO-DO Considering the classic xy-axis model of computer graphis/games,
+	// is this code correct?
 	return acos(x / norm());
+	// return acos(x / norm()) + 180;
 }
 
 template<typename T> gvt::Vector<T> gvt::Vector<T>::operator* (
@@ -61,13 +64,9 @@ template<typename T> gvt::Vector<T> gvt::Vector<T>::operator* (
 template<typename T> gvt::Vector<T> gvt::Vector<T>::operator+ (
 	gvt::Vector<T> const &o
 ) const {
-	gvt::Vector<T> out = *this;
-
-	out.x += o.x;
-	out.y += o.y;
-	out.normalize();
-	
-	return out;
+	return {
+		x + o.x, y + o.y
+	};
 }
 
 template<typename T> gvt::Vector<T>& gvt::Vector<T>::operator+= (
