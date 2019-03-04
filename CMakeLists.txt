@@ -6,6 +6,7 @@ set(CMAKE_CXX_STANDARD 11)
 set(CMAKE_CXX_FLAGS -Wall)
 set(DIR_SRC "src")
 set(DIR_MODELS "${DIR_SRC}/model")
+set(DIR_VIEWS "${DIR_SRC}/view")
 set(DIR_SAMPLES "samples/")
 
 # The project versionig scheme is Semver: https://semver.org/
@@ -47,6 +48,10 @@ add_library(Bunker "${DIR_MODELS}/Bunker.cpp")
 target_link_libraries(Bunker Shape)
 
 add_library(Utils "${DIR_SRC}/Utils.cpp")
+
+
+add_library(SpaceshipView "${DIR_VIEWS}/SpaceshipView.cpp")
+target_link_libraries(SpaceshipView Spaceship Utils)
 
 
 add_executable(SFMLCollision "${DIR_SAMPLES}/SFMLCollision.cpp")
