@@ -60,7 +60,6 @@ namespace gvt {
 			Point mEnd{0, 0};
 		protected:
 			Rectangle collisionBox() const override;
-			void rotate() override;
     	public:
     		/**
     		 * @brief Constructs a @c Rectangle with width > 0 and height > 0.
@@ -74,6 +73,8 @@ namespace gvt {
 			 */
 			bool clashes(Rectangle const &o) const;
 			bool operator==(Shape const &o) const override;
+
+			virtual void rotation(float r) override;
 
 			float width() const override;
 			float height() const override;

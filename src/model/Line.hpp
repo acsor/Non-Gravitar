@@ -34,21 +34,20 @@ namespace gvt {
 			Point mEnd;
 		protected:
 			Rectangle collisionBox() const override;
-			void rotate() override;
 		public:
 			// Default width of the bounding box returned by
 			// Line::collisionBox()
 			double static const constexpr WIDTH_BBOX = 1E-3;
 
 			Line(Point const &start, Point const &end);
+			float width() const override;
+			void rotation(float r) override;
 			/**
 			 * @brief Scales the width of the line object by <b>factor</b>.
 			 * @return Stretched out/in Line object
 			 */
 			Line& operator* (double factor);
 			bool operator== (Shape const &o) const override;
-
-			float width() const override;
 	};
 }
 

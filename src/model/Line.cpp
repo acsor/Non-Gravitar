@@ -34,12 +34,17 @@ Rectangle Line::collisionBox() const {
 	return Rectangle({mX, mY}, mEnd);
 }
 
-void Line::rotate() {
-	// TO-DO Implement
-}
-
 Line::Line(Point const &start, Point const &end):
 	Shape(start.x(), start.y()), mEnd{end} {
+}
+
+float Line::width() const {
+	return Point(mX, mY).distance(mEnd);
+}
+
+void Line::rotation(float r) {
+	Shape::rotation(r);
+	// TO-DO Implement the remainder
 }
 
 Line& Line::operator* (double factor) {
@@ -58,8 +63,4 @@ bool Line::operator== (Shape const &o) const {
 		return Shape::operator==(*other) && mEnd == other->mEnd;
 
 	return false;
-}
-
-float Line::width() const {
-	return Point(mX, mY).distance(mEnd);
 }

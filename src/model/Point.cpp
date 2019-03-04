@@ -34,10 +34,6 @@ gvt::Rectangle gvt::Point::collisionBox() const {
 	return Rectangle{*this - halfWidth, *this + halfWidth};
 }
 
-void Point::rotate() {
-	// TO-DO Implement
-}
-
 Point::Point(float xcoord, float ycoord): Shape(xcoord, ycoord) {
 }
 

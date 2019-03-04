@@ -38,7 +38,7 @@ add_library(Rectangle "${DIR_MODELS}/Rectangle.cpp")
 target_link_libraries(Rectangle Shape)
 
 add_library(Spaceship "${DIR_MODELS}/Spaceship.cpp")
-target_link_libraries(Spaceship Shape)
+target_link_libraries(Spaceship Shape Point Rectangle Fuel)
 
 add_library(Fuel "${DIR_MODELS}/Fuel.cpp")
 target_link_libraries(Fuel Spaceship)

@@ -30,16 +30,15 @@
 
 namespace gvt {
 	class Rectangle;
-	class Point;
 
 	/**
 	 * @brief An abstract base class for subsequent shape objects. Note that
 	 * coordinates are taken by default from the <i>top left</i> corner, hence
 	 * not an arbitrary center (which may vary from shape to shape).
-	 * @see gvt::Plane
 	 * @todo Remove the dependency from @c Plane, in such a way that such an
 	 * instance is notified by state changes through the <i>event listener</i>
 	 * mechanism.
+	 * @see gvt::Plane
 	 */
 	class Shape: public EventDispatcher {
 		protected:
@@ -56,12 +55,6 @@ namespace gvt {
 			 * detect collision with another @c Shape.
 			 */
 			virtual Rectangle collisionBox() const = 0;
-			/**
-			 * @brief Updates the rotation property of the object, typically by
-			 * referring to the @c mOrigin[XY] attributes. Usually called by
-			 * @c Shape::rotation(unsigned).
-			 */
-			virtual void rotate() = 0;
 		public:
 			using ostream = std::ostream;
 
@@ -114,7 +107,11 @@ namespace gvt {
 			/**
 			 * @param r The rotation angle to set for this object
 			 */
-			void rotation(unsigned r);
+			virtual inline void rotation(float r);
+			/**
+			 * @param r Amount of degrees to add to the current degrees value
+			 */
+			virtual inline void rotate(float r);
 			/**
 			 * @param t Velocity value to set to the current @c Shape instance.
 			 */

@@ -48,10 +48,6 @@ std::ostream& std::operator<< (std::ostream &out, Rectangle const &r) {
 }
 
 
-void Rectangle::rotate() {
-	// TO-DO Implement
-}
-
 Rectangle Rectangle::collisionBox() const {
 	return *this;
 }
@@ -73,6 +69,11 @@ bool Rectangle::operator==(Shape const &o) const {
 		return Shape::operator==(*other) && mEnd == other->mEnd;
 
 	return false;
+}
+
+void Rectangle::rotation(float r) {
+	Shape::rotation(r);
+	// TO-DO Implement remainder part
 }
 
 float Rectangle::width() const {

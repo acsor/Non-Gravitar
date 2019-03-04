@@ -20,12 +20,10 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 #include "Shape.hpp"
-#include "Point.hpp"
 #include "Rectangle.hpp"
 
 using Event = gvt::Event;
 using Shape = gvt::Shape;
-using Point = gvt::Point;
 using Trajectory = gvt::Trajectory;
 
 
@@ -51,18 +49,8 @@ float Shape::rotation() const {
 	return mRotation;
 }
 
-void Shape::rotation(unsigned r) {
-	mRotation = r % 360;
-	rotate();
-	notify(ROTATION);
-
-	if (mPlane)
-		mPlane->updateCollisions();
-}
-
 void Shape::velocity(Trajectory const &t) {
 	mVelocity = t;
-	notify(VELOCITY);
 }
 
 Trajectory Shape::velocity() const {

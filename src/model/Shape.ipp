@@ -50,3 +50,15 @@ float gvt::Shape::originX () const {
 float gvt::Shape::originY () const {
 	return mOriginY;
 }
+
+void gvt::Shape::rotation(float r) {
+	mRotation = (int)r % 360;
+	notify(ROTATION);
+
+	if (mPlane)
+		mPlane->updateCollisions();
+}
+
+void gvt::Shape::rotate(float r) {
+	rotation(mRotation + r);
+}

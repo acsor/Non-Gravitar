@@ -31,7 +31,6 @@ namespace gvt {
 	class Point: public Shape {
 		protected:
 			Rectangle collisionBox() const override;
-			void rotate() override;
 		public:
 			friend Point operator*(float, const Point&);
 

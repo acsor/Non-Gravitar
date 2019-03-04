@@ -36,10 +36,6 @@ Rectangle Circle::collisionBox() const {
 	};
 }
 
-void Circle::rotate() {
-	// TO-DO Implement
-}
-
 Circle::Circle(float xcoord, float ycoord): Circle{xcoord, ycoord, 0} {
 }
 

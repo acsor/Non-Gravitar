@@ -32,7 +32,6 @@ namespace gvt {
 			float mRadius;
 
 			Rectangle collisionBox() const override;
-			void rotate() override;
 		public:
 			Circle(float xcoord, float ycoord);
 			Circle(float xcoord, float ycoord, float radius);
