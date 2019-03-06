@@ -48,7 +48,8 @@ namespace gvt {
 			inline float height() const override;
 
 			/**
-			 * @return a Missile instance shot by the calling Bunker object.
+			 * @return a @c RoundMissile instance shot by the calling @c Bunker
+			 * object.
 			 */
 			RoundMissile shoot();
 
