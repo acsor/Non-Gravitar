@@ -51,8 +51,12 @@ template<typename T> double gvt::Vector<T>::norm() const {
 template<typename T> double gvt::Vector<T>::degrees() const {
 	// TO-DO Considering the classic xy-axis model of computer graphis/games,
 	// is this code correct?
-	return acos(x / norm());
-	// return acos(x / norm()) + 180;
+	if (y > 0)
+		return (x != 0) ? atan(y / x): M_PI / 2.0;
+	else if (y < 0)
+		return (x != 0) ? atan(y / x): 3.0 / 2.0 * M_PI;
+	else
+		return (x < 0) ? M_PI: 0;
 }
 
 template<typename T> gvt::Vector<T> gvt::Vector<T>::operator* (

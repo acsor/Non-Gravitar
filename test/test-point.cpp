@@ -39,8 +39,10 @@ TEST_CASE("Shape::moveAlong()", "[Shape][Point]") {
 		{sqrt(2) / 2.0, -sqrt(2) / 2.0}, {1, 0}
 	};
 	list<Trajectory> ts = {
-		0, M_PI / 4.0, M_PI / 2.0, M_PI * 3.0 / 4.0, M_PI, M_PI * 5.0 / 4.0,
-		M_PI * 3.0 / 2.0, M_PI * 7.0 / 4.0, 2 * M_PI
+		Trajectory{0}, Trajectory{M_PI / 4.0}, Trajectory{M_PI / 2.0},
+		Trajectory{M_PI * 3.0 / 4.0}, Trajectory{M_PI},
+		Trajectory{M_PI * 5.0 / 4.0}, Trajectory{M_PI * 3.0 / 2.0},
+		Trajectory{M_PI * 7.0 / 4.0}, Trajectory{2 * M_PI}
 	};
 
 	auto t = ts.cbegin();

@@ -30,10 +30,14 @@ using Rectangle = gvt::Rectangle;
 
 Rectangle Circle::collisionBox() const {
 	// TO-DO Improve by taking into account rotation as well
-	return Rectangle{
+	Rectangle r = Rectangle{
 		{mX - mOriginX, mY - mOriginY},
 		{mX - mOriginX + 2 * mRadius, mY - mOriginY + 2 * mRadius}
 	};
+
+	r.rotation(mRotation);
+
+	return r;
 }
 
 Circle::Circle(float xcoord, float ycoord): Circle{xcoord, ycoord, 0} {

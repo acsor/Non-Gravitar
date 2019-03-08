@@ -38,14 +38,19 @@ target_link_libraries(Circle Shape Rectangle)
 add_library(Rectangle "${DIR_MODELS}/Rectangle.cpp")
 target_link_libraries(Rectangle Shape)
 
+
 add_library(Spaceship "${DIR_MODELS}/Spaceship.cpp")
 target_link_libraries(Spaceship Shape Point Rectangle Fuel)
 
 add_library(Fuel "${DIR_MODELS}/Fuel.cpp")
 target_link_libraries(Fuel Spaceship)
 
+add_library(RoundMissile "${DIR_MODELS}/RoundMissile.cpp")
+target_link_libraries(RoundMissile Shape)
+
 add_library(Bunker "${DIR_MODELS}/Bunker.cpp")
 target_link_libraries(Bunker Shape)
+
 
 add_library(Utils "${DIR_SRC}/Utils.cpp")
 

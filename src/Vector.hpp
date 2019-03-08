@@ -42,7 +42,7 @@ namespace gvt {
 		 * @param degrees Value (specified in radians) in [0, 2π). Any value
 		 * outside this range will be reduced to it
 		 */
-		Vector(T r);
+		explicit Vector(T r);
 		/**
 		 * @brief Normalizes the given @c Vector<T> instance such that the
 		 * module of the vector it represents has unitary length

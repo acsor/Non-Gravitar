@@ -28,7 +28,10 @@ using Point = gvt::Point;
 
 
 gvt::Rectangle gvt::Point::collisionBox() const {
-	Point halfWidth{WIDTH_BBOX / 2.0, WIDTH_BBOX / 2.0};
+	Point const halfWidth{
+		static_cast<float>(WIDTH_BBOX / 2.0 - mOriginX),
+		static_cast<float>(WIDTH_BBOX / 2.0 - mOriginY)
+	};
 
 	// TO-DO Check/unit test this
 	return Rectangle{*this - halfWidth, *this + halfWidth};

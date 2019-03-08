@@ -29,7 +29,10 @@
 namespace gvt {
 	class RoundMissile: public Circle {
 		public:
-			explicit RoundMissile(float radius);
+			static constexpr unsigned DEFAULT_RADIUS = 2;
+
+			explicit RoundMissile(float xcoord, float ycoord);
+			explicit RoundMissile(float xcoord, float ycoord, float radius);
 
 			bool operator== (Shape const &o) const override;
 	};

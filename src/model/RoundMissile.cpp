@@ -19,12 +19,20 @@
 // LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
-#include "Missile.hpp"
+#include "RoundMissile.hpp"
 
 using RoundMissile = gvt::RoundMissile;
+using Circle = gvt::Circle;
+using Shape = gvt::Shape;
 
 
-RoundMissile::RoundMissile(radius): Circle(radius) {
+
+RoundMissile::RoundMissile(float xcoord, float ycoord):
+	RoundMissile(xcoord, ycoord, RoundMissile::DEFAULT_RADIUS) {
+}
+
+RoundMissile::RoundMissile(float xcoord, float ycoord, float radius):
+	Circle(xcoord, ycoord, radius) {
 }
 
 bool RoundMissile::operator== (Shape const &o) const {
