@@ -8,12 +8,18 @@ add_executable(
 	$<TARGET_OBJECTS:test-rectangle>
 	$<TARGET_OBJECTS:test-circle>
 	$<TARGET_OBJECTS:test-vector>
+
+	$<TARGET_OBJECTS:test-bunker>
+
 	$<TARGET_OBJECTS:test-observer>
 	$<TARGET_OBJECTS:test-event>
 	$<TARGET_OBJECTS:test-utils>
 )
 target_link_libraries(
-	test-all Point Line Rectangle Circle Observer Event Utils
+	test-all
+	Point Line Rectangle Circle
+	Bunker RoundMissile
+	Observer Event Utils
 )
 
 add_library(test-main OBJECT test-main.cpp)
@@ -23,6 +29,8 @@ add_library(test-line OBJECT test-line.cpp)
 add_library(test-rectangle OBJECT test-rectangle.cpp)
 add_library(test-circle OBJECT test-circle.cpp)
 add_library(test-vector OBJECT test-vector.cpp)
+
+add_library(test-bunker OBJECT test-bunker.cpp)
 
 add_library(test-observer OBJECT test-observer.cpp)
 add_library(test-event OBJECT test-event.cpp)

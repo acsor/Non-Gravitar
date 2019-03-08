@@ -22,36 +22,65 @@
 #ifndef NON_GRAVITAR_BUNKER_HPP
 #define NON_GRAVITAR_BUNKER_HPP
 
+#include <vector>
+#include "Rectangle.hpp"
 #include "Shape.hpp"
 #include "ShapeTraits.hpp"
-#include "Missile.hpp"
+#include "RoundMissile.hpp"
+
+template<typename T> using vector = std::vector<T>;
 
 
 namespace gvt {
-	enum class BunkerType {
-		DoubleDir, TripleDir
-	};
-
 	class Bunker: public Shape, public WidthTrait, public HeightTrait {
-		private:
-			Trajectory *mTrajectories;
 		protected:
+			vector<Trajectory> mPaths;
+			unsigned mCurr{0};
+
 			Rectangle collisionBox() const override;
+
+			Bunker(float xcoord, float ycoord, size_t directions);
 		public:
-			static float const constexpr	BUNKER_WIDTH = 5;
-			static float const constexpr	BUNKER_HEIGHT = 4;
+			static unsigned const constexpr WIDTH = 45;
+			static unsigned const constexpr HEIGHT = 66;
 
-			BunkerType type;
+			inline float width() const override;
+			inline float height() const override;
 
-			Bunker(float xcoord, float ycoord, BunkerType type);
-			virtual ~Bunker();
 			/**
 			 * @return a Missile instance shot by the calling Bunker object.
 			 */
-			virtual Missile shoot() const = 0;
+			RoundMissile shoot();
 
-			bool operator== (Shape const &o) const override;
+			bool operator==(Shape const &o) const override;
 	};
+
+	// If I recall correctly, templates can even be used to pass concrete
+	// values between specializations, e.g. ClassName<4>. Could that be an idea
+	// to simplify the inheritance for Bunker2D and Bunker3D?
+	class Bunker2D: public Bunker {
+		public:
+			Bunker2D(float xcoord, float ycoord);
+
+			bool operator==(Shape const &o) const override;
+	};
+
+	class Bunker3D: public Bunker {
+		public:
+			Bunker3D(float xcoord, float ycoord);
+
+			bool operator==(Shape const &o) const override;
+	};
+}
+
+
+// Implementation of Bunker inline functions
+float gvt::Bunker::width() const {
+	return WIDTH;
+}
+
+float gvt::Bunker::height() const {
+	return HEIGHT;
 }
 
 

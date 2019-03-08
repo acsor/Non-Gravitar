@@ -19,4 +19,89 @@
 // LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
+#include <random>
+#include <cmath>
+#include <ctime>
 #include "Bunker.hpp"
+
+using Bunker = gvt::Bunker;
+using Bunker2D = gvt::Bunker2D;
+using Bunker3D = gvt::Bunker3D;
+using Rectangle = gvt::Rectangle;
+using RoundMissile = gvt::RoundMissile;
+using Shape = gvt::Shape;
+
+
+Rectangle Bunker::collisionBox () const {
+    Rectangle r = {
+		{mX - mOriginX, mY - mOriginY},
+		{mX - mOriginX + width(), mY - mOriginY + height()}
+    };
+    r.rotate(mRotation);
+
+    return r;
+}
+
+Bunker::Bunker(float xcoord, float ycoord, size_t directions):
+	Shape(xcoord, ycoord), mPaths{directions} {
+	std::uniform_real_distribution<float> angles{
+		static_cast<float>(mRotation - M_PI / 2.0),
+		static_cast<float>(mRotation + M_PI / 2.0)
+	};
+	std::default_random_engine e(time(NULL));
+
+	while (directions > 0) {
+		mPaths[directions - 1] = Trajectory(angles(e));
+
+		directions--;
+	}
+}
+
+RoundMissile Bunker::shoot() {
+	// Bear in mind that by default, on the graphics layer the Bunker is
+	// rotated by default by 90. deg (the normal out of its ceiling has
+	// direction (1, 0))
+	RoundMissile m{mX + height(), mY + width() / 2.0};
+
+	m.origin(mOriginX, mOriginY);
+	m.rotation(mRotation);
+	m.velocity(mPaths[mCurr]);
+	mCurr = (mCurr + 1) % mPaths.size();
+
+	return m;
+}
+
+bool Bunker::operator== (Shape const &o) const {
+	auto *other = dynamic_cast<Bunker const *>(&o);
+
+	if (other)
+		return mPaths == other->mPaths && Shape::operator==(o);
+
+	return false;
+}
+
+
+Bunker2D::Bunker2D(float xcoord, float ycoord): Bunker(xcoord, ycoord, 2) {
+}
+
+bool Bunker2D::operator== (Shape const &o) const {
+	auto *other = dynamic_cast<Bunker2D const *>(&o);
+
+	if (other)
+		return Bunker::operator==(o);
+
+	return false;
+}
+
+
+Bunker3D::Bunker3D(float xcoord, float ycoord): Bunker(xcoord, ycoord, 3) {
+}
+
+bool Bunker3D::operator== (Shape const &o) const {
+	auto *other = dynamic_cast<Bunker3D const *>(&o);
+
+	if (other)
+		return Bunker::operator==(o);
+
+	return false;
+}
