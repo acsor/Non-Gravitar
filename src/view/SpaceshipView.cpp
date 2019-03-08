@@ -26,12 +26,17 @@
 using SpaceshipView = gvt::SpaceshipView;
 
 
+const std::string SpaceshipView::SPACESHIP_TEXTURE = "graphics/spaceship.png";
+const std::string SpaceshipView::ACCEL_SPACESHIP_TEXTURE =
+	"graphics/spaceship-accelerating.png";
+
+
 SpaceshipView::SpaceshipView(shared_ptr<Spaceship> spaceship, bool debug):
 	mSpaceship{spaceship}, mDebug{debug} {
 	if (
-			!mTexture.loadFromFile(gvt::staticsGet(GVT_ASSET_SPACESHIP)) ||
+			!mTexture.loadFromFile(gvt::staticsGet(SPACESHIP_TEXTURE)) ||
 			!mAccelTexture.loadFromFile(
-				gvt::staticsGet(GVT_ASSET_SPACESHIP_ACCEL)
+				gvt::staticsGet(ACCEL_SPACESHIP_TEXTURE)
 			)
 	   ) {
 		throw std::runtime_error{

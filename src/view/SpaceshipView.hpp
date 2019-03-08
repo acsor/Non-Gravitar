@@ -22,6 +22,7 @@
 #ifndef NON_GRAVITAR_SPACESHIP_VIEW_HPP
 #define NON_GRAVITAR_SPACESHIP_VIEW_HPP
 
+#include <string>
 #include <memory>
 #include <SFML/Graphics.hpp>
 #include "../model/Spaceship.hpp"
@@ -32,10 +33,6 @@ template<typename T> using shared_ptr = std::shared_ptr<T>;
 using RenderStates = sf::RenderStates;
 using RenderTarget = sf::RenderTarget;
 using Texture = sf::Texture;
-
-
-#define GVT_ASSET_SPACESHIP "graphics/spaceship.png"
-#define GVT_ASSET_SPACESHIP_ACCEL "graphics/spaceship-accelerating.png"
 
 
 namespace gvt {
@@ -53,6 +50,9 @@ namespace gvt {
 			 */
 			Texture mTexture, mAccelTexture, mShieldTexture;
 		public:
+			static const std::string SPACESHIP_TEXTURE;
+			static const std::string ACCEL_SPACESHIP_TEXTURE;
+
 			SpaceshipView(shared_ptr<Spaceship> spaceship, bool debug=false);
 			~SpaceshipView();
 
