@@ -69,40 +69,40 @@ namespace gvt {
 			 * @param xcoord the value of the new x coordinate of the shape
 			 * top-left corner.
 			 */
-			inline void x(float xcoord);
+			virtual inline void x(float xcoord);
 			/**
 			 * @param ycoord the value of the new y coordinate of the shape
 			 * top-left corner.
 			 */
-			inline void y(float ycoord);
+			virtual inline void y(float ycoord);
 			/**
 			 * @return Top-left corner x coordinate.
 			 */
-			inline float x() const;
+			virtual inline float x() const;
 			/**
 			 * @return Top-left corner y coordinate.
 			 */
-			inline float y() const;
+			virtual inline float y() const;
 			/**
 			 * @return The origin x coordinate, used for various geometrical
 			 * transformations (e.g. translation, rotation, ...)
 			 */
-			inline float originX() const;
+			virtual inline float originX() const;
 			/**
 			 * @return The origin y coordinate, used for various geometrical
 			 * transformations (e.g. translation, rotation, ...)
 			 */
-			inline float originY() const;
+			virtual inline float originY() const;
 			/**
 			 * @param p The origin used as a reference for various geometrical
 			 * transformations
 			 */
-			void origin(float xcoord, float ycoord);
+			virtual void origin(float xcoord, float ycoord);
 			/**
 			 * @return The angle with respect to the object origin of the
 			 * current @c Shape instance, given in radians.
 			 */
-			float rotation() const;
+			virtual float rotation() const;
 			/**
 			 * @param r The rotation angle to set for this object, in radians
 			 * @todo Test the implementation
@@ -115,31 +115,31 @@ namespace gvt {
 			/**
 			 * @param t Velocity value to set to the current @c Shape instance.
 			 */
-			void velocity(Trajectory const &t);
+			virtual void velocity(Trajectory const &t);
 			/**
 			 * @return The velocity vector associated with the current
 			 * @c Shape.
 			 */
-			Trajectory velocity() const;
+			virtual Trajectory velocity() const;
 			/**
 			 * @return The current @c Shape speed, as a scalar value.
 			 */
-			float speed() const;
+			virtual float speed() const;
 			/**
 			 * @return @c true if the boundaries of the current @c Shape clash
 			 * with those of the object @c o.
 			 */
-			bool clashes(Shape const &o) const;
+			virtual bool clashes(Shape const &o) const;
 			/**
 			 * @brief Adds xcoord and ycord to the current space object
 			 * coordinates.
 			 */
-			void move(float xcoord, float ycoord);
+			virtual void move(float xcoord, float ycoord);
 			/**
 			 * @brief Move the current object along the given trajectory.
 			 * @param t Trajectory to follow
 			 */
-			void moveAlong(Trajectory const &t);
+			virtual void moveAlong(Trajectory const &t);
 			/**
 			 * @return @c true if the object at the current position meets the
 			 * other @c Shape given as argument by following the

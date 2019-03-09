@@ -82,8 +82,8 @@ void SpaceshipView::handle(Event const &e) {
 			mSprite.setOrigin(p->originX(), p->originY());
 		} else if (e == Shape::ROTATION) {
 			mSprite.setRotation(gvt::rad2deg(p->rotation()));
-		} else if (e == Shape::DESTROIED) {
-			mSprite = sf::Sprite();
 		}
+	} else if (e == Shape::DESTROIED) {
+		mSprite = sf::Sprite();
 	}
 }
