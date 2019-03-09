@@ -48,6 +48,10 @@ float gvt::Shape::originY () const {
 	return mOriginY;
 }
 
+float gvt::Shape::rotation() const {
+	return mRotation;
+}
+
 void gvt::Shape::rotation(float r) {
 	// TO-DO Shorten, if at all possible, this code that I have produced, which
 	// at first sight looks orribly bigger than it ought to be

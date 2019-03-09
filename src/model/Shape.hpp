@@ -48,12 +48,6 @@ namespace gvt {
 			float mOriginX{0}, mOriginY{0};
 			float mRotation{0};
 			Trajectory mVelocity{0, 0};
-
-			/**
-			 * @return A @c Rectangle object representing the bounds used to
-			 * detect collision with another @c Shape.
-			 */
-			virtual Rectangle collisionBox() const = 0;
 		public:
 			using ostream = std::ostream;
 
@@ -102,7 +96,7 @@ namespace gvt {
 			 * @return The angle with respect to the object origin of the
 			 * current @c Shape instance, given in radians.
 			 */
-			virtual float rotation() const;
+			virtual inline float rotation() const;
 			/**
 			 * @param r The rotation angle to set for this object, in radians
 			 * @todo Test the implementation
@@ -125,6 +119,12 @@ namespace gvt {
 			 * @return The current @c Shape speed, as a scalar value.
 			 */
 			virtual float speed() const;
+
+			/**
+			 * @return A @c Rectangle object representing the bounds used to
+			 * detect collision with another @c Shape.
+			 */
+			virtual Rectangle collisionBox() const = 0;
 			/**
 			 * @return @c true if the boundaries of the current @c Shape clash
 			 * with those of the object @c o.

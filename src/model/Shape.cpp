@@ -46,10 +46,6 @@ void Shape::origin(float xcoord, float ycoord) {
 	notify(ORIGIN);
 }
 
-float Shape::rotation() const {
-	return mRotation;
-}
-
 void Shape::velocity(Trajectory const &t) {
 	mVelocity = t;
 }
