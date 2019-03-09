@@ -24,7 +24,9 @@
 #include <SFML/Graphics.hpp>
 #include <SFML/Window.hpp>
 #include "model/Spaceship.hpp"
+#include "model/Bunker.hpp"
 #include "view/SpaceshipView.hpp"
+#include "view/BunkerView.hpp"
 #include "Vector.hpp"
 
 using Event = sf::Event;
@@ -33,6 +35,9 @@ using RenderWindow = sf::RenderWindow;
 
 using Spaceship = gvt::Spaceship;
 using SpaceshipView = gvt::SpaceshipView;
+
+using Bunker = gvt::Bunker;
+using BunkerView = gvt::BunkerView;
 
 
 #define STEP_SIZE 5
@@ -45,9 +50,13 @@ int main () {
 	Event e;
 
 	std::shared_ptr<Spaceship> ship{new Spaceship(0, 0, 1000)};
+	std::shared_ptr<Bunker> bunker{new gvt::Bunker2D(100, 100)};
 	SpaceshipView view{ship};
+	BunkerView bView{bunker};
 
 	ship->origin(ship->width() / 2, ship->height() / 2);
+	bunker->origin(bunker->height() / 2, bunker->width() / 2.0);
+	bunker->rotation(-M_PI / 2.0);
 	w.setFramerateLimit(60);
 
 	while (w.isOpen()) {
@@ -83,6 +92,7 @@ int main () {
 
 		w.clear();
 		w.draw(view);
+		w.draw(bView);
 		w.display();
 	}
 

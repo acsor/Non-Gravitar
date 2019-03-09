@@ -70,7 +70,9 @@ target_link_libraries(SFMLOrigin sfml-window sfml-graphics sfml-system)
 
 add_executable(NonGravitar "${DIR_SRC}/NonGravitar.cpp")
 target_link_libraries(
-	NonGravitar sfml-window sfml-graphics sfml-system Spaceship SpaceshipView
+	NonGravitar
+	sfml-window sfml-graphics sfml-system
+	SpaceshipView BunkerView
 )
 
 add_subdirectory(test)
