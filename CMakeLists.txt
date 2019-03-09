@@ -56,13 +56,13 @@ add_library(Utils "${DIR_SRC}/Utils.cpp")
 
 
 add_library(ShapeView "${DIR_VIEWS}/ShapeView.cpp")
-target_link_libraries(ShapeView Spaceship Utils)
+target_link_libraries(ShapeView Shape)
 
 add_library(SpaceshipView "${DIR_VIEWS}/SpaceshipView.cpp")
-target_link_libraries(SpaceshipView Spaceship Utils)
+target_link_libraries(SpaceshipView Spaceship ShapeView Utils)
 
 add_library(BunkerView "${DIR_VIEWS}/BunkerView.cpp")
-target_link_libraries(BunkerView Bunker Utils)
+target_link_libraries(BunkerView Bunker ShapeView Utils)
 
 
 add_executable(SFMLCollision "${DIR_SAMPLES}/SFMLCollision.cpp")

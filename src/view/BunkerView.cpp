@@ -32,8 +32,7 @@ const std::string BunkerView::BUNKER3D_GRAPHICS = "graphics/bunker-3.png";
 
 
 BunkerView::BunkerView(shared_ptr<Bunker> bunker, bool debug):
-	mBunker{bunker} {
-	mDebug = debug;
+	ShapeView(bunker, debug), mBunker{bunker} {
 	std::string texturePath;
 
 	if (typeid(*bunker) == typeid(gvt::Bunker2D))
@@ -60,10 +59,14 @@ BunkerView::~BunkerView() {
 }
 
 void BunkerView::draw(RenderTarget &target, RenderStates state) const {
+	ShapeView::draw(target, state);
+
 	target.draw(mSprite);
 }
 
 void BunkerView::handle(Event const &e) {
+	ShapeView::handle(e);
+
 	if (auto p = mBunker.lock()) {
 		if (e == Shape::MOVE) {
 			mSprite.setPosition(p->x(), p->y());

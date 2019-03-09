@@ -71,10 +71,10 @@ bool Rectangle::operator==(Shape const &o) const {
 	return false;
 }
 
-void Rectangle::rotation(float r) {
-	Shape::rotation(r);
-	// TO-DO Implement remainder part
-}
+// void Rectangle::rotation(float r) {
+// 	Shape::rotation(r);
+// 	// TO-DO Implement remainder part
+// }
 
 float Rectangle::width() const {
 	return abs(mEnd.x() - mX);

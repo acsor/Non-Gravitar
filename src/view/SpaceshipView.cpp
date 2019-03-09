@@ -32,7 +32,7 @@ const std::string SpaceshipView::ACCEL_SPACESHIP_TEXTURE =
 
 
 SpaceshipView::SpaceshipView(shared_ptr<Spaceship> spaceship, bool debug):
-	mSpaceship{spaceship}, mDebug{debug} {
+	ShapeView(spaceship, debug), mSpaceship{spaceship} {
 	if (
 			!mTexture.loadFromFile(gvt::staticsGet(SPACESHIP_TEXTURE)) ||
 			!mAccelTexture.loadFromFile(
@@ -56,12 +56,14 @@ SpaceshipView::SpaceshipView(shared_ptr<Spaceship> spaceship, bool debug):
 }
 
 SpaceshipView::~SpaceshipView() {
-	if (auto p = mSpaceship.lock()) {
+	// TO-DO Is the base class (Shape) destructor invoked implicitly?
+	if (auto p = mSpaceship.lock())
 		p->detach(*this);
-	}
 }
 
 void SpaceshipView::draw(RenderTarget &target, RenderStates state) const {
+	ShapeView::draw(target, state);
+
 	if (mAccel) {
 		mSprite.setTexture(mAccelTexture);
 		target.draw(mSprite);
@@ -74,6 +76,8 @@ void SpaceshipView::draw(RenderTarget &target, RenderStates state) const {
 }
 
 void SpaceshipView::handle(Event const &e) {
+	ShapeView::handle(e);
+
 	if (auto p = mSpaceship.lock()) {
 		if (e == Shape::MOVE) {
 			mSprite.setPosition(p->x(), p->y());

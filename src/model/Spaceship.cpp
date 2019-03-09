@@ -32,10 +32,10 @@ Spaceship::Spaceship(float xcoord, float ycoord, unsigned fuel):
 
 Rectangle Spaceship::collisionBox() const {
 	Rectangle r = {
-		{mX - mOriginX, mY - mOriginY},
-		{mX + WIDTH - mOriginX, mY + HEIGHT - mOriginY}
+		{mX, mY}, {mX + WIDTH, mY + HEIGHT}
 	};
 	r.rotation(mRotation);
+	r.origin(mOriginX, mOriginY);
 
 	return r;
 }

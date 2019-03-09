@@ -74,7 +74,9 @@ namespace gvt {
 			bool clashes(Rectangle const &o) const;
 			bool operator==(Shape const &o) const override;
 
-			virtual void rotation(float r) override;
+			// TO-DO Check why the override below obfuscates the
+			// Shape::rotation() function
+			// virtual void rotation(float r) override;
 
 			float width() const override;
 			float height() const override;

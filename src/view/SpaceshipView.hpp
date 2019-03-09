@@ -25,6 +25,7 @@
 #include <string>
 #include <memory>
 #include <SFML/Graphics.hpp>
+#include "ShapeView.hpp"
 #include "../model/Spaceship.hpp"
 #include "../Event.hpp"
 
@@ -36,11 +37,10 @@ using Texture = sf::Texture;
 
 
 namespace gvt {
-	class SpaceshipView: public sf::Drawable, public EventListener {
+	class SpaceshipView: public ShapeView {
 		private:
 			weak_ptr<Spaceship> mSpaceship;
 			bool mutable mAccel{false};
-			bool mDebug{false};
 
 			sf::Sprite mutable mSprite{};
 			/**
@@ -54,7 +54,8 @@ namespace gvt {
 			static const std::string ACCEL_SPACESHIP_TEXTURE;
 
 			SpaceshipView(shared_ptr<Spaceship> spaceship, bool debug=false);
-			~SpaceshipView();
+			// Should an inherited virtual destructor be marked override?
+			~SpaceshipView() override;
 
 			void draw(RenderTarget &target, RenderStates state) const override;
 			void handle(Event const &e) override;

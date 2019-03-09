@@ -34,10 +34,10 @@ using Shape = gvt::Shape;
 
 Rectangle Bunker::collisionBox () const {
     Rectangle r = {
-		{mX - mOriginX, mY - mOriginY},
-		{mX - mOriginX + width(), mY - mOriginY + height()}
+		{mX, mY}, {mX + width(), mY + height()}
     };
     r.rotate(mRotation);
+	r.origin(mOriginX, mOriginY);
 
     return r;
 }

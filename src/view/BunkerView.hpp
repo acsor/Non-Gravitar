@@ -25,6 +25,7 @@
 #include <string>
 #include <memory>
 #include <SFML/Graphics.hpp>
+#include "ShapeView.hpp"
 #include "../model/Bunker.hpp"
 
 template<typename T> using weak_ptr = std::weak_ptr<T>;
@@ -35,10 +36,9 @@ using Texture = sf::Texture;
 
 
 namespace gvt {
-	class BunkerView: public sf::Drawable, public EventListener {
+	class BunkerView: public ShapeView {
 		private:
 			weak_ptr<Bunker> mBunker;
-			bool mDebug;
 
 			sf::Sprite mSprite{};
 			Texture mTexture;
@@ -47,7 +47,8 @@ namespace gvt {
 			static const std::string BUNKER3D_GRAPHICS;
 
 			BunkerView(shared_ptr<Bunker> bunker, bool debug=false);
-			~BunkerView();
+			// Should an inherited virtual destructor be marked override?
+			~BunkerView() override;
 
 			void draw(RenderTarget &target, RenderStates state) const override;
 			void handle(Event const &e) override;

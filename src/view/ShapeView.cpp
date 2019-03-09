@@ -19,19 +19,28 @@
 // LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
+#include <iostream>
 #include "ShapeView.hpp"
+#include "../model/Rectangle.hpp"
+#include "../Utils.hpp"
 
 using Shape = gvt::Shape;
 using ShapeView = gvt::ShapeView;
 
 
 ShapeView::ShapeView(shared_ptr<Shape> shape, bool debug): mShape{shape} {
+	gvt::Rectangle bounds = shape->collisionBox();
+
 	mDebug = debug;
 
-	mBounds = sf::RectangleShape();
-	mBounds.setPosition(shape->x(), shape->y());
-	mBounds.setOrigin(shape->originX(), shape->originY());
-	mBounds.setRotation(shape->rotation());
+	mBounds = sf::RectangleShape({bounds.width(), bounds.height()});
+	mBounds.setPosition(bounds.x(), bounds.y());
+	mBounds.setOrigin(bounds.originX(), bounds.originY());
+	mBounds.setRotation(gvt::rad2deg(bounds.rotation()));
+
+	mBounds.setFillColor(sf::Color::Green);
+	mBounds.setOutlineColor(sf::Color::Red);
+	mBounds.setOutlineThickness(1.5);
 }
 
 void ShapeView::draw(RenderTarget &target, RenderStates s) const {
@@ -42,11 +51,13 @@ void ShapeView::draw(RenderTarget &target, RenderStates s) const {
 void ShapeView::handle(Event const &e) {
 	if (auto p = mShape.lock()) {
 		if (e == Shape::MOVE) {
-			mBounds.setPosition(p->x(), p->y());
+			mBounds.setPosition(p->collisionBox().x(), p->collisionBox().y());
 		} else if (e == Shape::ORIGIN) {
-			mBounds.setOrigin(p->originX(), p->originY());
+			mBounds.setOrigin(
+				p->collisionBox().originX(), p->collisionBox().originY()
+			);
 		} else if (e == Shape::ROTATION) {
-			mBounds.setRotation(p->rotation());
+			mBounds.setRotation(gvt::rad2deg(p->collisionBox().rotation()));
 		}
 	}
 }

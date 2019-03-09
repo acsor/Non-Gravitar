@@ -45,14 +45,16 @@ using BunkerView = gvt::BunkerView;
 
 
 int main () {
+	// TO-DO Set the debug value from the command line
+	bool debug = false;
 	sf::VideoMode const mode = sf::VideoMode::getDesktopMode();
 	RenderWindow w{mode, "Non-Gravitar"};
 	Event e;
 
 	std::shared_ptr<Spaceship> ship{new Spaceship(0, 0, 1000)};
 	std::shared_ptr<Bunker> bunker{new gvt::Bunker2D(100, 100)};
-	SpaceshipView view{ship};
-	BunkerView bView{bunker};
+	SpaceshipView view{ship, debug};
+	BunkerView bView{bunker, debug};
 
 	ship->origin(ship->width() / 2, ship->height() / 2);
 	bunker->origin(bunker->height() / 2, bunker->width() / 2.0);
