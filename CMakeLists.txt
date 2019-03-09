@@ -46,10 +46,10 @@ add_library(Fuel "${DIR_MODELS}/Fuel.cpp")
 target_link_libraries(Fuel Spaceship)
 
 add_library(RoundMissile "${DIR_MODELS}/RoundMissile.cpp")
-target_link_libraries(RoundMissile Shape)
+target_link_libraries(RoundMissile Shape Circle)
 
 add_library(Bunker "${DIR_MODELS}/Bunker.cpp")
-target_link_libraries(Bunker Shape)
+target_link_libraries(Bunker Shape RoundMissile)
 
 
 add_library(Utils "${DIR_SRC}/Utils.cpp")
@@ -57,6 +57,9 @@ add_library(Utils "${DIR_SRC}/Utils.cpp")
 
 add_library(SpaceshipView "${DIR_VIEWS}/SpaceshipView.cpp")
 target_link_libraries(SpaceshipView Spaceship Utils)
+
+add_library(BunkerView "${DIR_VIEWS}/BunkerView.cpp")
+target_link_libraries(BunkerView Bunker Utils)
 
 
 add_executable(SFMLCollision "${DIR_SAMPLES}/SFMLCollision.cpp")
