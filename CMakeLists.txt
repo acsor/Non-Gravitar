@@ -55,6 +55,9 @@ target_link_libraries(Bunker Shape RoundMissile)
 add_library(Utils "${DIR_SRC}/Utils.cpp")
 
 
+add_library(ShapeView "${DIR_VIEWS}/ShapeView.cpp")
+target_link_libraries(ShapeView Spaceship Utils)
+
 add_library(SpaceshipView "${DIR_VIEWS}/SpaceshipView.cpp")
 target_link_libraries(SpaceshipView Spaceship Utils)
 
