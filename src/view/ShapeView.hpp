@@ -42,7 +42,10 @@ namespace gvt {
 
 			ShapeView(shared_ptr<Shape> shape, bool debug=false);
 		public:
-			virtual ~ShapeView() = default;
+			virtual ~ShapeView();
+
+			bool debug() const;
+			void debug(bool debug);
 
 			void draw(RenderTarget &target, RenderStates s) const override;
 			void handle(Event const &e) override;

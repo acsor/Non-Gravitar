@@ -45,20 +45,18 @@ using BunkerView = gvt::BunkerView;
 
 
 int main () {
-	// TO-DO Set the debug value from the command line
-	bool debug = false;
 	sf::VideoMode const mode = sf::VideoMode::getDesktopMode();
 	RenderWindow w{mode, "Non-Gravitar"};
 	Event e;
 
-	std::shared_ptr<Spaceship> ship{new Spaceship(0, 0, 1000)};
-	std::shared_ptr<Bunker> bunker{new gvt::Bunker2D(100, 100)};
-	SpaceshipView view{ship, debug};
-	BunkerView bView{bunker, debug};
+	std::shared_ptr<Spaceship> ship{new Spaceship(22, 23, 1000)};
+	std::shared_ptr<Bunker> bunker{new gvt::Bunker2D(500, 500)};
+	SpaceshipView view{ship, false};
+	BunkerView bView{bunker, false};
 
 	ship->origin(ship->width() / 2, ship->height() / 2);
 	bunker->origin(bunker->height() / 2, bunker->width() / 2.0);
-	bunker->rotation(-M_PI / 2.0);
+	bunker->rotation(-3.0 / 4.0 * M_PI);
 	w.setFramerateLimit(60);
 
 	while (w.isOpen()) {
@@ -83,6 +81,12 @@ int main () {
 						case (Keyboard::Key::S):
 							// Should activate the shields in a future version
 							// of the codebase
+							break;
+						case (Keyboard::Key::B):
+							if (e.key.control) {
+								view.debug(!view.debug());
+								bView.debug(!bView.debug());
+							}
 							break;
 						default:
 							break;

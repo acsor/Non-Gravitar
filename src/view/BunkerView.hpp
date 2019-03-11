@@ -47,8 +47,6 @@ namespace gvt {
 			static const std::string BUNKER3D_GRAPHICS;
 
 			BunkerView(shared_ptr<Bunker> bunker, bool debug=false);
-			// Should an inherited virtual destructor be marked override?
-			~BunkerView() override;
 
 			void draw(RenderTarget &target, RenderStates state) const override;
 			void handle(Event const &e) override;

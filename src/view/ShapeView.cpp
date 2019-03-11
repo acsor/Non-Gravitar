@@ -37,10 +37,22 @@ ShapeView::ShapeView(shared_ptr<Shape> shape, bool debug): mShape{shape} {
 	mBounds.setPosition(bounds.x(), bounds.y());
 	mBounds.setOrigin(bounds.originX(), bounds.originY());
 	mBounds.setRotation(gvt::rad2deg(bounds.rotation()));
-
 	mBounds.setFillColor(sf::Color::Green);
-	mBounds.setOutlineColor(sf::Color::Red);
-	mBounds.setOutlineThickness(1.5);
+
+	shape->attachListener(*this);
+}
+
+ShapeView::~ShapeView() {
+	if (auto p = mShape.lock())
+		p->detachListener(*this);
+}
+
+bool ShapeView::debug() const {
+	return mDebug;
+}
+
+void ShapeView::debug(bool debug) {
+	mDebug = debug;
 }
 
 void ShapeView::draw(RenderTarget &target, RenderStates s) const {
@@ -49,15 +61,17 @@ void ShapeView::draw(RenderTarget &target, RenderStates s) const {
 }
 
 void ShapeView::handle(Event const &e) {
+	Rectangle box{{0, 0}, {0, 0}};
+
 	if (auto p = mShape.lock()) {
+		box = p->collisionBox();
+
 		if (e == Shape::MOVE) {
-			mBounds.setPosition(p->collisionBox().x(), p->collisionBox().y());
+			mBounds.setPosition(box.x(), box.y());
 		} else if (e == Shape::ORIGIN) {
-			mBounds.setOrigin(
-				p->collisionBox().originX(), p->collisionBox().originY()
-			);
+			mBounds.setOrigin(box.originX(), box.originY());
 		} else if (e == Shape::ROTATION) {
-			mBounds.setRotation(gvt::rad2deg(p->collisionBox().rotation()));
+			mBounds.setRotation(gvt::rad2deg(box.rotation()));
 		}
 	}
 }

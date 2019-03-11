@@ -54,8 +54,6 @@ namespace gvt {
 			static const std::string ACCEL_SPACESHIP_TEXTURE;
 
 			SpaceshipView(shared_ptr<Spaceship> spaceship, bool debug=false);
-			// Should an inherited virtual destructor be marked override?
-			~SpaceshipView() override;
 
 			void draw(RenderTarget &target, RenderStates state) const override;
 			void handle(Event const &e) override;
