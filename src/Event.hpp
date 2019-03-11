@@ -48,8 +48,8 @@ namespace gvt {
 		private:
 			set<EventListener*> mListeners;
 		public:
-			void attach(EventListener &l);
-			void detach(EventListener &l);
+			void attachListener(EventListener &l);
+			void detachListener(EventListener &l);
 			void notify(Event const &e) const;
 	};
 

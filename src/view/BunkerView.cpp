@@ -50,12 +50,12 @@ BunkerView::BunkerView(shared_ptr<Bunker> bunker, bool debug):
 	mSprite.setRotation(bunker->rotation());
 	mSprite.setTexture(mTexture);
 
-	bunker->attach(*this);
+	bunker->attachListener(*this);
 }
 
 BunkerView::~BunkerView() {
 	if (auto p = mBunker.lock())
-		p->detach(*this);
+		p->detachListener(*this);
 }
 
 void BunkerView::draw(RenderTarget &target, RenderStates state) const {

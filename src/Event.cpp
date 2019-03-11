@@ -46,11 +46,11 @@ bool Event::operator!= (Event const &o) const {
 }
 
 
-void EventDispatcher::attach(EventListener &l) {
+void EventDispatcher::attachListener(EventListener &l) {
 	mListeners.insert(&l);
 }
 
-void EventDispatcher::detach(EventListener &l) {
+void EventDispatcher::detachListener(EventListener &l) {
 	mListeners.erase(&l);
 }
 

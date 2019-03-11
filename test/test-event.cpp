@@ -55,7 +55,7 @@ TEST_CASE("EventListener::handle(), EventDispatcher::notify()", "[Event]") {
 	SimpleListener l;
 	size_t repeatA = 43, repeatB = 55;
 
-	s.attach(l);
+	s.attachListener(l);
 
 	for (size_t i = 0; i < repeatA; i++)
 		s.notify(SimpleDispatcher::EVENT_A);
@@ -66,7 +66,7 @@ TEST_CASE("EventListener::handle(), EventDispatcher::notify()", "[Event]") {
 	REQUIRE(l.eventA == repeatA);
 	REQUIRE(l.eventB == repeatB);
 
-	s.detach(l);
+	s.detachListener(l);
 }
 
 TEST_CASE("Event::operator==", "[Event]") {

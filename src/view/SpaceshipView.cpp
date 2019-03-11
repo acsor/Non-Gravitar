@@ -52,13 +52,13 @@ SpaceshipView::SpaceshipView(shared_ptr<Spaceship> spaceship, bool debug):
 	mSprite.setRotation(gvt::rad2deg(spaceship->rotation()));
 	mSprite.setTexture(mTexture);
 
-	spaceship->attach(*this);
+	spaceship->attachListener(*this);
 }
 
 SpaceshipView::~SpaceshipView() {
 	// TO-DO Is the base class (Shape) destructor invoked implicitly?
 	if (auto p = mSpaceship.lock())
-		p->detach(*this);
+		p->detachListener(*this);
 }
 
 void SpaceshipView::draw(RenderTarget &target, RenderStates state) const {
