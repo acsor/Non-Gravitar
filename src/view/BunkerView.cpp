@@ -57,7 +57,7 @@ void BunkerView::draw(RenderTarget &target, RenderStates state) const {
 	target.draw(mSprite);
 }
 
-void BunkerView::handle(Event const &e) {
+void BunkerView::handle(Event e) {
 	ShapeView::handle(e);
 
 	if (auto p = mBunker.lock()) {

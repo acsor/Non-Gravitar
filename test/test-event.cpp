@@ -37,7 +37,7 @@ class SimpleListener: public EventListener {
 	public:
 		size_t eventA{0}, eventB{0};
 
-		void handle(Event const &e) override {
+		void handle(Event e) override {
 			if (e == SimpleDispatcher::EVENT_A)
 				eventA++;
 			else if (e == SimpleDispatcher::EVENT_B)

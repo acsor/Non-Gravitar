@@ -60,7 +60,7 @@ void ShapeView::draw(RenderTarget &target, RenderStates s) const {
 		target.draw(mBounds);
 }
 
-void ShapeView::handle(Event const &e) {
+void ShapeView::handle(Event e) {
 	Rectangle box{{0, 0}, {0, 0}};
 
 	if (auto p = mShape.lock()) {

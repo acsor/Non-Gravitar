@@ -67,7 +67,7 @@ void SpaceshipView::draw(RenderTarget &target, RenderStates state) const {
 	}
 }
 
-void SpaceshipView::handle(Event const &e) {
+void SpaceshipView::handle(Event e) {
 	ShapeView::handle(e);
 
 	if (auto p = mSpaceship.lock()) {

@@ -54,7 +54,7 @@ void EventDispatcher::detachListener(EventListener &l) {
 	mListeners.erase(&l);
 }
 
-void EventDispatcher::notify(Event const &e) const {
+void EventDispatcher::notify(Event e) const {
 	for (auto i = mListeners.begin(); i != mListeners.end(); i++)
 		(*i)->handle(e);
 }
