@@ -54,7 +54,9 @@ RoundMissile Bunker::shoot() {
 	// Bear in mind that by default, on the graphics layer the Bunker is
 	// rotated by default by 90. deg (the normal out of its ceiling has
 	// direction (1, 0))
-	RoundMissile m{mX + height(), mY + width() / 2.0};
+	RoundMissile m{
+		mX + height(), static_cast<float>(mY + width() / 2.0)
+	};
 
 	m.origin(mOriginX, mOriginY);
 	m.rotation(mRotation);
