@@ -29,8 +29,6 @@ namespace gvt {
 	class Rectangle;
 
 	class Point: public Shape {
-		protected:
-			Rectangle collisionBox() const override;
 		public:
 			friend Point operator*(float, const Point&);
 
@@ -41,6 +39,8 @@ namespace gvt {
 
 			Point operator+ (Point const &o) const;
 			Point operator- (Point const &o) const;
+
+			Rectangle collisionBox() const override;
 			bool operator== (Shape const &o) const override;
 	};
 

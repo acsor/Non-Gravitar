@@ -30,8 +30,6 @@ namespace gvt {
 	class Circle: public Shape {
 		protected:
 			float mRadius;
-
-			Rectangle collisionBox() const override;
 		public:
 			Circle(float xcoord, float ycoord);
 			Circle(float xcoord, float ycoord, float radius);
@@ -39,6 +37,7 @@ namespace gvt {
 			float area() const;
 			bool clashes(Circle const &o) const;
 
+			Rectangle collisionBox() const override;
 			bool operator== (Shape const &o) const override;
 	};
 };

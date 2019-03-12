@@ -25,22 +25,11 @@
 using namespace gvt;
 
 
-Rectangle Fuel::collisionBox() const {
-	// TO-DO This implementation is outright wrong, indeed we have yet no
-	// possibility to specify tilted rectangles, but only one whose sides are
-	// perpendicular to the x and y axes
-	Rectangle r =  {
-		{mX - mOriginX, mY - mOriginY},
-		{mX + WIDTH - mOriginX, mY + HEIGHT - mOriginY}
-	};
-	r.rotation(mRotation);
-
-	return r;
-}
-
 Fuel::Fuel(float xcoord, float ycoord, unsigned fuel):
 	Shape(xcoord, ycoord) {
 	mFuel = fuel;
+	mOriginX = WIDTH / 2;
+	mOriginY = HEIGHT / 2;
 }
 
 unsigned Fuel::fuel() const {
@@ -57,6 +46,16 @@ float Fuel::width() const {
 
 float Fuel::height() const {
 	return Fuel::HEIGHT;
+}
+
+Rectangle Fuel::collisionBox() const {
+	Rectangle r =  {
+		{mX, mY}, {mX + WIDTH, mY + HEIGHT}
+	};
+	r.origin(mOriginX, mOriginY);
+	r.rotation(mRotation);
+
+	return r;
 }
 
 bool Fuel::operator== (Shape const &o) const {

@@ -32,8 +32,6 @@ namespace gvt {
 	class Fuel: public Shape, public WidthTrait, public HeightTrait {
 		private:
 			unsigned mFuel;
-		protected:
-			Rectangle collisionBox() const override;
 		public:
 			/**
 			 * @brief Width and height measures derived from
@@ -55,6 +53,7 @@ namespace gvt {
 			float width() const override;
 			float height() const override;
 
+			Rectangle collisionBox() const override;
 			bool operator== (Shape const &o) const override;
 	};
 }

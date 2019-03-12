@@ -21,21 +21,25 @@
 // SOFTWARE.
 #include "Spaceship.hpp"
 
+using Point = gvt::Point;
 using Spaceship = gvt::Spaceship;
 using Rectangle = gvt::Rectangle;
 
 
 Spaceship::Spaceship(float xcoord, float ycoord, unsigned fuel):
 	Shape::Shape(xcoord, ycoord) {
+	mOriginX = WIDTH / 2;
+	mOriginY = HEIGHT / 2;
 	mFuel = fuel;
 }
 
 Rectangle Spaceship::collisionBox() const {
 	Rectangle r = {
-		{mX, mY}, {mX + WIDTH, mY + HEIGHT}
+		{mX, mY}, {mX + COLLIDING_WIDTH, mY + COLLIDING_HEIGHT}
 	};
+	
+	r.origin(COLLIDING_WIDTH / 2.0, COLLIDING_HEIGHT / 2.0);
 	r.rotation(mRotation);
-	r.origin(mOriginX, mOriginY);
 
 	return r;
 }

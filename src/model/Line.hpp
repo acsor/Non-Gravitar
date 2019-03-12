@@ -32,8 +32,6 @@ namespace gvt {
 	class Line: public Shape, public WidthTrait {
 		private:
 			Point mEnd;
-		protected:
-			Rectangle collisionBox() const override;
 		public:
 			// Default width of the bounding box returned by
 			// Line::collisionBox()
@@ -47,6 +45,8 @@ namespace gvt {
 			 * @return Stretched out/in Line object
 			 */
 			Line& operator* (double factor);
+
+			Rectangle collisionBox() const override;
 			bool operator== (Shape const &o) const override;
 	};
 }

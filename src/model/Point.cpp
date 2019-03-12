@@ -28,13 +28,17 @@ using Point = gvt::Point;
 
 
 gvt::Rectangle gvt::Point::collisionBox() const {
+	// TO-DO Check/unit test this
 	Point const halfWidth{
 		static_cast<float>(WIDTH_BBOX / 2.0 - mOriginX),
 		static_cast<float>(WIDTH_BBOX / 2.0 - mOriginY)
 	};
+	Rectangle r = Rectangle{*this - halfWidth, *this + halfWidth};
 
-	// TO-DO Check/unit test this
-	return Rectangle{*this - halfWidth, *this + halfWidth};
+	r.origin(mOriginX, mOriginY);
+	r.rotation(mRotation);
+
+	return r;
 }
 
 Point::Point(float xcoord, float ycoord): Shape(xcoord, ycoord) {

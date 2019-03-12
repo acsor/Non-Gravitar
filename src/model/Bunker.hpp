@@ -37,9 +37,16 @@ namespace gvt {
 			vector<Trajectory> mPaths;
 			unsigned mCurr{0};
 
-			Rectangle collisionBox() const override;
-
 			Bunker(float xcoord, float ycoord, size_t directions);
+
+			// Width and height measures of the collision boxes
+			static unsigned const constexpr COLLIDING_WIDTH = 29;
+			static unsigned const constexpr COLLIDING_HEIGHT = 42;
+
+
+			// Width and height measures of the collision boxes
+			static unsigned const constexpr ORIGINX = 14;
+			static unsigned const constexpr ORIGINY = 33;
 		public:
 			static unsigned const constexpr WIDTH = 45;
 			static unsigned const constexpr HEIGHT = 66;
@@ -53,6 +60,7 @@ namespace gvt {
 			 */
 			RoundMissile shoot();
 
+			Rectangle collisionBox() const override;
 			bool operator==(Shape const &o) const override;
 	};
 

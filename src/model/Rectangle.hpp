@@ -58,8 +58,6 @@ namespace gvt {
 
 		private:
 			Point mEnd{0, 0};
-		protected:
-			Rectangle collisionBox() const override;
     	public:
     		/**
     		 * @brief Constructs a @c Rectangle with width > 0 and height > 0.
@@ -72,6 +70,8 @@ namespace gvt {
 			 * portion, @c false otherwise.
 			 */
 			bool clashes(Rectangle const &o) const;
+
+			Rectangle collisionBox() const override;
 			bool operator==(Shape const &o) const override;
 
 			// TO-DO Check why the override below obfuscates the

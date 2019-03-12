@@ -22,9 +22,17 @@
 #ifndef NON_GRAVITAR_PLANE_HPP
 #define NON_GRAVITAR_PLANE_HPP
 
+#include <list>
+#include <memory>
+#include "../Event.hpp"
+
 
 namespace gvt {
-	class Plane {
+	class Shape;
+
+	class Plane: public EventListener {
+		private:
+			std::list<std::shared_ptr<Shape>> mObjects;
 		public:
 			void updateCollisions();
 	};

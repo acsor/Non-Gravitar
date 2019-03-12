@@ -28,23 +28,13 @@ using Shape = gvt::Shape;
 using Rectangle = gvt::Rectangle;
 
 
-Rectangle Circle::collisionBox() const {
-	// TO-DO Improve by taking into account rotation as well
-	Rectangle r = Rectangle{
-		{mX - mOriginX, mY - mOriginY},
-		{mX - mOriginX + 2 * mRadius, mY - mOriginY + 2 * mRadius}
-	};
-
-	r.rotation(mRotation);
-
-	return r;
-}
-
 Circle::Circle(float xcoord, float ycoord): Circle{xcoord, ycoord, 0} {
 }
 
 Circle::Circle(float xcoord, float ycoord, float radius):
 	Shape{xcoord, ycoord}, mRadius{radius} {
+	mOriginX = radius;
+	mOriginY = radius;
 }
 
 float Circle::area() const {
@@ -57,6 +47,18 @@ bool Circle::clashes(Circle const &o) const {
 		pow(mX + mRadius - mOriginX - (o.mX + mRadius - o.mOriginX), 2) +
 		pow(mY + mRadius - mOriginY - (o.mY + mRadius - o.mOriginY), 2)
 	) <= mRadius + o.mRadius;
+}
+
+Rectangle Circle::collisionBox() const {
+	// TO-DO Improve by taking into account rotation as well
+	Rectangle r = Rectangle{
+		{mX, mY}, {mX + 2 * mRadius, mY + 2 * mRadius}
+	};
+
+	r.origin(mRadius, mRadius);
+	r.rotation(mRotation);
+
+	return r;
 }
 
 bool Circle::operator== (Shape const &o) const {

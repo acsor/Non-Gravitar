@@ -34,8 +34,11 @@ namespace gvt {
 		private:
 			// Represents the current fuel amount in the ship
 			unsigned mFuel;
-		protected:
-			Rectangle collisionBox() const override;
+
+			// Offsets for the Spaceship bounding box, holding width/height
+			// values
+			static unsigned const constexpr COLLIDING_WIDTH = 30;
+			static unsigned const constexpr COLLIDING_HEIGHT = 27;
 		public:
 			/** Width and height properties of any given spaceship. Note that
 			 * these measures depend on the texture data found in
@@ -73,6 +76,7 @@ namespace gvt {
 			inline float width() const override;
 			inline float height() const override;
 
+			Rectangle collisionBox() const override;
 			bool operator== (Shape const &o) const override;
 	};
 }

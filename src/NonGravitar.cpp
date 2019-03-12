@@ -54,9 +54,7 @@ int main () {
 	SpaceshipView view{ship, false};
 	BunkerView bView{bunker, false};
 
-	ship->origin(ship->width() / 2, ship->height() / 2);
-	bunker->origin(bunker->height() / 2, bunker->width() / 2.0);
-	bunker->rotation(-3.0 / 4.0 * M_PI);
+	// bunker->rotation(-3.0 / 4.0 * M_PI);
 	w.setFramerateLimit(60);
 
 	while (w.isOpen()) {
