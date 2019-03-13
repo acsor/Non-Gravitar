@@ -27,23 +27,30 @@ using Shape = gvt::Shape;
 using Trajectory = gvt::Trajectory;
 
 
-const Event Shape::MOVE;
-const Event Shape::ORIGIN;
-const Event Shape::ROTATION;
-const Event Shape::DESTROIED;
+const Event Shape::MOVE = Event::create();
+const Event Shape::ORIGIN = Event::create();
+const Event Shape::ROTATION = Event::create();
+const Event Shape::DESTROIED = Event::create();
 
 
 Shape::Shape(float x, float y): mX{x}, mY{y} {
 }
 
 Shape::~Shape() {
-	notify(DESTROIED);
+	Event e = DESTROIED;
+	e.data = this;
+
+	notify(e);
 }
 
 void Shape::origin(float xcoord, float ycoord) {
+	Event e = ORIGIN;
+
 	mOriginX = xcoord;
 	mOriginY = ycoord;
-	notify(ORIGIN);
+	e.data = this;
+
+	notify(e);
 }
 
 void Shape::velocity(Trajectory const &t) {
@@ -63,15 +70,23 @@ bool Shape::clashes(gvt::Shape const &o) const {
 }
 
 void Shape::move(float xcoord, float ycoord) {
+	Event e = MOVE;
+
     mX += xcoord;
     mY += ycoord;
-	notify(MOVE);
+	e.data = this;
+
+	notify(e);
 }
 
 void Shape::moveAlong(Trajectory const &t) {
+	Event e = MOVE;
+
 	mX += t.x;
 	mY += t.y;
-	notify(MOVE);
+	e.data = this;
+
+	notify(e);
 }
 
 bool Shape::operator== (Shape const &o) const {
