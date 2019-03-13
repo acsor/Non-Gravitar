@@ -19,8 +19,29 @@
 // LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
-#include "Plane.hpp"
+#include "ShapeBundle.hpp"
+
+using Event = gvt::Event;
+using ShapeBundle = gvt::ShapeBundle;
+using Shape = gvt::Shape;
 
 
-void gvt::Plane::updateCollisions() {
+const Event ShapeBundle::SHAPE_ATTACHED = Event::create();
+const Event ShapeBundle::DESTROIED = Event::create();
+
+
+ShapeBundle::~ShapeBundle() {
+	notify(DESTROIED);
+}
+
+void ShapeBundle::attachShape(Shape *shape) {
+	// Not checking for null-pointer arguments is intended behavior, as code
+	// feeding in null-pointer values should not exist in the first place: a
+	// segmentation fault acts as a proper signaling mechanism
+	Event attached = SHAPE_ATTACHED;
+	mObjects.push_front(std::shared_ptr<Shape>(shape));
+	shape->attachListener(*this);
+
+	attached.data = &mObjects.front();
+	notify(attached);
 }

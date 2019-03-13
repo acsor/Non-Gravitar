@@ -19,23 +19,45 @@
 // LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
-#ifndef NON_GRAVITAR_PLANE_HPP
-#define NON_GRAVITAR_PLANE_HPP
+#ifndef NON_GRAVITAR_SHAPE_BUNDLE_HPP
+#define NON_GRAVITAR_SHAPE_BUNDLE_HPP
 
 #include <list>
 #include <memory>
+#include "Shape.hpp"
 #include "../Event.hpp"
 
 
 namespace gvt {
 	class Shape;
 
-	class Plane: public EventListener {
-		private:
+	class ShapeBundle: public EventListener, public EventDispatcher {
+		protected:
 			std::list<std::shared_ptr<Shape>> mObjects;
+
+			ShapeBundle();
 		public:
-			void updateCollisions();
+			using iterator = std::list<std::shared_ptr<Shape>>::iterator;
+
+			static const Event SHAPE_ATTACHED;
+			static const Event DESTROIED;
+
+			virtual ~ShapeBundle();
+			void attachShape(Shape *shape);
+
+			inline iterator begin();
+			inline iterator end();
 	};
+}
+
+
+// Implementation of inline functions
+gvt::ShapeBundle::iterator gvt::ShapeBundle::begin() {
+	return mObjects.begin();
+}
+
+gvt::ShapeBundle::iterator gvt::ShapeBundle::end() {
+	return mObjects.end();
 }
 
 
