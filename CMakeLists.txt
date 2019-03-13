@@ -87,7 +87,7 @@ add_executable(NonGravitar "${DIR_SRC}/NonGravitar.cpp")
 target_link_libraries(
 	NonGravitar
 	sfml-window sfml-graphics sfml-system
-	SpaceshipView BunkerView
+	ShapeBundle DummyBundle ShapeBundleView
 )
 
 add_subdirectory(test)
