@@ -65,6 +65,11 @@ add_library(Utils "${DIR_SRC}/Utils.cpp")
 add_library(ShapeView "${DIR_VIEWS}/ShapeView.cpp")
 target_link_libraries(ShapeView Shape)
 
+add_library(ShapeBundleView "${DIR_VIEWS}/ShapeBundleView.cpp")
+target_link_libraries(
+	ShapeBundleView Event Shape ShapeBundle BunkerView SpaceshipView
+)
+
 add_library(SpaceshipView "${DIR_VIEWS}/SpaceshipView.cpp")
 target_link_libraries(SpaceshipView Spaceship ShapeView Utils)
 
