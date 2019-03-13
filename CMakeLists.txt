@@ -25,8 +25,13 @@ add_library(Event "${DIR_SRC}/Event.cpp")
 add_library(Shape "${DIR_MODELS}/Shape.cpp")
 target_link_libraries(Shape Event)
 
+
 add_library(ShapeBundle "${DIR_MODELS}/ShapeBundle.cpp")
 target_link_libraries(ShapeBundle Event Shape)
+
+add_library(DummyBundle "${DIR_MODELS}/DummyBundle.cpp")
+target_link_libraries(DummyBundle ShapeBundle)
+
 
 add_library(Point "${DIR_MODELS}/Point.cpp")
 target_link_libraries(Point Shape)
