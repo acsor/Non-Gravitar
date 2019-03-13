@@ -37,6 +37,10 @@ Event::Event () {
 	ID_COUNTER++;
 }
 
+Event Event::create() {
+	return Event();
+}
+
 bool Event::operator== (Event const &o) const {
 	return mId == o.mId;
 }

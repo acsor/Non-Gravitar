@@ -36,13 +36,14 @@ namespace gvt {
 			uint16_t mId;
 
 			static constexpr uint16_t MAX_ID = 65535;
+
+			Event();
 		public:
 			void *data{nullptr};
 
 			static uint16_t ID_COUNTER;
 
-			Event();
-
+			static Event create();
 			bool operator== (Event const &o) const;
 			bool operator!= (Event const &o) const;
 	};

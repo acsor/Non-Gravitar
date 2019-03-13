@@ -46,8 +46,8 @@ class SimpleListener: public EventListener {
 };
 
 
-const Event SimpleDispatcher::EVENT_A;
-const Event SimpleDispatcher::EVENT_B;
+const Event SimpleDispatcher::EVENT_A = Event::create();
+const Event SimpleDispatcher::EVENT_B = Event::create();
 
 
 TEST_CASE("EventListener::handle(), EventDispatcher::notify()", "[Event]") {
@@ -71,7 +71,7 @@ TEST_CASE("EventListener::handle(), EventDispatcher::notify()", "[Event]") {
 
 TEST_CASE("Event::operator==", "[Event]") {
 	auto ids = Event::ID_COUNTER;
-	Event a, b;
+	Event a = Event::create(), b = Event::create();
 	Event c{a}, d = a;
 
 	REQUIRE(a == c);
