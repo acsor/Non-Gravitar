@@ -27,23 +27,26 @@
 #include "Shape.hpp"
 #include "../Event.hpp"
 
+template<typename T> using shared_ptr = std::shared_ptr<T>;
+
 
 namespace gvt {
 	class Shape;
 
 	class ShapeBundle: public EventListener, public EventDispatcher {
 		protected:
-			std::list<std::shared_ptr<Shape>> mObjects;
+			std::list<shared_ptr<Shape>> mObjects;
 
 			ShapeBundle();
 		public:
-			using iterator = std::list<std::shared_ptr<Shape>>::iterator;
+			using iterator = std::list<shared_ptr<Shape>>::iterator;
 
 			static const Event SHAPE_ATTACHED;
+			static const Event SHAPE_DETACHED;
 			static const Event DESTROIED;
 
 			virtual ~ShapeBundle();
-			void attachShape(Shape *shape);
+			void insert(shared_ptr<Shape> shape);
 
 			inline iterator begin();
 			inline iterator end();
