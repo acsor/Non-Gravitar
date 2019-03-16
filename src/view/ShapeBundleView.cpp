@@ -59,6 +59,8 @@ bool ShapeBundleView::debug() const {
 }
 
 void ShapeBundleView::debug(bool state) {
+	mDebug = state;
+
 	for (auto i = mViews.begin(); i != mViews.end(); i++) {
 		i->second->debug(state);
 	}
