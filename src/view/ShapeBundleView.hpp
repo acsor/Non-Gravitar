@@ -50,7 +50,7 @@ namespace gvt {
 			ShapeBundleView(
 				shared_ptr<ShapeBundle> bundle, bool debug=false
 			);
-			~ShapeBundleView();
+			virtual ~ShapeBundleView();
 
 			bool debug() const;
 			void debug(bool state);

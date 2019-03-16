@@ -40,7 +40,7 @@ namespace gvt {
 		private:
 			weak_ptr<Bunker> mBunker;
 
-			sf::Sprite mSprite{};
+			sf::Sprite mSprite;
 			Texture mTexture;
 		public:
 			static const std::string BUNKER2D_GRAPHICS;

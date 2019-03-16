@@ -42,8 +42,6 @@ namespace gvt {
 			// Width and height measures of the collision boxes
 			static unsigned const constexpr COLLIDING_WIDTH = 29;
 			static unsigned const constexpr COLLIDING_HEIGHT = 42;
-
-
 			// Width and height measures of the collision boxes
 			static unsigned const constexpr ORIGINX = 14;
 			static unsigned const constexpr ORIGINY = 33;

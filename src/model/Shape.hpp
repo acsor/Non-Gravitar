@@ -44,10 +44,11 @@ namespace gvt {
 			float mOriginX{0}, mOriginY{0};
 			float mRotation{0};
 			Trajectory mVelocity{0, 0};
+
+			Shape(float x, float y);
 		public:
 			using ostream = std::ostream;
 
-			Shape(float x, float y);
 			virtual ~Shape();
 
 			/**

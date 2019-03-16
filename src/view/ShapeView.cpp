@@ -63,17 +63,21 @@ void ShapeView::draw(RenderTarget &target, RenderStates s) const {
 void ShapeView::handle(Event *e) {
 	Rectangle box{{0, 0}, {0, 0}};
 	auto event = dynamic_cast<ShapeEvent*>(e);
-	auto p = mShape.lock();
 
-	if (event && p) {
-		box = p->collisionBox();
+	if (event) {
+		if (auto p = mShape.lock()) {
+			box = p->collisionBox();
 
-		if (event->type == ShapeEvent::Type::moved) {
-			mBounds.setPosition(box.x(), box.y());
-		} else if (event->type == ShapeEvent::Type::origin) {
-			mBounds.setOrigin(box.originX(), box.originY());
-		} else if (event->type == ShapeEvent::Type::rotated) {
-			mBounds.setRotation(gvt::rad2deg(box.rotation()));
+			if (event->type == ShapeEvent::Type::moved) {
+				mBounds.setPosition(box.x(), box.y());
+			} else if (event->type == ShapeEvent::Type::origin) {
+				mBounds.setOrigin(box.originX(), box.originY());
+			} else if (event->type == ShapeEvent::Type::rotated) {
+				mBounds.setRotation(gvt::rad2deg(box.rotation()));
+			}
+		} else if (event->type == ShapeEvent::Type::destroied) {
+			mShape.reset();
+			event->shape->detachListener(*this);
 		}
 	}
 }
