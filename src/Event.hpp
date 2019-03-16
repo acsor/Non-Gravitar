@@ -31,22 +31,12 @@ template<typename T> using set = std::set<T>;
 namespace gvt {
 	class EventListener;
 
-	struct Event {
-		private:
-			uint16_t mId;
-
-			static constexpr uint16_t MAX_ID = 65535;
-
-			Event();
-		public:
-			void *data{nullptr};
-
-			static uint16_t ID_COUNTER;
-
-			static Event create();
-			bool operator== (Event const &o) const;
-			bool operator!= (Event const &o) const;
-	};
+    struct Event {
+    	protected:
+    		Event() = default;
+    	public:
+			virtual ~Event() = default;
+    };
 
 	class EventDispatcher {
 		private:
@@ -54,12 +44,12 @@ namespace gvt {
 		public:
 			void attachListener(EventListener &l);
 			void detachListener(EventListener &l);
-			void notify(Event e) const;
+			void notify(Event *e) const;
 	};
 
 	class EventListener {
 		public:
-			virtual void handle(Event e) = 0;
+			virtual void handle(Event *e) = 0;
 	};
 }
 

@@ -23,30 +23,23 @@
 
 using Event = gvt::Event;
 using ShapeBundle = gvt::ShapeBundle;
+using ShapeBundleEvent = gvt::ShapeBundleEvent;
 using Shape = gvt::Shape;
 
 
-const Event ShapeBundle::SHAPE_ATTACHED = Event::create();
-const Event ShapeBundle::SHAPE_DETACHED = Event::create();
-const Event ShapeBundle::DESTROIED = Event::create();
-
-
-ShapeBundle::ShapeBundle() {
-}
-
 ShapeBundle::~ShapeBundle() {
-	notify(DESTROIED);
+	ShapeBundleEvent e{ShapeBundleEvent::Type::destroied, this, nullptr};
+
+	notify(&e);
 }
 
 void ShapeBundle::insert(shared_ptr<Shape> shape) {
+	ShapeBundleEvent e{ShapeBundleEvent::Type::attached, this, shape};
 	// Not checking for null-pointer arguments is intended behavior, as code
 	// feeding in null-pointer values should not exist in the first place: a
 	// segmentation fault acts as a proper signaling mechanism
-	Event attached = SHAPE_ATTACHED;
-
 	mObjects.push_front(shape);
 	shape->attachListener(*this);
 
-	attached.data = &mObjects.front();
-	notify(attached);
+	notify(&e);
 }

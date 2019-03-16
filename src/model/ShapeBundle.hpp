@@ -37,13 +37,9 @@ namespace gvt {
 		protected:
 			std::list<shared_ptr<Shape>> mObjects;
 
-			ShapeBundle();
+			ShapeBundle() = default;
 		public:
 			using iterator = std::list<shared_ptr<Shape>>::iterator;
-
-			static const Event SHAPE_ATTACHED;
-			static const Event SHAPE_DETACHED;
-			static const Event DESTROIED;
 
 			virtual ~ShapeBundle();
 			void insert(shared_ptr<Shape> shape);
@@ -51,16 +47,38 @@ namespace gvt {
 			inline iterator begin();
 			inline iterator end();
 	};
+
+	struct ShapeBundleEvent: public Event {
+		enum class Type {
+			unspecified = 0, attached, detached, destroied
+		};
+
+		Type type{Type::unspecified};
+		ShapeBundle *bundle{nullptr};
+		shared_ptr<Shape> shape;
+
+		ShapeBundleEvent() = default;
+		inline ShapeBundleEvent(
+			Type type, ShapeBundle *bundle, shared_ptr<Shape> shape
+		);
+	};
 }
 
 
 // Implementation of inline functions
-gvt::ShapeBundle::iterator gvt::ShapeBundle::begin() {
-	return mObjects.begin();
-}
+namespace gvt {
+	ShapeBundleEvent::ShapeBundleEvent(
+		ShapeBundleEvent::Type t, ShapeBundle *b, shared_ptr<Shape> s
+	): type{t}, bundle{b}, shape{s} {
+	}
 
-gvt::ShapeBundle::iterator gvt::ShapeBundle::end() {
-	return mObjects.end();
+	ShapeBundle::iterator ShapeBundle::begin() {
+		return mObjects.begin();
+	}
+
+	ShapeBundle::iterator ShapeBundle::end() {
+		return mObjects.end();
+	}
 }
 
 

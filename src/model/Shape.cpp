@@ -22,35 +22,27 @@
 #include "Shape.hpp"
 #include "Rectangle.hpp"
 
-using Event = gvt::Event;
 using Shape = gvt::Shape;
+using ShapeEvent = gvt::ShapeEvent;
 using Trajectory = gvt::Trajectory;
-
-
-const Event Shape::MOVE = Event::create();
-const Event Shape::ORIGIN = Event::create();
-const Event Shape::ROTATION = Event::create();
-const Event Shape::DESTROIED = Event::create();
 
 
 Shape::Shape(float x, float y): mX{x}, mY{y} {
 }
 
 Shape::~Shape() {
-	Event e = DESTROIED;
-	e.data = this;
+	ShapeEvent e{ShapeEvent::Type::destroied, this};
 
-	notify(e);
+	notify(&e);
 }
 
 void Shape::origin(float xcoord, float ycoord) {
-	Event e = ORIGIN;
+	ShapeEvent e{ShapeEvent::Type::origin, this};
 
 	mOriginX = xcoord;
 	mOriginY = ycoord;
-	e.data = this;
 
-	notify(e);
+	notify(&e);
 }
 
 void Shape::velocity(Trajectory const &t) {
@@ -70,23 +62,21 @@ bool Shape::clashes(gvt::Shape const &o) const {
 }
 
 void Shape::move(float xcoord, float ycoord) {
-	Event e = MOVE;
+	ShapeEvent e{ShapeEvent::Type::moved, this};
 
-    mX += xcoord;
+	mX += xcoord;
     mY += ycoord;
-	e.data = this;
 
-	notify(e);
+	notify(&e);
 }
 
 void Shape::moveAlong(Trajectory const &t) {
-	Event e = MOVE;
+	ShapeEvent e{ShapeEvent::Type::moved, this};
 
 	mX += t.x;
 	mY += t.y;
-	e.data = this;
 
-	notify(e);
+	notify(&e);
 }
 
 bool Shape::operator== (Shape const &o) const {

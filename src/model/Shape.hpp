@@ -47,11 +47,6 @@ namespace gvt {
 		public:
 			using ostream = std::ostream;
 
-			static const Event MOVE;
-			static const Event ORIGIN;
-			static const Event ROTATION;
-			static const Event DESTROIED;
-
 			Shape(float x, float y);
 			virtual ~Shape();
 
@@ -145,6 +140,18 @@ namespace gvt {
 
 			virtual bool operator== (Shape const &o) const;
 			virtual bool operator!= (Shape const &o) const;
+	};
+
+	struct ShapeEvent: public Event {
+		enum class Type {
+			unspecified = 0, moved, origin, rotated, destroied
+		};
+
+		ShapeEvent::Type type{ShapeEvent::Type::unspecified};
+		Shape *shape{nullptr};
+
+		inline ShapeEvent();
+		inline ShapeEvent(ShapeEvent::Type type, Shape *shape);
 	};
 }
 

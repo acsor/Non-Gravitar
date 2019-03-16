@@ -67,19 +67,24 @@ void SpaceshipView::draw(RenderTarget &target, RenderStates state) const {
 	}
 }
 
-void SpaceshipView::handle(Event e) {
+void SpaceshipView::handle(Event *e) {
 	ShapeView::handle(e);
 
-	if (auto p = mSpaceship.lock()) {
-		if (e == Shape::MOVE) {
-			mSprite.setPosition(p->x(), p->y());
-			mAccel = true;
-		} else if (e == Shape::ORIGIN) {
-			mSprite.setOrigin(p->originX(), p->originY());
-		} else if (e == Shape::ROTATION) {
-			mSprite.setRotation(gvt::rad2deg(p->rotation()));
+	auto event = dynamic_cast<ShapeEvent*>(e);
+	auto p = mSpaceship.lock();
+
+	if (event) {
+		if (p) {
+			if (event->type == ShapeEvent::Type::moved) {
+				mSprite.setPosition(p->x(), p->y());
+				mAccel = true;
+			} else if (event->type == ShapeEvent::Type::origin) {
+				mSprite.setOrigin(p->originX(), p->originY());
+			} else if (event->type == ShapeEvent::Type::rotated) {
+				mSprite.setRotation(gvt::rad2deg(p->rotation()));
+			}
+		} else if (event->type == ShapeEvent::Type::destroied) {
+			mSprite = sf::Sprite();
 		}
-	} else if (e == Shape::DESTROIED) {
-		mSprite = sf::Sprite();
 	}
 }

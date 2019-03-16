@@ -25,6 +25,7 @@
 #include "../view/SpaceshipView.hpp"
 #include "../view/BunkerView.hpp"
 
+using ShapeBundleEvent = gvt::ShapeBundleEvent;
 using ShapeBundleView = gvt::ShapeBundleView;
 
 
@@ -71,19 +72,19 @@ void ShapeBundleView::draw(
 	}
 }
 
-void ShapeBundleView::handle(Event e) {
-	shared_ptr<Shape> shape;
+void ShapeBundleView::handle(Event *e) {
+	auto event = dynamic_cast<ShapeBundleEvent*>(e);
 
-	if (e == ShapeBundle::SHAPE_ATTACHED) {
-		shape = *static_cast<shared_ptr<Shape>*>(e.data);
-
-		mViews[shape.get()] = unique_ptr<ShapeView>(shapeToView(shape));
-	} else if (e == ShapeBundle::SHAPE_DETACHED) {
-		shape = *static_cast<shared_ptr<Shape>*>(e.data);
-
-		mViews.erase(shape.get());
-	} else if (e == ShapeBundle::DESTROIED) {
-		mViews.clear();
-		mBundle.reset();
+	if (event) {
+		if (event->type == ShapeBundleEvent::Type::attached) {
+			mViews[event->shape.get()] = unique_ptr<ShapeView>(
+				shapeToView(event->shape)
+			);
+		} else if (event->type == ShapeBundleEvent::Type::detached) {
+			mViews.erase(event->shape.get());
+		} else if (event->type == ShapeBundleEvent::Type::destroied) {
+			mViews.clear();
+			mBundle.reset();
+		}
 	}
 }

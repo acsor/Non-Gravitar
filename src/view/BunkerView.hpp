@@ -49,7 +49,7 @@ namespace gvt {
 			BunkerView(shared_ptr<Bunker> bunker, bool debug=false);
 
 			void draw(RenderTarget &target, RenderStates state) const override;
-			void handle(Event e) override;
+			void handle(Event *e) override;
 	};
 }
 

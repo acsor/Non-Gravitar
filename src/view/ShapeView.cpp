@@ -60,17 +60,19 @@ void ShapeView::draw(RenderTarget &target, RenderStates s) const {
 		target.draw(mBounds);
 }
 
-void ShapeView::handle(Event e) {
+void ShapeView::handle(Event *e) {
 	Rectangle box{{0, 0}, {0, 0}};
+	auto event = dynamic_cast<ShapeEvent*>(e);
+	auto p = mShape.lock();
 
-	if (auto p = mShape.lock()) {
+	if (event && p) {
 		box = p->collisionBox();
 
-		if (e == Shape::MOVE) {
+		if (event->type == ShapeEvent::Type::moved) {
 			mBounds.setPosition(box.x(), box.y());
-		} else if (e == Shape::ORIGIN) {
+		} else if (event->type == ShapeEvent::Type::origin) {
 			mBounds.setOrigin(box.originX(), box.originY());
-		} else if (e == Shape::ROTATION) {
+		} else if (event->type == ShapeEvent::Type::rotated) {
 			mBounds.setRotation(gvt::rad2deg(box.rotation()));
 		}
 	}

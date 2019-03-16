@@ -31,7 +31,7 @@ namespace gvt {
 		public:
 			DummyBundle();
 
-			void handle(Event e) override;
+			void handle(Event *e) override;
 	};
 }
 

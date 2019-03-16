@@ -29,6 +29,6 @@ using Shape = gvt::Shape;
 DummyBundle::DummyBundle(): ShapeBundle() {
 }
 
-void DummyBundle::handle(Event e) {
+void DummyBundle::handle(Event *e) {
 	// Do nothing -- this is supposed to be a dummy handler only!
 }

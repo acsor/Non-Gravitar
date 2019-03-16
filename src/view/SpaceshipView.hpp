@@ -56,7 +56,7 @@ namespace gvt {
 			SpaceshipView(shared_ptr<Spaceship> spaceship, bool debug=false);
 
 			void draw(RenderTarget &target, RenderStates state) const override;
-			void handle(Event e) override;
+			void handle(Event *e) override;
 	};
 }
 

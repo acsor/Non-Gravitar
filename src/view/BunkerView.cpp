@@ -57,18 +57,21 @@ void BunkerView::draw(RenderTarget &target, RenderStates state) const {
 	target.draw(mSprite);
 }
 
-void BunkerView::handle(Event e) {
+void BunkerView::handle(Event *e) {
 	ShapeView::handle(e);
+	auto event = dynamic_cast<ShapeEvent*>(e);
 
-	if (auto p = mBunker.lock()) {
-		if (e == Shape::MOVE) {
-			mSprite.setPosition(p->x(), p->y());
-		} else if (e == Shape::ORIGIN) {
-			mSprite.setOrigin(p->originX(), p->originY());
-		} else if (e == Shape::ROTATION) {
-			mSprite.setRotation(gvt::rad2deg(p->rotation()));
+	if (event) {
+		if (auto p = mBunker.lock()) {
+			if (event->type == ShapeEvent::Type::moved) {
+				mSprite.setPosition(p->x(), p->y());
+			} else if (event->type == ShapeEvent::Type::origin) {
+				mSprite.setOrigin(p->originX(), p->originY());
+			} else if (event->type == ShapeEvent::Type::rotated) {
+				mSprite.setRotation(gvt::rad2deg(p->rotation()));
+			}
+		} else if (event->type == ShapeEvent::Type::destroied) {
+			mSprite = sf::Sprite();
 		}
-	} else if (e == Shape::DESTROIED) {
-		mSprite = sf::Sprite();
 	}
 }

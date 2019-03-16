@@ -19,6 +19,8 @@
 // LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
+#include <iostream>
+#include <stdexcept>
 #include "../src/Event.hpp"
 #include "catch.hpp"
 
@@ -27,58 +29,63 @@ using EventDispatcher = gvt::EventDispatcher;
 using EventListener = gvt::EventListener;
 
 
-class SimpleDispatcher: public EventDispatcher {
-	public:
-		static const Event EVENT_A;
-		static const Event EVENT_B;
-};
+namespace gvt {
+	class SimpleDispatcher: public EventDispatcher {
+		public:
+			SimpleDispatcher() = default;
+	};
 
-class SimpleListener: public EventListener {
-	public:
-		size_t eventA{0}, eventB{0};
+	struct SimpleEvent: public Event {
+		enum class Type {unspecified = 0, a, b};
 
-		void handle(Event e) override {
-			if (e == SimpleDispatcher::EVENT_A)
-				eventA++;
-			else if (e == SimpleDispatcher::EVENT_B)
-				eventB++;
+		SimpleEvent::Type type;
+
+		SimpleEvent(SimpleEvent::Type type) {
+			this->type = type;
 		}
+	};
+
+	class SimpleListener: public EventListener {
+		public:
+			unsigned eventA{0}, eventB{0};
+
+			void handle(Event *e) override {
+                auto event = dynamic_cast<SimpleEvent*>(e);
+
+                if (event) {
+					if (event->type == SimpleEvent::Type::a) {
+						eventA++;
+					} else if (event->type == SimpleEvent::Type::b) {
+						eventB++;
+					} else {
+						throw std::domain_error(
+							"Unrecognized type of SimpleEvent"
+						);
+					}
+				}
+			}
+	};
 };
-
-
-const Event SimpleDispatcher::EVENT_A = Event::create();
-const Event SimpleDispatcher::EVENT_B = Event::create();
 
 
 TEST_CASE("EventListener::handle(), EventDispatcher::notify()", "[Event]") {
-	SimpleDispatcher s;
-	SimpleListener l;
-	size_t repeatA = 43, repeatB = 55;
+	using SE = gvt::SimpleEvent;
+
+	gvt::SimpleDispatcher s;
+	gvt::SimpleListener l;
+	SE a{SE::Type::a}, b{SE::Type::b};
+	unsigned const repeatA = 43, repeatB = 55;
 
 	s.attachListener(l);
 
-	for (size_t i = 0; i < repeatA; i++)
-		s.notify(SimpleDispatcher::EVENT_A);
+	for (unsigned i = 0; i < repeatA; i++)
+		s.notify(&a);
 
-	for (size_t i = 0; i < repeatB; i++)
-		s.notify(SimpleDispatcher::EVENT_B);
+	for (unsigned i = 0; i < repeatB; i++)
+		s.notify(&b);
 
 	REQUIRE(l.eventA == repeatA);
 	REQUIRE(l.eventB == repeatB);
 
 	s.detachListener(l);
-}
-
-TEST_CASE("Event::operator==", "[Event]") {
-	auto ids = Event::ID_COUNTER;
-	Event a = Event::create(), b = Event::create();
-	Event c{a}, d = a;
-
-	REQUIRE(a == c);
-	REQUIRE(a == d);
-	REQUIRE(a != b);
-	REQUIRE(c != b);
-	REQUIRE(d != b);
-
-	REQUIRE(Event::ID_COUNTER - ids == 2);
 }

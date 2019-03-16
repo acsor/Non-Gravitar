@@ -26,29 +26,6 @@ using EventDispatcher = gvt::EventDispatcher;
 using Event = gvt::Event;
 
 
-uint16_t Event::ID_COUNTER = 0;
-
-
-Event::Event () {
-	if (ID_COUNTER >= Event::MAX_ID)
-		throw std::overflow_error{"Too many events allocated"};
-
-	mId = ID_COUNTER;
-	ID_COUNTER++;
-}
-
-Event Event::create() {
-	return Event();
-}
-
-bool Event::operator== (Event const &o) const {
-	return mId == o.mId;
-}
-
-bool Event::operator!= (Event const &o) const {
-	return mId != o.mId;
-}
-
 
 void EventDispatcher::attachListener(EventListener &l) {
 	mListeners.insert(&l);
@@ -58,7 +35,7 @@ void EventDispatcher::detachListener(EventListener &l) {
 	mListeners.erase(&l);
 }
 
-void EventDispatcher::notify(Event e) const {
+void EventDispatcher::notify(Event *e) const {
 	for (auto i = mListeners.begin(); i != mListeners.end(); i++)
 		(*i)->handle(e);
 }

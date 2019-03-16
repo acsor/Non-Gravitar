@@ -48,7 +48,7 @@ namespace gvt {
 			void debug(bool debug);
 
 			void draw(RenderTarget &target, RenderStates s) const override;
-			void handle(Event e) override;
+			void handle(Event *e) override;
 	};
 }
 

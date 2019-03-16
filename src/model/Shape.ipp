@@ -20,49 +20,68 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 #include <cmath>
+#include "Shape.hpp"
 
 
-void gvt::Shape::x(float xcoord) {
-    mX = xcoord;
-	notify(MOVE);
-}
+namespace gvt {
+	ShapeEvent::ShapeEvent():
+			ShapeEvent::ShapeEvent(ShapeEvent::Type::unspecified, nullptr) {
+	}
 
-void gvt::Shape::y(float ycoord) {
-    mY = ycoord;
-	notify(MOVE);
-}
+	ShapeEvent::ShapeEvent(ShapeEvent::Type type, Shape *shape) {
+		this->type = type;
+		this->shape = shape;
+	}
 
-float gvt::Shape::x() const {
-    return mX;
-}
 
-float gvt::Shape::y() const {
-    return mY;
-}
+	void Shape::x(float xcoord) {
+		ShapeEvent e {ShapeEvent::Type::moved, this};
 
-float gvt::Shape::originX () const {
-	return mOriginX;
-}
+		mX = xcoord;
+		notify(&e);
+	}
 
-float gvt::Shape::originY () const {
-	return mOriginY;
-}
+	void Shape::y(float ycoord) {
+		ShapeEvent e {ShapeEvent::Type::moved, this};
 
-float gvt::Shape::rotation() const {
-	return mRotation;
-}
+		mY = ycoord;
+		notify(&e);
+	}
 
-void gvt::Shape::rotation(float r) {
-	// TO-DO Shorten, if at all possible, this code that I have produced, which
-	// at first sight looks orribly bigger than it ought to be
-	if (r >= 0)
-		mRotation = r - (2.0 * M_PI) * floor(r / (2.0 * M_PI));
-	else
-		mRotation = r - (2.0 * M_PI) * ceil(r / (2.0 * M_PI));
+	float Shape::x() const {
+		return mX;
+	}
 
-	notify(ROTATION);
-}
+	float Shape::y() const {
+		return mY;
+	}
 
-void gvt::Shape::rotate(float r) {
-	rotation(mRotation + r);
+	float Shape::originX() const {
+		return mOriginX;
+	}
+
+	float Shape::originY() const {
+		return mOriginY;
+	}
+
+	float Shape::rotation() const {
+		return mRotation;
+	}
+
+	void Shape::rotation(float r) {
+		ShapeEvent e {ShapeEvent::Type::rotated, this};
+
+		// TO-DO Shorten, if at all possible, this code that I have produced, which
+		// at first sight looks orribly bigger than it ought to be
+		if (r >= 0)
+			mRotation = r - (2.0 * M_PI) * floor(r / (2.0 * M_PI));
+		else
+			mRotation = r - (2.0 * M_PI) * ceil(r / (2.0 * M_PI));
+
+		notify(&e);
+	}
+
+	void Shape::rotate(float r) {
+		rotation(mRotation + r);
+	}
 }
