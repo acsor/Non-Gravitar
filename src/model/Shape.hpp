@@ -45,6 +45,10 @@ namespace gvt {
 			float mRotation{0};
 			Trajectory mVelocity{0, 0};
 
+			// Boolean flag specifying whether the current object received too
+			// much "damage" to put it out of game
+			bool mDestroied{false};
+
 			Shape(float x, float y);
 		public:
 			using ostream = std::ostream;
@@ -111,6 +115,8 @@ namespace gvt {
 			 * @return The current @c Shape speed, as a scalar value.
 			 */
 			virtual float speed() const;
+			virtual inline bool destroied() const;
+			virtual inline void destroied(bool state);
 
 			/**
 			 * @return A @c Rectangle object representing the bounds used to

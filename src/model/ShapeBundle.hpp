@@ -42,7 +42,7 @@ namespace gvt {
 			using iterator = std::list<shared_ptr<Shape>>::iterator;
 
 			virtual ~ShapeBundle();
-			void insert(shared_ptr<Shape> shape);
+			virtual void insert(shared_ptr<Shape> shape);
 
 			inline iterator begin();
 			inline iterator end();
@@ -67,17 +67,17 @@ namespace gvt {
 
 // Implementation of inline functions
 namespace gvt {
-	ShapeBundleEvent::ShapeBundleEvent(
-		ShapeBundleEvent::Type t, ShapeBundle *b, shared_ptr<Shape> s
-	): type{t}, bundle{b}, shape{s} {
-	}
-
 	ShapeBundle::iterator ShapeBundle::begin() {
 		return mObjects.begin();
 	}
 
 	ShapeBundle::iterator ShapeBundle::end() {
 		return mObjects.end();
+	}
+
+	ShapeBundleEvent::ShapeBundleEvent(
+		ShapeBundleEvent::Type t, ShapeBundle *b, shared_ptr<Shape> s
+	): type{t}, bundle{b}, shape{s} {
 	}
 }
 

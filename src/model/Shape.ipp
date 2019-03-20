@@ -84,4 +84,12 @@ namespace gvt {
 	void Shape::rotate(float r) {
 		rotation(mRotation + r);
 	}
+
+	bool Shape::destroied() const {
+		return mDestroied;
+	}
+
+	void Shape::destroied(bool state) {
+		mDestroied = state;
+	}
 }
