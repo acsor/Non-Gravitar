@@ -29,7 +29,7 @@ using ShapeView = gvt::ShapeView;
 
 
 ShapeView::ShapeView(shared_ptr<Shape> shape, bool debug): mShape{shape} {
-	gvt::Rectangle bounds = shape->collisionBox();
+	gvt::Rectangle bounds = shape->globalBounds();
 
 	mDebug = debug;
 
@@ -66,7 +66,7 @@ void ShapeView::handle(Event *e) {
 
 	if (event) {
 		if (auto p = mShape.lock()) {
-			box = p->collisionBox();
+			box = p->globalBounds();
 
 			if (event->type == ShapeEvent::Type::moved) {
 				mBounds.setPosition(box.x(), box.y());

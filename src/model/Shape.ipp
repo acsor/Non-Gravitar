@@ -56,6 +56,7 @@ namespace gvt {
 		return mY;
 	}
 
+
 	float Shape::originX() const {
 		return mOriginX;
 	}
@@ -84,6 +85,7 @@ namespace gvt {
 	void Shape::rotate(float r) {
 		rotation(mRotation + r);
 	}
+
 
 	bool Shape::destroied() const {
 		return mDestroied;

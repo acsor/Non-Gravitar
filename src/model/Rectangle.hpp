@@ -47,8 +47,7 @@ namespace std {
 
 
 namespace gvt {
-    class Rectangle: public Shape, public WidthTrait, public HeightTrait
-	{
+    class Rectangle: public Shape, public WidthTrait, public HeightTrait {
 		using ostream = std::ostream;
 
 		friend struct std::hash<Rectangle>;
@@ -71,7 +70,7 @@ namespace gvt {
 			 */
 			bool clashes(Rectangle const &o) const;
 
-			Rectangle collisionBox() const override;
+			Rectangle globalBounds() const override;
 			bool operator==(Shape const &o) const override;
 
 			// TO-DO Check why the override below obfuscates the

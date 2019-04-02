@@ -27,7 +27,7 @@
 using Point = gvt::Point;
 
 
-gvt::Rectangle gvt::Point::collisionBox() const {
+gvt::Rectangle gvt::Point::globalBounds() const {
 	// TO-DO Check/unit test this
 	Point const halfWidth{
 		static_cast<float>(WIDTH_BBOX / 2.0 - mOriginX),

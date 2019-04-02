@@ -33,7 +33,7 @@ Spaceship::Spaceship(float xcoord, float ycoord, unsigned fuel):
 	mFuel = fuel;
 }
 
-Rectangle Spaceship::collisionBox() const {
+Rectangle Spaceship::globalBounds() const {
 	Rectangle r = {
 		{mX, mY}, {mX + COLLIDING_WIDTH, mY + COLLIDING_HEIGHT}
 	};

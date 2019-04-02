@@ -58,7 +58,7 @@ namespace gvt {
 			 */
 			RoundMissile shoot();
 
-			Rectangle collisionBox() const override;
+			Rectangle globalBounds() const override;
 			bool operator==(Shape const &o) const override;
 	};
 

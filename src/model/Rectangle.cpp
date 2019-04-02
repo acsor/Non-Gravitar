@@ -48,7 +48,7 @@ std::ostream& std::operator<< (std::ostream &out, Rectangle const &r) {
 }
 
 
-Rectangle Rectangle::collisionBox() const {
+Rectangle Rectangle::globalBounds() const {
 	return *this;
 }
 

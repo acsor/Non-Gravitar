@@ -40,7 +40,7 @@ namespace gvt {
 			Point operator+ (Point const &o) const;
 			Point operator- (Point const &o) const;
 
-			Rectangle collisionBox() const override;
+			Rectangle globalBounds() const override;
 			bool operator== (Shape const &o) const override;
 	};
 

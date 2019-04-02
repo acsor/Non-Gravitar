@@ -53,7 +53,7 @@ namespace gvt {
 			float width() const override;
 			float height() const override;
 
-			Rectangle collisionBox() const override;
+			Rectangle globalBounds() const override;
 			bool operator== (Shape const &o) const override;
 	};
 }

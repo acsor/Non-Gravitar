@@ -28,7 +28,7 @@ using Point = gvt::Point;
 using Rectangle = gvt::Rectangle;
 
 
-Rectangle Line::collisionBox() const {
+Rectangle Line::globalBounds() const {
 	// TO-DO Enhance the collision box creation by minimizing the area covered
 	// by the rectangle
 	return Rectangle({mX, mY}, mEnd);

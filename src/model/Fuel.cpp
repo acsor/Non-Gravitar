@@ -48,7 +48,7 @@ float Fuel::height() const {
 	return Fuel::HEIGHT;
 }
 
-Rectangle Fuel::collisionBox() const {
+Rectangle Fuel::globalBounds() const {
 	Rectangle r =  {
 		{mX, mY}, {mX + WIDTH, mY + HEIGHT}
 	};

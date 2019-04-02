@@ -64,7 +64,7 @@ RoundMissile Bunker::shoot() {
 	return m;
 }
 
-Rectangle Bunker::collisionBox () const {
+Rectangle Bunker::globalBounds() const {
     Rectangle r = {
 		{mX, mY}, {mX + COLLIDING_WIDTH, mY + COLLIDING_HEIGHT}
     };

@@ -120,9 +120,11 @@ namespace gvt {
 
 			/**
 			 * @return A @c Rectangle object representing the bounds used to
-			 * detect collision with another @c Shape.
+			 * detect collisions with another @c Shape. The coordinates
+			 * accounted for are <i>global</i>, that is are measured against
+			 * the global coordinate system.
 			 */
-			virtual Rectangle collisionBox() const = 0;
+			virtual Rectangle globalBounds() const = 0;
 			/**
 			 * @return @c true if the boundaries of the current @c Shape clash
 			 * with those of the object @c o.
@@ -140,8 +142,8 @@ namespace gvt {
 			virtual void moveAlong(Trajectory const &t);
 			/**
 			 * @return @c true if the object at the current position meets the
-			 * other @c Shape given as argument by following the
-			 * trajectory @c t
+			 * other @c Shape given as argument by following the trajectory @c
+			 * t
 			 */
 			bool meets(Shape const &o, Trajectory const &t) const;
 

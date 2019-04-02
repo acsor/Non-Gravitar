@@ -49,7 +49,7 @@ bool Circle::clashes(Circle const &o) const {
 	) <= mRadius + o.mRadius;
 }
 
-Rectangle Circle::collisionBox() const {
+Rectangle Circle::globalBounds() const {
 	// TO-DO Improve by taking into account rotation as well
 	Rectangle r = Rectangle{
 		{mX, mY}, {mX + 2 * mRadius, mY + 2 * mRadius}

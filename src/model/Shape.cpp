@@ -57,9 +57,6 @@ float Shape::speed() const {
 	return mVelocity.norm();
 }
 
-bool Shape::clashes(gvt::Shape const &o) const {
-    return collisionBox().clashes(o.collisionBox());
-}
 
 void Shape::move(float xcoord, float ycoord) {
 	ShapeEvent e{ShapeEvent::Type::moved, this};
@@ -70,13 +67,8 @@ void Shape::move(float xcoord, float ycoord) {
 	notify(&e);
 }
 
-void Shape::moveAlong(Trajectory const &t) {
-	ShapeEvent e{ShapeEvent::Type::moved, this};
-
-	mX += t.x;
-	mY += t.y;
-
-	notify(&e);
+bool Shape::clashes(gvt::Shape const &o) const {
+    return globalBounds().clashes(o.globalBounds());
 }
 
 bool Shape::operator== (Shape const &o) const {

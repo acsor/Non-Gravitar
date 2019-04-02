@@ -34,7 +34,7 @@ namespace gvt {
 			Point mEnd;
 		public:
 			// Default width of the bounding box returned by
-			// Line::collisionBox()
+			// Line::globalBounds()
 			double static const constexpr WIDTH_BBOX = 1E-3;
 
 			Line(Point const &start, Point const &end);
@@ -46,7 +46,7 @@ namespace gvt {
 			 */
 			Line& operator* (double factor);
 
-			Rectangle collisionBox() const override;
+			Rectangle globalBounds() const override;
 			bool operator== (Shape const &o) const override;
 	};
 }
