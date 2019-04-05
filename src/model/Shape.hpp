@@ -45,8 +45,6 @@ namespace gvt {
 			float mRotation{0};
 			Trajectory mVelocity{0, 0};
 
-			// Boolean flag specifying whether the current object received too
-			// much "damage" to put it out of game
 			bool mDestroied{false};
 
 			Shape(float x, float y);
@@ -73,6 +71,17 @@ namespace gvt {
 			 * @return Top-left corner y coordinate.
 			 */
 			virtual inline float y() const;
+			/**
+			 * @brief Adds xcoord and ycord to the current space object
+			 * coordinates.
+			 */
+			virtual void move(float xcoord, float ycoord);
+			/**
+			 * @brief Move the current object along the given trajectory.
+			 * @param t Trajectory to follow
+			 */
+			virtual void moveAlong(Trajectory const &t);
+
 			/**
 			 * @return The origin x coordinate, used for various geometrical
 			 * transformations (e.g. translation, rotation, ...)
@@ -102,6 +111,10 @@ namespace gvt {
 			 * @param r Amount of radians to add to the current rotation value
 			 */
 			virtual inline void rotate(float r);
+
+			virtual inline bool destroied() const;
+			virtual inline void destroied(bool state);
+
 			/**
 			 * @param t Velocity value to set to the current @c Shape instance.
 			 */
@@ -115,8 +128,6 @@ namespace gvt {
 			 * @return The current @c Shape speed, as a scalar value.
 			 */
 			virtual float speed() const;
-			virtual inline bool destroied() const;
-			virtual inline void destroied(bool state);
 
 			/**
 			 * @return A @c Rectangle object representing the bounds used to
@@ -130,16 +141,6 @@ namespace gvt {
 			 * with those of the object @c o.
 			 */
 			virtual bool clashes(Shape const &o) const;
-			/**
-			 * @brief Adds xcoord and ycord to the current space object
-			 * coordinates.
-			 */
-			virtual void move(float xcoord, float ycoord);
-			/**
-			 * @brief Move the current object along the given trajectory.
-			 * @param t Trajectory to follow
-			 */
-			virtual void moveAlong(Trajectory const &t);
 			/**
 			 * @return @c true if the object at the current position meets the
 			 * other @c Shape given as argument by following the trajectory @c

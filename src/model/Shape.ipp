@@ -72,8 +72,8 @@ namespace gvt {
 	void Shape::rotation(float r) {
 		ShapeEvent e {ShapeEvent::Type::rotated, this};
 
-		// TO-DO Shorten, if at all possible, this code that I have produced, which
-		// at first sight looks orribly bigger than it ought to be
+		// TO-DO Shorten, if at all possible, this code that I have produced,
+		// which at first sight looks orribly bigger than it ought to be
 		if (r >= 0)
 			mRotation = r - (2.0 * M_PI) * floor(r / (2.0 * M_PI));
 		else

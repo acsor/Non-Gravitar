@@ -36,6 +36,24 @@ Shape::~Shape() {
 	notify(&e);
 }
 
+void Shape::move(float xcoord, float ycoord) {
+	ShapeEvent e{ShapeEvent::Type::moved, this};
+
+	mX += xcoord;
+    mY += ycoord;
+
+	notify(&e);
+}
+
+void Shape::moveAlong(Trajectory const &t) {
+	ShapeEvent e{ShapeEvent::Type::moved, this};
+
+	mX += t.x;
+	mY += t.y;
+
+	notify(&e);
+}
+
 void Shape::origin(float xcoord, float ycoord) {
 	ShapeEvent e{ShapeEvent::Type::origin, this};
 
