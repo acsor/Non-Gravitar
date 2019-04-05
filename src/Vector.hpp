@@ -53,10 +53,9 @@ namespace gvt {
 		 */
 		double inline norm() const;
 		/*
-		 * @return The angle subtended with the @a x axis (<tt>y = 0</tt>) by
-		 * the @c Vector
+		 * @return The angle this vector forms with the x axis.
 		 */
-		double inline degrees() const;
+		double inline angle() const;
 
 		Vector operator* (double l) const;
 		Vector operator+ (Vector const &o) const;

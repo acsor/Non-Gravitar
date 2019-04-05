@@ -48,7 +48,46 @@ TEST_CASE("gvt::Vector::normalize()", "[Vector]") {
 		u = v;
 		u.normalize();
 
-		REQUIRE(abs(v.degrees() - u.degrees()) <= 0.001);
+		REQUIRE(abs(v.angle() - u.angle()) < 0.001);
+	}
+}
+
+TEST_CASE("gvt::Vector::angle()", "[Vector]") {
+	Vector<float> const inputs[] = {
+			{0, 0},
+			// First quarter
+			{sqrtf(3) / 2.0, 0.5}, {sqrtf(2) / 2.0, sqrtf(2) / 2.0},
+			{0.5, sqrtf(3) / 2.0}, {0, 1},
+			// Second quarter
+			{-0.5, sqrtf(3) / 2.0}, {-sqrtf(2) / 2.0, sqrtf(2) / 2.0},
+			{-sqrtf(3) / 2.0, 0.5}, {-1, 0},
+			// Third quarter
+			{-sqrtf(3) / 2.0, -0.5}, {-sqrtf(2) / 2.0, -sqrtf(2) / 2.0},
+			{-0.5, -sqrtf(3) / 2.0}, {0, -1},
+			// Fourth quarter
+			{0.5, -sqrtf(3) / 2.0}, {sqrtf(2) / 2.0, -sqrtf(2) / 2.0},
+			{sqrtf(3) / 2.0, -0.5}, {1, 0}
+	};
+	float const expOutputs[] = {
+			0,
+			// First quarter
+			M_PI / 6.0, M_PI / 4.0, M_PI / 3.0, M_PI / 2.0,
+			// Second quarter
+			2.0 * M_PI / 3.0, 3.0 * M_PI / 4.0, 5.0 * M_PI / 6.0, M_PI,
+			// Third quarter
+            M_PI + M_PI / 6.0, M_PI + M_PI / 4.0, M_PI + M_PI / 3.0,
+            M_PI + M_PI / 2.0,
+			// Fourth quarter
+			5.0 * M_PI / 3.0, 7.0 * M_PI / 4.0, 11.0 * M_PI / 6.0, 0
+	};
+	size_t const n = sizeof(expOutputs) / sizeof(float);
+
+	for (size_t i = 0; i < n; i++) {
+		INFO(
+			"[" << i << "] Expecting " << expOutputs[i] << ", got " <<
+			inputs[i].angle()
+		);
+		REQUIRE(abs(inputs[i].angle() - expOutputs[i]) < 0.0001);
 	}
 }
 

@@ -48,15 +48,8 @@ template<typename T> double gvt::Vector<T>::norm() const {
 	return sqrt(pow(x, 2) + pow(y, 2));
 }
 
-template<typename T> double gvt::Vector<T>::degrees() const {
-	// TO-DO Considering the classic xy-axis model of computer graphis/games,
-	// is this code correct?
-	if (y > 0)
-		return (x != 0) ? atan(y / x): M_PI / 2.0;
-	else if (y < 0)
-		return (x != 0) ? atan(y / x): 3.0 / 2.0 * M_PI;
-	else
-		return (x < 0) ? M_PI: 0;
+template<typename T> double gvt::Vector<T>::angle() const {
+	return (y >= 0) ? acos(x / norm()): M_PI + acos(-x / norm());
 }
 
 template<typename T> gvt::Vector<T> gvt::Vector<T>::operator* (
