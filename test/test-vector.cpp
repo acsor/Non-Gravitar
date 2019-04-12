@@ -91,6 +91,34 @@ TEST_CASE("gvt::Vector::angle()", "[Vector]") {
 	}
 }
 
+TEST_CASE("gvt::Vector::rotate()", "[Vector]") {
+	Vector<float> v{1, 0}, temp;
+	float radians[] = {
+		// Main coordinates
+		0, M_PI / 2, M_PI, 1.5 * M_PI, 2 * M_PI,
+		// Handpicked coordinates to ensure correctness
+		M_PI / 6, M_PI / 4, M_PI / 3
+	};
+	Vector<float> expected[] = {
+		v, {0, 1}, {-1, 0}, {0, -1}, v,
+		{sqrt(3) / 2.0, 0.5}, {sqrt(2) / 2.0, sqrt(2) / 2.0},
+		{0.5, sqrt(3) / 2.0}
+	};
+	size_t const n = sizeof(radians) / sizeof(float);
+
+	for (size_t i = 0; i < n; i++) {
+		temp = v;
+		temp.rotate(radians[i]);
+
+		INFO(
+			"[" << i << "] " << "Expected {" << expected[i].x << ", " <<
+			expected[i].y << "}, got {" << temp.x << ", " << temp.y << "}"
+		);
+		REQUIRE(abs(temp.x - expected[i].x) <= 0.0001);
+		REQUIRE(abs(temp.y - expected[i].y) <= 0.0001);
+	}
+}
+
 TEST_CASE("gvt::Vector::operator==", "[Vector]") {
 	Vector<double> a{1, 2}, b{1.0, 2.0}, c{4.59, 49};
 

@@ -37,17 +37,22 @@ namespace gvt {
 		 */
 		Vector(T x, T y);
 		/**
-		 * @brief Instantiates a normalized @c Vector<T> object from the number
-		 * of degrees
-		 * @param degrees Value (specified in radians) in [0, 2π). Any value
-		 * outside this range will be reduced to it
-		 */
+		 * @brief Instantiates a normalized @c Vector<T> object from the angle
+		 * value
+		 * @param degrees Value (specified in radians) in [0, 2π). Any outside
+		 * value will be reduced to this range
+		 **/
 		explicit Vector(T r);
 		/**
 		 * @brief Normalizes the given @c Vector<T> instance such that the
 		 * module of the vector it represents has unitary length
 		 */
 		void normalize();
+		void rotate(float rad);
+		/**
+		 * Rotate the vector by @c rad radiants around 2D point @c center.
+		 */
+		void rotate(float rad, Vector center);
 		/**
 		 * @return The norm, aka length, of the given vector
 		 */
@@ -59,6 +64,7 @@ namespace gvt {
 
 		Vector operator* (double l) const;
 		Vector operator+ (Vector const &o) const;
+		Vector operator- (Vector const &o) const;
 		Vector& operator+= (Vector const &o);
 
 		bool operator==(Vector const &o) const;

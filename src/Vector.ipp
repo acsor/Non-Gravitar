@@ -22,63 +22,85 @@
 #include <cmath>
 
 
-template<typename T> gvt::Vector<T>::Vector(): Vector(0, 0) {
-}
-
-template<typename T> gvt::Vector<T>::Vector(T x, T y) {
-	this->x = x;
-	this->y = y;
-}
-
-template<typename T> gvt::Vector<T>::Vector(T r) {
-	x = cos(r);
-	y = sin(r);
-}
-
-template<typename T> void gvt::Vector<T>::normalize() {
-	float length = norm();
-
-	if (length != 0) {
-		x /= length;
-		y /= length;
+namespace gvt {
+	template<typename T> Vector<T>::Vector(): Vector(0, 0) {
 	}
-}
 
-template<typename T> double gvt::Vector<T>::norm() const {
-	return sqrt(pow(x, 2) + pow(y, 2));
-}
+	template<typename T> Vector<T>::Vector(T x, T y) {
+		this->x = x;
+		this->y = y;
+	}
 
-template<typename T> double gvt::Vector<T>::angle() const {
-	return (y >= 0) ? acos(x / norm()): M_PI + acos(-x / norm());
-}
+	template<typename T> Vector<T>::Vector(T r) {
+		x = cos(r);
+		y = sin(r);
+	}
 
-template<typename T> gvt::Vector<T> gvt::Vector<T>::operator* (
-	double l
-) const {
-	return Vector(l * x, l * y);
-}
+	template<typename T> void Vector<T>::normalize() {
+		float length = norm();
 
-template<typename T> gvt::Vector<T> gvt::Vector<T>::operator+ (
-	gvt::Vector<T> const &o
-) const {
-	return {
-		x + o.x, y + o.y
-	};
-}
+		if (length != 0) {
+			x /= length;
+			y /= length;
+		}
+	}
 
-template<typename T> gvt::Vector<T>& gvt::Vector<T>::operator+= (
-	gvt::Vector<T> const &o
-) {
-	x += o.x;
-	y += o.y;
-	normalize();
+	template<typename T> void Vector<T>::rotate(float rad) {
+		auto n = norm();
+		auto theta = angle();
 
-	return *this;
-}
+		x = n * cos(theta + rad);
+		y = n * sin(theta + rad);
+	}
 
-template<typename T> bool gvt::Vector<T>::operator==(Vector const &o) const {
-	return x == o.x && y == o.y;
-}
-template<typename T> bool gvt::Vector<T>::operator!=(Vector const &o) const {
-	return x != o.x || y != o.y;
+	template<typename T> void Vector<T>::rotate(float rad, Vector center) {
+		// partial represents the `(v - c)' vector rotated by `rad' radians
+		// around the center
+		Vector<T> partial = (*this - center);
+
+		partial.rotate(rad);
+
+		x = partial.x + center.x;
+		y = partial.y + center.y;
+	}
+
+	template<typename T> double Vector<T>::norm() const {
+		return sqrt(pow(x, 2) + pow(y, 2));
+	}
+
+	template<typename T> double Vector<T>::angle() const {
+		return (y >= 0) ? acos(x / norm()): M_PI + acos(-x / norm());
+	}
+
+	template<typename T> Vector<T> Vector<T>::operator* (
+			double l
+			) const {
+		return Vector(l * x, l * y);
+	}
+
+	template<typename T> Vector<T> Vector<T>::operator+ (Vector<T> const &o)
+	const {
+		return {x + o.x, y + o.y};
+	}
+
+	template<typename T> Vector<T> Vector<T>::operator- (Vector const &o) const
+	{
+		return {x - o.x, y - o.y};
+	}
+
+	template<typename T> Vector<T>& Vector<T>::operator+= (Vector<T> const &o)
+	{
+		x += o.x;
+		y += o.y;
+
+		return *this;
+	}
+
+	template<typename T> bool Vector<T>::operator==(Vector const &o) const {
+		return x == o.x && y == o.y;
+	}
+
+	template<typename T> bool Vector<T>::operator!=(Vector const &o) const {
+		return x != o.x || y != o.y;
+	}
 }
