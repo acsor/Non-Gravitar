@@ -19,26 +19,23 @@
 // LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
-#ifndef NON_GRAVITAR_BOUNDING_POLYGON_HPP
-#define NON_GRAVITAR_BOUNDING_POLYGON_HPP
-
-#include <Vector.hpp>
+#ifndef NON_GRAVITAR_BOUNDING_TRIANGLE_HPP
+#define NON_GRAVITAR_BOUNDING_TRIANGLE_HPP
 
 
 namespace gvt {
-	class BoundingPolygon {
+	class BoundingTriangle: public BoundingPolygon {
+		private:
+			std::vector<Vector<float>> mVertices(3);
 		protected:
-			/**
-			 * @return A series of vectors giving the normal axes of the convex
-			 * polygon making the call. These will be later used to to
-			 * project the polygon onto them.
-			 */
-			virtual std::vector<Vector<float>> normalAxes() const = 0;
+			std::vector<Vector<float>> vertices() const override;
 		public:
-			bool clashes(BoundingPolygon const &o) const final;
-			virtual bool operator== (BoundingPolygon const &o) const = 0;
+			BoundingTriangle(
+				Vector<float> v1, Vector<float> v2, Vector<float> v3
+			);
+
+			bool operator== (BoundingPolygon const &o) const override;
 	};
 }
-
 
 #endif
