@@ -61,6 +61,14 @@ namespace gvt {
 		 * @return The angle this vector forms with the x axis.
 		 */
 		double inline angle() const;
+		/**
+		 * @return The dot product of this vector with @c other.
+		 */
+		T inline dotProduct(Vector const &other) const;
+		/**
+		 * @return The projection of this vector along the axis vector @c axis
+		 */
+		double projectAlong(Vector const &axis) const;
 
 		Vector operator* (double l) const;
 		Vector operator+ (Vector const &o) const;

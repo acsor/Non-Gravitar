@@ -20,6 +20,7 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 #include <cmath>
+#include <stdexcept>
 
 
 namespace gvt {
@@ -72,9 +73,25 @@ namespace gvt {
 		return (y >= 0) ? acos(x / norm()): M_PI + acos(-x / norm());
 	}
 
-	template<typename T> Vector<T> Vector<T>::operator* (
-			double l
-			) const {
+	template<typename T> T Vector<T>::dotProduct(Vector<T> const &other) const
+	{
+		return x * other.x + y * other.y;
+	}
+
+	template<typename T> double Vector<T>::projectAlong(Vector<T> const &axis)
+	const {
+		auto axisNorm = axis.norm();
+
+		if (axisNorm != 0) {
+			return dotProduct(axis) / axisNorm;
+		} else {
+			throw std::domain_error(
+				"Can not project along a vector of length 0"
+			);
+		}
+	}
+
+	template<typename T> Vector<T> Vector<T>::operator* (double l) const {
 		return Vector(l * x, l * y);
 	}
 
