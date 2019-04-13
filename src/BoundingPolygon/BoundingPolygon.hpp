@@ -31,10 +31,12 @@ template<typename T> using vector = std::vector<T>;
 
 
 namespace gvt {
+	struct AxialProjection;
+
 	class BoundingPolygon {
 		public:
-			typedef float float_type;
-			typedef Vector<float_type> Vertex;
+			using float_type = float;
+			using Vertex = Vector<float_type>;
 		protected:
 			/**
 			 * @return A std::vector of vertices, ordered in clockwise manner,
@@ -53,9 +55,32 @@ namespace gvt {
 			void shift(Vector<float_type> translation);
 			void rotate(float_type deg);
 			void rotate(float_type deg, Vertex center);
+			AxialProjection projectAlong(Vector<float_type> axis) const;
 
-			virtual bool clashes(BoundingPolygon const &o) const final;
+			/**
+			 * SAT (Separating Axes Theorem) algorithm implementation for
+			 * detecting collisions between two arbitrarily-oriented convex 2D
+			 * polygons. The @c BoundingPolygon class abstracts away their
+			 * shape, assuming their vertices are predisposed in a convex
+			 * manner.
+			 *
+			 * @return @c true if @c *this clashes with @c o, false otherwise.
+			 * @see https://en.wikipedia.org/wiki/Hyperplane_separation_theorem
+			 * @see https://www.metanetsoftware.com/technique/tutorialA.html
+			 */
+			virtual bool intersects(BoundingPolygon const &o) const final;
 			virtual bool operator== (BoundingPolygon const &o) const = 0;
+	};
+
+	struct AxialProjection {
+		using float_type = BoundingPolygon::float_type;
+		float_type start, end;
+
+		/**
+		 * @return @c true if this axial projection intersects with @c o,
+		 * @c false otherwise.
+		 */
+		bool intersects(AxialProjection const &o) const;
 	};
 }
 

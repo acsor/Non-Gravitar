@@ -19,43 +19,67 @@
 // LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
+#include <algorithm>
 #include <cstdlib>
+
 #include "BoundingPolygon.hpp"
 
-template<typename T> using Vector = gvt::Vector<T>;
 
-using BoundingPolygon = gvt::BoundingPolygon;
-using float_type = gvt::BoundingPolygon::float_type;
-using Vertex = gvt::BoundingPolygon::Vertex;
+namespace gvt {
+	using float_type = BoundingPolygon::float_type;
 
+	std::vector<Vector<float_type>> BoundingPolygon::normalAxes() const {
+		auto vs = vertices();
+		Vector<float_type> diff;
+		std::vector<Vector<float_type>> axes(vs.size());
 
-std::vector<Vector<float_type>> BoundingPolygon::normalAxes() const {
-	auto vs = vertices();
-	Vector<float_type> diff;
-	std::vector<Vector<float_type>> axes(vs.size());
+		for (size_t i = 1; i < vs.size(); i++) {
+			diff = vs[i].get() - vs[i - 1].get();
+			axes[i - 1] = Vector<float_type>(diff.angle() - M_PI / 2.0);
+		}
 
-	for (size_t i = 1; i < vs.size(); i++) {
-		diff = vs[i].get() - vs[i - 1].get();
-		axes[i - 1] = Vector<float_type>(diff.angle() - M_PI / 2.0);
+		return axes;
 	}
 
-	return axes;
-}
-
-void BoundingPolygon::shift(Vector<float_type> translation) {
-	for (Vector<float_type>& v: vertices()) {
-		v += translation;
+	void BoundingPolygon::shift(Vector<float_type> translation) {
+		for (Vector<float_type>& v: vertices()) {
+			v += translation;
+		}
 	}
-}
 
-void BoundingPolygon::rotate(float deg) {
-	for (Vector<float_type>& v: vertices()) {
-		v.rotate(deg);
+	void BoundingPolygon::rotate(float deg) {
+		for (Vector<float_type>& v: vertices()) {
+			v.rotate(deg);
+		}
 	}
-}
 
-void BoundingPolygon::rotate(float deg, Vertex center) {
-	for (Vertex& v: vertices()) {
-		v.rotate(deg, center);
+	void BoundingPolygon::rotate(float deg, Vertex center) {
+		for (Vertex& v: vertices()) {
+			v.rotate(deg, center);
+		}
+	}
+
+	AxialProjection BoundingPolygon::projectAlong(Vector<float_type> axis)
+	const {
+		auto vs = vertices();
+		float_type tempProj = vs[0].get().projectAlong(axis);
+		AxialProjection p {tempProj, tempProj};
+
+		for (size_t i = 1; i < vs.size(); i++) {
+			tempProj = vs[i].get().projectAlong(axis);
+			p.start = std::min<float_type>(p.start, tempProj);
+			p.end = std::max<float_type>(p.start, tempProj);
+		}
+
+		return p;
+	}
+
+	bool BoundingPolygon::intersects(BoundingPolygon const &o) const {
+		return false;
+	}
+
+
+	bool AxialProjection::intersects(AxialProjection const &o) const {
+		return o.start <= end && start <= o.end;
 	}
 }

@@ -8,7 +8,7 @@ set(CMAKE_CXX_FLAGS -Wall)
 set(DIR_SRC "src")
 set(DIR_MODELS "${DIR_SRC}/model")
 set(DIR_VIEWS "${DIR_SRC}/view")
-set(DIR_ABS "${DIR_SRC}/BoundingPolygon")
+set(DIR_BOUND "${DIR_SRC}/BoundingPolygon")
 set(DIR_SAMPLES "samples/")
 
 # The project versionig scheme is Semver: https://semver.org/
@@ -24,7 +24,7 @@ include_directories("${DIR_SRC}")
 add_library(Observer "${DIR_SRC}/Observer.cpp")
 add_library(Event "${DIR_SRC}/Event.cpp")
 
-add_library(BoundingPolygon "${DIR_ABS}/BoundingPolygon.cpp")
+add_library(BoundingPolygon "${DIR_BOUND}/BoundingPolygon.cpp")
 
 add_library(Shape "${DIR_MODELS}/Shape.cpp")
 
