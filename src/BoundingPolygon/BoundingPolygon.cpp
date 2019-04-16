@@ -19,8 +19,8 @@
 // LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
-#include <algorithm>
 #include <cstdlib>
+#include <stdexcept>
 #include <unordered_set>
 
 #include "BoundingPolygon.hpp"
@@ -42,6 +42,11 @@ namespace gvt {
 	}
 
 	BoundingPolygon::BoundingPolygon(std::initializer_list<Vertex> vertices) {
+		if (vertices.size() < 3)
+			throw std::domain_error(
+				"No known 2D polygon has fewer than 3 vertices!"
+			);
+
 		mVertices.assign(vertices);
 	}
 

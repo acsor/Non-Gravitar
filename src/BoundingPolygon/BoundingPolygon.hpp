@@ -57,6 +57,8 @@ namespace gvt {
 			 * in clockwise manner; not complying with this specification can
 			 * lead to unspecified behavior in some @c BoundingPolygon
 			 * primitives.
+			 * @throw std::domain_error if the number of vertices is minor
+			 * than 3
 			 */
 			BoundingPolygon(std::initializer_list<Vertex> vertices);
 
