@@ -83,6 +83,14 @@ namespace gvt {
 }
 
 
+namespace std {
+	template<typename T>
+	struct hash<gvt::Vector<T>> {
+		size_t operator() (gvt::Vector<T> const &key) const;
+	};
+}
+
+
 // Implementation file for inline and template functions
 #include "Vector.ipp"
 

@@ -121,3 +121,12 @@ namespace gvt {
 		return x != o.x || y != o.y;
 	}
 }
+
+
+namespace std {
+	template<typename T>
+	size_t hash<gvt::Vector<T>>::operator() (gvt::Vector<T> const &key) const {
+		// TO-DO Might be improved. I implemented this in a rush
+		return hash<T>()(key.x) ^ hash<T>()(key.y);
+	}
+}
