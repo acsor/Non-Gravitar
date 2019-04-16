@@ -21,6 +21,7 @@
 // SOFTWARE.
 #include <algorithm>
 #include <cstdlib>
+#include <unordered_set>
 
 #include "BoundingPolygon.hpp"
 
@@ -75,7 +76,18 @@ namespace gvt {
 	}
 
 	bool BoundingPolygon::intersects(BoundingPolygon const &o) const {
-		return false;
+		std::unordered_set<Vector<float_type>> axes;
+		auto ax1 = normalAxes(), ax2 = o.normalAxes();
+
+		axes.insert(ax1.begin(), ax1.end());
+		axes.insert(ax2.begin(), ax2.end());
+
+		for (auto axis: axes) {
+			if (!projectAlong(axis).intersects(o.projectAlong(axis)))
+				return false;
+		}
+
+		return true;
 	}
 
 

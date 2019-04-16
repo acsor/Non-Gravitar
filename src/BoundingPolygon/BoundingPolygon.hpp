@@ -24,7 +24,7 @@
 
 #include <functional>
 #include <vector>
-#include <Vector.hpp>
+#include "Vector.hpp"
 
 template<typename T> using reference_wrapper = std::reference_wrapper<T>;
 template<typename T> using vector = std::vector<T>;
@@ -42,7 +42,7 @@ namespace gvt {
 			 * @return A std::vector of vertices, ordered in clockwise manner,
 			 * composing the convex polygon (NOTE: faiing to order the
 			 * vertices in the prescribed way will lead to unexpected behavior
-			 * in some other BoundingPolygon primitives).
+			 * in some other BoundingPolygon primitives.)
 			 */
 			virtual vector<reference_wrapper<Vertex>> vertices() const = 0;
 			/**
@@ -55,6 +55,11 @@ namespace gvt {
 			void shift(Vector<float_type> translation);
 			void rotate(float_type deg);
 			void rotate(float_type deg, Vertex center);
+			/**
+			 * @brief Projects the given polygon along @c axis
+			 * @return An @c AxialProjection, representing the project extremes
+			 * along @c axis
+			 */
 			AxialProjection projectAlong(Vector<float_type> axis) const;
 
 			/**
