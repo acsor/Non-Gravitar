@@ -22,11 +22,10 @@
 #ifndef NON_GRAVITAR_BOUNDING_POLYGON_HPP
 #define NON_GRAVITAR_BOUNDING_POLYGON_HPP
 
-#include <functional>
+#include <initializer_list>
 #include <vector>
 #include "Vector.hpp"
 
-template<typename T> using reference_wrapper = std::reference_wrapper<T>;
 template<typename T> using vector = std::vector<T>;
 
 
@@ -39,12 +38,12 @@ namespace gvt {
 			using Vertex = Vector<float_type>;
 		protected:
 			/**
-			 * @return A std::vector of vertices, ordered in clockwise manner,
+			 * A sequence of vertices, ordered in clockwise manner,
 			 * composing the convex polygon (NOTE: faiing to order the
 			 * vertices in the prescribed way will lead to unexpected behavior
 			 * in some other BoundingPolygon primitives.)
 			 */
-			virtual vector<reference_wrapper<Vertex>> vertices() const = 0;
+			std::vector<Vertex> mVertices;
 			/**
 			 * @return A series of vectors representing the normal axes of the
 			 * convex polygon making the call. These will be later used by the
@@ -52,16 +51,35 @@ namespace gvt {
 			 */
 			virtual vector<Vector<float_type>> normalAxes() const final;
 		public:
+			/**
+			 * @param vertices a std::initializer_list of @c Vertex values
+			 * composing the convex polygon. These are expected to be ordered
+			 * in clockwise manner; not complying with this specification can
+			 * lead to unspecified behavior in some @c BoundingPolygon
+			 * primitives.
+			 */
+			BoundingPolygon(std::initializer_list<Vertex> vertices);
+
+			/**
+			 * @brief Shifts (i.e. translates) the polygon by the given vector
+			 * quantity @c translation
+			 */
 			void shift(Vector<float_type> translation);
-			void rotate(float_type deg);
-			void rotate(float_type deg, Vertex center);
+			/**
+			 * @brief Rotates the polygon by @c rad radiants around @c center.
+			 */
+			void rotate(float_type rad, Vertex center);
+			/**
+			 * @brief Rotates the polygon by @c rad radiants around the (0, 0)
+			 * locus
+			 */
+			void rotate(float_type rad);
 			/**
 			 * @brief Projects the given polygon along @c axis
 			 * @return An @c AxialProjection, representing the project extremes
 			 * along @c axis
 			 */
 			AxialProjection projectAlong(Vector<float_type> axis) const;
-
 			/**
 			 * SAT (Separating Axes Theorem) algorithm implementation for
 			 * detecting collisions between two arbitrarily-oriented convex 2D
@@ -74,7 +92,9 @@ namespace gvt {
 			 * @see https://www.metanetsoftware.com/technique/tutorialA.html
 			 */
 			virtual bool intersects(BoundingPolygon const &o) const final;
-			virtual bool operator== (BoundingPolygon const &o) const = 0;
+
+			virtual bool operator== (BoundingPolygon const &o) const;
+			virtual bool operator!= (BoundingPolygon const &o) const;
 	};
 
 	struct AxialProjection {

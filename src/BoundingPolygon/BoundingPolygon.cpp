@@ -30,44 +30,43 @@ namespace gvt {
 	using float_type = BoundingPolygon::float_type;
 
 	std::vector<Vector<float_type>> BoundingPolygon::normalAxes() const {
-		auto vs = vertices();
 		Vector<float_type> diff;
-		std::vector<Vector<float_type>> axes(vs.size());
+		std::vector<Vector<float_type>> axes(mVertices.size());
 
-		for (size_t i = 1; i < vs.size(); i++) {
-			diff = vs[i].get() - vs[i - 1].get();
+		for (size_t i = 1; i < mVertices.size(); i++) {
+			diff = mVertices[i] - mVertices[i - 1];
 			axes[i - 1] = Vector<float_type>(diff.angle() - M_PI / 2.0);
 		}
 
 		return axes;
 	}
 
+	BoundingPolygon::BoundingPolygon(std::initializer_list<Vertex> vertices) {
+		mVertices.assign(vertices);
+	}
+
 	void BoundingPolygon::shift(Vector<float_type> translation) {
-		for (Vector<float_type>& v: vertices()) {
+		for (Vector<float_type>& v: mVertices)
 			v += translation;
-		}
 	}
 
-	void BoundingPolygon::rotate(float deg) {
-		for (Vector<float_type>& v: vertices()) {
-			v.rotate(deg);
-		}
+	void BoundingPolygon::rotate(float rad) {
+		for (Vector<float_type>& v: mVertices)
+			v.rotate(rad);
 	}
 
-	void BoundingPolygon::rotate(float deg, Vertex center) {
-		for (Vertex& v: vertices()) {
-			v.rotate(deg, center);
-		}
+	void BoundingPolygon::rotate(float rad, Vertex center) {
+		for (Vertex& v: mVertices)
+			v.rotate(rad, center);
 	}
 
 	AxialProjection BoundingPolygon::projectAlong(Vector<float_type> axis)
 	const {
-		auto vs = vertices();
-		float_type tempProj = vs[0].get().projectAlong(axis);
+		float_type tempProj = mVertices[0].projectAlong(axis);
 		AxialProjection p {tempProj, tempProj};
 
-		for (size_t i = 1; i < vs.size(); i++) {
-			tempProj = vs[i].get().projectAlong(axis);
+		for (size_t i = 1; i < mVertices.size(); i++) {
+			tempProj = mVertices[i].projectAlong(axis);
 			p.start = std::min<float_type>(p.start, tempProj);
 			p.end = std::max<float_type>(p.start, tempProj);
 		}
@@ -88,6 +87,14 @@ namespace gvt {
 		}
 
 		return true;
+	}
+
+	bool BoundingPolygon::operator== (BoundingPolygon const &o) const {
+		return mVertices == o.mVertices;
+	}
+
+	bool BoundingPolygon::operator!= (BoundingPolygon const &o) const {
+		return !operator==(o);
 	}
 
 

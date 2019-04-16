@@ -22,17 +22,15 @@
 #ifndef NON_GRAVITAR_BOUNDING_TRIANGLE_HPP
 #define NON_GRAVITAR_BOUNDING_TRIANGLE_HPP
 
+#include "BoundingPolygon.hpp"
+
 
 namespace gvt {
 	class BoundingTriangle: public BoundingPolygon {
-		private:
-			std::vector<Vector<float>> mVertices(3);
-		protected:
-			std::vector<Vector<float>> vertices() const override;
 		public:
-			BoundingTriangle(
-				Vector<float> v1, Vector<float> v2, Vector<float> v3
-			);
+			using Vertex = BoundingPolygon::Vertex;
+
+			BoundingTriangle(Vertex v1, Vertex v2, Vertex v3);
 
 			bool operator== (BoundingPolygon const &o) const override;
 	};

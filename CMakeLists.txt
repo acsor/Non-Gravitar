@@ -24,8 +24,11 @@ include_directories("${DIR_SRC}")
 add_library(Observer "${DIR_SRC}/Observer.cpp")
 add_library(Event "${DIR_SRC}/Event.cpp")
 
+
 add_library(BoundingPolygon "${DIR_BOUND}/BoundingPolygon.cpp")
 
+add_library(BoundingTriangle "${DIR_BOUND}/BoundingTriangle.cpp")
+target_link_libraries(BoundingTriangle BoundingPolygon)
 add_library(Shape "${DIR_MODELS}/Shape.cpp")
 
 

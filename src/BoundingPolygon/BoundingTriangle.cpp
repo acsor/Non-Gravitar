@@ -21,19 +21,18 @@
 // SOFTWARE.
 #include "BoundingTriangle.hpp"
 
-using BoundingTriangle = gvt::BoundingTriangle;
-template<typename T> using Vector = gvt::Vector<T>;
 
+namespace gvt {
+	BoundingTriangle::BoundingTriangle(Vertex v1, Vertex v2, Vertex v3):
+		BoundingPolygon{v1, v2, v3} {
+	}
 
-std::vector<Vector<float>> BoundingTriangle::vertices() const {
-	return mVertices;
-}
+	bool BoundingTriangle::operator== (BoundingPolygon const &o) const {
+		auto other = dynamic_cast<BoundingTriangle const *>(&o);
 
-bool BoundingTriangle::operator== (BoundingPolygon const &o) const {
-	auto other = dynamic_cast<BoundingPolygon const *>(o);
+		if (other)
+			return mVertices == other->mVertices;
 
-	if (other)
-		return mVertices == other->mVertices;
-
-	return false;
+		return false;
+	}
 }
