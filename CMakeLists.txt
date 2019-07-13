@@ -29,6 +29,9 @@ add_library(BoundingPolygon "${DIR_BOUND}/BoundingPolygon.cpp")
 
 add_library(BoundingTriangle "${DIR_BOUND}/BoundingTriangle.cpp")
 target_link_libraries(BoundingTriangle BoundingPolygon)
+
+add_library(BoundingRectangle "${DIR_BOUND}/BoundingRectangle.cpp")
+target_link_libraries(BoundingRectangle BoundingPolygon)
 add_library(Shape "${DIR_MODELS}/Shape.cpp")
 
 

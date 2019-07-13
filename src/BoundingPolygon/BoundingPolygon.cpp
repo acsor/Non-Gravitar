@@ -19,7 +19,6 @@
 // LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
-#include <cstdlib>
 #include <stdexcept>
 #include <unordered_set>
 
@@ -32,11 +31,18 @@ namespace gvt {
 	std::vector<Vector<float_type>> BoundingPolygon::normalAxes() const {
 		Vector<float_type> diff;
 		std::vector<Vector<float_type>> axes(mVertices.size());
+		size_t i = 1;
 
-		for (size_t i = 1; i < mVertices.size(); i++) {
+        while (i < mVertices.size()) {
 			diff = mVertices[i] - mVertices[i - 1];
 			axes[i - 1] = Vector<float_type>(diff.angle() - M_PI / 2.0);
+
+			i++;
 		}
+
+		// Add last axis
+		diff = mVertices[0] - mVertices[i - 1];
+		axes[i - 1] = Vector<float_type>(diff.angle() - M_PI / 2.0);
 
 		return axes;
 	}
@@ -73,7 +79,7 @@ namespace gvt {
 		for (size_t i = 1; i < mVertices.size(); i++) {
 			tempProj = mVertices[i].projectAlong(axis);
 			p.start = std::min<float_type>(p.start, tempProj);
-			p.end = std::max<float_type>(p.start, tempProj);
+			p.end = std::max<float_type>(p.end, tempProj);
 		}
 
 		return p;
