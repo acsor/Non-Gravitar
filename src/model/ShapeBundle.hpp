@@ -32,12 +32,25 @@ template<typename T> using shared_ptr = std::shared_ptr<T>;
 
 namespace gvt {
 	class Shape;
+	class ShapeBundle;
 
-	class ShapeBundle: public EventListener, public EventDispatcher {
-		protected:
-			std::list<shared_ptr<Shape>> mObjects;
+	// TODO Convert to lambda function
+	class ShapeBundleListener: public EventListener {
+        private:
+	        ShapeBundle &mBundle;
+        public:
+	        void handle (Event *e) override;
+	};
 
-			ShapeBundle() = default;
+	class ShapeBundle: public EventDispatcher {
+	    friend class ShapeBundleListener;
+
+        private:
+            ShapeBundleListener mListener;
+        protected:
+            std::list<shared_ptr<Shape>> mShapes;
+
+            ShapeBundle() = default;
 		public:
 			using iterator = std::list<shared_ptr<Shape>>::iterator;
 
@@ -48,31 +61,31 @@ namespace gvt {
 			inline iterator end();
 	};
 
-	struct ShapeBundleEvent: public Event {
-		enum class Type {
-			unspecified = 0, attached, detached, destroied
-		};
+    struct ShapeBundleEvent: public Event {
+        enum class Type {
+            unspecified = 0, attached, detached, destroyed
+        };
 
-		Type type{Type::unspecified};
-		ShapeBundle *bundle{nullptr};
-		shared_ptr<Shape> shape;
+        Type type{Type::unspecified};
+        ShapeBundle *bundle{nullptr};
+        shared_ptr<Shape> shape;
 
-		ShapeBundleEvent() = default;
-		inline ShapeBundleEvent(
-			Type type, ShapeBundle *bundle, shared_ptr<Shape> shape
-		);
-	};
+        ShapeBundleEvent() = default;
+        inline ShapeBundleEvent(
+                Type type, ShapeBundle *bundle, shared_ptr<Shape> shape
+        );
+    };
 }
 
 
 // Implementation of inline functions
 namespace gvt {
 	ShapeBundle::iterator ShapeBundle::begin() {
-		return mObjects.begin();
+		return mShapes.begin();
 	}
 
 	ShapeBundle::iterator ShapeBundle::end() {
-		return mObjects.end();
+		return mShapes.end();
 	}
 
 	ShapeBundleEvent::ShapeBundleEvent(

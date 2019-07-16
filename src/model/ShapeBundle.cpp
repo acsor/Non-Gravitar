@@ -27,11 +27,26 @@ using ShapeBundleEvent = gvt::ShapeBundleEvent;
 using Shape = gvt::Shape;
 
 
+void gvt::ShapeBundleListener::handle (Event *e) {
+    auto bundleEvent = dynamic_cast<ShapeBundleEvent *>(e);
+
+    if (bundleEvent) {
+        switch (bundleEvent->type) {
+            case (ShapeBundleEvent::Type::destroyed):
+                mBundle.mShapes.remove(bundleEvent->shape);
+                break;
+            default:
+                break;
+        }
+    }
+}
+
+
 ShapeBundle::~ShapeBundle() {
 	ShapeBundleEvent e{ShapeBundleEvent::Type::destroyed, this, nullptr};
 
-	for (auto i = mObjects.begin(); i != mObjects.end(); i++) {
-		(*i)->detachListener(*this);
+	for (auto i = mShapes.begin(); i != mShapes.end(); i++) {
+		(*i)->detachListener(mListener);
 	}
 
 	notify(&e);
@@ -42,8 +57,8 @@ void ShapeBundle::insert(shared_ptr<Shape> shape) {
 	// Not checking for null-pointer arguments is intended behavior, as code
 	// feeding in null-pointer values should not exist in the first place: a
 	// segmentation fault acts as a proper signaling mechanism
-	mObjects.push_front(shape);
-	shape->attachListener(*this);
+	mShapes.push_front(shape);
+	shape->attachListener(mListener);
 
 	notify(&e);
 }
