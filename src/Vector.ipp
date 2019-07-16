@@ -73,13 +73,13 @@ namespace gvt {
 		return (y >= 0) ? acos(x / norm()): M_PI + acos(-x / norm());
 	}
 
-	template<typename T> T Vector<T>::dotProduct(Vector<T> const &other) const
-	{
+	template<typename T>
+	T Vector<T>::dotProduct(Vector<T> const &other) const {
 		return x * other.x + y * other.y;
 	}
 
-	template<typename T> double Vector<T>::projectAlong(Vector<T> const &axis)
-	const {
+	template<typename T>
+	double Vector<T>::projectAlong(Vector<T> const &axis) const {
 		auto axisNorm = axis.norm();
 
 		if (axisNorm != 0) {
@@ -95,18 +95,18 @@ namespace gvt {
 		return Vector(l * x, l * y);
 	}
 
-	template<typename T> Vector<T> Vector<T>::operator+ (Vector<T> const &o)
-	const {
+	template<typename T>
+	Vector<T> Vector<T>::operator+ (Vector<T> const &o) const {
 		return {x + o.x, y + o.y};
 	}
 
-	template<typename T> Vector<T> Vector<T>::operator- (Vector const &o) const
-	{
+	template<typename T>
+	Vector<T> Vector<T>::operator- (Vector const &o) const {
 		return {x - o.x, y - o.y};
 	}
 
-	template<typename T> Vector<T>& Vector<T>::operator+= (Vector<T> const &o)
-	{
+	template<typename T>
+	Vector<T>& Vector<T>::operator+= (Vector<T> const &o) {
 		x += o.x;
 		y += o.y;
 
