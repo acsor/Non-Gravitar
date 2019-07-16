@@ -154,7 +154,7 @@ namespace gvt {
 
 	struct ShapeEvent: public Event {
 		enum class Type {
-			unspecified = 0, moved, origin, rotated, destroied
+			unspecified = 0, moved, origin, rotated, destroyed
 		};
 
 		ShapeEvent::Type type{ShapeEvent::Type::unspecified};

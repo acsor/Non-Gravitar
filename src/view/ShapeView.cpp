@@ -75,7 +75,7 @@ void ShapeView::handle(Event *e) {
 			} else if (event->type == ShapeEvent::Type::rotated) {
 				mBounds.setRotation(gvt::rad2deg(box.rotation()));
 			}
-		} else if (event->type == ShapeEvent::Type::destroied) {
+		} else if (event->type == ShapeEvent::Type::destroyed) {
 			mShape.reset();
 			event->shape->detachListener(*this);
 		}

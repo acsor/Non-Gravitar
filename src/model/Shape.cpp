@@ -31,7 +31,7 @@ Shape::Shape(float x, float y): mX{x}, mY{y} {
 }
 
 Shape::~Shape() {
-	ShapeEvent e{ShapeEvent::Type::destroied, this};
+	ShapeEvent e{ShapeEvent::Type::destroyed, this};
 
 	notify(&e);
 }

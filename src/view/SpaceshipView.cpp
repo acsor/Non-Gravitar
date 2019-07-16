@@ -83,7 +83,7 @@ void SpaceshipView::handle(Event *e) {
 			} else if (event->type == ShapeEvent::Type::rotated) {
 				mSprite.setRotation(gvt::rad2deg(p->rotation()));
 			}
-		} else if (event->type == ShapeEvent::Type::destroied) {
+		} else if (event->type == ShapeEvent::Type::destroyed) {
 			mSprite = sf::Sprite();
 		}
 	}

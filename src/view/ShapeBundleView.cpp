@@ -84,7 +84,7 @@ void ShapeBundleView::handle(Event *e) {
 			);
 		} else if (event->type == ShapeBundleEvent::Type::detached) {
 			mViews.erase(event->shape.get());
-		} else if (event->type == ShapeBundleEvent::Type::destroied) {
+		} else if (event->type == ShapeBundleEvent::Type::destroyed) {
 			mViews.clear();
 			mBundle.reset();
 		}

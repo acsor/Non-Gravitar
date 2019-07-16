@@ -28,7 +28,7 @@ using Shape = gvt::Shape;
 
 
 ShapeBundle::~ShapeBundle() {
-	ShapeBundleEvent e{ShapeBundleEvent::Type::destroied, this, nullptr};
+	ShapeBundleEvent e{ShapeBundleEvent::Type::destroyed, this, nullptr};
 
 	for (auto i = mObjects.begin(); i != mObjects.end(); i++) {
 		(*i)->detachListener(*this);
