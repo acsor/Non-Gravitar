@@ -46,6 +46,7 @@ namespace gvt {
 			 */
 			Line& operator* (double factor);
 
+			void accept (ShapeVisitor &visitor) override;
 			Rectangle globalBounds() const override;
 			bool operator== (Shape const &o) const override;
 	};

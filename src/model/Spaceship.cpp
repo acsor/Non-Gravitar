@@ -61,6 +61,10 @@ bool Spaceship::charged() const {
 	return mFuel > 0;
 }
 
+void gvt::Spaceship::accept(gvt::ShapeVisitor &visitor) {
+	visitor.visitSpaceship(*this);
+}
+
 bool Spaceship::operator==(Shape const &o) const {
 	auto *other = dynamic_cast<Spaceship const *>(&o);
 
@@ -69,3 +73,4 @@ bool Spaceship::operator==(Shape const &o) const {
 
 	return false;
 }
+

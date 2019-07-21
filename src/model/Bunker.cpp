@@ -64,6 +64,10 @@ RoundMissile Bunker::shoot() {
 	return m;
 }
 
+void Bunker::accept (ShapeVisitor &visitor) {
+	visitor.visitBunker(*this);
+}
+
 Rectangle Bunker::globalBounds() const {
     Rectangle r = {
 		{mX, mY}, {mX + COLLIDING_WIDTH, mY + COLLIDING_HEIGHT}

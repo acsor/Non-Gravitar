@@ -40,6 +40,10 @@ void Fuel::empty() {
 	mFuel = 0;
 }
 
+void Fuel::accept(ShapeVisitor &visitor) {
+	visitor.visitFuel(*this);
+}
+
 float Fuel::width() const {
 	return Fuel::WIDTH;
 }
@@ -66,3 +70,5 @@ bool Fuel::operator== (Shape const &o) const {
 
 	return false;
 }
+
+

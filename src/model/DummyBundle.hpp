@@ -29,9 +29,7 @@
 namespace gvt {
 	class DummyBundle: public ShapeBundle {
 		public:
-			DummyBundle();
-
-			void handle(Event *e) override;
+			DummyBundle() = default;
 	};
 }
 

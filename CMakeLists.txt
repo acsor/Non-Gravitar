@@ -38,9 +38,6 @@ add_library(Shape "${DIR_MODELS}/Shape.cpp")
 add_library(ShapeBundle "${DIR_MODELS}/ShapeBundle.cpp")
 target_link_libraries(ShapeBundle Event Shape)
 
-add_library(DummyBundle "${DIR_MODELS}/DummyBundle.cpp")
-target_link_libraries(DummyBundle ShapeBundle)
-
 
 add_library(Point "${DIR_MODELS}/Point.cpp")
 target_link_libraries(Point Shape)
@@ -96,7 +93,7 @@ add_executable(NonGravitar "${DIR_SRC}/NonGravitar.cpp")
 target_link_libraries(
 	NonGravitar
 	sfml-window sfml-graphics sfml-system
-	ShapeBundle DummyBundle ShapeBundleView
+	ShapeBundle ShapeBundleView
 )
 
 add_subdirectory(test)

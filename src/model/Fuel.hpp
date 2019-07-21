@@ -24,6 +24,7 @@
 
 #include "Shape.hpp"
 #include "ShapeTraits.hpp"
+#include "ShapeVisitor.hpp"
 
 
 namespace gvt {
@@ -49,6 +50,7 @@ namespace gvt {
 			 * @brief Empties the fuel amount contained.
 			 */
 			void empty();
+			void accept(ShapeVisitor &visitor) override;
 			
 			float width() const override;
 			float height() const override;

@@ -26,6 +26,7 @@
 #include "Shape.hpp"
 #include "ShapeTraits.hpp"
 #include "Point.hpp"
+#include "ShapeVisitor.hpp"
 
 
 namespace gvt {
@@ -70,6 +71,7 @@ namespace gvt {
 			 */
 			bool clashes(Rectangle const &o) const;
 
+			void accept (ShapeVisitor &visitor) override;
 			Rectangle globalBounds() const override;
 			bool operator==(Shape const &o) const override;
 

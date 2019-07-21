@@ -35,6 +35,10 @@ RoundMissile::RoundMissile(float xcoord, float ycoord, float radius):
 	Circle(xcoord, ycoord, radius) {
 }
 
+void gvt::RoundMissile::accept(ShapeVisitor &visitor) {
+	visitor.visitMissile(*this);
+}
+
 bool RoundMissile::operator== (Shape const &o) const {
 	auto *other = dynamic_cast<RoundMissile const *>(&o);
 
@@ -43,3 +47,4 @@ bool RoundMissile::operator== (Shape const &o) const {
 
 	return false;
 }
+

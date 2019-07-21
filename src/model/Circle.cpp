@@ -49,6 +49,10 @@ bool Circle::clashes(Circle const &o) const {
 	) <= mRadius + o.mRadius;
 }
 
+void Circle::accept (ShapeVisitor &visitor) {
+	visitor.visitCircle(*this);
+}
+
 Rectangle Circle::globalBounds() const {
 	// TO-DO Improve by taking into account rotation as well
 	Rectangle r = Rectangle{

@@ -76,15 +76,6 @@ float Shape::speed() const {
 }
 
 
-void Shape::move(float xcoord, float ycoord) {
-	ShapeEvent e{ShapeEvent::Type::moved, this};
-
-	mX += xcoord;
-    mY += ycoord;
-
-	notify(&e);
-}
-
 bool Shape::clashes(gvt::Shape const &o) const {
     return globalBounds().clashes(o.globalBounds());
 }

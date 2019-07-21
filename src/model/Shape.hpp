@@ -29,6 +29,7 @@
 
 namespace gvt {
 	class Rectangle;
+	class ShapeVisitor;
 
 	/**
 	 * @brief An abstract base class for subsequent shape objects. Note that
@@ -128,6 +129,14 @@ namespace gvt {
 			 * @return The current @c Shape speed, as a scalar value.
 			 */
 			virtual float speed() const;
+			
+			/**
+			 * Lets a @c ShapeVisitor perform its operation on the 
+			 * implementing subclass.
+			 * 
+			 * @see ShapeVisitor
+			 */
+			virtual void accept(ShapeVisitor &visitor) = 0;
 
 			/**
 			 * @return A @c Rectangle object representing the bounds used to

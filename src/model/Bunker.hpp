@@ -23,10 +23,11 @@
 #define NON_GRAVITAR_BUNKER_HPP
 
 #include <vector>
-#include "Rectangle.hpp"
 #include "Shape.hpp"
+#include "Rectangle.hpp"
 #include "ShapeTraits.hpp"
 #include "RoundMissile.hpp"
+#include "ShapeVisitor.hpp"
 
 template<typename T> using vector = std::vector<T>;
 
@@ -57,6 +58,8 @@ namespace gvt {
 			 * object.
 			 */
 			RoundMissile shoot();
+
+			void accept (ShapeVisitor &visitor) override;
 
 			Rectangle globalBounds() const override;
 			bool operator==(Shape const &o) const override;

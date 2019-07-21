@@ -26,6 +26,7 @@
 #include "Shape.hpp"
 #include "ShapeTraits.hpp"
 #include "Rectangle.hpp"
+#include "ShapeVisitor.hpp"
 
 
 namespace gvt {
@@ -72,6 +73,8 @@ namespace gvt {
 			 * fuel in it, @c false othwerise.
 			 */
 			bool charged() const;
+
+			void accept(ShapeVisitor &visitor) override;
 
 			inline float width() const override;
 			inline float height() const override;

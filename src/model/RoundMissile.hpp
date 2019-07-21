@@ -33,6 +33,8 @@ namespace gvt {
 
 			explicit RoundMissile(float xcoord, float ycoord);
 			explicit RoundMissile(float xcoord, float ycoord, float radius);
+			
+			void accept (ShapeVisitor &visitor) override;
 
 			bool operator== (Shape const &o) const override;
 	};

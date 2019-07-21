@@ -48,6 +48,10 @@ std::ostream& std::operator<< (std::ostream &out, Rectangle const &r) {
 }
 
 
+void Rectangle::accept (ShapeVisitor &visitor) {
+	visitor.visitRectangle(*this);
+}
+
 Rectangle Rectangle::globalBounds() const {
 	return *this;
 }

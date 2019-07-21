@@ -27,20 +27,6 @@
 using Point = gvt::Point;
 
 
-gvt::Rectangle gvt::Point::globalBounds() const {
-	// TO-DO Check/unit test this
-	Point const halfWidth{
-		static_cast<float>(WIDTH_BBOX / 2.0 - mOriginX),
-		static_cast<float>(WIDTH_BBOX / 2.0 - mOriginY)
-	};
-	Rectangle r = Rectangle{*this - halfWidth, *this + halfWidth};
-
-	r.origin(mOriginX, mOriginY);
-	r.rotation(mRotation);
-
-	return r;
-}
-
 Point::Point(float xcoord, float ycoord): Shape(xcoord, ycoord) {
 }
 
@@ -58,6 +44,24 @@ Point gvt::Point::operator- (Point const &o) const {
 
 Point gvt::operator* (float factor, Point const &p) {
 	return Point{factor * p.mX, factor * p.mY};
+}
+
+gvt::Rectangle gvt::Point::globalBounds() const {
+	// TO-DO Check/unit test this
+	Point const halfWidth{
+			static_cast<float>(WIDTH_BBOX / 2.0 - mOriginX),
+			static_cast<float>(WIDTH_BBOX / 2.0 - mOriginY)
+	};
+	Rectangle r = Rectangle{*this - halfWidth, *this + halfWidth};
+
+	r.origin(mOriginX, mOriginY);
+	r.rotation(mRotation);
+
+	return r;
+}
+
+void gvt::Point::accept (gvt::ShapeVisitor &visitor) {
+	visitor.visitPoint(*this);
 }
 
 bool Point::operator== (Shape const &o) const {

@@ -28,12 +28,6 @@ using Point = gvt::Point;
 using Rectangle = gvt::Rectangle;
 
 
-Rectangle Line::globalBounds() const {
-	// TO-DO Enhance the collision box creation by minimizing the area covered
-	// by the rectangle
-	return Rectangle({mX, mY}, mEnd);
-}
-
 Line::Line(Point const &start, Point const &end):
 	Shape(start.x(), start.y()), mEnd{end} {
 }
@@ -45,6 +39,16 @@ float Line::width() const {
 void Line::rotation(float r) {
 	Shape::rotation(r);
 	// TO-DO Implement the remainder
+}
+
+void Line::accept (ShapeVisitor &visitor) {
+	visitor.visitLine(*this);
+}
+
+Rectangle Line::globalBounds() const {
+	// TO-DO Enhance the collision box creation by minimizing the area covered
+	// by the rectangle
+	return Rectangle({mX, mY}, mEnd);
 }
 
 Line& Line::operator* (double factor) {

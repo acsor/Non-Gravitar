@@ -37,6 +37,7 @@ namespace gvt {
 			float area() const;
 			bool clashes(Circle const &o) const;
 
+			void accept (ShapeVisitor &visitor) override;
 			Rectangle globalBounds() const override;
 			bool operator== (Shape const &o) const override;
 	};

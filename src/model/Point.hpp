@@ -23,6 +23,7 @@
 #define NON_GRAVITAR_POINT_HPP
 
 #include "Shape.hpp"
+#include "ShapeVisitor.hpp"
 
 
 namespace gvt {
@@ -40,6 +41,7 @@ namespace gvt {
 			Point operator+ (Point const &o) const;
 			Point operator- (Point const &o) const;
 
+			void accept (ShapeVisitor &visitor) override;
 			Rectangle globalBounds() const override;
 			bool operator== (Shape const &o) const override;
 	};
