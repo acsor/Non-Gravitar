@@ -20,7 +20,7 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 #include "catch.hpp"
-#include "model/Line.hpp"
+#include "shape/Line.hpp"
 
 using namespace gvt;
 

@@ -24,8 +24,8 @@
 
 #include <list>
 #include <memory>
-#include "Shape.hpp"
-#include "../Event.hpp"
+#include "shape/Shape.hpp"
+#include "Event.hpp"
 
 template<typename T> using shared_ptr = std::shared_ptr<T>;
 
@@ -35,18 +35,19 @@ namespace gvt {
 	class ShapeBundle;
 
 	// TODO Convert to lambda function
-	class ShapeBundleListener: public EventListener {
+	class DestroyedListener: public EventListener {
         private:
 	        ShapeBundle &mBundle;
         public:
+			DestroyedListener(ShapeBundle &bundle);
 	        void handle (Event *e) override;
 	};
 
 	class ShapeBundle: public EventDispatcher {
-	    friend class ShapeBundleListener;
+	    friend class DestroyedListener;
 
         private:
-            ShapeBundleListener mListener;
+            DestroyedListener mListener{*this};
         protected:
             std::list<shared_ptr<Shape>> mShapes;
 

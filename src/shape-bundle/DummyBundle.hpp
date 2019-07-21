@@ -23,7 +23,7 @@
 #define NON_GRAVITAR_DUMMY_BUNDLE_HPP
 
 #include "ShapeBundle.hpp"
-#include "../Event.hpp"
+#include "Event.hpp"
 
 
 namespace gvt {

@@ -26,7 +26,7 @@
 #include <memory>
 #include <SFML/Graphics.hpp>
 #include "../Event.hpp"
-#include "../model/ShapeBundle.hpp"
+#include "../shape-bundle/ShapeBundle.hpp"
 #include "../view/ShapeView.hpp"
 
 template<typename T> using weak_ptr = std::weak_ptr<T>;

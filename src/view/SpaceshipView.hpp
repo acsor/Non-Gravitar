@@ -26,7 +26,7 @@
 #include <memory>
 #include <SFML/Graphics.hpp>
 #include "ShapeView.hpp"
-#include "../model/Spaceship.hpp"
+#include "../shape/Spaceship.hpp"
 #include "../Event.hpp"
 
 template<typename T> using weak_ptr = std::weak_ptr<T>;

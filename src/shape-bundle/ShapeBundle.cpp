@@ -27,7 +27,11 @@ using ShapeBundleEvent = gvt::ShapeBundleEvent;
 using Shape = gvt::Shape;
 
 
-void gvt::ShapeBundleListener::handle (Event *e) {
+gvt::DestroyedListener::DestroyedListener(ShapeBundle &bundle):
+	mBundle{bundle} {
+}
+
+void gvt::DestroyedListener::handle (Event *e) {
     auto bundleEvent = dynamic_cast<ShapeBundleEvent *>(e);
 
     if (bundleEvent) {

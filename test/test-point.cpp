@@ -22,7 +22,7 @@
 #include <cmath>
 #include <list>
 #include "catch.hpp"
-#include "model/Point.hpp"
+#include "shape/Point.hpp"
 #include "Vector.hpp"
 
 using Point = gvt::Point;

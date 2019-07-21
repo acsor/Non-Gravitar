@@ -23,9 +23,9 @@
 #include <utility>
 
 #include "catch.hpp"
-#include "../src/BoundingPolygon/BoundingPolygon.hpp"
-#include "../src/BoundingPolygon/BoundingTriangle.hpp"
-#include "../src/BoundingPolygon/BoundingRectangle.hpp"
+#include "../src/bounding-polygon/BoundingPolygon.hpp"
+#include "../src/bounding-polygon/BoundingTriangle.hpp"
+#include "../src/bounding-polygon/BoundingRectangle.hpp"
 
 using Triangle = gvt::BoundingTriangle;
 using Rect = gvt::BoundingRectangle;

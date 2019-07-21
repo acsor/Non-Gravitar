@@ -20,8 +20,8 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 #include "catch.hpp"
-#include "../src/model/RoundMissile.hpp"
-#include "../src/model/Bunker.hpp"
+#include "../src/shape/RoundMissile.hpp"
+#include "../src/shape/Bunker.hpp"
 
 using Bunker = gvt::Bunker;
 using RoundMissile = gvt::RoundMissile;

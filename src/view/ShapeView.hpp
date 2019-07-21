@@ -24,7 +24,7 @@
 
 #include <memory>
 #include <SFML/Graphics.hpp>
-#include "../model/Shape.hpp"
+#include "../shape/Shape.hpp"
 
 template<typename T> using weak_ptr = std::weak_ptr<T>;
 template<typename T> using shared_ptr = std::shared_ptr<T>;

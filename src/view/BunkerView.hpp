@@ -26,7 +26,7 @@
 #include <memory>
 #include <SFML/Graphics.hpp>
 #include "ShapeView.hpp"
-#include "../model/Bunker.hpp"
+#include "../shape/Bunker.hpp"
 
 template<typename T> using weak_ptr = std::weak_ptr<T>;
 template<typename T> using shared_ptr = std::shared_ptr<T>;

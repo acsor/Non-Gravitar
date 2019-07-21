@@ -24,10 +24,10 @@
 #include <memory>
 #include <SFML/Graphics.hpp>
 #include <SFML/Window.hpp>
-#include "model/Spaceship.hpp"
-#include "model/ShapeBundle.hpp"
-#include "model/DummyBundle.hpp"
-#include "model/Bunker.hpp"
+#include "shape/Spaceship.hpp"
+#include "shape-bundle/ShapeBundle.hpp"
+#include "shape-bundle/DummyBundle.hpp"
+#include "shape/Bunker.hpp"
 #include "Vector.hpp"
 #include "view/BunkerView.hpp"
 #include "view/ShapeBundleView.hpp"

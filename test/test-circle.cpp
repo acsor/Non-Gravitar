@@ -21,7 +21,7 @@
 // SOFTWARE.
 #include "catch.hpp"
 #include "cmath"
-#include "model/Circle.hpp"
+#include "shape/Circle.hpp"
 
 using Circle = gvt::Circle;
 

@@ -21,7 +21,7 @@
 // SOFTWARE.
 #include <iostream>
 #include "ShapeView.hpp"
-#include "../model/Rectangle.hpp"
+#include "../shape/Rectangle.hpp"
 #include "../Utils.hpp"
 
 using Shape = gvt::Shape;

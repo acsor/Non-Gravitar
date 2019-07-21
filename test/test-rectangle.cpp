@@ -21,7 +21,7 @@
 // SOFTWARE.
 #include <unordered_set>
 #include "catch.hpp"
-#include "model/Rectangle.hpp"
+#include "shape/Rectangle.hpp"
 
 using namespace std;
 using namespace gvt;

@@ -6,9 +6,10 @@ set(CMAKE_CXX_STANDARD 11)
 set(CMAKE_CXX_FLAGS -Wall)
 
 set(DIR_SRC "src")
-set(DIR_MODELS "${DIR_SRC}/model")
+set(DIR_SHAPE "${DIR_SRC}/shape")
+set(DIR_SHAPE_BUNDLE "${DIR_SRC}/shape-bundle")
 set(DIR_VIEWS "${DIR_SRC}/view")
-set(DIR_BOUND "${DIR_SRC}/BoundingPolygon")
+set(DIR_BOUND "${DIR_SRC}/bounding-polygon")
 set(DIR_SAMPLES "samples/")
 
 # The project versionig scheme is Semver: https://semver.org/
@@ -32,36 +33,36 @@ target_link_libraries(BoundingTriangle BoundingPolygon)
 
 add_library(BoundingRectangle "${DIR_BOUND}/BoundingRectangle.cpp")
 target_link_libraries(BoundingRectangle BoundingPolygon)
-add_library(Shape "${DIR_MODELS}/Shape.cpp")
+add_library(Shape "${DIR_SHAPE}/Shape.cpp")
 
 
-add_library(ShapeBundle "${DIR_MODELS}/ShapeBundle.cpp")
+add_library(ShapeBundle "${DIR_SHAPE_BUNDLE}/ShapeBundle.cpp")
 target_link_libraries(ShapeBundle Event Shape)
 
 
-add_library(Point "${DIR_MODELS}/Point.cpp")
+add_library(Point "${DIR_SHAPE}/Point.cpp")
 target_link_libraries(Point Shape)
 
-add_library(Line "${DIR_MODELS}/Line.cpp")
+add_library(Line "${DIR_SHAPE}/Line.cpp")
 target_link_libraries(Line Shape Point Rectangle)
 
-add_library(Circle "${DIR_MODELS}/Circle.cpp")
+add_library(Circle "${DIR_SHAPE}/Circle.cpp")
 target_link_libraries(Circle Shape Rectangle)
 
-add_library(Rectangle "${DIR_MODELS}/Rectangle.cpp")
+add_library(Rectangle "${DIR_SHAPE}/Rectangle.cpp")
 target_link_libraries(Rectangle Shape)
 
 
-add_library(Spaceship "${DIR_MODELS}/Spaceship.cpp")
+add_library(Spaceship "${DIR_SHAPE}/Spaceship.cpp")
 target_link_libraries(Spaceship Shape Point Rectangle Fuel)
 
-add_library(Fuel "${DIR_MODELS}/Fuel.cpp")
+add_library(Fuel "${DIR_SHAPE}/Fuel.cpp")
 target_link_libraries(Fuel Spaceship)
 
-add_library(RoundMissile "${DIR_MODELS}/RoundMissile.cpp")
+add_library(RoundMissile "${DIR_SHAPE}/RoundMissile.cpp")
 target_link_libraries(RoundMissile Shape Circle)
 
-add_library(Bunker "${DIR_MODELS}/Bunker.cpp")
+add_library(Bunker "${DIR_SHAPE}/Bunker.cpp")
 target_link_libraries(Bunker Shape RoundMissile)
 
 

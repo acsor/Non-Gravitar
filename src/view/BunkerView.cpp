@@ -20,7 +20,7 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 #include <typeinfo>
-#include "../model/Shape.hpp"
+#include "../shape/Shape.hpp"
 #include "../Utils.hpp"
 #include "BunkerView.hpp"
 
