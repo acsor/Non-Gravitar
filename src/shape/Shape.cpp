@@ -54,6 +54,13 @@ void Shape::moveAlong(Vectorf const &t) {
 	notify(&e);
 }
 
+void Shape::animate(float time) {
+	if (mAcceleration.norm() != 0) {
+		mVelocity += mAcceleration * time;
+		moveAlong(mVelocity * time);
+	}
+}
+
 void Shape::origin(float xcoord, float ycoord) {
 	ShapeEvent e{ShapeEvent::Type::origin, this};
 

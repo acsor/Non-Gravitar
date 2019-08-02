@@ -84,6 +84,13 @@ namespace gvt {
 			 * @param t Trajectory to follow
 			 */
 			virtual void moveAlong(Vectorf const &t);
+			/**
+			 * Moves the object along the trajectory described by the @c
+			 * Shape velocity, which in turn is updated by the @c Shape
+			 * acceleration by the given amount of time.
+			 * @param time Velocity factor, in seconds.
+			 */
+			virtual void animate(float time);
 
 			/**
 			 * @return The origin x coordinate, used for various geometrical
