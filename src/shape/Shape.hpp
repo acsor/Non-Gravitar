@@ -46,7 +46,7 @@ namespace gvt {
 			float mRotation{0};
 			Trajectory mVelocity{0, 0};
 
-			bool mDestroied{false};
+			bool mDestroyed{false};
 
 			Shape(float x, float y);
 		public:
@@ -113,8 +113,8 @@ namespace gvt {
 			 */
 			virtual inline void rotate(float r);
 
-			virtual inline bool destroied() const;
-			virtual inline void destroied(bool state);
+			virtual inline bool destroyed() const;
+			virtual inline void destroyed(bool state);
 
 			/**
 			 * @param t Velocity value to set to the current @c Shape instance.

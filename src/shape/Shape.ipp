@@ -86,11 +86,11 @@ namespace gvt {
 	}
 
 
-	bool Shape::destroied() const {
-		return mDestroied;
+	bool Shape::destroyed() const {
+		return mDestroyed;
 	}
 
-	void Shape::destroied(bool state) {
-		mDestroied = state;
+	void Shape::destroyed(bool state) {
+		mDestroyed = state;
 	}
 }

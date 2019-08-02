@@ -62,7 +62,7 @@ gvt::CollisionVisitor::CollisionVisitor(CollisionBundle &bundle):
 }
 
 void gvt::CollisionVisitor::visitMissile(gvt::RoundMissile &missile) {
-    missile.destroied(true);
+	missile.destroyed(true);
 }
 
 void gvt::CollisionVisitor::visitBunker(gvt::Bunker &bunker) {
@@ -70,11 +70,11 @@ void gvt::CollisionVisitor::visitBunker(gvt::Bunker &bunker) {
 }
 
 void gvt::CollisionVisitor::visitSpaceship(gvt::Spaceship &spaceship) {
-    spaceship.destroied(true);
+	spaceship.destroyed(true);
 }
 
 void gvt::CollisionVisitor::visitFuel(gvt::Fuel &fuel) {
-	fuel.destroied(true);
+	fuel.destroyed(true);
 }
 
 void gvt::CollisionVisitor::visitPoint(Point &point) {
