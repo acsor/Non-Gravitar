@@ -24,7 +24,7 @@
 
 using Shape = gvt::Shape;
 using ShapeEvent = gvt::ShapeEvent;
-using Trajectory = gvt::Trajectory;
+using Trajectory = gvt::Vectorf;
 
 
 Shape::Shape(float x, float y): mX{x}, mY{y} {
@@ -45,7 +45,7 @@ void Shape::move(float xcoord, float ycoord) {
 	notify(&e);
 }
 
-void Shape::moveAlong(Trajectory const &t) {
+void Shape::moveAlong(Vectorf const &t) {
 	ShapeEvent e{ShapeEvent::Type::moved, this};
 
 	mX += t.x;
@@ -63,7 +63,7 @@ void Shape::origin(float xcoord, float ycoord) {
 	notify(&e);
 }
 
-void Shape::velocity(Trajectory const &t) {
+void Shape::velocity(Vectorf const &t) {
 	mVelocity = t;
 }
 

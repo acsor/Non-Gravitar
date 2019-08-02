@@ -44,7 +44,7 @@ namespace gvt {
 			float mX{0}, mY{0};
 			float mOriginX{0}, mOriginY{0};
 			float mRotation{0};
-			Trajectory mVelocity{0, 0};
+			Vectorf mVelocity{0, 0};
 
 			bool mDestroyed{false};
 
@@ -81,7 +81,7 @@ namespace gvt {
 			 * @brief Move the current object along the given trajectory.
 			 * @param t Trajectory to follow
 			 */
-			virtual void moveAlong(Trajectory const &t);
+			virtual void moveAlong(Vectorf const &t);
 
 			/**
 			 * @return The origin x coordinate, used for various geometrical
@@ -119,12 +119,12 @@ namespace gvt {
 			/**
 			 * @param t Velocity value to set to the current @c Shape instance.
 			 */
-			virtual void velocity(Trajectory const &t);
+			virtual void velocity(Vectorf const &t);
 			/**
 			 * @return The velocity vector associated with the current
 			 * @c Shape.
 			 */
-			virtual Trajectory velocity() const;
+			virtual Vectorf velocity() const;
 			/**
 			 * @return The current @c Shape speed, as a scalar value.
 			 */
@@ -155,7 +155,7 @@ namespace gvt {
 			 * other @c Shape given as argument by following the trajectory @c
 			 * t
 			 */
-			bool meets(Shape const &o, Trajectory const &t) const;
+			bool meets(Shape const &o, Vectorf const &t) const;
 
 			virtual bool operator== (Shape const &o) const;
 			virtual bool operator!= (Shape const &o) const;

@@ -79,7 +79,8 @@ namespace gvt {
 		bool operator!=(Vector const &o) const;
 	};
 
-	using Trajectory = Vector<float>;
+	using Vectorf = Vector<float>;
+	using Vectord = Vector<double>;
 }
 
 

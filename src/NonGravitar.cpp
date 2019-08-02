@@ -79,7 +79,7 @@ int main () {
 							break;
 						case (Keyboard::Key::W):
 							ship->moveAlong(
-								gvt::Trajectory(ship->rotation()) * STEP_SIZE
+								gvt::Vectorf(ship->rotation()) * STEP_SIZE
 							);
 							break;
 						case (Keyboard::Key::D):

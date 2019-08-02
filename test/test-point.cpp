@@ -27,7 +27,7 @@
 
 using Point = gvt::Point;
 template<typename T> using list = std::list<T>;
-using Trajectory = gvt::Trajectory;
+using Trajectory = gvt::Vectorf;
 
 
 TEST_CASE("Shape::moveAlong()", "[Shape][Point]") {

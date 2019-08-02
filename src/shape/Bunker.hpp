@@ -35,7 +35,7 @@ template<typename T> using vector = std::vector<T>;
 namespace gvt {
 	class Bunker: public Shape, public WidthTrait, public HeightTrait {
 		protected:
-			vector<Trajectory> mPaths;
+			vector<Vectorf> mPaths;
 			unsigned mCurr{0};
 
 			Bunker(float xcoord, float ycoord, size_t directions);

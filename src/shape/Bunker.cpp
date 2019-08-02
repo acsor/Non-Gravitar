@@ -44,7 +44,7 @@ Bunker::Bunker(float xcoord, float ycoord, size_t directions):
 	mOriginY = ORIGINY;
 
 	while (directions > 0) {
-		mPaths[directions - 1] = Trajectory(angles(e));
+		mPaths[directions - 1] = Vectorf(angles(e));
 
 		directions--;
 	}
