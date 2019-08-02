@@ -69,6 +69,9 @@ target_link_libraries(RoundMissile Shape Circle)
 add_library(Bunker "${DIR_SHAPE}/Bunker.cpp")
 target_link_libraries(Bunker Shape RoundMissile)
 
+add_library(Mountain "${DIR_SHAPE}/Mountain.cpp")
+target_link_libraries(Mountain Shape)
+
 
 add_library(Utils "${DIR_SRC}/Utils.cpp")
 
