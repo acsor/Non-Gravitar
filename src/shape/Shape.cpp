@@ -75,6 +75,14 @@ float Shape::speed() const {
 	return mVelocity.norm();
 }
 
+void Shape::acceleration(Vectorf const &a) {
+	mAcceleration = a;
+}
+
+gvt::Vectorf Shape::acceleration() const {
+	return mAcceleration;
+}
+
 
 bool Shape::clashes(gvt::Shape const &o) const {
     return globalBounds().clashes(o.globalBounds());

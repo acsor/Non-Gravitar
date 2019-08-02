@@ -41,10 +41,12 @@ namespace gvt {
 		protected:
 			// Coordinates of the top-left corner by default, not of an
 			// arbitrary center
+			// TODO Turn these two fields below into Vectorf mPosition
 			float mX{0}, mY{0};
 			float mOriginX{0}, mOriginY{0};
 			float mRotation{0};
 			Vectorf mVelocity{0, 0};
+			Vectorf mAcceleration{0, 0};
 
 			bool mDestroyed{false};
 
@@ -117,6 +119,8 @@ namespace gvt {
 			virtual inline void destroyed(bool state);
 
 			/**
+			 * Sets the velocity of this @c Shape. Note that the unit measure
+			 * utilized is point/sec.
 			 * @param t Velocity value to set to the current @c Shape instance.
 			 */
 			virtual void velocity(Vectorf const &t);
@@ -129,7 +133,15 @@ namespace gvt {
 			 * @return The current @c Shape speed, as a scalar value.
 			 */
 			virtual float speed() const;
-			
+			/**
+			 * @param a Acceleration vector to set for this @c Shape.
+			 */
+			virtual void acceleration(Vectorf const &a);
+			/**
+			 * @return The acceleration vector associated to this @c Shape.
+			 */
+			virtual Vectorf acceleration() const;
+
 			/**
 			 * Lets a @c ShapeVisitor perform its operation on the 
 			 * implementing subclass.

@@ -24,6 +24,7 @@
 
 
 namespace gvt {
+	// TODO Substitute with a Region class, derived from Shape
 	/**
 	 * Abstract class giving a width trait to derived classes.
 	 */
