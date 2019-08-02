@@ -26,6 +26,9 @@ using EventDispatcher = gvt::EventDispatcher;
 using Event = gvt::Event;
 
 
+EventDispatcher::~EventDispatcher () {
+    mListeners.clear();
+}
 
 void EventDispatcher::attachListener(EventListener &l) {
 	mListeners.insert(&l);

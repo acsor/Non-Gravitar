@@ -49,10 +49,6 @@ void gvt::DestroyedListener::handle (Event *e) {
 ShapeBundle::~ShapeBundle() {
 	ShapeBundleEvent e{ShapeBundleEvent::Type::destroyed, this, nullptr};
 
-	for (auto i = mShapes.begin(); i != mShapes.end(); i++) {
-		(*i)->detachListener(mListener);
-	}
-
 	notify(&e);
 }
 

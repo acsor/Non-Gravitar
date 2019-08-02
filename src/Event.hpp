@@ -42,6 +42,7 @@ namespace gvt {
 		private:
 			set<EventListener*> mListeners;
 		public:
+			~EventDispatcher();
 			void attachListener(EventListener &l);
 			void detachListener(EventListener &l);
 			void notify(Event *e) const;
