@@ -39,6 +39,10 @@ add_library(Shape "${DIR_SHAPE}/Shape.cpp")
 add_library(ShapeBundle "${DIR_SHAPE_BUNDLE}/ShapeBundle.cpp")
 target_link_libraries(ShapeBundle Event Shape)
 
+add_library(CollisionBundle "${DIR_SHAPE_BUNDLE}/CollisionBundle.cpp")
+target_link_libraries(CollisionBundle ShapeBundle)
+
+
 
 add_library(Point "${DIR_SHAPE}/Point.cpp")
 target_link_libraries(Point Shape)
