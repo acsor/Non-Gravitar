@@ -21,7 +21,7 @@
 // SOFTWARE.
 #include <cmath>
 #include "Rectangle.hpp"
-#include "Utils.hpp"
+#include "utils/Utils.hpp"
 
 using Rectangle = gvt::Rectangle;
 

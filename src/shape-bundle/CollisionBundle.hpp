@@ -22,7 +22,7 @@
 #ifndef NON_GRAVITAR_COLLISION_BUNDLE_HPP
 #define NON_GRAVITAR_COLLISION_BUNDLE_HPP
 
-#include "Event.hpp"
+#include "utils/Event.hpp"
 #include "ShapeBundle.hpp"
 #include "shape/ShapeVisitor.hpp"
 

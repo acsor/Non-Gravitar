@@ -25,7 +25,7 @@
 #include <map>
 #include <memory>
 #include <SFML/Graphics.hpp>
-#include "../Event.hpp"
+#include "utils/Event.hpp"
 #include "../shape-bundle/ShapeBundle.hpp"
 #include "../view/ShapeView.hpp"
 

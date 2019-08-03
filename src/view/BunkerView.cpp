@@ -21,7 +21,7 @@
 // SOFTWARE.
 #include <typeinfo>
 #include "../shape/Shape.hpp"
-#include "../Utils.hpp"
+#include "utils/Utils.hpp"
 #include "BunkerView.hpp"
 
 using BunkerView = gvt::BunkerView;

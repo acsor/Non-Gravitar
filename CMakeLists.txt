@@ -9,6 +9,7 @@ set(DIR_SRC "src")
 set(DIR_SHAPE "${DIR_SRC}/shape")
 set(DIR_SHAPE_BUNDLE "${DIR_SRC}/shape-bundle")
 set(DIR_VIEWS "${DIR_SRC}/view")
+set(DIR_UTILS "${DIR_SRC}/utils")
 set(DIR_BOUND "${DIR_SRC}/bounding-polygon")
 set(DIR_SAMPLES "samples/")
 
@@ -22,8 +23,8 @@ set(VERSION_PATCH 0)
 
 include_directories("${DIR_SRC}")
 
-add_library(Observer "${DIR_SRC}/Observer.cpp")
-add_library(Event "${DIR_SRC}/Event.cpp")
+add_library(Observer "${DIR_UTILS}/Observer.cpp")
+add_library(Event "${DIR_UTILS}/Event.cpp")
 
 
 add_library(BoundingPolygon "${DIR_BOUND}/BoundingPolygon.cpp")
@@ -73,7 +74,7 @@ add_library(Mountain "${DIR_SHAPE}/Mountain.cpp")
 target_link_libraries(Mountain Shape)
 
 
-add_library(Utils "${DIR_SRC}/Utils.cpp")
+add_library(Utils "${DIR_UTILS}/Utils.cpp")
 
 
 add_library(ShapeView "${DIR_VIEWS}/ShapeView.cpp")

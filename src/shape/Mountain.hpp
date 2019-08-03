@@ -3,7 +3,7 @@
 
 #include "Shape.hpp"
 #include "ShapeVisitor.hpp"
-#include "Vector.hpp"
+#include "utils/Vector.hpp"
 
 
 namespace gvt {

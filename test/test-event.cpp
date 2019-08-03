@@ -21,7 +21,7 @@
 // SOFTWARE.
 #include <iostream>
 #include <stdexcept>
-#include "../src/Event.hpp"
+#include "utils/Event.hpp"
 #include "catch.hpp"
 
 using Event = gvt::Event;

@@ -21,7 +21,7 @@
 // SOFTWARE.
 #include <stdexcept>
 #include "SpaceshipView.hpp"
-#include "Utils.hpp"
+#include "utils/Utils.hpp"
 
 using SpaceshipView = gvt::SpaceshipView;
 

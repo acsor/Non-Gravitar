@@ -49,7 +49,7 @@ string gvt::dirpath(string const &path, bool collapse) {
 }
 
 string gvt::staticsGet(string const &localPath) {
-	return gvt::dirpath(__FILE__, false) + "../" + GVT_STATICS_DIR + localPath;
+	return GVT_STATICS_DIR + localPath;
 }
 
 

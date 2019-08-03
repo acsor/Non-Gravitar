@@ -23,8 +23,8 @@
 #define NON_GRAVITAR_SHAPE_HPP
 
 #include <ostream>
-#include "../Event.hpp"
-#include "../Vector.hpp"
+#include "utils/Event.hpp"
+#include "utils/Vector.hpp"
 
 
 namespace gvt {

@@ -21,7 +21,7 @@
 // SOFTWARE.
 #include <cmath>
 #include "Circle.hpp"
-#include "Utils.hpp"
+#include "utils/Utils.hpp"
 
 using Circle = gvt::Circle;
 using Shape = gvt::Shape;

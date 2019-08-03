@@ -22,7 +22,7 @@
 #include <iostream>
 #include "ShapeView.hpp"
 #include "../shape/Rectangle.hpp"
-#include "../Utils.hpp"
+#include "utils/Utils.hpp"
 
 using Shape = gvt::Shape;
 using ShapeView = gvt::ShapeView;

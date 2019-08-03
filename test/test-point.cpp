@@ -23,7 +23,7 @@
 #include <list>
 #include "catch.hpp"
 #include "shape/Point.hpp"
-#include "Vector.hpp"
+#include "utils/Vector.hpp"
 
 using Point = gvt::Point;
 template<typename T> using list = std::list<T>;

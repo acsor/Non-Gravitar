@@ -22,7 +22,7 @@
 #include <set>
 #include <utility>
 #include "catch.hpp"
-#include "../src/Vector.hpp"
+#include "utils/Vector.hpp"
 
 template <typename T> using Vector = gvt::Vector<T>;
 

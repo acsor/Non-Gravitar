@@ -23,7 +23,7 @@
 #include <list>
 #include <string>
 #include "catch.hpp"
-#include "../src/Utils.hpp"
+#include "utils/Utils.hpp"
 
 template<typename T> using list = std::list<T>;
 using string = std::string;

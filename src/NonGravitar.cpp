@@ -28,7 +28,7 @@
 #include "shape-bundle/ShapeBundle.hpp"
 #include "shape-bundle/DummyBundle.hpp"
 #include "shape/Bunker.hpp"
-#include "Vector.hpp"
+#include "utils/Vector.hpp"
 #include "view/BunkerView.hpp"
 #include "view/ShapeBundleView.hpp"
 #include "view/SpaceshipView.hpp"
