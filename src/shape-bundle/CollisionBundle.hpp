@@ -58,10 +58,6 @@ namespace gvt {
 			void visitBunker(Bunker &bunker) override;
 			void visitMissile(RoundMissile &missile) override;
 			void visitFuel(Fuel &fuel) override;
-			void visitPoint(Point &point) override;
-			void visitRectangle(Rectangle &rectangle) override;
-			void visitLine(Line &line) override;
-			void visitCircle(Circle &circle) override;
 	};
 
 	/**

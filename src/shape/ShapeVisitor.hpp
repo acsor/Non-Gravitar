@@ -20,16 +20,18 @@ namespace gvt {
 	 * @see https://en.wikipedia.org/wiki/Visitor_pattern
 	 */
 	class ShapeVisitor {
+		protected:
+			ShapeVisitor() = default;
 		public:
-			virtual void visitBunker(Bunker &bunker) = 0;
-			virtual void visitCircle(Circle &circle) = 0;
-			virtual void visitFuel(Fuel &fuel) = 0;
-			virtual void visitLine(Line &line) = 0;
-			virtual void visitMissile(RoundMissile &missile) = 0;
-			virtual void visitMountain(Mountain &mountain) = 0;
-			virtual void visitPoint(Point &point) = 0;
-			virtual void visitRectangle(Rectangle &rectangle) = 0;
-			virtual void visitSpaceship(Spaceship &spaceship) = 0;
+			virtual void visitBunker(Bunker &bunker) {};
+			virtual void visitCircle(Circle &circle) {};
+			virtual void visitFuel(Fuel &fuel) {};
+			virtual void visitLine(Line &line) {};
+			virtual void visitMissile(RoundMissile &missile) {};
+			virtual void visitMountain(Mountain &mountain) {};
+			virtual void visitPoint(Point &point) {};
+			virtual void visitRectangle(Rectangle &rectangle) {};
+			virtual void visitSpaceship(Spaceship &spaceship) {};
 	};
 }
 

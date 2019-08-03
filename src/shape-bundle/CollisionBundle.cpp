@@ -77,18 +77,6 @@ void gvt::CollisionVisitor::visitFuel(gvt::Fuel &fuel) {
 	fuel.destroyed(true);
 }
 
-void gvt::CollisionVisitor::visitPoint(Point &point) {
-}
-
-void gvt::CollisionVisitor::visitRectangle(Rectangle &rectangle) {
-}
-
-void gvt::CollisionVisitor::visitLine(Line &line) {
-}
-
-void gvt::CollisionVisitor::visitCircle(Circle &circle) {
-}
-
 
 void gvt::CollisionBundle::updateCollisions() {
 	for (auto first: mShapes) {
