@@ -31,7 +31,7 @@ namespace gvt {
 	class CollisionBundle;
 
 	// TODO Replace by lambda
-	class CollisionListener: public EventHandler {
+	class CollisionListener: public GVTEventHandler {
 		private:
 			CollisionBundle &mBundle;
 		public:

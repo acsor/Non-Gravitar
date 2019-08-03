@@ -35,7 +35,7 @@ namespace gvt {
 	class ShapeBundle;
 
 	// TODO Convert to lambda function
-	class DestroyedListener: public EventHandler {
+	class DestroyedListener: public GVTEventHandler {
         private:
 	        ShapeBundle &mBundle;
         public:
@@ -43,7 +43,7 @@ namespace gvt {
 	        void handle (Event *e) override;
 	};
 
-	class ShapeBundle: public EventDispatcher {
+	class ShapeBundle: public GVTEventDispatcher {
 	    friend class DestroyedListener;
 
         private:

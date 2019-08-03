@@ -24,7 +24,6 @@ set(VERSION_PATCH 0)
 include_directories("${DIR_SRC}")
 
 add_library(Observer "${DIR_UTILS}/Observer.cpp")
-add_library(Event "${DIR_UTILS}/Event.cpp")
 
 
 add_library(BoundingPolygon "${DIR_BOUND}/BoundingPolygon.cpp")
@@ -38,7 +37,7 @@ add_library(Shape "${DIR_SHAPE}/Shape.cpp")
 
 
 add_library(ShapeBundle "${DIR_SHAPE_BUNDLE}/ShapeBundle.cpp")
-target_link_libraries(ShapeBundle Event Shape)
+target_link_libraries(ShapeBundle Shape)
 
 add_library(CollisionBundle "${DIR_SHAPE_BUNDLE}/CollisionBundle.cpp")
 target_link_libraries(CollisionBundle ShapeBundle)
@@ -82,7 +81,7 @@ target_link_libraries(ShapeView Shape)
 
 add_library(ShapeBundleView "${DIR_VIEWS}/ShapeBundleView.cpp")
 target_link_libraries(
-	ShapeBundleView Event Shape ShapeBundle BunkerView SpaceshipView
+	ShapeBundleView Shape ShapeBundle BunkerView SpaceshipView
 )
 
 add_library(SpaceshipView "${DIR_VIEWS}/SpaceshipView.cpp")

@@ -37,7 +37,7 @@ namespace gvt {
 	 * not an arbitrary center (which may vary from shape to shape).
 	 * @see gvt::Plane
 	 */
-	class Shape: public EventDispatcher {
+	class Shape: public GVTEventDispatcher {
 		protected:
 			// Coordinates of the top-left corner by default, not of an
 			// arbitrary center

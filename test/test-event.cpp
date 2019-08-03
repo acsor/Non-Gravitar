@@ -25,12 +25,12 @@
 #include "catch.hpp"
 
 using Event = gvt::Event;
-using EventDispatcher = gvt::EventDispatcher;
-using EventListener = gvt::EventHandler;
+using GVTEventDispatcher = gvt::GVTEventDispatcher;
+using GVTEventListener = gvt::GVTEventHandler;
 
 
 namespace gvt {
-	class SimpleDispatcher: public EventDispatcher {
+	class SimpleDispatcher: public GVTEventDispatcher {
 		public:
 			SimpleDispatcher() = default;
 	};
@@ -45,7 +45,7 @@ namespace gvt {
 		}
 	};
 
-	class SimpleListener: public EventHandler {
+	class SimpleListener: public GVTEventHandler {
 		public:
 			unsigned eventA{0}, eventB{0};
 
@@ -65,7 +65,7 @@ namespace gvt {
 				}
 			}
 	};
-};
+}
 
 
 TEST_CASE("EventHandler::handle(), EventDispatcher::notify()", "[Event]") {

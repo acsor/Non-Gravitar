@@ -29,7 +29,7 @@ template<typename T> using set = std::set<T>;
 
 
 namespace gvt {
-	class EventHandler;
+	template<typename E> class EventHandler;
 
     struct Event {
     	protected:
@@ -38,21 +38,27 @@ namespace gvt {
 			virtual ~Event() = default;
     };
 
-	class EventDispatcher {
+	template<typename E> class EventDispatcher {
 		private:
-			set<EventHandler*> mHandlers;
+			set<EventHandler<E>*> mHandlers;
 		public:
 			~EventDispatcher();
-			void addHandler(EventHandler &h);
-			void removeHandler(EventHandler &h);
-			void notify(Event *e) const;
+			void addHandler(EventHandler<E> &h);
+			void removeHandler(EventHandler<E> &h);
+			void notify(E *e) const;
 	};
 
-	class EventHandler {
+	template<typename E> class EventHandler {
 		public:
-			virtual void handle(Event *e) = 0;
+			virtual void handle(E *e) = 0;
 	};
+
+	using GVTEventHandler = EventHandler<Event>;
+	using GVTEventDispatcher = EventDispatcher<Event>;
 }
+
+
+#include "Event.tpp"
 
 
 #endif

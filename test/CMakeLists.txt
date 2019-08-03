@@ -21,7 +21,7 @@ target_link_libraries(
 	Point Line Rectangle Circle
 	BoundingPolygon BoundingTriangle BoundingRectangle
 	Bunker RoundMissile
-	Observer Event Utils
+	Observer Utils
 )
 
 add_library(test-main OBJECT test-main.cpp)
