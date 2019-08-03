@@ -29,7 +29,7 @@ template<typename T> using set = std::set<T>;
 
 
 namespace gvt {
-	class EventListener;
+	class EventHandler;
 
     struct Event {
     	protected:
@@ -40,15 +40,15 @@ namespace gvt {
 
 	class EventDispatcher {
 		private:
-			set<EventListener*> mListeners;
+			set<EventHandler*> mHandlers;
 		public:
 			~EventDispatcher();
-			void attachListener(EventListener &l);
-			void detachListener(EventListener &l);
+			void addHandler(EventHandler &h);
+			void removeHandler(EventHandler &h);
 			void notify(Event *e) const;
 	};
 
-	class EventListener {
+	class EventHandler {
 		public:
 			virtual void handle(Event *e) = 0;
 	};

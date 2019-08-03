@@ -39,12 +39,12 @@ ShapeView::ShapeView(shared_ptr<Shape> shape, bool debug): mShape{shape} {
 	mBounds.setRotation(gvt::rad2deg(bounds.rotation()));
 	mBounds.setFillColor(sf::Color::Green);
 
-	shape->attachListener(*this);
+	shape->addHandler(*this);
 }
 
 ShapeView::~ShapeView() {
 	if (auto p = mShape.lock())
-		p->detachListener(*this);
+		p->removeHandler(*this);
 }
 
 bool ShapeView::debug() const {
@@ -77,7 +77,7 @@ void ShapeView::handle(Event *e) {
 			}
 		} else if (event->type == ShapeEvent::Type::destroyed) {
 			mShape.reset();
-			event->shape->detachListener(*this);
+			event->shape->removeHandler(*this);
 		}
 	}
 }

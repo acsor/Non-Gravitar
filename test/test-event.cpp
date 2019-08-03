@@ -26,7 +26,7 @@
 
 using Event = gvt::Event;
 using EventDispatcher = gvt::EventDispatcher;
-using EventListener = gvt::EventListener;
+using EventListener = gvt::EventHandler;
 
 
 namespace gvt {
@@ -45,7 +45,7 @@ namespace gvt {
 		}
 	};
 
-	class SimpleListener: public EventListener {
+	class SimpleListener: public EventHandler {
 		public:
 			unsigned eventA{0}, eventB{0};
 
@@ -68,7 +68,7 @@ namespace gvt {
 };
 
 
-TEST_CASE("EventListener::handle(), EventDispatcher::notify()", "[Event]") {
+TEST_CASE("EventHandler::handle(), EventDispatcher::notify()", "[Event]") {
 	using SE = gvt::SimpleEvent;
 
 	gvt::SimpleDispatcher s;
@@ -76,7 +76,7 @@ TEST_CASE("EventListener::handle(), EventDispatcher::notify()", "[Event]") {
 	SE a{SE::Type::a}, b{SE::Type::b};
 	unsigned const repeatA = 43, repeatB = 55;
 
-	s.attachListener(l);
+	s.addHandler(l);
 
 	for (unsigned i = 0; i < repeatA; i++)
 		s.notify(&a);
@@ -87,5 +87,5 @@ TEST_CASE("EventListener::handle(), EventDispatcher::notify()", "[Event]") {
 	REQUIRE(l.eventA == repeatA);
 	REQUIRE(l.eventB == repeatB);
 
-	s.detachListener(l);
+	s.removeHandler(l);
 }

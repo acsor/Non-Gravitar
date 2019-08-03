@@ -33,7 +33,7 @@ using RenderTarget = sf::RenderTarget;
 
 
 namespace gvt {
-	class ShapeView: public sf::Drawable, public EventListener {
+	class ShapeView: public sf::Drawable, public EventHandler {
 		private:
 			sf::RectangleShape mBounds;
 		protected:

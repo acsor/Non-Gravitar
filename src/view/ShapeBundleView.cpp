@@ -31,12 +31,12 @@ using ShapeBundleView = gvt::ShapeBundleView;
 
 ShapeBundleView::ShapeBundleView(shared_ptr<ShapeBundle> bundle, bool debug):
 	mBundle{bundle}, mDebug{debug} {
-	bundle->attachListener(*this);
+	bundle->addHandler(*this);
 }
 
 ShapeBundleView::~ShapeBundleView() {
 	if (auto p = mBundle.lock())
-		p->detachListener(*this);
+		p->removeHandler(*this);
 }
 
 gvt::ShapeView* ShapeBundleView::shapeToView (shared_ptr<Shape> shape) {

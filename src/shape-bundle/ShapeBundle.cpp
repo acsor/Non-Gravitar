@@ -58,7 +58,7 @@ void ShapeBundle::insert(shared_ptr<Shape> shape) {
 	// feeding in null-pointer values should not exist in the first place: a
 	// segmentation fault acts as a proper signaling mechanism
 	mShapes.push_front(shape);
-	shape->attachListener(mListener);
+	shape->addHandler(mListener);
 
 	notify(&e);
 }

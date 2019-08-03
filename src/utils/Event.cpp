@@ -30,12 +30,12 @@ EventDispatcher::~EventDispatcher () {
     mListeners.clear();
 }
 
-void EventDispatcher::attachListener(EventListener &l) {
-	mListeners.insert(&l);
+void EventDispatcher::addHandler(EventHandler &h) {
+	mListeners.insert(&h);
 }
 
-void EventDispatcher::detachListener(EventListener &l) {
-	mListeners.erase(&l);
+void EventDispatcher::removeHandler(EventHandler &h) {
+	mListeners.erase(&h);
 }
 
 void EventDispatcher::notify(Event *e) const {

@@ -35,7 +35,7 @@ template<typename T> using unique_ptr = std::unique_ptr<T>;
 
 
 namespace gvt {
-	class ShapeBundleView: public sf::Drawable, public EventListener {
+	class ShapeBundleView: public sf::Drawable, public EventHandler {
 		protected:
 			weak_ptr<ShapeBundle> mBundle;
 			// TO-DO We might prefer to have shared_ptr<Shape>-valued keys.
