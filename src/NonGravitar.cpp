@@ -51,47 +51,44 @@ using BunkerView = gvt::BunkerView;
 #define ANGLE_SIZE (10 * M_PI / 180.0)
 
 
-int main () {
-	sf::VideoMode const mode = sf::VideoMode::getDesktopMode();
-	RenderWindow w{mode, "Non-Gravitar"};
-	Event e;
+// TODO Replace with exceedingly succint lambda
+class CloseWindowHandler: public gvt::EventHandler<sf::Event> {
+	private:
+		sf::Window &mWindow;
+	public:
+		explicit CloseWindowHandler(sf::Window &window): mWindow{window} {};
+		void handle (sf::Event *e) override {
+			if (e->type == sf::Event::Closed)
+				mWindow.close();
+		}
+};
 
-	shared_ptr<ShapeBundle> bundle{new gvt::DummyBundle()};
-	shared_ptr<Spaceship> ship{new Spaceship(22, 23, 1000)};
-	gvt::ShapeBundleView view(bundle);
+// TODO Replace with lambda
+class MoveShipHandler: public gvt::EventHandler<sf::Event> {
+	private:
+		shared_ptr<Spaceship> mShip;
+	public:
+		explicit MoveShipHandler(shared_ptr<Spaceship> spaceship):
+				mShip{spaceship} {};
 
-	bundle->insert(ship);
-	bundle->insert(shared_ptr<Bunker>(new gvt::Bunker2D(600, 500)));
-	bundle->insert(shared_ptr<Bunker>(new gvt::Bunker3D(500, 500)));
-
-	w.setFramerateLimit(45);
-
-	while (w.isOpen()) {
-		while (w.pollEvent(e)) {
-			switch (e.type) {
-				case (Event::Closed):
-					w.close();
-					break;
+		void handle (sf::Event *e) override {
+			switch (e->type) {
 				case (Event::KeyPressed):
-					switch (e.key.code) {
+					switch (e->key.code) {
 						case (Keyboard::Key::A):
-							ship->rotate(-ANGLE_SIZE);
+							mShip->rotate(-ANGLE_SIZE);
 							break;
 						case (Keyboard::Key::W):
-							ship->moveAlong(
-								gvt::Vectorf(ship->rotation()) * STEP_SIZE
+							mShip->moveAlong(
+									gvt::Vectorf(mShip->rotation()) * STEP_SIZE
 							);
 							break;
 						case (Keyboard::Key::D):
-							ship->rotate(ANGLE_SIZE);
+							mShip->rotate(ANGLE_SIZE);
 							break;
 						case (Keyboard::Key::S):
 							// Should activate the shields in a future version
 							// of the program
-							break;
-						case (Keyboard::Key::B):
-							if (e.key.control)
-								view.debug(!view.debug());
 							break;
 						default:
 							break;
@@ -100,6 +97,32 @@ int main () {
 					break;
 			}
 		}
+};
+
+
+int main () {
+	sf::VideoMode const mode = sf::VideoMode::getDesktopMode();
+	RenderWindow w{mode, "Non-Gravitar"};
+
+	shared_ptr<ShapeBundle> bundle{new gvt::DummyBundle()};
+	shared_ptr<Spaceship> ship{new Spaceship(22, 23, 1000)};
+	gvt::ShapeBundleView view(bundle);
+
+	gvt::EventDispatcher<sf::Event> loopDispatcher;
+	Event e;
+
+	w.setFramerateLimit(45);
+
+	bundle->insert(ship);
+	bundle->insert(shared_ptr<Bunker>(new gvt::Bunker2D(600, 500)));
+	bundle->insert(shared_ptr<Bunker>(new gvt::Bunker3D(500, 500)));
+
+	loopDispatcher.addHandler(new CloseWindowHandler(w));
+	loopDispatcher.addHandler(new MoveShipHandler(ship));
+
+	while (w.isOpen()) {
+		while (w.pollEvent(e))
+			loopDispatcher.notify(&e);
 
 		w.clear();
 		w.draw(view);

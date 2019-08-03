@@ -43,6 +43,8 @@ namespace gvt {
 			set<EventHandler<E>*> mHandlers;
 		public:
 			~EventDispatcher();
+			void addHandler(EventHandler<E> *h);
+			void removeHandler(EventHandler<E> *h);
 			void addHandler(EventHandler<E> &h);
 			void removeHandler(EventHandler<E> &h);
 			void notify(E *e) const;
