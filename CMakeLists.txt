@@ -79,10 +79,11 @@ add_library(Utils "${DIR_UTILS}/Utils.cpp")
 add_library(ShapeView "${DIR_VIEWS}/ShapeView.cpp")
 target_link_libraries(ShapeView Shape)
 
+add_library(ShapeViewFactory "${DIR_VIEWS}/ShapeViewFactory.cpp")
+target_link_libraries(ShapeViewFactory SpaceshipView BunkerView)
+
 add_library(ShapeBundleView "${DIR_VIEWS}/ShapeBundleView.cpp")
-target_link_libraries(
-	ShapeBundleView Shape ShapeBundle BunkerView SpaceshipView
-)
+target_link_libraries(ShapeBundleView ShapeBundle ShapeViewFactory)
 
 add_library(SpaceshipView "${DIR_VIEWS}/SpaceshipView.cpp")
 target_link_libraries(SpaceshipView Spaceship ShapeView Utils)

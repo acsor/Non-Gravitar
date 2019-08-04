@@ -30,27 +30,13 @@ using ShapeBundleView = gvt::ShapeBundleView;
 
 
 ShapeBundleView::ShapeBundleView(shared_ptr<ShapeBundle> bundle, bool debug):
-	Debuggable(debug), mBundle{bundle} {
+	Debuggable(debug), mFactory{debug}, mBundle{bundle} {
 	bundle->addHandler(*this);
 }
 
 ShapeBundleView::~ShapeBundleView() {
 	if (auto p = mBundle.lock())
 		p->removeHandler(*this);
-}
-
-gvt::ShapeView* ShapeBundleView::shapeToView (shared_ptr<Shape> shape) {
-	if (std::dynamic_pointer_cast<Spaceship>(shape)) {
-		return new SpaceshipView(
-			std::dynamic_pointer_cast<Spaceship>(shape), mDebug
-		);
-	} else if (std::dynamic_pointer_cast<Bunker>(shape)) {
-		return new BunkerView(
-			std::dynamic_pointer_cast<Bunker>(shape), mDebug
-		);
-	} else {
-		throw std::domain_error("Unrecognized type of shape");
-	}
 }
 
 void ShapeBundleView::debug(bool state) {
@@ -74,8 +60,8 @@ void ShapeBundleView::handle(Event *e) {
 
 	if (event) {
 		if (event->type == ShapeBundleEvent::Type::attached) {
-			mViews[event->shape.get()] = unique_ptr<ShapeView>(
-				shapeToView(event->shape)
+			mViews[event->shape.get()] = shared_ptr<ShapeView>(
+				mFactory.makeView(event->shape)
 			);
 		} else if (event->type == ShapeBundleEvent::Type::detached) {
 			mViews.erase(event->shape.get());
