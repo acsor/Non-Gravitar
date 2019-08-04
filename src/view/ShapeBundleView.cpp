@@ -30,7 +30,7 @@ using ShapeBundleView = gvt::ShapeBundleView;
 
 
 ShapeBundleView::ShapeBundleView(shared_ptr<ShapeBundle> bundle, bool debug):
-	mBundle{bundle}, mDebug{debug} {
+	Debuggable(debug), mBundle{bundle} {
 	bundle->addHandler(*this);
 }
 
@@ -53,13 +53,8 @@ gvt::ShapeView* ShapeBundleView::shapeToView (shared_ptr<Shape> shape) {
 	}
 }
 
-
-bool ShapeBundleView::debug() const {
-	return mDebug;
-}
-
 void ShapeBundleView::debug(bool state) {
-	mDebug = state;
+	Debuggable::debug(state);
 
 	for (auto i = mViews.begin(); i != mViews.end(); i++) {
 		i->second->debug(state);

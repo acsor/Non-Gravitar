@@ -24,7 +24,8 @@
 
 #include <memory>
 #include <SFML/Graphics.hpp>
-#include "../shape/Shape.hpp"
+#include "shape/Shape.hpp"
+#include "Debuggable.hpp"
 
 template<typename T> using weak_ptr = std::weak_ptr<T>;
 template<typename T> using shared_ptr = std::shared_ptr<T>;
@@ -33,19 +34,16 @@ using RenderTarget = sf::RenderTarget;
 
 
 namespace gvt {
-	class ShapeView: public sf::Drawable, public GVTEventHandler {
+	class ShapeView: public sf::Drawable, public GVTEventHandler,
+			public Debuggable {
 		private:
 			sf::RectangleShape mBounds;
 		protected:
 			weak_ptr<Shape> mShape;
-			bool mDebug;
 
 			ShapeView(shared_ptr<Shape> shape, bool debug=false);
 		public:
 			virtual ~ShapeView();
-
-			bool debug() const;
-			void debug(bool debug);
 
 			void draw(RenderTarget &target, RenderStates s) const override;
 			void handle(Event *e) override;

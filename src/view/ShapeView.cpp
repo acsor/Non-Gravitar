@@ -28,10 +28,9 @@ using Shape = gvt::Shape;
 using ShapeView = gvt::ShapeView;
 
 
-ShapeView::ShapeView(shared_ptr<Shape> shape, bool debug): mShape{shape} {
+ShapeView::ShapeView(shared_ptr<Shape> shape, bool debug):
+	Debuggable(debug), mShape{shape} {
 	gvt::Rectangle bounds = shape->globalBounds();
-
-	mDebug = debug;
 
 	mBounds = sf::RectangleShape({bounds.width(), bounds.height()});
 	mBounds.setPosition(bounds.x(), bounds.y());
@@ -45,14 +44,6 @@ ShapeView::ShapeView(shared_ptr<Shape> shape, bool debug): mShape{shape} {
 ShapeView::~ShapeView() {
 	if (auto p = mShape.lock())
 		p->removeHandler(*this);
-}
-
-bool ShapeView::debug() const {
-	return mDebug;
-}
-
-void ShapeView::debug(bool debug) {
-	mDebug = debug;
 }
 
 void ShapeView::draw(RenderTarget &target, RenderStates s) const {

@@ -28,6 +28,7 @@
 #include "utils/Event.hpp"
 #include "../shape-bundle/ShapeBundle.hpp"
 #include "../view/ShapeView.hpp"
+#include "Debuggable.hpp"
 
 template<typename T> using weak_ptr = std::weak_ptr<T>;
 template<typename T> using shared_ptr = std::shared_ptr<T>;
@@ -35,15 +36,14 @@ template<typename T> using unique_ptr = std::unique_ptr<T>;
 
 
 namespace gvt {
-	class ShapeBundleView: public sf::Drawable, public GVTEventHandler {
+	class ShapeBundleView: public sf::Drawable, public GVTEventHandler,
+			public Debuggable {
 		protected:
 			weak_ptr<ShapeBundle> mBundle;
 			// TO-DO We might prefer to have shared_ptr<Shape>-valued keys.
 			// This hasn't been done immediately because shared_ptr<> was a
 			// little bit tricky to deal with
 			std::map<Shape*, unique_ptr<ShapeView>> mViews;
-
-			bool mDebug;
 
 			ShapeView* shapeToView (shared_ptr<Shape> shape);
 		public:
@@ -52,8 +52,7 @@ namespace gvt {
 			);
 			virtual ~ShapeBundleView();
 
-			bool debug() const;
-			void debug(bool state);
+			void debug (bool debug) override;
 
 			void draw(
 				sf::RenderTarget &target, sf::RenderStates state
