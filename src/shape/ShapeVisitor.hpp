@@ -4,12 +4,10 @@
 
 namespace gvt {
 	class Spaceship;
-	class Point;
 	class Rectangle;
 	class Bunker;
 	class RoundMissile;
 	class Fuel;
-	class Line;
 	class Circle;
 	class Mountain;
 
@@ -26,10 +24,8 @@ namespace gvt {
 			virtual void visitBunker(Bunker &bunker) {};
 			virtual void visitCircle(Circle &circle) {};
 			virtual void visitFuel(Fuel &fuel) {};
-			virtual void visitLine(Line &line) {};
 			virtual void visitMissile(RoundMissile &missile) {};
 			virtual void visitMountain(Mountain &mountain) {};
-			virtual void visitPoint(Point &point) {};
 			virtual void visitRectangle(Rectangle &rectangle) {};
 			virtual void visitSpaceship(Spaceship &spaceship) {};
 	};

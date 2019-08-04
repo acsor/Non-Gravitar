@@ -43,12 +43,6 @@ add_library(CollisionGroup "${DIR_SHAPE_GROUP}/CollisionGroup.cpp")
 target_link_libraries(CollisionGroup ShapeGroup)
 
 
-add_library(Point "${DIR_SHAPE}/Point.cpp")
-target_link_libraries(Point Shape)
-
-add_library(Line "${DIR_SHAPE}/Line.cpp")
-target_link_libraries(Line Shape Point Rectangle)
-
 add_library(Circle "${DIR_SHAPE}/Circle.cpp")
 target_link_libraries(Circle Shape Rectangle)
 
@@ -57,7 +51,7 @@ target_link_libraries(Rectangle Shape)
 
 
 add_library(Spaceship "${DIR_SHAPE}/Spaceship.cpp")
-target_link_libraries(Spaceship Shape Point Rectangle Fuel)
+target_link_libraries(Spaceship Shape Rectangle Fuel)
 
 add_library(Fuel "${DIR_SHAPE}/Fuel.cpp")
 target_link_libraries(Fuel Spaceship)
