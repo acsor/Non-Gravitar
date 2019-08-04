@@ -19,27 +19,27 @@
 // LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
-#include "ShapeBundleView.hpp"
+#include "ShapeGroupView.hpp"
 
 #include <stdexcept>
 #include "../view/SpaceshipView.hpp"
 #include "../view/BunkerView.hpp"
 
-using ShapeBundleEvent = gvt::ShapeBundleEvent;
-using ShapeBundleView = gvt::ShapeBundleView;
+using ShapeGroupEvent = gvt::ShapeGroupEvent;
+using ShapeGroupView = gvt::ShapeGroupView;
 
 
-ShapeBundleView::ShapeBundleView(shared_ptr<ShapeBundle> bundle, bool debug):
-	Debuggable(debug), mFactory{debug}, mBundle{bundle} {
-	bundle->addHandler(*this);
+ShapeGroupView::ShapeGroupView(shared_ptr<ShapeGroup> group, bool debug):
+	Debuggable(debug), mFactory{debug}, mGroup{group} {
+	group->addHandler(*this);
 }
 
-ShapeBundleView::~ShapeBundleView() {
-	if (auto p = mBundle.lock())
+ShapeGroupView::~ShapeGroupView() {
+	if (auto p = mGroup.lock())
 		p->removeHandler(*this);
 }
 
-void ShapeBundleView::debug(bool state) {
+void ShapeGroupView::debug(bool state) {
 	Debuggable::debug(state);
 
 	for (auto i = mViews.begin(); i != mViews.end(); i++) {
@@ -47,7 +47,7 @@ void ShapeBundleView::debug(bool state) {
 	}
 }
 
-void ShapeBundleView::draw(
+void ShapeGroupView::draw(
 	sf::RenderTarget &target, sf::RenderStates state
 ) const {
 	for (auto i = mViews.begin(); i != mViews.end(); i++) {
@@ -55,19 +55,19 @@ void ShapeBundleView::draw(
 	}
 }
 
-void ShapeBundleView::handle(Event *e) {
-	auto event = dynamic_cast<ShapeBundleEvent*>(e);
+void ShapeGroupView::handle(Event *e) {
+	auto event = dynamic_cast<ShapeGroupEvent*>(e);
 
 	if (event) {
-		if (event->type == ShapeBundleEvent::Type::attached) {
+		if (event->type == ShapeGroupEvent::Type::attached) {
 			mViews[event->shape.get()] = shared_ptr<ShapeView>(
 				mFactory.makeView(event->shape)
 			);
-		} else if (event->type == ShapeBundleEvent::Type::detached) {
+		} else if (event->type == ShapeGroupEvent::Type::detached) {
 			mViews.erase(event->shape.get());
-		} else if (event->type == ShapeBundleEvent::Type::destroyed) {
+		} else if (event->type == ShapeGroupEvent::Type::destroyed) {
 			mViews.clear();
-			mBundle.reset();
+			mGroup.reset();
 		}
 	}
 }

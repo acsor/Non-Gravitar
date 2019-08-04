@@ -19,25 +19,25 @@
 // LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
-#include "ShapeBundle.hpp"
+#include "ShapeGroup.hpp"
 
 using Event = gvt::Event;
-using ShapeBundle = gvt::ShapeBundle;
-using ShapeBundleEvent = gvt::ShapeBundleEvent;
+using ShapeGroup = gvt::ShapeGroup;
+using ShapeGroupEvent = gvt::ShapeGroupEvent;
 using Shape = gvt::Shape;
 
 
-gvt::DestroyedListener::DestroyedListener(ShapeBundle &bundle):
-	mBundle{bundle} {
+gvt::DestroyedListener::DestroyedListener(ShapeGroup &group):
+	mGroup{group} {
 }
 
 void gvt::DestroyedListener::handle (Event *e) {
-    auto bundleEvent = dynamic_cast<ShapeBundleEvent *>(e);
+    auto groupEvent = dynamic_cast<ShapeGroupEvent *>(e);
 
-    if (bundleEvent) {
-        switch (bundleEvent->type) {
-            case (ShapeBundleEvent::Type::destroyed):
-                mBundle.mShapes.remove(bundleEvent->shape);
+    if (groupEvent) {
+        switch (groupEvent->type) {
+            case (ShapeGroupEvent::Type::destroyed):
+                mGroup.mShapes.remove(groupEvent->shape);
                 break;
             default:
                 break;
@@ -46,14 +46,14 @@ void gvt::DestroyedListener::handle (Event *e) {
 }
 
 
-ShapeBundle::~ShapeBundle() {
-	ShapeBundleEvent e{ShapeBundleEvent::Type::destroyed, this, nullptr};
+ShapeGroup::~ShapeGroup() {
+	ShapeGroupEvent e{ShapeGroupEvent::Type::destroyed, this, nullptr};
 
 	notify(&e);
 }
 
-void ShapeBundle::insert(shared_ptr<Shape> shape) {
-	ShapeBundleEvent e{ShapeBundleEvent::Type::attached, this, shape};
+void ShapeGroup::insert(shared_ptr<Shape> shape) {
+	ShapeGroupEvent e{ShapeGroupEvent::Type::attached, this, shape};
 	// Not checking for null-pointer arguments is intended behavior, as code
 	// feeding in null-pointer values should not exist in the first place: a
 	// segmentation fault acts as a proper signaling mechanism

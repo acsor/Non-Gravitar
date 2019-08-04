@@ -19,8 +19,8 @@
 // LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
-#ifndef NON_GRAVITAR_SHAPE_BUNDLE_HPP
-#define NON_GRAVITAR_SHAPE_BUNDLE_HPP
+#ifndef NON_GRAVITAR_SHAPE_GROUP_HPP
+#define NON_GRAVITAR_SHAPE_GROUP_HPP
 
 #include <list>
 #include <memory>
@@ -32,18 +32,18 @@ template<typename T> using shared_ptr = std::shared_ptr<T>;
 
 namespace gvt {
 	class Shape;
-	class ShapeBundle;
+	class ShapeGroup;
 
 	// TODO Convert to lambda function
 	class DestroyedListener: public GVTEventHandler {
         private:
-	        ShapeBundle &mBundle;
+	        ShapeGroup &mGroup;
         public:
-			DestroyedListener(ShapeBundle &bundle);
+			DestroyedListener(ShapeGroup &group);
 	        void handle (Event *e) override;
 	};
 
-	class ShapeBundle: public GVTEventDispatcher {
+	class ShapeGroup: public GVTEventDispatcher {
 	    friend class DestroyedListener;
 
         private:
@@ -51,29 +51,29 @@ namespace gvt {
         protected:
             std::list<shared_ptr<Shape>> mShapes;
 
-            ShapeBundle() = default;
+            ShapeGroup() = default;
 		public:
 			using iterator = std::list<shared_ptr<Shape>>::iterator;
 
-			virtual ~ShapeBundle();
+			virtual ~ShapeGroup();
 			virtual void insert(shared_ptr<Shape> shape);
 
 			inline iterator begin();
 			inline iterator end();
 	};
 
-    struct ShapeBundleEvent: public Event {
+    struct ShapeGroupEvent: public Event {
         enum class Type {
             unspecified = 0, attached, detached, destroyed
         };
 
         Type type{Type::unspecified};
-        ShapeBundle *bundle{nullptr};
+        ShapeGroup *group{nullptr};
         shared_ptr<Shape> shape;
 
-        ShapeBundleEvent() = default;
-        inline ShapeBundleEvent(
-                Type type, ShapeBundle *bundle, shared_ptr<Shape> shape
+        ShapeGroupEvent() = default;
+        inline ShapeGroupEvent(
+                Type type, ShapeGroup *group, shared_ptr<Shape> shape
         );
     };
 }
@@ -81,17 +81,17 @@ namespace gvt {
 
 // Implementation of inline functions
 namespace gvt {
-	ShapeBundle::iterator ShapeBundle::begin() {
+	ShapeGroup::iterator ShapeGroup::begin() {
 		return mShapes.begin();
 	}
 
-	ShapeBundle::iterator ShapeBundle::end() {
+	ShapeGroup::iterator ShapeGroup::end() {
 		return mShapes.end();
 	}
 
-	ShapeBundleEvent::ShapeBundleEvent(
-		ShapeBundleEvent::Type t, ShapeBundle *b, shared_ptr<Shape> s
-	): type{t}, bundle{b}, shape{s} {
+	ShapeGroupEvent::ShapeGroupEvent(
+		ShapeGroupEvent::Type t, ShapeGroup *b, shared_ptr<Shape> s
+	): type{t}, group{b}, shape{s} {
 	}
 }
 

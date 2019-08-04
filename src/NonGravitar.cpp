@@ -25,12 +25,12 @@
 #include <SFML/Graphics.hpp>
 #include <SFML/Window.hpp>
 #include "shape/Spaceship.hpp"
-#include "shape-bundle/ShapeBundle.hpp"
-#include "shape-bundle/DummyBundle.hpp"
+#include "shape-group/ShapeGroup.hpp"
+#include "shape-group/DummyGroup.hpp"
 #include "shape/Bunker.hpp"
 #include "utils/Vector.hpp"
 #include "view/BunkerView.hpp"
-#include "view/ShapeBundleView.hpp"
+#include "view/ShapeGroupView.hpp"
 #include "view/SpaceshipView.hpp"
 
 template<typename T> using shared_ptr = std::shared_ptr<T>;
@@ -39,7 +39,7 @@ using Event = sf::Event;
 using Keyboard = sf::Keyboard;
 using RenderWindow = sf::RenderWindow;
 
-using ShapeBundle = gvt::ShapeBundle;
+using ShapeGroup = gvt::ShapeGroup;
 using Spaceship = gvt::Spaceship;
 using SpaceshipView = gvt::SpaceshipView;
 
@@ -104,18 +104,18 @@ int main () {
 	sf::VideoMode const mode = sf::VideoMode::getDesktopMode();
 	RenderWindow w{mode, "Non-Gravitar"};
 
-	shared_ptr<ShapeBundle> bundle{new gvt::DummyBundle()};
+	shared_ptr<ShapeGroup> group{new gvt::DummyGroup()};
 	shared_ptr<Spaceship> ship{new Spaceship(22, 23, 1000)};
-	gvt::ShapeBundleView view(bundle);
+	gvt::ShapeGroupView view(group);
 
 	gvt::EventDispatcher<sf::Event> loopDispatcher;
 	Event e;
 
 	w.setFramerateLimit(45);
 
-	bundle->insert(ship);
-	bundle->insert(shared_ptr<Bunker>(new gvt::Bunker2D(600, 500)));
-	bundle->insert(shared_ptr<Bunker>(new gvt::Bunker3D(500, 500)));
+	group->insert(ship);
+	group->insert(shared_ptr<Bunker>(new gvt::Bunker2D(600, 500)));
+	group->insert(shared_ptr<Bunker>(new gvt::Bunker3D(500, 500)));
 
 	loopDispatcher.addHandler(new CloseWindowHandler(w));
 	loopDispatcher.addHandler(new MoveShipHandler(ship));

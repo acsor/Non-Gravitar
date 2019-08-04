@@ -19,14 +19,14 @@
 // LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
-#ifndef NON_GRAVITAR_SHAPE_BUNDLE_VIEW
-#define NON_GRAVITAR_SHAPE_BUNDLE_VIEW
+#ifndef NON_GRAVITAR_SHAPE_GROUP_VIEW
+#define NON_GRAVITAR_SHAPE_GROUP_VIEW
 
 #include <map>
 #include <memory>
 #include <SFML/Graphics.hpp>
 #include "utils/Event.hpp"
-#include "shape-bundle/ShapeBundle.hpp"
+#include "shape-group/ShapeGroup.hpp"
 #include "view/ShapeView.hpp"
 #include "ShapeViewFactory.hpp"
 #include "Debuggable.hpp"
@@ -37,19 +37,19 @@ template<typename T> using unique_ptr = std::unique_ptr<T>;
 
 
 namespace gvt {
-	class ShapeBundleView: public sf::Drawable, public GVTEventHandler,
+	class ShapeGroupView: public sf::Drawable, public GVTEventHandler,
 			public Debuggable {
 		private:
 			ShapeViewFactory mFactory;
 		protected:
-			weak_ptr<ShapeBundle> mBundle;
+			weak_ptr<ShapeGroup> mGroup;
 			std::map<Shape*, shared_ptr<ShapeView>> mViews;
 
 		public:
-			explicit ShapeBundleView(
-				shared_ptr<ShapeBundle> bundle, bool debug=false
+			explicit ShapeGroupView(
+				shared_ptr<ShapeGroup> group, bool debug=false
 			);
-			virtual ~ShapeBundleView();
+			virtual ~ShapeGroupView();
 
 			void debug (bool debug) override;
 

@@ -19,23 +19,23 @@
 // LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
-#ifndef NON_GRAVITAR_COLLISION_BUNDLE_HPP
-#define NON_GRAVITAR_COLLISION_BUNDLE_HPP
+#ifndef NON_GRAVITAR_COLLISION_GROUP_HPP
+#define NON_GRAVITAR_COLLISION_GROUP_HPP
 
 #include "utils/Event.hpp"
-#include "ShapeBundle.hpp"
+#include "ShapeGroup.hpp"
 #include "shape/ShapeVisitor.hpp"
 
 
 namespace gvt {
-	class CollisionBundle;
+	class CollisionGroup;
 
 	// TODO Replace by lambda
 	class CollisionListener: public GVTEventHandler {
 		private:
-			CollisionBundle &mBundle;
+			CollisionGroup &mGroup;
 		public:
-			explicit CollisionListener(CollisionBundle &bundle);
+			explicit CollisionListener(CollisionGroup &group);
 			void handle (Event *e) override;
 	};
 
@@ -50,9 +50,9 @@ namespace gvt {
 	 */
 	class CollisionVisitor: public ShapeVisitor {
 		private:
-			CollisionBundle &mBundle;
+			CollisionGroup &mGroup;
 		public:
-			explicit CollisionVisitor(CollisionBundle &bundle);
+			explicit CollisionVisitor(CollisionGroup &group);
 
 			void visitSpaceship(Spaceship &spaceship) override;
 			void visitBunker(Bunker &bunker) override;
@@ -61,9 +61,9 @@ namespace gvt {
 	};
 
 	/**
-	 * A subclass of @c ShapeBundle handling collision between objects.
+	 * A subclass of @c ShapeGroup handling collision between objects.
 	 */
-	class CollisionBundle: public ShapeBundle {
+	class CollisionGroup: public ShapeGroup {
 		friend class CollisionListener;
 
         private:
@@ -72,7 +72,7 @@ namespace gvt {
 
 			void updateCollisions();
 		public:
-			CollisionBundle() = default;
+			CollisionGroup() = default;
 	};
 }
 

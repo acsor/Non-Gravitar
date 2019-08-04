@@ -19,17 +19,17 @@
 // LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
-#ifndef NON_GRAVITAR_DUMMY_BUNDLE_HPP
-#define NON_GRAVITAR_DUMMY_BUNDLE_HPP
+#ifndef NON_GRAVITAR_DUMMY_GROUP_HPP
+#define NON_GRAVITAR_DUMMY_GROUP_HPP
 
-#include "ShapeBundle.hpp"
+#include "ShapeGroup.hpp"
 #include "utils/Event.hpp"
 
 
 namespace gvt {
-	class DummyBundle: public ShapeBundle {
+	class DummyGroup: public ShapeGroup {
 		public:
-			DummyBundle() = default;
+			DummyGroup() = default;
 	};
 }
 

@@ -7,7 +7,7 @@ set(CMAKE_CXX_FLAGS -Wall)
 
 set(DIR_SRC "src")
 set(DIR_SHAPE "${DIR_SRC}/shape")
-set(DIR_SHAPE_BUNDLE "${DIR_SRC}/shape-bundle")
+set(DIR_SHAPE_GROUP "${DIR_SRC}/shape-group")
 set(DIR_VIEWS "${DIR_SRC}/view")
 set(DIR_UTILS "${DIR_SRC}/utils")
 set(DIR_BOUND "${DIR_SRC}/bounding-polygon")
@@ -36,12 +36,11 @@ target_link_libraries(BoundingRectangle BoundingPolygon)
 add_library(Shape "${DIR_SHAPE}/Shape.cpp")
 
 
-add_library(ShapeBundle "${DIR_SHAPE_BUNDLE}/ShapeBundle.cpp")
-target_link_libraries(ShapeBundle Shape)
+add_library(ShapeGroup "${DIR_SHAPE_GROUP}/ShapeGroup.cpp")
+target_link_libraries(ShapeGroup Shape)
 
-add_library(CollisionBundle "${DIR_SHAPE_BUNDLE}/CollisionBundle.cpp")
-target_link_libraries(CollisionBundle ShapeBundle)
-
+add_library(CollisionGroup "${DIR_SHAPE_GROUP}/CollisionGroup.cpp")
+target_link_libraries(CollisionGroup ShapeGroup)
 
 
 add_library(Point "${DIR_SHAPE}/Point.cpp")
@@ -82,8 +81,8 @@ target_link_libraries(ShapeView Shape)
 add_library(ShapeViewFactory "${DIR_VIEWS}/ShapeViewFactory.cpp")
 target_link_libraries(ShapeViewFactory SpaceshipView BunkerView)
 
-add_library(ShapeBundleView "${DIR_VIEWS}/ShapeBundleView.cpp")
-target_link_libraries(ShapeBundleView ShapeBundle ShapeViewFactory)
+add_library(ShapeGroupView "${DIR_VIEWS}/ShapeGroupView.cpp")
+target_link_libraries(ShapeGroupView ShapeGroup ShapeViewFactory)
 
 add_library(SpaceshipView "${DIR_VIEWS}/SpaceshipView.cpp")
 target_link_libraries(SpaceshipView Spaceship ShapeView Utils)
@@ -102,7 +101,7 @@ add_executable(NonGravitar "${DIR_SRC}/NonGravitar.cpp")
 target_link_libraries(
 	NonGravitar
 	sfml-window sfml-graphics sfml-system
-	ShapeBundle ShapeBundleView
+	ShapeGroup ShapeGroupView
 )
 
 add_subdirectory(test)

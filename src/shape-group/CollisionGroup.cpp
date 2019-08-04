@@ -20,7 +20,7 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 #include <memory>
-#include "CollisionBundle.hpp"
+#include "CollisionGroup.hpp"
 
 #include "shape/Spaceship.hpp"
 #include "shape/Bunker.hpp"
@@ -31,14 +31,14 @@
 #include "shape/Line.hpp"
 #include "shape/Circle.hpp"
 
-using CollisionBundle = gvt::CollisionBundle;
+using CollisionGroup = gvt::CollisionGroup;
 using Event = gvt::Event;
 using Shape = gvt::Shape;
 
 template<typename T> using shared_ptr = std::shared_ptr<T>;
 
-gvt::CollisionListener::CollisionListener(CollisionBundle &bundle):
-	mBundle{bundle} {
+gvt::CollisionListener::CollisionListener(CollisionGroup &group):
+	mGroup{group} {
 }
 
 void gvt::CollisionListener::handle(Event *e) {
@@ -49,7 +49,7 @@ void gvt::CollisionListener::handle(Event *e) {
         	case ShapeEvent::Type::moved:
 			case ShapeEvent::Type::rotated:
 			case ShapeEvent::Type::origin:
-                mBundle.updateCollisions();
+                mGroup.updateCollisions();
         	default:
         		break;
         }
@@ -57,8 +57,8 @@ void gvt::CollisionListener::handle(Event *e) {
 }
 
 
-gvt::CollisionVisitor::CollisionVisitor(CollisionBundle &bundle):
-	mBundle{bundle} {
+gvt::CollisionVisitor::CollisionVisitor(CollisionGroup &group):
+	mGroup{group} {
 }
 
 void gvt::CollisionVisitor::visitMissile(gvt::RoundMissile &missile) {
@@ -78,7 +78,7 @@ void gvt::CollisionVisitor::visitFuel(gvt::Fuel &fuel) {
 }
 
 
-void gvt::CollisionBundle::updateCollisions() {
+void gvt::CollisionGroup::updateCollisions() {
 	for (auto first: mShapes) {
         for (auto second: mShapes) {
         	if (*first != *second && first->clashes(*second)) {
