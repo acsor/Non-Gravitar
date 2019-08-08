@@ -18,7 +18,7 @@ set(VERSION_MAJOR 0)
 set(VERSION_MINOR 1)
 set(VERSION_PATCH 0)
 
-# TO-DO Add find_package directive for adding a dependency to the SFML library
+# TODO Add find_package directive for adding a dependency to the SFML library
 
 
 include_directories("${DIR_SRC}")
@@ -47,14 +47,14 @@ add_library(Circle "${DIR_SHAPE}/Circle.cpp")
 target_link_libraries(Circle Shape Rectangle)
 
 add_library(Rectangle "${DIR_SHAPE}/Rectangle.cpp")
-target_link_libraries(Rectangle Shape)
+target_link_libraries(Rectangle Shape BoundingRectangle)
 
 
 add_library(Spaceship "${DIR_SHAPE}/Spaceship.cpp")
-target_link_libraries(Spaceship Shape Rectangle Fuel)
+target_link_libraries(Spaceship Shape Fuel BoundingTriangle)
 
 add_library(Fuel "${DIR_SHAPE}/Fuel.cpp")
-target_link_libraries(Fuel Spaceship)
+target_link_libraries(Fuel Spaceship BoundingRectangle)
 
 add_library(RoundMissile "${DIR_SHAPE}/RoundMissile.cpp")
 target_link_libraries(RoundMissile Shape Circle)

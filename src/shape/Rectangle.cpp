@@ -20,6 +20,7 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 #include <cmath>
+#include <bounding-polygon/BoundingRectangle.hpp>
 #include "Rectangle.hpp"
 #include "utils/Utils.hpp"
 
@@ -29,7 +30,7 @@ using Rectangle = gvt::Rectangle;
 size_t std::hash<Rectangle>::operator()(Rectangle const &r) const {
 	auto h = hash<float>{};
 
-	return h(r.mX) ^ h(r.mY) ^ h(r.mEnd.x()) ^ h(r.mEnd.y());
+	return h(r.mPosition.x) ^ h(r.mPosition.y) ^ h(r.mEnd.x) ^ h(r.mEnd.y);
 }
 
 bool std::equal_to<Rectangle>::operator()(
@@ -39,10 +40,10 @@ bool std::equal_to<Rectangle>::operator()(
 }
 
 std::ostream& std::operator<< (std::ostream &out, Rectangle const &r) {
-	// TO-DO Learn and eventually tweak the output conversion of your types.
-	// Also learn to use manipulators
-	out << "{" << r.mX << ", " << r.mY << ", " << r.mEnd.x() << ", " <<
-		r.mEnd.y() << "}";
+	// TODO Learn and eventually tweak the output conversion of your types.
+	//  Also learn to use manipulators
+	out << "{" << r.mPosition.x << ", " << r.mPosition.y << ", " << r.mEnd.x
+			<< ", " << r.mEnd.y << "}";
 
 	return out;
 }
@@ -52,18 +53,16 @@ void Rectangle::accept (ShapeVisitor &visitor) {
 	visitor.visitRectangle(*this);
 }
 
-Rectangle Rectangle::globalBounds() const {
-	return *this;
+gvt::BoundingPolygon Rectangle::collisionPolygon() const {
+    BoundingRectangle r {mPosition, mPosition + Vectorf{width(), height()}};
+
+    r.rotate(mRotation);
+
+    return r;
 }
 
-Rectangle::Rectangle(Point topLeft, Point bottomRight):
-	Shape(topLeft.x(), topLeft.y()), mEnd{bottomRight} {
-}
-
-bool Rectangle::clashes(Rectangle const &o) const {
-	// TO-DO Update with reference to rotation
-	return IN_CLOSED_INTERVAL(mX - o.mX, -width(), o.width()) &&
-			IN_CLOSED_INTERVAL(mY - o.mY, -height(), o.height());
+Rectangle::Rectangle(Vectorf topLeft, Vectorf bottomRight):
+	Shape(topLeft), mEnd{bottomRight} {
 }
 
 bool Rectangle::operator==(Shape const &o) const {
@@ -75,15 +74,10 @@ bool Rectangle::operator==(Shape const &o) const {
 	return false;
 }
 
-// void Rectangle::rotation(float r) {
-// 	Shape::rotation(r);
-// 	// TO-DO Implement remainder part
-// }
-
 float Rectangle::width() const {
-	return abs(mEnd.x() - mX);
+	return std::abs(mEnd.x - mPosition.x);
 }
 
 float Rectangle::height() const {
-	return abs(mEnd.y() - mY);
+	return std::abs(mEnd.y - mPosition.y);
 }

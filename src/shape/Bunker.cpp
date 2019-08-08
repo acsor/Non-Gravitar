@@ -23,6 +23,7 @@
 #include <cmath>
 #include <ctime>
 #include "Bunker.hpp"
+#include "bounding-polygon/BoundingRectangle.hpp"
 
 using Bunker = gvt::Bunker;
 using Bunker2D = gvt::Bunker2D;
@@ -32,16 +33,13 @@ using RoundMissile = gvt::RoundMissile;
 using Shape = gvt::Shape;
 
 
-Bunker::Bunker(float xcoord, float ycoord, size_t directions):
-	Shape(xcoord, ycoord), mPaths{directions} {
+Bunker::Bunker(Vectorf position, size_t directions):
+	Shape(position), mPaths{directions} {
 	std::uniform_real_distribution<float> angles{
 		static_cast<float>(mRotation - M_PI / 2.0),
 		static_cast<float>(mRotation + M_PI / 2.0)
 	};
 	std::default_random_engine e(time(NULL));
-
-	mOriginX = ORIGINX;
-	mOriginY = ORIGINY;
 
 	while (directions > 0) {
 		mPaths[directions - 1] = Vectorf(angles(e));
@@ -54,9 +52,10 @@ RoundMissile Bunker::shoot() {
 	// Bear in mind that by default, on the graphics layer the Bunker is
 	// rotated by default by 90. deg (the normal out of its ceiling has
 	// direction (1, 0))
-	RoundMissile m{mX + height(), static_cast<float>(mY + width() / 2.0)};
+	RoundMissile m{
+		mPosition + Vectorf{height(), static_cast<float>(width() / 2.0)}
+	};
 
-	m.origin(mOriginX, mOriginY);
 	m.rotation(mRotation);
 	m.velocity(mPaths[mCurr]);
 	mCurr = (mCurr + 1) % mPaths.size();
@@ -68,12 +67,11 @@ void Bunker::accept (ShapeVisitor &visitor) {
 	visitor.visitBunker(*this);
 }
 
-Rectangle Bunker::globalBounds() const {
-    Rectangle r = {
-		{mX, mY}, {mX + COLLIDING_WIDTH, mY + COLLIDING_HEIGHT}
+gvt::BoundingPolygon Bunker::collisionPolygon() const {
+    BoundingRectangle r = {
+		mPosition, mPosition + Vectorf{COLLIDING_WIDTH, COLLIDING_HEIGHT}
     };
-	r.origin(COLLIDING_WIDTH / 2, COLLIDING_HEIGHT / 2);
-    r.rotation(mRotation);
+    r.rotate(mRotation);
 
     return r;
 }
@@ -88,7 +86,7 @@ bool Bunker::operator== (Shape const &o) const {
 }
 
 
-Bunker2D::Bunker2D(float xcoord, float ycoord): Bunker(xcoord, ycoord, 2) {
+Bunker2D::Bunker2D(Vectorf position): Bunker(position, 2) {
 }
 
 bool Bunker2D::operator== (Shape const &o) const {
@@ -101,7 +99,7 @@ bool Bunker2D::operator== (Shape const &o) const {
 }
 
 
-Bunker3D::Bunker3D(float xcoord, float ycoord): Bunker(xcoord, ycoord, 3) {
+Bunker3D::Bunker3D(Vectorf position): Bunker(position, 3) {
 }
 
 bool Bunker3D::operator== (Shape const &o) const {

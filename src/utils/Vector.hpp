@@ -57,6 +57,10 @@ namespace gvt {
 		 * @return The norm, aka length, of the given vector
 		 */
 		double inline norm() const;
+		/**
+		 * @return The distance between this vector and @c other.
+		 */
+		double inline distance(Vector const &other) const;
 		/*
 		 * @return The angle this vector forms with the x axis.
 		 */
@@ -79,14 +83,15 @@ namespace gvt {
 		bool operator!=(Vector const &o) const;
 	};
 
+	template<typename T> Vector<T> operator* (double f, Vector<T> v);
+
 	using Vectorf = Vector<float>;
 	using Vectord = Vector<double>;
 }
 
 
 namespace std {
-	template<typename T>
-	struct hash<gvt::Vector<T>> {
+	template<typename T> struct hash<gvt::Vector<T>> {
 		size_t operator() (gvt::Vector<T> const &key) const;
 	};
 }

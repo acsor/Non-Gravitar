@@ -47,8 +47,8 @@ SpaceshipView::SpaceshipView(shared_ptr<Spaceship> spaceship, bool debug):
 	mTexture.setSmooth(true);
 	mAccelTexture.setSmooth(true);
 
-	mSprite.setPosition(spaceship->x(), spaceship->y());
-	mSprite.setOrigin(spaceship->originX(), spaceship->originY());
+	mSprite.setPosition(spaceship->position().x, spaceship->position().y);
+	mSprite.setOrigin(spaceship->width() / 2.0, spaceship->height() / 2.0);
 	mSprite.setRotation(gvt::rad2deg(spaceship->rotation()));
 	mSprite.setTexture(mTexture);
 }
@@ -76,10 +76,8 @@ void SpaceshipView::handle(Event *e) {
 	if (event) {
 		if (p) {
 			if (event->type == ShapeEvent::Type::moved) {
-				mSprite.setPosition(p->x(), p->y());
+				mSprite.setPosition(p->position().x, p->position().y);
 				mAccel = true;
-			} else if (event->type == ShapeEvent::Type::origin) {
-				mSprite.setOrigin(p->originX(), p->originY());
 			} else if (event->type == ShapeEvent::Type::rotated) {
 				mSprite.setRotation(gvt::rad2deg(p->rotation()));
 			}

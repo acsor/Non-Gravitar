@@ -27,19 +27,17 @@
 #include "ShapeTraits.hpp"
 #include "Rectangle.hpp"
 #include "ShapeVisitor.hpp"
+#include "bounding-polygon/BoundingPolygon.hpp"
 
 
 namespace gvt {
-	class Spaceship: public Shape, public WidthTrait, public HeightTrait
-	{
+	class Spaceship: public Shape, public WidthTrait, public HeightTrait {
 		private:
 			// Represents the current fuel amount in the ship
 			unsigned mFuel;
 
-			// Offsets for the Spaceship bounding box, holding width/height
-			// values
-			static unsigned const constexpr COLLIDING_WIDTH = 30;
-			static unsigned const constexpr COLLIDING_HEIGHT = 27;
+			// Offset for the Spaceship collision polygon
+			static Vectorf const sCollisionOffset;
 		public:
 			/** Width and height properties of any given spaceship. Note that
 			 * these measures depend on the texture data found in
@@ -51,7 +49,7 @@ namespace gvt {
 			static unsigned const constexpr WIDTH = 45;
 			static unsigned const constexpr HEIGHT = 46;
 
-			Spaceship(float xcoord, float ycoord, unsigned fuel);
+			Spaceship(Vectorf position, unsigned fuel);
 			unsigned fuel() const;
 			/**
 			 * @brief Recharges the current @c Spaceship instance by the fuel
@@ -70,7 +68,7 @@ namespace gvt {
 			void discharge(unsigned amount = 1);
 			/**
 			 * @return @c true if the current @c Spaceship instance has still
-			 * fuel in it, @c false othwerise.
+			 * fuel in it, @c false otherwise.
 			 */
 			bool charged() const;
 
@@ -79,7 +77,7 @@ namespace gvt {
 			inline float width() const override;
 			inline float height() const override;
 
-			Rectangle globalBounds() const override;
+			BoundingPolygon collisionPolygon() const override;
 			bool operator== (Shape const &o) const override;
 	};
 }

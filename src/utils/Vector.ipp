@@ -69,6 +69,11 @@ namespace gvt {
 		return sqrt(pow(x, 2) + pow(y, 2));
 	}
 
+	template<typename T>
+	double Vector<T>::distance(Vector<T> const &other) const {
+		return sqrt(pow(other.x - x, 2) + pow(other.y - x, 2));
+	}
+
 	template<typename T> double Vector<T>::angle() const {
 		return (y >= 0) ? acos(x / norm()): M_PI + acos(-x / norm());
 	}
@@ -120,13 +125,18 @@ namespace gvt {
 	template<typename T> bool Vector<T>::operator!=(Vector const &o) const {
 		return x != o.x || y != o.y;
 	}
+
+
+	template<typename T> gvt::Vector<T> operator* (double f, gvt::Vector<T> v) {
+		return gvt::Vector<T>(f * v.x, f * v.y);
+	}
 }
 
 
 namespace std {
 	template<typename T>
 	size_t hash<gvt::Vector<T>>::operator() (gvt::Vector<T> const &key) const {
-		// TO-DO Might be improved. I implemented this in a rush
+		// TODO Might be improved. I implemented this in a rush
 		return hash<T>()(key.x) ^ hash<T>()(key.y);
 	}
 }

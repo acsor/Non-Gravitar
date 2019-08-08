@@ -19,29 +19,32 @@
 // LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
+#include <bounding-polygon/BoundingTriangle.hpp>
 #include "Spaceship.hpp"
 
-using Point = gvt::Point;
 using Spaceship = gvt::Spaceship;
 using Rectangle = gvt::Rectangle;
 
 
-Spaceship::Spaceship(float xcoord, float ycoord, unsigned fuel):
-	Shape::Shape(xcoord, ycoord) {
-	mOriginX = WIDTH / 2;
-	mOriginY = HEIGHT / 2;
+gvt::Vectorf const Spaceship::sCollisionOffset = {3, 0};
+
+
+Spaceship::Spaceship(Vectorf position, unsigned fuel): Shape::Shape(position) {
 	mFuel = fuel;
 }
 
-Rectangle Spaceship::globalBounds() const {
-	Rectangle r = {
-		{mX, mY}, {mX + COLLIDING_WIDTH, mY + COLLIDING_HEIGHT}
+gvt::BoundingPolygon Spaceship::collisionPolygon() const {
+	BoundingTriangle t = {
+		mPosition + sCollisionOffset,
+		mPosition + sCollisionOffset + Vectorf{
+			height(), static_cast<float>(width() / 2.0)
+		},
+		mPosition + sCollisionOffset + Vectorf{0, width()}
 	};
 	
-	r.origin(COLLIDING_WIDTH / 2.0, COLLIDING_HEIGHT / 2.0);
-	r.rotation(mRotation);
+	t.rotate(mRotation);
 
-	return r;
+	return t;
 }
 
 unsigned Spaceship::fuel() const {

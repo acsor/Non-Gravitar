@@ -23,6 +23,7 @@
 #define NON_GRAVITAR_SHAPE_HPP
 
 #include <ostream>
+#include <bounding-polygon/BoundingPolygon.hpp>
 #include "utils/Event.hpp"
 #include "utils/Vector.hpp"
 
@@ -39,115 +40,82 @@ namespace gvt {
 	 */
 	class Shape: public GVTEventDispatcher {
 		protected:
-			// Coordinates of the top-left corner by default, not of an
+			// mPosition encodes coordinates of the top-left corner, not of an
 			// arbitrary center
-			// TODO Turn these two fields below into Vectorf mPosition
-			float mX{0}, mY{0};
-			float mOriginX{0}, mOriginY{0};
+            Vectorf mPosition, mVelocity{0, 0}, mAccel{0, 0};
 			float mRotation{0};
-			Vectorf mVelocity{0, 0};
-			Vectorf mAcceleration{0, 0};
 
 			bool mDestroyed{false};
 
-			Shape(float x, float y);
+			Shape() = default;
+			explicit Shape(Vectorf position);
 		public:
 			using ostream = std::ostream;
 
 			virtual ~Shape();
 
 			/**
-			 * @param xcoord the value of the new x coordinate of the shape
-			 * top-left corner.
+			 * @return The position vector associated to this @c Shape.
 			 */
-			virtual inline void x(float xcoord);
+			inline Vectorf position() const;
 			/**
-			 * @param ycoord the value of the new y coordinate of the shape
-			 * top-left corner.
+			 * @param position Position vector to set for this @c Shape.
 			 */
-			virtual inline void y(float ycoord);
-			/**
-			 * @return Top-left corner x coordinate.
-			 */
-			virtual inline float x() const;
-			/**
-			 * @return Top-left corner y coordinate.
-			 */
-			virtual inline float y() const;
-			/**
-			 * @brief Adds xcoord and ycord to the current space object
-			 * coordinates.
-			 */
-			virtual void move(float xcoord, float ycoord);
+			void position(Vectorf position);
 			/**
 			 * @brief Move the current object along the given trajectory.
 			 * @param t Trajectory to follow
 			 */
-			virtual void moveAlong(Vectorf const &t);
+			void move(Vectorf const &t);
 			/**
 			 * Moves the object along the trajectory described by the @c
 			 * Shape velocity, which in turn is updated by the @c Shape
 			 * acceleration by the given amount of time.
 			 * @param time Velocity factor, in seconds.
 			 */
-			virtual void animate(float time);
+			void animate(float time);
 
-			/**
-			 * @return The origin x coordinate, used for various geometrical
-			 * transformations (e.g. translation, rotation, ...)
-			 */
-			virtual inline float originX() const;
-			/**
-			 * @return The origin y coordinate, used for various geometrical
-			 * transformations (e.g. translation, rotation, ...)
-			 */
-			virtual inline float originY() const;
-			/**
-			 * @param p The origin used as a reference for various geometrical
-			 * transformations
-			 */
-			virtual void origin(float xcoord, float ycoord);
 			/**
 			 * @return The angle with respect to the object origin of the
 			 * current @c Shape instance, given in radians.
 			 */
-			virtual inline float rotation() const;
+			inline float rotation() const;
 			/**
 			 * @param r The rotation angle to set for this object, in radians
 			 * @todo Test the implementation
 			 */
-			virtual inline void rotation(float r);
+			void rotation(float r);
 			/**
 			 * @param r Amount of radians to add to the current rotation value
 			 */
-			virtual inline void rotate(float r);
+			inline void rotate(float r);
 
-			virtual inline bool destroyed() const;
-			virtual inline void destroyed(bool state);
+			inline bool destroyed() const;
+			inline void destroyed(bool state);
 
 			/**
 			 * Sets the velocity of this @c Shape. Note that the unit measure
 			 * utilized is point/sec.
 			 * @param t Velocity value to set to the current @c Shape instance.
 			 */
-			virtual void velocity(Vectorf const &t);
+			void velocity(Vectorf const &t);
 			/**
 			 * @return The velocity vector associated with the current
 			 * @c Shape.
 			 */
-			virtual Vectorf velocity() const;
+			Vectorf velocity() const;
 			/**
 			 * @return The current @c Shape speed, as a scalar value.
 			 */
-			virtual float speed() const;
+			float speed() const;
 			/**
 			 * @param a Acceleration vector to set for this @c Shape.
 			 */
-			virtual void acceleration(Vectorf const &a);
+			void acceleration(Vectorf const &a);
 			/**
 			 * @return The acceleration vector associated to this @c Shape.
 			 */
-			virtual Vectorf acceleration() const;
+			Vectorf acceleration() const;
 
 			/**
 			 * Lets a @c ShapeVisitor perform its operation on the 
@@ -163,12 +131,12 @@ namespace gvt {
 			 * accounted for are <i>global</i>, that is are measured against
 			 * the global coordinate system.
 			 */
-			virtual Rectangle globalBounds() const = 0;
+			virtual BoundingPolygon collisionPolygon() const = 0;
 			/**
 			 * @return @c true if the boundaries of the current @c Shape clash
 			 * with those of the object @c o.
 			 */
-			virtual bool clashes(Shape const &o) const;
+			bool clashes(Shape const &o) const;
 			/**
 			 * @return @c true if the object at the current position meets the
 			 * other @c Shape given as argument by following the trajectory @c
@@ -182,7 +150,7 @@ namespace gvt {
 
 	struct ShapeEvent: public Event {
 		enum class Type {
-			unspecified = 0, moved, origin, rotated, destroyed
+			unspecified = 0, moved, rotated, destroyed
 		};
 
 		ShapeEvent::Type type{ShapeEvent::Type::unspecified};

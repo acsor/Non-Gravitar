@@ -18,12 +18,12 @@ Tra le regole e convenzioni attuali sono comprese:
 `.md`, `.cpp`, `.hpp`, ...).
 2. Nomenclatura: classi in
 [UpperCamelCase](https://en.wikipedia.org/wiki/Camel_case); variabili, funzioni
-e metodi in `lowerCamelCase` (o meglio `snake_case`? TO-DO decidi). Spaziatura
+e metodi in `lowerCamelCase` (o meglio `snake_case`? TODO decidi). Spaziatura
 e cose meno importanti discusse oralmente.
 3. Testare il proprio codice. Verranno fornite piccole suite di test da
-   eseguire prima di revisionare il proprio codice. (TO-DO aggiorna il punto
+   eseguire prima di revisionare il proprio codice. (TODO aggiorna il punto
    quando avrai dettagli più precisi.)
-4. Segnare con un commento `TO-DO` quelle parti di codice su cui ritornare in
+4. Segnare con un commento `TODO` quelle parti di codice su cui ritornare in
    futuro (motivazione: facile ricercare tutti i punti da ritoccare in un
    secondo momento).
 

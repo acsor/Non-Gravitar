@@ -20,15 +20,15 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 #include "catch.hpp"
-#include "../src/shape/RoundMissile.hpp"
-#include "../src/shape/Bunker.hpp"
+#include "shape/RoundMissile.hpp"
+#include "shape/Bunker.hpp"
 
 using Bunker = gvt::Bunker;
 using RoundMissile = gvt::RoundMissile;
 
 
 TEST_CASE("Bunker::shoot() missiles have to be cyclic", "[Bunker]") {
-	Bunker b = gvt::Bunker3D(0, 0);
+	Bunker b = gvt::Bunker3D({0, 0});
 	RoundMissile m1 = b.shoot(), m2 = b.shoot(), m3 = b.shoot();
 
 	REQUIRE(m1 == b.shoot());
@@ -40,9 +40,9 @@ TEST_CASE(
 	"Bunker::shoot() missiles have to be oriented within 90 deg. of the "
 	"shooting Bunker", "[Bunker]"
 ) {
-	Bunker b = gvt::Bunker3D(0, 0);
+	Bunker b = gvt::Bunker3D({0, 0});
 	size_t const samples = 300;
-	RoundMissile m{0, 0};
+	RoundMissile m{{0, 0}};
 
 	for (size_t i = 0; i < samples; i++) {
 		m = b.shoot();
@@ -54,6 +54,6 @@ TEST_CASE(
 		INFO("angle = " << m.velocity().angle());
 		REQUIRE(abs(b.rotation() - m.velocity().angle()) <= M_PI);
 
-		b = gvt::Bunker3D(0, 0);
+		b = gvt::Bunker3D({0, 0});
 	}
 }

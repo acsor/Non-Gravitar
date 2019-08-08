@@ -31,14 +31,13 @@ namespace gvt {
 		protected:
 			float mRadius;
 		public:
-			Circle(float xcoord, float ycoord);
-			Circle(float xcoord, float ycoord, float radius);
+			Circle(Vectorf position, float radius);
 
 			float area() const;
 			bool clashes(Circle const &o) const;
 
 			void accept (ShapeVisitor &visitor) override;
-			Rectangle globalBounds() const override;
+			BoundingPolygon collisionPolygon() const override;
 			bool operator== (Shape const &o) const override;
 	};
 };

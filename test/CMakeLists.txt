@@ -1,5 +1,5 @@
-# TO-DO Make executable output name end in `.out'
-# TO-DO Find a shorter way of specifying `test-all' dependencies
+# TODO Make executable output name end in `.out'
+# TODO Find a shorter way of specifying `test-all' dependencies
 add_executable(
 	test-all
 	$<TARGET_OBJECTS:test-main>
@@ -16,7 +16,7 @@ add_executable(
 )
 target_link_libraries(
 	test-all
-	Point Line Rectangle Circle
+	Rectangle Circle
 	BoundingPolygon BoundingTriangle BoundingRectangle
 	Bunker RoundMissile
 	Observer Utils

@@ -26,9 +26,7 @@
 #include "shape/Bunker.hpp"
 #include "shape/RoundMissile.hpp"
 #include "shape/Fuel.hpp"
-#include "shape/Point.hpp"
 #include "shape/Rectangle.hpp"
-#include "shape/Line.hpp"
 #include "shape/Circle.hpp"
 
 using CollisionGroup = gvt::CollisionGroup;
@@ -48,7 +46,6 @@ void gvt::CollisionListener::handle(Event *e) {
         switch (shapeEvent->type) {
         	case ShapeEvent::Type::moved:
 			case ShapeEvent::Type::rotated:
-			case ShapeEvent::Type::origin:
                 mGroup.updateCollisions();
         	default:
         		break;

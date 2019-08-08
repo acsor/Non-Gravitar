@@ -20,6 +20,7 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 #include <cmath>
+#include <bounding-polygon/BoundingRectangle.hpp>
 #include "Circle.hpp"
 #include "utils/Utils.hpp"
 
@@ -28,13 +29,8 @@ using Shape = gvt::Shape;
 using Rectangle = gvt::Rectangle;
 
 
-Circle::Circle(float xcoord, float ycoord): Circle{xcoord, ycoord, 0} {
-}
-
-Circle::Circle(float xcoord, float ycoord, float radius):
-	Shape{xcoord, ycoord}, mRadius{radius} {
-	mOriginX = radius;
-	mOriginY = radius;
+Circle::Circle(Vectorf position, float radius):
+	Shape{position}, mRadius{radius} {
 }
 
 float Circle::area() const {
@@ -42,10 +38,9 @@ float Circle::area() const {
 }
 
 bool Circle::clashes(Circle const &o) const {
-	// TO-DO Test
-	return sqrt(
-		pow(mX + mRadius - mOriginX - (o.mX + mRadius - o.mOriginX), 2) +
-		pow(mY + mRadius - mOriginY - (o.mY + mRadius - o.mOriginY), 2)
+	// TODO Test
+	return (mPosition + Vectorf{mRadius, mRadius}).distance(
+			o.mPosition + Vectorf{o.mRadius, o.mRadius}
 	) <= mRadius + o.mRadius;
 }
 
@@ -53,14 +48,12 @@ void Circle::accept (ShapeVisitor &visitor) {
 	visitor.visitCircle(*this);
 }
 
-Rectangle Circle::globalBounds() const {
-	// TO-DO Improve by taking into account rotation as well
-	Rectangle r = Rectangle{
-		{mX, mY}, {mX + 2 * mRadius, mY + 2 * mRadius}
+gvt::BoundingPolygon Circle::collisionPolygon() const {
+	BoundingPolygon r = BoundingRectangle{
+		mPosition, mPosition + 2 * Vectorf{mRadius, mRadius}
 	};
 
-	r.origin(mRadius, mRadius);
-	r.rotation(mRotation);
+	r.rotate(mRotation);
 
 	return r;
 }

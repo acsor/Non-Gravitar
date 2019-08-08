@@ -21,15 +21,13 @@
 // SOFTWARE.
 #include "Fuel.hpp"
 #include "Rectangle.hpp"
+#include "bounding-polygon/BoundingRectangle.hpp"
 
 using namespace gvt;
 
 
-Fuel::Fuel(float xcoord, float ycoord, unsigned fuel):
-	Shape(xcoord, ycoord) {
+Fuel::Fuel(Vectorf position, unsigned fuel): Shape(position) {
 	mFuel = fuel;
-	mOriginX = WIDTH / 2;
-	mOriginY = HEIGHT / 2;
 }
 
 unsigned Fuel::fuel() const {
@@ -52,12 +50,11 @@ float Fuel::height() const {
 	return Fuel::HEIGHT;
 }
 
-Rectangle Fuel::globalBounds() const {
-	Rectangle r =  {
-		{mX, mY}, {mX + WIDTH, mY + HEIGHT}
+BoundingPolygon Fuel::collisionPolygon() const {
+	BoundingRectangle r = {
+		mPosition, mPosition + Vectorf{WIDTH, HEIGHT}
 	};
-	r.origin(mOriginX, mOriginY);
-	r.rotation(mRotation);
+	r.rotate(mRotation);
 
 	return r;
 }

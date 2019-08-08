@@ -32,59 +32,17 @@ namespace gvt {
 		this->shape = shape;
 	}
 
-
-	void Shape::x(float xcoord) {
-		ShapeEvent e {ShapeEvent::Type::moved, this};
-
-		mX = xcoord;
-		notify(&e);
-	}
-
-	void Shape::y(float ycoord) {
-		ShapeEvent e {ShapeEvent::Type::moved, this};
-
-		mY = ycoord;
-		notify(&e);
-	}
-
-	float Shape::x() const {
-		return mX;
-	}
-
-	float Shape::y() const {
-		return mY;
-	}
-
-
-	float Shape::originX() const {
-		return mOriginX;
-	}
-
-	float Shape::originY() const {
-		return mOriginY;
+	gvt::Vectorf Shape::position() const {
+		return mPosition;
 	}
 
 	float Shape::rotation() const {
 		return mRotation;
 	}
 
-	void Shape::rotation(float r) {
-		ShapeEvent e {ShapeEvent::Type::rotated, this};
-
-		// TO-DO Shorten, if at all possible, this code that I have produced,
-		// which at first sight looks orribly bigger than it ought to be
-		if (r >= 0)
-			mRotation = r - (2.0 * M_PI) * floor(r / (2.0 * M_PI));
-		else
-			mRotation = r - (2.0 * M_PI) * ceil(r / (2.0 * M_PI));
-
-		notify(&e);
-	}
-
 	void Shape::rotate(float r) {
 		rotation(mRotation + r);
 	}
-
 
 	bool Shape::destroyed() const {
 		return mDestroyed;

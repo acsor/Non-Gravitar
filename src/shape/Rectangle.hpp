@@ -25,7 +25,7 @@
 #include <ostream>
 #include "Shape.hpp"
 #include "ShapeTraits.hpp"
-#include "Point.hpp"
+#include "utils/Vector.hpp"
 #include "ShapeVisitor.hpp"
 
 
@@ -57,27 +57,17 @@ namespace gvt {
 		friend ostream& std::operator<< (ostream &out, Rectangle const &r);
 
 		private:
-			Point mEnd{0, 0};
+			Vectorf mEnd{0, 0};
     	public:
     		/**
     		 * @brief Constructs a @c Rectangle with width > 0 and height > 0.
     		 * @throw std::domain_error if width < 0 or height < 0.
     		 */
-			Rectangle(Point topLeft, Point bottomRight);
-			/**
-			 * @param o Other @c Rectangle instance to detect clashing with.
-			 * @return @c true if the two <tt>Rectangle</tt>s share an area
-			 * portion, @c false otherwise.
-			 */
-			bool clashes(Rectangle const &o) const;
+			Rectangle(Vectorf topLeft, Vectorf bottomRight);
 
 			void accept (ShapeVisitor &visitor) override;
-			Rectangle globalBounds() const override;
+			BoundingPolygon collisionPolygon() const override;
 			bool operator==(Shape const &o) const override;
-
-			// TO-DO Check why the override below obfuscates the
-			// Shape::rotation() function
-			// virtual void rotation(float r) override;
 
 			float width() const override;
 			float height() const override;

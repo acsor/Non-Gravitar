@@ -45,8 +45,8 @@ BunkerView::BunkerView(shared_ptr<Bunker> bunker, bool debug):
 	if (!mTexture.loadFromFile(texturePath))
 		throw std::runtime_error("Could not load Bunker texture from disk");
 
-	mSprite.setPosition(bunker->x(), bunker->y());
-	mSprite.setOrigin(bunker->originX(), bunker->originY());
+	mSprite.setPosition(bunker->position().x, bunker->position().y);
+	// mSprite.setOrigin(bunker->originX(), bunker->originY());
 	mSprite.setRotation(bunker->rotation());
 	mSprite.setTexture(mTexture);
 }
@@ -64,9 +64,7 @@ void BunkerView::handle(Event *e) {
 	if (event) {
 		if (auto p = mBunker.lock()) {
 			if (event->type == ShapeEvent::Type::moved) {
-				mSprite.setPosition(p->x(), p->y());
-			} else if (event->type == ShapeEvent::Type::origin) {
-				mSprite.setOrigin(p->originX(), p->originY());
+				mSprite.setPosition(p->position().x, p->position().y);
 			} else if (event->type == ShapeEvent::Type::rotated) {
 				mSprite.setRotation(gvt::rad2deg(p->rotation()));
 			}

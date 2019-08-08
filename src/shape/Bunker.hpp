@@ -38,14 +38,11 @@ namespace gvt {
 			vector<Vectorf> mPaths;
 			unsigned mCurr{0};
 
-			Bunker(float xcoord, float ycoord, size_t directions);
+			Bunker(Vectorf position, size_t directions);
 
 			// Width and height measures of the collision boxes
 			static unsigned const constexpr COLLIDING_WIDTH = 29;
 			static unsigned const constexpr COLLIDING_HEIGHT = 42;
-			// Width and height measures of the collision boxes
-			static unsigned const constexpr ORIGINX = 14;
-			static unsigned const constexpr ORIGINY = 33;
 		public:
 			static unsigned const constexpr WIDTH = 45;
 			static unsigned const constexpr HEIGHT = 66;
@@ -61,7 +58,7 @@ namespace gvt {
 
 			void accept (ShapeVisitor &visitor) override;
 
-			Rectangle globalBounds() const override;
+			BoundingPolygon collisionPolygon() const override;
 			bool operator==(Shape const &o) const override;
 	};
 
@@ -70,14 +67,14 @@ namespace gvt {
 	// to simplify the inheritance for Bunker2D and Bunker3D?
 	class Bunker2D: public Bunker {
 		public:
-			Bunker2D(float xcoord, float ycoord);
+			Bunker2D(Vectorf position);
 
 			bool operator==(Shape const &o) const override;
 	};
 
 	class Bunker3D: public Bunker {
 		public:
-			Bunker3D(float xcoord, float ycoord);
+			Bunker3D(Vectorf position);
 
 			bool operator==(Shape const &o) const override;
 	};

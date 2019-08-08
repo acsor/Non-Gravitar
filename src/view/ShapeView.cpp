@@ -21,7 +21,7 @@
 // SOFTWARE.
 #include <iostream>
 #include "ShapeView.hpp"
-#include "../shape/Rectangle.hpp"
+#include "shape/Rectangle.hpp"
 #include "utils/Utils.hpp"
 
 using Shape = gvt::Shape;
@@ -30,13 +30,6 @@ using ShapeView = gvt::ShapeView;
 
 ShapeView::ShapeView(shared_ptr<Shape> shape, bool debug):
 	Debuggable(debug), mShape{shape} {
-	gvt::Rectangle bounds = shape->globalBounds();
-
-	mBounds = sf::RectangleShape({bounds.width(), bounds.height()});
-	mBounds.setPosition(bounds.x(), bounds.y());
-	mBounds.setOrigin(bounds.originX(), bounds.originY());
-	mBounds.setRotation(gvt::rad2deg(bounds.rotation()));
-	mBounds.setFillColor(sf::Color::Green);
 
 	shape->addHandler(*this);
 }
@@ -47,8 +40,6 @@ ShapeView::~ShapeView() {
 }
 
 void ShapeView::draw(RenderTarget &target, RenderStates s) const {
-	if (mDebug && !mShape.expired())
-		target.draw(mBounds);
 }
 
 void ShapeView::handle(Event *e) {
@@ -56,17 +47,7 @@ void ShapeView::handle(Event *e) {
 	auto event = dynamic_cast<ShapeEvent*>(e);
 
 	if (event) {
-		if (auto p = mShape.lock()) {
-			box = p->globalBounds();
-
-			if (event->type == ShapeEvent::Type::moved) {
-				mBounds.setPosition(box.x(), box.y());
-			} else if (event->type == ShapeEvent::Type::origin) {
-				mBounds.setOrigin(box.originX(), box.originY());
-			} else if (event->type == ShapeEvent::Type::rotated) {
-				mBounds.setRotation(gvt::rad2deg(box.rotation()));
-			}
-		} else if (event->type == ShapeEvent::Type::destroyed) {
+		if (event->type == ShapeEvent::Type::destroyed) {
 			mShape.reset();
 			event->shape->removeHandler(*this);
 		}

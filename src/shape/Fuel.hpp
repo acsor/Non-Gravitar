@@ -41,7 +41,7 @@ namespace gvt {
 			static unsigned const constexpr WIDTH = 41;
 			static unsigned const constexpr HEIGHT = 43;
 
-			Fuel(float xcoord, float ycoord, unsigned fuel);
+			Fuel(Vectorf position, unsigned fuel);
 			/**
 			 * @return The current fuel amount.
 			 */
@@ -55,7 +55,7 @@ namespace gvt {
 			float width() const override;
 			float height() const override;
 
-			Rectangle globalBounds() const override;
+			BoundingPolygon collisionPolygon() const override;
 			bool operator== (Shape const &o) const override;
 	};
 }

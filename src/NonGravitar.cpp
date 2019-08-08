@@ -79,7 +79,7 @@ class MoveShipHandler: public gvt::EventHandler<sf::Event> {
 							mShip->rotate(-ANGLE_SIZE);
 							break;
 						case (Keyboard::Key::W):
-							mShip->moveAlong(
+							mShip->move(
 									gvt::Vectorf(mShip->rotation()) * STEP_SIZE
 							);
 							break;
@@ -105,7 +105,7 @@ int main () {
 	RenderWindow w{mode, "Non-Gravitar"};
 
 	shared_ptr<ShapeGroup> group{new gvt::DummyGroup()};
-	shared_ptr<Spaceship> ship{new Spaceship(22, 23, 1000)};
+	shared_ptr<Spaceship> ship{new Spaceship({22, 23}, 1000)};
 	gvt::ShapeGroupView view(group);
 
 	gvt::EventDispatcher<sf::Event> loopDispatcher;
@@ -114,8 +114,8 @@ int main () {
 	w.setFramerateLimit(45);
 
 	group->insert(ship);
-	group->insert(shared_ptr<Bunker>(new gvt::Bunker2D(600, 500)));
-	group->insert(shared_ptr<Bunker>(new gvt::Bunker3D(500, 500)));
+	group->insert(shared_ptr<Bunker>(new gvt::Bunker2D({600, 500})));
+	group->insert(shared_ptr<Bunker>(new gvt::Bunker3D({500, 500})));
 
 	loopDispatcher.addHandler(new CloseWindowHandler(w));
 	loopDispatcher.addHandler(new MoveShipHandler(ship));

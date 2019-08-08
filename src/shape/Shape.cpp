@@ -27,7 +27,7 @@ using ShapeEvent = gvt::ShapeEvent;
 using Trajectory = gvt::Vectorf;
 
 
-Shape::Shape(float x, float y): mX{x}, mY{y} {
+Shape::Shape(Vectorf position): mPosition{position} {
 }
 
 Shape::~Shape() {
@@ -36,36 +36,38 @@ Shape::~Shape() {
 	notify(&e);
 }
 
-void Shape::move(float xcoord, float ycoord) {
+void Shape::position(gvt::Vectorf position) {
 	ShapeEvent e{ShapeEvent::Type::moved, this};
 
-	mX += xcoord;
-    mY += ycoord;
+	mPosition = position;
 
 	notify(&e);
 }
 
-void Shape::moveAlong(Vectorf const &t) {
+void Shape::move(Vectorf const &t) {
 	ShapeEvent e{ShapeEvent::Type::moved, this};
 
-	mX += t.x;
-	mY += t.y;
+	mPosition += Vectorf(t.x, t.y);
 
 	notify(&e);
 }
 
 void Shape::animate(float time) {
-	if (mAcceleration.norm() != 0) {
-		mVelocity += mAcceleration * time;
-		moveAlong(mVelocity * time);
+	if (mAccel.norm() != 0) {
+		mVelocity += mAccel * time;
+		move(mVelocity * time);
 	}
 }
 
-void Shape::origin(float xcoord, float ycoord) {
-	ShapeEvent e{ShapeEvent::Type::origin, this};
+void Shape::rotation(float r) {
+	ShapeEvent e {ShapeEvent::Type::rotated, this};
 
-	mOriginX = xcoord;
-	mOriginY = ycoord;
+	// TODO Shorten, if at all possible, this code that I have produced,
+	//  which at first sight looks orribly bigger than it ought to be
+	if (r >= 0)
+		mRotation = r - (2.0 * M_PI) * floor(r / (2.0 * M_PI));
+	else
+		mRotation = r - (2.0 * M_PI) * ceil(r / (2.0 * M_PI));
 
 	notify(&e);
 }
@@ -83,22 +85,21 @@ float Shape::speed() const {
 }
 
 void Shape::acceleration(Vectorf const &a) {
-	mAcceleration = a;
+	mAccel = a;
 }
 
 gvt::Vectorf Shape::acceleration() const {
-	return mAcceleration;
+	return mAccel;
 }
 
 
 bool Shape::clashes(gvt::Shape const &o) const {
-    return globalBounds().clashes(o.globalBounds());
+    return collisionPolygon().intersects(o.collisionPolygon());
 }
 
 bool Shape::operator== (Shape const &o) const {
-	return mX == o.mX && mY == o.mY && mOriginX == o.mOriginX &&
-			mOriginY == o.mOriginY && mRotation == o.mRotation &&
-			mVelocity == mVelocity;
+	return mPosition == o.mPosition && mVelocity == mVelocity &&
+			mAccel == o .mAccel && mRotation == o.mRotation;
 }
 
 bool Shape::operator!= (Shape const &o) const {
