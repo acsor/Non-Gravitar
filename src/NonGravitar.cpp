@@ -99,6 +99,24 @@ class MoveShipHandler: public gvt::EventHandler<sf::Event> {
 		}
 };
 
+// TODO Replace with lambda
+class DebugToggleHandler: public gvt::EventHandler<sf::Event> {
+	private:
+		gvt::ShapeGroupView &mRootView;
+	public:
+        explicit DebugToggleHandler(gvt::ShapeGroupView &rootView):
+        	mRootView{rootView} {};
+
+		void handle (sf::Event *e) override {
+			if (
+				e->type == Event::KeyPressed &&
+				e->key.code == Keyboard::Key::B && e->key.control
+			) {
+                mRootView.debug(!mRootView.debug());
+			}
+		};
+};
+
 
 int main () {
 	sf::VideoMode const mode = sf::VideoMode::getDesktopMode();
@@ -106,7 +124,7 @@ int main () {
 
 	shared_ptr<ShapeGroup> group{new gvt::DummyGroup()};
 	shared_ptr<Spaceship> ship{new Spaceship({22, 23}, 1000)};
-	gvt::ShapeGroupView view(group);
+	gvt::ShapeGroupView rootView(group);
 
 	gvt::EventDispatcher<sf::Event> loopDispatcher;
 	Event e;
@@ -119,13 +137,14 @@ int main () {
 
 	loopDispatcher.addHandler(new CloseWindowHandler(w));
 	loopDispatcher.addHandler(new MoveShipHandler(ship));
+	loopDispatcher.addHandler(new DebugToggleHandler(rootView));
 
 	while (w.isOpen()) {
 		while (w.pollEvent(e))
 			loopDispatcher.notify(&e);
 
 		w.clear();
-		w.draw(view);
+		w.draw(rootView);
 		w.display();
 	}
 

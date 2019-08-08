@@ -28,8 +28,26 @@ using Shape = gvt::Shape;
 using ShapeView = gvt::ShapeView;
 
 
+void ShapeView::updateDebugBounds() {
+    if (auto shape = mShape.lock()) {
+    	// Reallocating mBounds each time is not efficient, but this computation
+    	// is only performed when mDebug == true, so this is not a real concern
+		vector<BoundingPolygon::Vertex>
+		        vertices = shape->collisionPolygon().vertices();
+		mBounds = sf::VertexArray(sf::LineStrip, vertices.size());
+
+        for (size_t i = 0; i < vertices.size(); i++) {
+			mBounds[i] = sf::Vector2f(vertices[i].x, vertices[i].y);
+			mBounds[i].color = sf::Color::Green;
+		}
+    } else {
+    	mBounds.clear();
+    }
+}
+
 ShapeView::ShapeView(shared_ptr<Shape> shape, bool debug):
 	Debuggable(debug), mShape{shape} {
+	updateDebugBounds();
 
 	shape->addHandler(*this);
 }
@@ -40,6 +58,8 @@ ShapeView::~ShapeView() {
 }
 
 void ShapeView::draw(RenderTarget &target, RenderStates s) const {
+	if (mDebug && !mShape.expired())
+		target.draw(mBounds);
 }
 
 void ShapeView::handle(Event *e) {
@@ -47,6 +67,15 @@ void ShapeView::handle(Event *e) {
 	auto event = dynamic_cast<ShapeEvent*>(e);
 
 	if (event) {
+		if (auto shape = mShape.lock()) {
+			if (
+					mDebug &&
+					(event->type == ShapeEvent::Type::moved ||
+					event->type == ShapeEvent::Type::rotated)
+			) {
+				updateDebugBounds();
+			}
+		}
 		if (event->type == ShapeEvent::Type::destroyed) {
 			mShape.reset();
 			event->shape->removeHandler(*this);

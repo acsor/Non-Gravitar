@@ -51,6 +51,9 @@ namespace gvt {
 			);
 			virtual ~ShapeGroupView();
 
+			// TODO Why was there no visibility for Debuggable::debug()?
+			//  Eliminate the declaration below.
+			bool debug() const {return mDebug;};
 			void debug (bool debug) override;
 
 			void draw(

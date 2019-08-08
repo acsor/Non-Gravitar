@@ -95,6 +95,12 @@ namespace gvt {
 			 */
 			virtual bool intersects(BoundingPolygon const &o) const final;
 
+			/**
+			 * @return The "list" of vertices comprising this @c
+			 * BoundingPolygon.
+			 */
+			std::vector<Vertex> vertices () const;
+
 			virtual bool operator== (BoundingPolygon const &o) const;
 			virtual bool operator!= (BoundingPolygon const &o) const;
 	};

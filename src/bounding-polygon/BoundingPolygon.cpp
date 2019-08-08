@@ -27,6 +27,7 @@
 
 namespace gvt {
 	using float_type = BoundingPolygon::float_type;
+	using Vertex = gvt::BoundingPolygon::Vertex;
 
 	std::vector<Vector<float_type>> BoundingPolygon::normalAxes() const {
 		Vector<float_type> diff;
@@ -98,6 +99,10 @@ namespace gvt {
 		}
 
 		return true;
+	}
+
+	std::vector<Vertex> BoundingPolygon::vertices () const {
+		return mVertices;
 	}
 
 	bool BoundingPolygon::operator== (BoundingPolygon const &o) const {

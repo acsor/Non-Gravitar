@@ -37,9 +37,9 @@ namespace gvt {
 	class ShapeView: public sf::Drawable, public GVTEventHandler,
 			public Debuggable {
 		private:
-			// TODO What once used to be the mBounds variable, used for
-			//  debugging purposes, should be now turned into a vertex array
-			// sf::RectangleShape mBounds;
+			sf::VertexArray mBounds;
+
+			void updateDebugBounds();
 		protected:
 			weak_ptr<Shape> mShape;
 
