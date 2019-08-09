@@ -61,6 +61,7 @@ namespace gvt {
 		 * @return The distance between this vector and @c other.
 		 */
 		double inline distance(Vector const &other) const;
+		Vector<T> midpoint (Vector<T> const &other) const;
 		/*
 		 * @return The angle this vector forms with the x axis.
 		 */
@@ -74,9 +75,10 @@ namespace gvt {
 		 */
 		double projectAlong(Vector const &axis) const;
 
-		Vector operator* (double l) const;
 		Vector operator+ (Vector const &o) const;
 		Vector operator- (Vector const &o) const;
+		Vector operator* (double f) const;
+		Vector operator/ (double f) const;
 		Vector& operator+= (Vector const &o);
 
 		bool operator==(Vector const &o) const;
@@ -84,6 +86,7 @@ namespace gvt {
 	};
 
 	template<typename T> Vector<T> operator* (double f, Vector<T> v);
+	template<typename T> Vector<T> operator/ (double f, Vector<T> v);
 
 	using Vectorf = Vector<float>;
 	using Vectord = Vector<double>;

@@ -36,6 +36,26 @@ namespace gvt {
 		return mPosition;
 	}
 
+	gvt::Vectorf Shape::center() const {
+		return mPosition.midpoint(mPosition + Vectorf{width(), height()});
+	}
+
+	gvt::Vectorf Shape::velocity() const {
+		return mVelocity;
+	}
+
+	float Shape::speed() const {
+		return mVelocity.norm();
+	}
+
+	void Shape::acceleration(Vectorf const &a) {
+		mAccel = a;
+	}
+
+	gvt::Vectorf Shape::acceleration() const {
+		return mAccel;
+	}
+
 	float Shape::rotation() const {
 		return mRotation;
 	}

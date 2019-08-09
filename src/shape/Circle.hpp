@@ -33,14 +33,32 @@ namespace gvt {
 		public:
 			Circle(Vectorf position, float radius);
 
-			float area() const;
+			inline float width() const override;
+			inline float height() const override;
+
+			inline float area() const;
 			bool clashes(Circle const &o) const;
 
 			void accept (ShapeVisitor &visitor) override;
 			BoundingPolygon collisionPolygon() const override;
 			bool operator== (Shape const &o) const override;
 	};
-};
+}
+
+
+namespace gvt {
+	float Circle::width() const {
+        return 2 * mRadius;
+	}
+
+	float Circle::height() const {
+		return 2 * mRadius;
+	}
+
+	float Circle::area() const {
+		return M_PI * pow(mRadius, 2);
+	}
+}
 
 
 #endif

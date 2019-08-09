@@ -24,14 +24,13 @@
 
 #include "Fuel.hpp"
 #include "Shape.hpp"
-#include "ShapeTraits.hpp"
 #include "Rectangle.hpp"
 #include "ShapeVisitor.hpp"
 #include "bounding-polygon/BoundingPolygon.hpp"
 
 
 namespace gvt {
-	class Spaceship: public Shape, public WidthTrait, public HeightTrait {
+	class Spaceship: public Shape {
 		private:
 			// Represents the current fuel amount in the ship
 			unsigned mFuel;

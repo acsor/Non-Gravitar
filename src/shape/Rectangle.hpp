@@ -24,7 +24,6 @@
 
 #include <ostream>
 #include "Shape.hpp"
-#include "ShapeTraits.hpp"
 #include "utils/Vector.hpp"
 #include "ShapeVisitor.hpp"
 
@@ -48,7 +47,7 @@ namespace std {
 
 
 namespace gvt {
-    class Rectangle: public Shape, public WidthTrait, public HeightTrait {
+    class Rectangle: public Shape {
 		using ostream = std::ostream;
 
 		friend struct std::hash<Rectangle>;

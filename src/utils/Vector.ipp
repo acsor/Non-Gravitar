@@ -74,6 +74,11 @@ namespace gvt {
 		return sqrt(pow(other.x - x, 2) + pow(other.y - x, 2));
 	}
 
+	template<typename T>
+	Vector<T> Vector<T>::midpoint (Vector<T> const &other) const {
+		return Vector<T>{(x + other.x) / 2.0, (y + other.y) / 2.0};
+	}
+
 	template<typename T> double Vector<T>::angle() const {
 		return (y >= 0) ? acos(x / norm()): M_PI + acos(-x / norm());
 	}
@@ -96,10 +101,6 @@ namespace gvt {
 		}
 	}
 
-	template<typename T> Vector<T> Vector<T>::operator* (double l) const {
-		return Vector(l * x, l * y);
-	}
-
 	template<typename T>
 	Vector<T> Vector<T>::operator+ (Vector<T> const &o) const {
 		return {x + o.x, y + o.y};
@@ -108,6 +109,14 @@ namespace gvt {
 	template<typename T>
 	Vector<T> Vector<T>::operator- (Vector const &o) const {
 		return {x - o.x, y - o.y};
+	}
+
+	template<typename T> Vector<T> Vector<T>::operator* (double f) const {
+		return Vector(f * x, f * y);
+	}
+
+	template<typename T> Vector<T> Vector<T>::operator/ (double f) const {
+		return Vector(x / f, y / f);
 	}
 
 	template<typename T>
@@ -129,6 +138,10 @@ namespace gvt {
 
 	template<typename T> gvt::Vector<T> operator* (double f, gvt::Vector<T> v) {
 		return gvt::Vector<T>(f * v.x, f * v.y);
+	}
+
+	template<typename T> gvt::Vector<T> operator/ (double f, gvt::Vector<T> v) {
+		return gvt::Vector<T>(v.x / f, v.y / f);
 	}
 }
 

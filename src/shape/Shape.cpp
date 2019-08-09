@@ -24,7 +24,6 @@
 
 using Shape = gvt::Shape;
 using ShapeEvent = gvt::ShapeEvent;
-using Trajectory = gvt::Vectorf;
 
 
 Shape::Shape(Vectorf position): mPosition{position} {
@@ -74,22 +73,6 @@ void Shape::rotation(float r) {
 
 void Shape::velocity(Vectorf const &t) {
 	mVelocity = t;
-}
-
-Trajectory Shape::velocity() const {
-	return mVelocity;
-}
-
-float Shape::speed() const {
-	return mVelocity.norm();
-}
-
-void Shape::acceleration(Vectorf const &a) {
-	mAccel = a;
-}
-
-gvt::Vectorf Shape::acceleration() const {
-	return mAccel;
 }
 
 

@@ -25,7 +25,6 @@
 #include <vector>
 #include "Shape.hpp"
 #include "Rectangle.hpp"
-#include "ShapeTraits.hpp"
 #include "RoundMissile.hpp"
 #include "ShapeVisitor.hpp"
 
@@ -33,7 +32,7 @@ template<typename T> using vector = std::vector<T>;
 
 
 namespace gvt {
-	class Bunker: public Shape, public WidthTrait, public HeightTrait {
+	class Bunker: public Shape {
 		protected:
 			vector<Vectorf> mPaths;
 			unsigned mCurr{0};

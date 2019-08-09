@@ -33,10 +33,6 @@ Circle::Circle(Vectorf position, float radius):
 	Shape{position}, mRadius{radius} {
 }
 
-float Circle::area() const {
-	return M_PI * pow(mRadius, 2);
-}
-
 bool Circle::clashes(Circle const &o) const {
 	// TODO Test
 	return (mPosition + Vectorf{mRadius, mRadius}).distance(

@@ -23,14 +23,13 @@
 #define NON_GRAVITAR_FUEL_HPP
 
 #include "Shape.hpp"
-#include "ShapeTraits.hpp"
 #include "ShapeVisitor.hpp"
 
 
 namespace gvt {
 	class Spaceship;
 
-	class Fuel: public Shape, public WidthTrait, public HeightTrait {
+	class Fuel: public Shape {
 		private:
 			unsigned mFuel;
 		public:

@@ -42,7 +42,7 @@ namespace gvt {
 		protected:
 			// mPosition encodes coordinates of the top-left corner, not of an
 			// arbitrary center
-            Vectorf mPosition, mVelocity{0, 0}, mAccel{0, 0};
+            Vectorf mPosition, mVelocity, mAccel;
 			float mRotation{0};
 
 			bool mDestroyed{false};
@@ -54,6 +54,8 @@ namespace gvt {
 
 			virtual ~Shape();
 
+			inline virtual float width() const = 0;
+			inline virtual float height() const = 0;
 			/**
 			 * @return The position vector associated to this @c Shape.
 			 */
@@ -63,17 +65,36 @@ namespace gvt {
 			 */
 			void position(Vectorf position);
 			/**
+			 * @return The center point of this @c Shape.
+			 */
+			inline Vectorf center() const;
+			/**
 			 * @brief Move the current object along the given trajectory.
 			 * @param t Trajectory to follow
 			 */
-			void move(Vectorf const &t);
 			/**
-			 * Moves the object along the trajectory described by the @c
-			 * Shape velocity, which in turn is updated by the @c Shape
-			 * acceleration by the given amount of time.
-			 * @param time Velocity factor, in seconds.
+			 * Sets the velocity of this @c Shape. Note that the unit measure
+			 * utilized is point/sec.
+			 * @param t Velocity value to set to the current @c Shape instance.
 			 */
-			void animate(float time);
+			void velocity(Vectorf const &t);
+			/**
+			 * @return The velocity vector associated with the current
+			 * @c Shape.
+			 */
+			inline Vectorf velocity() const;
+			/**
+			 * @return The current @c Shape speed, as a scalar value.
+			 */
+			inline float speed() const;
+			/**
+			 * @param a Acceleration vector to set for this @c Shape.
+			 */
+			inline void acceleration(Vectorf const &a);
+			/**
+			 * @return The acceleration vector associated to this @c Shape.
+			 */
+			inline Vectorf acceleration() const;
 
 			/**
 			 * @return The angle with respect to the object origin of the
@@ -89,42 +110,15 @@ namespace gvt {
 			 * @param r Amount of radians to add to the current rotation value
 			 */
 			inline void rotate(float r);
-
+			/**
+			 * @return @c true if this @c Shape instance was marked as
+			 * destroyed, @c false otherwise.
+			 */
 			inline bool destroyed() const;
+			/**
+			 * @param state @c true to mark this @c Shape as destroyed.
+			 */
 			inline void destroyed(bool state);
-
-			/**
-			 * Sets the velocity of this @c Shape. Note that the unit measure
-			 * utilized is point/sec.
-			 * @param t Velocity value to set to the current @c Shape instance.
-			 */
-			void velocity(Vectorf const &t);
-			/**
-			 * @return The velocity vector associated with the current
-			 * @c Shape.
-			 */
-			Vectorf velocity() const;
-			/**
-			 * @return The current @c Shape speed, as a scalar value.
-			 */
-			float speed() const;
-			/**
-			 * @param a Acceleration vector to set for this @c Shape.
-			 */
-			void acceleration(Vectorf const &a);
-			/**
-			 * @return The acceleration vector associated to this @c Shape.
-			 */
-			Vectorf acceleration() const;
-
-			/**
-			 * Lets a @c ShapeVisitor perform its operation on the 
-			 * implementing subclass.
-			 * 
-			 * @see ShapeVisitor
-			 */
-			virtual void accept(ShapeVisitor &visitor) = 0;
-
 			/**
 			 * @return A @c Rectangle object representing the bounds used to
 			 * detect collisions with another @c Shape. The coordinates
@@ -137,6 +131,23 @@ namespace gvt {
 			 * with those of the object @c o.
 			 */
 			bool clashes(Shape const &o) const;
+
+			/**
+			 * Moves the object along the trajectory described by the @c
+			 * Shape velocity, which in turn is updated by the @c Shape
+			 * acceleration by the given amount of time.
+			 * @param time Velocity factor, in seconds.
+			 */
+			void animate(float time);
+			void move(Vectorf const &t);
+
+			/**
+			 * Lets a @c ShapeVisitor perform its operation on the 
+			 * implementing subclass.
+			 * 
+			 * @see ShapeVisitor
+			 */
+			virtual void accept(ShapeVisitor &visitor) = 0;
 			/**
 			 * @return @c true if the object at the current position meets the
 			 * other @c Shape given as argument by following the trajectory @c
