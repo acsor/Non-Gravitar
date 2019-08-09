@@ -34,10 +34,8 @@ namespace gvt {
 	 * A class taking in @c Shape instances and producing @c ShapeViews which
 	 * can visually represent them.
 	 */
-    class ShapeViewFactory: public Debuggable {
+    class ShapeViewFactory {
     	public:
-    		explicit ShapeViewFactory(bool debug=false): Debuggable(debug) {};
-
             ShapeView* makeView (std::shared_ptr<Shape> shape) const;
     };
 }

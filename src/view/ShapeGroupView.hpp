@@ -46,9 +46,7 @@ namespace gvt {
 			std::map<Shape*, shared_ptr<ShapeView>> mViews;
 
 		public:
-			explicit ShapeGroupView(
-				shared_ptr<ShapeGroup> group, bool debug=false
-			);
+			explicit ShapeGroupView(shared_ptr<ShapeGroup> group);
 			virtual ~ShapeGroupView();
 
 			// TODO Why was there no visibility for Debuggable::debug()?

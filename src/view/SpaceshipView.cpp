@@ -31,8 +31,8 @@ const std::string SpaceshipView::ACCEL_SPACESHIP_TEXTURE =
 	"graphics/spaceship-accelerating.png";
 
 
-SpaceshipView::SpaceshipView(shared_ptr<Spaceship> const &spaceship, bool debug):
-	ShapeView(spaceship, debug), mSpaceship{spaceship} {
+SpaceshipView::SpaceshipView(shared_ptr<Spaceship> const &spaceship):
+	ShapeView(spaceship), mSpaceship{spaceship} {
 	if (
 			!mTexture.loadFromFile(gvt::staticsGet(SPACESHIP_TEXTURE)) ||
 			!mAccelTexture.loadFromFile(

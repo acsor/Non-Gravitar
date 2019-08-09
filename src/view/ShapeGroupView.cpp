@@ -29,8 +29,8 @@ using ShapeGroupEvent = gvt::ShapeGroupEvent;
 using ShapeGroupView = gvt::ShapeGroupView;
 
 
-ShapeGroupView::ShapeGroupView(shared_ptr<ShapeGroup> group, bool debug):
-	Debuggable(debug), mFactory{debug}, mGroup{group} {
+ShapeGroupView::ShapeGroupView(shared_ptr<ShapeGroup> group):
+	Debuggable(false), mGroup{group} {
 	group->addHandler(*this);
 }
 

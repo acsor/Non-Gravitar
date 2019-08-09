@@ -31,8 +31,8 @@ const std::string BunkerView::BUNKER2D_GRAPHICS = "graphics/bunker-2.png";
 const std::string BunkerView::BUNKER3D_GRAPHICS = "graphics/bunker-3.png";
 
 
-BunkerView::BunkerView(const shared_ptr<Bunker>& bunker, bool debug):
-	ShapeView(bunker, debug), mBunker{bunker} {
+BunkerView::BunkerView(const shared_ptr<Bunker>& bunker):
+	ShapeView(bunker), mBunker{bunker} {
 	std::string texturePath;
 
 	// TODO Replace Bunker subclasses with the identifying integer parameter n

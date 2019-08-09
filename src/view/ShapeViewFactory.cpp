@@ -26,11 +26,11 @@ namespace gvt {
 	ShapeView* ShapeViewFactory::makeView (std::shared_ptr<Shape> shape) const {
 		if (std::dynamic_pointer_cast<Spaceship>(shape)) {
 			return new SpaceshipView(
-					std::dynamic_pointer_cast<Spaceship>(shape), mDebug
+					std::dynamic_pointer_cast<Spaceship>(shape)
 			);
 		} else if (std::dynamic_pointer_cast<Bunker>(shape)) {
 			return new BunkerView(
-					std::dynamic_pointer_cast<Bunker>(shape), mDebug
+					std::dynamic_pointer_cast<Bunker>(shape)
 			);
 		} else {
 			throw std::domain_error("Unrecognized type of shape");

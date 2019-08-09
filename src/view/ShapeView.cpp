@@ -61,8 +61,8 @@ void ShapeView::updateDebugBounds() {
     }
 }
 
-ShapeView::ShapeView(shared_ptr<Shape> const &shape, bool debug):
-	Debuggable(debug), mShape{shape} {
+ShapeView::ShapeView(shared_ptr<Shape> const &shape):
+	Debuggable(false), mShape{shape} {
 
 	updateTransform();
 	updateDebugBounds();

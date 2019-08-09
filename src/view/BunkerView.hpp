@@ -48,9 +48,7 @@ namespace gvt {
 			static const std::string BUNKER2D_GRAPHICS;
 			static const std::string BUNKER3D_GRAPHICS;
 
-			explicit BunkerView(
-				const shared_ptr<Bunker>& bunker, bool debug=false
-			);
+			explicit BunkerView(const shared_ptr<Bunker> &bunker);
 
 			void draw(RenderTarget &target, RenderStates state) const override;
 	};

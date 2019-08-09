@@ -56,9 +56,7 @@ namespace gvt {
 			static const std::string SPACESHIP_TEXTURE;
 			static const std::string ACCEL_SPACESHIP_TEXTURE;
 
-			explicit SpaceshipView(
-				const shared_ptr<Spaceship>& spaceship, bool debug=false
-			);
+			explicit SpaceshipView(const shared_ptr<Spaceship>& spaceship);
 
 			void draw(RenderTarget &target, RenderStates state) const override;
 	};
