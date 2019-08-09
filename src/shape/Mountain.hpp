@@ -38,7 +38,6 @@ namespace gvt {
 			inline Vectord top () const;
 			inline Vectord right () const;
 
-			Vectord center() const override;
 			/**
 			 * @return The base of the triangle this mountain is associated to.
 			 */

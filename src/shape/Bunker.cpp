@@ -71,7 +71,7 @@ gvt::BoundingPolygon Bunker::collisionPolygon() const {
     BoundingRectangle r = {
 		mPosition, mPosition + Vectord{WIDTH, HEIGHT}
     };
-    r.rotate(mRotation, center());
+    r.rotate(mRotation, r.center());
 
     return r;
 }

@@ -101,8 +101,8 @@ namespace gvt {
 			 */
 			std::vector<Vertex> vertices () const;
 			/**
-			 * @return The mean point of this @c BoundingPolygon, considered as
-			 * its center.
+			 * @return The mean point of this @c BoundingPolygon in
+			 * <b>absolute</b> values.
 			 */
 			Vertex center () const;
 

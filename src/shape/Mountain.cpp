@@ -31,10 +31,6 @@ namespace gvt {
 		mRight = right;
 	}
 
-	Vectord Mountain::center() const {
-        return (mLeft + mTop + mRight) / 3.0;
-	}
-
 	double Mountain::width() const {
 		return mLeft.distance(mRight);
 	}
@@ -47,7 +43,7 @@ namespace gvt {
 
 	BoundingPolygon Mountain::collisionPolygon() const {
 		BoundingTriangle t{mLeft, mTop, mRight};
-		t.rotate(mRotation, center());
+		t.rotate(mRotation, t.center());
 
 		return t;
 	}

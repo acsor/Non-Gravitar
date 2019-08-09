@@ -65,7 +65,8 @@ namespace gvt {
 			 */
 			void position(Vectord position);
 			/**
-			 * @return The center point of this @c Shape.
+			 * @return The center point of this @c Shape <b>relative</b> to
+			 * this object position.
 			 */
 			virtual inline Vectord center() const;
 			/**

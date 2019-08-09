@@ -24,6 +24,7 @@
 #include "catch.hpp"
 #include "utils/Vector.hpp"
 
+using Vectord = gvt::Vectord;
 template <typename T> using Vector = gvt::Vector<T>;
 
 
@@ -31,20 +32,20 @@ TEST_CASE("gvt::Vector::Vector(float)", "[Vector]") {
 	double degrees;
 
 	for (unsigned i = 0; i < 360; i++) {
-		degrees = Vector<float>(i).norm();
+		degrees = Vectord(i).norm();
 
 		REQUIRE(abs(degrees - 1.0) <= 0.01);
 	}
 }
 
 TEST_CASE("gvt::Vector::normalize()", "[Vector]") {
-	Vector<float> v, u;
+	Vectord v, u;
 	std::set<std::pair<float, float>> inputs = {
 		{4, 5}, {10, 9}, {1, 1}, {0, 1}, {-10, 4}, {4, -10}
 	};
 
 	for (auto i = inputs.cbegin(); i != inputs.cend(); i++) {
-		v = Vector<float>(i->first, i->second);
+		v = Vectord(i->first, i->second);
 		u = v;
 		u.normalize();
 
@@ -53,7 +54,7 @@ TEST_CASE("gvt::Vector::normalize()", "[Vector]") {
 }
 
 TEST_CASE("gvt::Vector::angle()", "[Vector]") {
-	Vector<float> const inputs[] = {
+	Vectord const inputs[] = {
 			{0, 0},
 			// First quarter
 			{sqrtf(3) / 2.0, 0.5}, {sqrtf(2) / 2.0, sqrtf(2) / 2.0},
@@ -92,14 +93,14 @@ TEST_CASE("gvt::Vector::angle()", "[Vector]") {
 }
 
 TEST_CASE("gvt::Vector::rotate()", "[Vector]") {
-	Vector<float> v{1, 0}, temp;
+	Vectord v{1, 0}, temp;
 	float radians[] = {
 		// Main coordinates
 		0, M_PI / 2, M_PI, 1.5 * M_PI, 2 * M_PI,
 		// Handpicked coordinates to ensure correctness
 		M_PI / 6, M_PI / 4, M_PI / 3
 	};
-	Vector<float> expected[] = {
+	Vectord expected[] = {
 		v, {0, 1}, {-1, 0}, {0, -1}, v,
 		{sqrt(3) / 2.0, 0.5}, {sqrt(2) / 2.0, sqrt(2) / 2.0},
 		{0.5, sqrt(3) / 2.0}
@@ -117,6 +118,10 @@ TEST_CASE("gvt::Vector::rotate()", "[Vector]") {
 		REQUIRE(abs(temp.x - expected[i].x) <= 0.0001);
 		REQUIRE(abs(temp.y - expected[i].y) <= 0.0001);
 	}
+}
+
+TEST_CASE("gvt::Vector::distance()", "[Vector]") {
+	REQUIRE(Vectord{4, 0}.distance(Vectord{10, 0}) == 6);
 }
 
 TEST_CASE("gvt::Vector::operator==", "[Vector]") {

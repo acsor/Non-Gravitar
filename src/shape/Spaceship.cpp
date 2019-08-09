@@ -19,7 +19,7 @@
 // LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
-#include <bounding-polygon/BoundingTriangle.hpp>
+#include "bounding-polygon/BoundingTriangle.hpp"
 #include "Spaceship.hpp"
 
 using Spaceship = gvt::Spaceship;
@@ -37,9 +37,7 @@ Spaceship::Spaceship(Vectord position, unsigned fuel): Shape::Shape(
 gvt::BoundingPolygon Spaceship::collisionPolygon() const {
 	BoundingTriangle t = {
 		mPosition + sCollisionOffset,
-		mPosition + sCollisionOffset + Vectord{
-			height(), static_cast<float>(width() / 2.0)
-		},
+		mPosition + sCollisionOffset + Vectord{HEIGHT, WIDTH / 2.0},
 		mPosition + sCollisionOffset + Vectord{0, width()}
 	};
 	

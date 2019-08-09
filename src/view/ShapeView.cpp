@@ -30,14 +30,14 @@ using ShapeView = gvt::ShapeView;
 
 void ShapeView::updateTransforms() {
 	if (auto shape = mShape.lock()) {
+		auto pos = shape->position();
+		auto center = shape->center();
+
 		mTranslation = sf::Transform::Identity;
 		mRotation = sf::Transform::Identity;
 
-		mTranslation.translate(shape->position().x, shape->position().y);
-		mRotation.rotate(
-			gvt::rad2deg(shape->rotation()), shape->width() / 2.0,
-			shape->height() / 2.0
-		);
+		mTranslation.translate(pos.x, pos.y);
+		mRotation.rotate(gvt::rad2deg(shape->rotation()), center.x, center.y);
 	}
 }
 

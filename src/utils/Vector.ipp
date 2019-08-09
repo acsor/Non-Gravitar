@@ -71,7 +71,7 @@ namespace gvt {
 
 	template<typename T>
 	double Vector<T>::distance(Vector<T> const &other) const {
-		return sqrt(pow(other.x - x, 2) + pow(other.y - x, 2));
+		return sqrt(pow(other.x - x, 2) + pow(other.y - y, 2));
 	}
 
 	template<typename T>
