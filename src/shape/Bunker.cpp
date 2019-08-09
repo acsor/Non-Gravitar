@@ -34,7 +34,7 @@ using Shape = gvt::Shape;
 
 
 Bunker::Bunker(Vectord position, size_t directions):
-		Shape(gvt::Vectord()), mPaths{directions} {
+		Shape(position), mPaths{directions} {
 	std::uniform_real_distribution<double> angles{
 		mRotation - M_PI / 2.0,
 		mRotation + M_PI / 2.0

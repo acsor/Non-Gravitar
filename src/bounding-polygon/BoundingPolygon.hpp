@@ -100,6 +100,11 @@ namespace gvt {
 			 * BoundingPolygon.
 			 */
 			std::vector<Vertex> vertices () const;
+			/**
+			 * @return The mean point of this @c BoundingPolygon, considered as
+			 * its center.
+			 */
+			Vertex center () const;
 
 			virtual bool operator== (BoundingPolygon const &o) const;
 			virtual bool operator!= (BoundingPolygon const &o) const;

@@ -70,7 +70,6 @@ namespace gvt {
 			 * fuel in it, @c false otherwise.
 			 */
 			bool charged() const;
-			Vectord center() const;
 
 			void accept(ShapeVisitor &visitor) override;
 

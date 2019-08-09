@@ -67,7 +67,7 @@ namespace gvt {
 			/**
 			 * @return The center point of this @c Shape.
 			 */
-			inline Vectord center() const;
+			virtual inline Vectord center() const;
 			/**
 			 * Sets the velocity of this @c Shape. Note that the unit measure
 			 * utilized is point/sec.

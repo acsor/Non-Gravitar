@@ -28,25 +28,43 @@ using Shape = gvt::Shape;
 using ShapeView = gvt::ShapeView;
 
 
+void ShapeView::updateTransform() {
+	if (auto shape = mShape.lock()) {
+		mTransform = sf::Transform::Identity;
+		mTransform
+			.translate(shape->position().x, shape->position().y)
+			.rotate(
+				gvt::rad2deg(shape->rotation()),
+				shape->width() / 2.0, shape->height() / 2.0
+			);
+	}
+}
+
 void ShapeView::updateDebugBounds() {
-    if (auto shape = mShape.lock()) {
+	auto shape = mShape.lock();
+
+    if (mDebug && shape != nullptr) {
     	// Reallocating mBounds each time is not efficient, but this computation
     	// is only performed when mDebug == true, so this is not a real concern
 		vector<BoundingPolygon::Vertex>
 		        vertices = shape->collisionPolygon().vertices();
-		mBounds = sf::VertexArray(sf::LineStrip, vertices.size());
+		mBounds = sf::VertexArray(sf::LineStrip, vertices.size() + 1);
+		size_t i = 0;
 
-        for (size_t i = 0; i < vertices.size(); i++) {
+        for (i = 0; i < vertices.size(); i++) {
 			mBounds[i] = sf::Vector2f(vertices[i].x, vertices[i].y);
 			mBounds[i].color = sf::Color::Green;
 		}
-    } else {
-    	mBounds.clear();
+
+		mBounds[i] = sf::Vector2f(vertices[0].x, vertices[0].y);
+		mBounds[i].color = sf::Color::Green;
     }
 }
 
-ShapeView::ShapeView(shared_ptr<Shape> shape, bool debug):
+ShapeView::ShapeView(shared_ptr<Shape> const &shape, bool debug):
 	Debuggable(debug), mShape{shape} {
+
+	updateTransform();
 	updateDebugBounds();
 
 	shape->addHandler(*this);
@@ -57,28 +75,38 @@ ShapeView::~ShapeView() {
 		p->removeHandler(*this);
 }
 
+void ShapeView::debug(bool debug) {
+	Debuggable::debug(debug);
+	updateDebugBounds();
+}
+
 void ShapeView::draw(RenderTarget &target, RenderStates s) const {
 	if (mDebug && !mShape.expired())
 		target.draw(mBounds);
 }
 
 void ShapeView::handle(Event *e) {
-	Rectangle box{{0, 0}, {0, 0}};
 	auto event = dynamic_cast<ShapeEvent*>(e);
 
-	if (event) {
-		if (auto shape = mShape.lock()) {
-			if (
-					mDebug &&
-					(event->type == ShapeEvent::Type::moved ||
-					event->type == ShapeEvent::Type::rotated)
-			) {
+	// Ugly if-statement, whose only purpose is to decrease the indent. level
+	// of the switch-statement
+	if (!event)
+		return;
+
+	switch (event->type) {
+		case (ShapeEvent::Type::moved):
+		case (ShapeEvent::Type::rotated):
+			if (!mShape.expired()) {
+				updateTransform();
 				updateDebugBounds();
 			}
-		}
-		if (event->type == ShapeEvent::Type::destroyed) {
+			break;
+		case (ShapeEvent::Type::destroyed):
 			mShape.reset();
+			mBounds.clear();
 			event->shape->removeHandler(*this);
-		}
+			break;
+		default:
+			break;
 	}
 }

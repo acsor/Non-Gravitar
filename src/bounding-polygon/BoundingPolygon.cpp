@@ -105,6 +105,17 @@ namespace gvt {
 		return mVertices;
 	}
 
+	BoundingPolygon::Vertex BoundingPolygon::center () const {
+		Vertex center = mVertices[0];
+
+		for (size_t i = 1; i < mVertices.size(); i++)
+            center += mVertices[i];
+
+		center = center / static_cast<float_type>(mVertices.size());
+
+		return center;
+	}
+
 	bool BoundingPolygon::operator== (BoundingPolygon const &o) const {
 		return mVertices == o.mVertices;
 	}

@@ -31,7 +31,7 @@ const std::string SpaceshipView::ACCEL_SPACESHIP_TEXTURE =
 	"graphics/spaceship-accelerating.png";
 
 
-SpaceshipView::SpaceshipView(shared_ptr<Spaceship> spaceship, bool debug):
+SpaceshipView::SpaceshipView(shared_ptr<Spaceship> const &spaceship, bool debug):
 	ShapeView(spaceship, debug), mSpaceship{spaceship} {
 	if (
 			!mTexture.loadFromFile(gvt::staticsGet(SPACESHIP_TEXTURE)) ||
@@ -46,10 +46,6 @@ SpaceshipView::SpaceshipView(shared_ptr<Spaceship> spaceship, bool debug):
 
 	mTexture.setSmooth(true);
 	mAccelTexture.setSmooth(true);
-
-	mSprite.setPosition(spaceship->position().x, spaceship->position().y);
-	mSprite.setOrigin(spaceship->width() / 2.0, spaceship->height() / 2.0);
-	mSprite.setRotation(gvt::rad2deg(spaceship->rotation()));
 	mSprite.setTexture(mTexture);
 }
 
@@ -58,12 +54,12 @@ void SpaceshipView::draw(RenderTarget &target, RenderStates state) const {
 
 	if (mAccel) {
 		mSprite.setTexture(mAccelTexture);
-		target.draw(mSprite);
+		target.draw(mSprite, mTransform);
 		mSprite.setTexture(mTexture);
 
 		mAccel = false;
 	} else {
-		target.draw(mSprite);
+		target.draw(mSprite, mTransform);
 	}
 }
 
@@ -71,16 +67,11 @@ void SpaceshipView::handle(Event *e) {
 	ShapeView::handle(e);
 
 	auto event = dynamic_cast<ShapeEvent*>(e);
-	auto p = mSpaceship.lock();
+	auto shape = mSpaceship.lock();
 
 	if (event) {
-		if (p) {
-			if (event->type == ShapeEvent::Type::moved) {
-				mSprite.setPosition(p->position().x, p->position().y);
-				mAccel = true;
-			} else if (event->type == ShapeEvent::Type::rotated) {
-				mSprite.setRotation(gvt::rad2deg(p->rotation()));
-			}
+		if (shape && event->type == ShapeEvent::Type::moved) {
+			mAccel = true;
 		} else if (event->type == ShapeEvent::Type::destroyed) {
 			mSprite = sf::Sprite();
 		}

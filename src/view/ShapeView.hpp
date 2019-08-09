@@ -39,13 +39,17 @@ namespace gvt {
 		private:
 			sf::VertexArray mBounds;
 
+			void updateTransform();
 			void updateDebugBounds();
 		protected:
+			sf::Transform mTransform;
 			weak_ptr<Shape> mShape;
 
-			ShapeView(shared_ptr<Shape> shape, bool debug=false);
+			ShapeView(const shared_ptr<Shape>& shape, bool debug=false);
 		public:
 			virtual ~ShapeView();
+
+			void debug(bool debug) override;
 
 			void draw(RenderTarget &target, RenderStates s) const override;
 			void handle(Event *e) override;

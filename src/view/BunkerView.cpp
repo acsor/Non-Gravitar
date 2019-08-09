@@ -20,7 +20,7 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 #include <typeinfo>
-#include "../shape/Shape.hpp"
+#include "shape/Shape.hpp"
 #include "utils/Utils.hpp"
 #include "BunkerView.hpp"
 
@@ -31,10 +31,11 @@ const std::string BunkerView::BUNKER2D_GRAPHICS = "graphics/bunker-2.png";
 const std::string BunkerView::BUNKER3D_GRAPHICS = "graphics/bunker-3.png";
 
 
-BunkerView::BunkerView(shared_ptr<Bunker> bunker, bool debug):
+BunkerView::BunkerView(const shared_ptr<Bunker>& bunker, bool debug):
 	ShapeView(bunker, debug), mBunker{bunker} {
 	std::string texturePath;
 
+	// TODO Replace Bunker subclasses with the identifying integer parameter n
 	if (typeid(*bunker) == typeid(gvt::Bunker2D))
 		texturePath = gvt::staticsGet(BUNKER2D_GRAPHICS);
 	else if (typeid(*bunker) == typeid(gvt::Bunker3D))
@@ -45,30 +46,22 @@ BunkerView::BunkerView(shared_ptr<Bunker> bunker, bool debug):
 	if (!mTexture.loadFromFile(texturePath))
 		throw std::runtime_error("Could not load Bunker texture from disk");
 
-	mSprite.setPosition(bunker->position().x, bunker->position().y);
-	// mSprite.setOrigin(bunker->originX(), bunker->originY());
-	mSprite.setRotation(bunker->rotation());
 	mSprite.setTexture(mTexture);
 }
 
 void BunkerView::draw(RenderTarget &target, RenderStates state) const {
-	ShapeView::draw(target, state);
+	target.draw(mSprite, mTransform);
 
-	target.draw(mSprite);
+	ShapeView::draw(target, state);
 }
 
 void BunkerView::handle(Event *e) {
-	ShapeView::handle(e);
 	auto event = dynamic_cast<ShapeEvent*>(e);
 
+	ShapeView::handle(e);
+
 	if (event) {
-		if (auto p = mBunker.lock()) {
-			if (event->type == ShapeEvent::Type::moved) {
-				mSprite.setPosition(p->position().x, p->position().y);
-			} else if (event->type == ShapeEvent::Type::rotated) {
-				mSprite.setRotation(gvt::rad2deg(p->rotation()));
-			}
-		} else if (event->type == ShapeEvent::Type::destroyed) {
+		if (event->type == ShapeEvent::Type::destroyed) {
 			mSprite = sf::Sprite();
 		}
 	}

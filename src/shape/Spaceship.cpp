@@ -65,10 +65,6 @@ bool Spaceship::charged() const {
 	return mFuel > 0;
 }
 
-gvt::Vectord Spaceship::center() const {
-	return (mPosition + Vectord{WIDTH, HEIGHT}) / 2.0;
-}
-
 void gvt::Spaceship::accept(gvt::ShapeVisitor &visitor) {
 	visitor.visitSpaceship(*this);
 }

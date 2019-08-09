@@ -42,8 +42,8 @@ ShapeGroupView::~ShapeGroupView() {
 void ShapeGroupView::debug(bool state) {
 	Debuggable::debug(state);
 
-	for (auto i = mViews.begin(); i != mViews.end(); i++) {
-		i->second->debug(state);
+	for (auto &mView : mViews) {
+		mView.second->debug(state);
 	}
 }
 
