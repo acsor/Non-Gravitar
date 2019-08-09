@@ -28,15 +28,16 @@ using Shape = gvt::Shape;
 using ShapeView = gvt::ShapeView;
 
 
-void ShapeView::updateTransform() {
+void ShapeView::updateTransforms() {
 	if (auto shape = mShape.lock()) {
-		mTransform = sf::Transform::Identity;
-		mTransform
-			.translate(shape->position().x, shape->position().y)
-			.rotate(
-				gvt::rad2deg(shape->rotation()),
-				shape->width() / 2.0, shape->height() / 2.0
-			);
+		mTranslation = sf::Transform::Identity;
+		mRotation = sf::Transform::Identity;
+
+		mTranslation.translate(shape->position().x, shape->position().y);
+		mRotation.rotate(
+			gvt::rad2deg(shape->rotation()), shape->width() / 2.0,
+			shape->height() / 2.0
+		);
 	}
 }
 
@@ -64,7 +65,7 @@ void ShapeView::updateDebugBounds() {
 ShapeView::ShapeView(shared_ptr<Shape> const &shape):
 	Debuggable(false), mShape{shape} {
 
-	updateTransform();
+	updateTransforms();
 	updateDebugBounds();
 
 	shape->addHandler(*this);
@@ -72,14 +73,14 @@ ShapeView::ShapeView(shared_ptr<Shape> const &shape):
 
 void ShapeView::onMoved () {
 	if (!mShape.expired()) {
-		updateTransform();
+		updateTransforms();
 		updateDebugBounds();
 	}
 }
 
 void ShapeView::onRotated () {
 	if (!mShape.expired()) {
-		updateTransform();
+		updateTransforms();
 		updateDebugBounds();
 	}
 }
@@ -106,24 +107,21 @@ void ShapeView::draw(RenderTarget &target, RenderStates s) const {
 void ShapeView::handle(Event *e) {
 	auto event = dynamic_cast<ShapeEvent*>(e);
 
-	// Ugly if-statement, whose only purpose is to decrease the indent. level
-	// of the switch-statement
-	if (!event)
-		return;
-
-	switch (event->type) {
-		case (ShapeEvent::Type::moved):
-			onMoved();
-			break;
-		case (ShapeEvent::Type::rotated):
-			onRotated();
-			break;
-		case (ShapeEvent::Type::destroyed):
-			onDestroyed();
-			mShape.reset();
-			event->shape->removeHandler(*this);
-			break;
-		default:
-			break;
+	if (event) {
+		switch (event->type) {
+			case (ShapeEvent::Type::moved):
+				onMoved();
+				break;
+			case (ShapeEvent::Type::rotated):
+				onRotated();
+				break;
+			case (ShapeEvent::Type::destroyed):
+				onDestroyed();
+				mShape.reset();
+				event->shape->removeHandler(*this);
+				break;
+			default:
+				break;
+		}
 	}
 }

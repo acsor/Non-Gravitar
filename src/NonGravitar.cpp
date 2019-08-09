@@ -124,6 +124,7 @@ int main () {
 
 	shared_ptr<ShapeGroup> group{new gvt::DummyGroup()};
 	shared_ptr<Spaceship> ship{new Spaceship({22, 23}, 1000)};
+	shared_ptr<Bunker> bunker{new gvt::Bunker2D({700, 500})};
 	gvt::ShapeGroupView rootView(group);
 
 	gvt::EventDispatcher<sf::Event> loopDispatcher;
@@ -132,12 +133,15 @@ int main () {
 	w.setFramerateLimit(45);
 
 	group->insert(ship);
+	group->insert(bunker);
 	group->insert(shared_ptr<Bunker>(new gvt::Bunker2D({600, 500})));
 	group->insert(shared_ptr<Bunker>(new gvt::Bunker3D({500, 500})));
 
 	loopDispatcher.addHandler(new CloseWindowHandler(w));
 	loopDispatcher.addHandler(new MoveShipHandler(ship));
 	loopDispatcher.addHandler(new DebugToggleHandler(rootView));
+
+	bunker->rotate(M_PI / -2.0);
 
 	while (w.isOpen()) {
 		while (w.pollEvent(e))

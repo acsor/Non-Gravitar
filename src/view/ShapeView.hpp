@@ -39,10 +39,10 @@ namespace gvt {
 		private:
 			sf::VertexArray mBounds;
 
-			void updateTransform();
+			void updateTransforms();
 			void updateDebugBounds();
 		protected:
-			sf::Transform mTransform;
+			sf::Transform mTranslation, mRotation;
 			weak_ptr<Shape> mShape;
 
 			explicit ShapeView(const shared_ptr<Shape>& shape);

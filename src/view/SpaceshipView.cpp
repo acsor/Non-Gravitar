@@ -54,12 +54,12 @@ void SpaceshipView::draw(RenderTarget &target, RenderStates state) const {
 
 	if (mAccel) {
 		mSprite.setTexture(mAccelTexture);
-		target.draw(mSprite, mTransform);
+		target.draw(mSprite, mTranslation * mRotation);
 		mSprite.setTexture(mTexture);
 
 		mAccel = false;
 	} else {
-		target.draw(mSprite, mTransform);
+		target.draw(mSprite, mTranslation * mRotation);
 	}
 }
 
