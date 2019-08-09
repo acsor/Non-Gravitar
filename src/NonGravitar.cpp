@@ -25,6 +25,7 @@
 #include <SFML/Graphics.hpp>
 #include <SFML/Window.hpp>
 #include "shape/Spaceship.hpp"
+#include "shape/Mountain.hpp"
 #include "shape-group/ShapeGroup.hpp"
 #include "shape-group/DummyGroup.hpp"
 #include "shape/Bunker.hpp"
@@ -136,6 +137,9 @@ int main () {
 	group->insert(bunker);
 	group->insert(shared_ptr<Bunker>(new gvt::Bunker2D({600, 500})));
 	group->insert(shared_ptr<Bunker>(new gvt::Bunker3D({500, 500})));
+	group->insert(shared_ptr<gvt::Mountain>(new gvt::Mountain(
+			{700, 500}, {850, 300}, {1100, 500}
+	)));
 
 	loopDispatcher.addHandler(new CloseWindowHandler(w));
 	loopDispatcher.addHandler(new MoveShipHandler(ship));

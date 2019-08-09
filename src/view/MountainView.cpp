@@ -19,56 +19,49 @@
 // LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
-#include <cmath>
+//
+#include "MountainView.hpp"
 
 
 namespace gvt {
-	ShapeEvent::ShapeEvent():
-			ShapeEvent::ShapeEvent(ShapeEvent::Type::unspecified, nullptr) {
+	// TODO Improve color
+	const sf::Color MountainView::sColor = sf::Color::Yellow;
+
+	void MountainView::updatePosition() {
+		std::shared_ptr<Mountain> shape = std::dynamic_pointer_cast<Mountain>(
+			mShape.lock()
+		);
+
+		if (shape) {
+			mVertices[0] = {
+					sf::Vector2f(shape->left().x, shape->left().y), sColor
+			};
+			mVertices[1] = {
+					sf::Vector2f(shape->top().x, shape->top().y), sColor
+			};
+			mVertices[2] = {
+					sf::Vector2f(shape->right().x, shape->right().y), sColor
+			};
+			mVertices[3] = {
+					sf::Vector2f(shape->left().x, shape->left().y), sColor
+			};
+		}
 	}
 
-	ShapeEvent::ShapeEvent(ShapeEvent::Type type, Shape *shape) {
-		this->type = type;
-		this->shape = shape;
+	MountainView::MountainView(shared_ptr<Mountain> const &m): ShapeView(m) {
+        mVertices = sf::VertexArray(sf::LineStrip, 4);
+
+		updatePosition();
 	}
 
-	Vectord Shape::position() const {
-		return mPosition;
+	void MountainView::onMoved() {
+		updatePosition();
 	}
 
-	Vectord Shape::center() const {
-		return mPosition + Vectord{width() / 2.0, height() / 2.0};
-	}
+	void MountainView::draw(RenderTarget &target, RenderStates state) const {
+		ShapeView::draw(target, state);
 
-	Vectord Shape::velocity() const {
-		return mVelocity;
-	}
-
-	double Shape::speed() const {
-		return mVelocity.norm();
-	}
-
-	void Shape::acceleration(const Vectord &a) {
-		mAccel = a;
-	}
-
-	Vectord Shape::acceleration() const {
-		return mAccel;
-	}
-
-	double Shape::rotation() const {
-		return mRotation;
-	}
-
-	void Shape::rotate(double r) {
-		rotation(mRotation + r);
-	}
-
-	bool Shape::destroyed() const {
-		return mDestroyed;
-	}
-
-	void Shape::destroyed(bool state) {
-		mDestroyed = state;
+		if (!mShape.expired())
+            target.draw(mVertices, mRotation);
 	}
 }

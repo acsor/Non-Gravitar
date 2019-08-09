@@ -69,20 +69,24 @@ target_link_libraries(Mountain Shape)
 add_library(Utils "${DIR_UTILS}/Utils.cpp")
 
 
+# Shape views section
 add_library(ShapeView "${DIR_VIEWS}/ShapeView.cpp")
 target_link_libraries(ShapeView Shape)
 
-add_library(ShapeViewFactory "${DIR_VIEWS}/ShapeViewFactory.cpp")
-target_link_libraries(ShapeViewFactory SpaceshipView BunkerView)
+add_library(BunkerView "${DIR_VIEWS}/BunkerView.cpp")
+target_link_libraries(BunkerView Bunker ShapeView Utils)
+
+add_library(MountainView "${DIR_VIEWS}/MountainView.cpp")
+target_link_libraries(MountainView Mountain ShapeView Utils)
 
 add_library(ShapeGroupView "${DIR_VIEWS}/ShapeGroupView.cpp")
 target_link_libraries(ShapeGroupView ShapeGroup ShapeViewFactory)
 
+add_library(ShapeViewFactory "${DIR_VIEWS}/ShapeViewFactory.cpp")
+target_link_libraries(ShapeViewFactory SpaceshipView BunkerView MountainView)
+
 add_library(SpaceshipView "${DIR_VIEWS}/SpaceshipView.cpp")
 target_link_libraries(SpaceshipView Spaceship ShapeView Utils)
-
-add_library(BunkerView "${DIR_VIEWS}/BunkerView.cpp")
-target_link_libraries(BunkerView Bunker ShapeView Utils)
 
 
 add_executable(SFMLCollision "${DIR_SAMPLES}/SFMLCollision.cpp")

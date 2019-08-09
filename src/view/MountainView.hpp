@@ -19,56 +19,30 @@
 // LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
-#include <cmath>
+#ifndef NON_GRAVITAR_MOUNTAIN_VIEW_HPP
+#define NON_GRAVITAR_MOUNTAIN_VIEW_HPP
+
+#include <SFML/Graphics.hpp>
+#include "shape/Mountain.hpp"
+#include "ShapeView.hpp"
 
 
 namespace gvt {
-	ShapeEvent::ShapeEvent():
-			ShapeEvent::ShapeEvent(ShapeEvent::Type::unspecified, nullptr) {
-	}
+	class MountainView: public ShapeView {
+		private:
+			sf::VertexArray mVertices;
 
-	ShapeEvent::ShapeEvent(ShapeEvent::Type type, Shape *shape) {
-		this->type = type;
-		this->shape = shape;
-	}
+			static const sf::Color sColor;
 
-	Vectord Shape::position() const {
-		return mPosition;
-	}
+			void updatePosition();
+		protected:
+			void onMoved () override;
+		public:
+			explicit MountainView(shared_ptr<Mountain> const &m);
 
-	Vectord Shape::center() const {
-		return mPosition + Vectord{width() / 2.0, height() / 2.0};
-	}
-
-	Vectord Shape::velocity() const {
-		return mVelocity;
-	}
-
-	double Shape::speed() const {
-		return mVelocity.norm();
-	}
-
-	void Shape::acceleration(const Vectord &a) {
-		mAccel = a;
-	}
-
-	Vectord Shape::acceleration() const {
-		return mAccel;
-	}
-
-	double Shape::rotation() const {
-		return mRotation;
-	}
-
-	void Shape::rotate(double r) {
-		rotation(mRotation + r);
-	}
-
-	bool Shape::destroyed() const {
-		return mDestroyed;
-	}
-
-	void Shape::destroyed(bool state) {
-		mDestroyed = state;
-	}
+			void draw(RenderTarget &target, RenderStates state) const override;
+	};
 }
+
+
+#endif
