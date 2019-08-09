@@ -34,7 +34,7 @@ namespace gvt {
 
 	class BoundingPolygon {
 		public:
-			using float_type = float;
+			using float_type = double;
 			using Vertex = Vector<float_type>;
 		protected:
 			/**
@@ -68,7 +68,7 @@ namespace gvt {
 			 */
 			void shift(Vector<float_type> translation);
 			/**
-			 * @brief Rotates the polygon by @c rad radiants around @c center.
+			 * @brief Rotates the polygon by @c rad radians around @c center.
 			 */
 			void rotate(float_type rad, Vertex center);
 			/**

@@ -47,7 +47,7 @@ using Bunker = gvt::Bunker;
 using BunkerView = gvt::BunkerView;
 
 
-#define STEP_SIZE 5
+#define STEP_SIZE 5.0
 #define ANGLE_SIZE (10 * M_PI / 180.0)
 
 
@@ -80,7 +80,7 @@ class MoveShipHandler: public gvt::EventHandler<sf::Event> {
 							break;
 						case (Keyboard::Key::W):
 							mShip->move(
-									gvt::Vectorf(mShip->rotation()) * STEP_SIZE
+								gvt::Vectord(mShip->rotation()) * STEP_SIZE
 							);
 							break;
 						case (Keyboard::Key::D):

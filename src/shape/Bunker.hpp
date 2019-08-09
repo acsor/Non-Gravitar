@@ -34,10 +34,10 @@ template<typename T> using vector = std::vector<T>;
 namespace gvt {
 	class Bunker: public Shape {
 		protected:
-			vector<Vectorf> mPaths;
+			vector<Vectord> mPaths;
 			unsigned mCurr{0};
 
-			Bunker(Vectorf position, size_t directions);
+			Bunker(Vectord position, size_t directions);
 
 			// Width and height measures of the collision boxes
 			static unsigned const constexpr COLLIDING_WIDTH = 29;
@@ -46,8 +46,8 @@ namespace gvt {
 			static unsigned const constexpr WIDTH = 45;
 			static unsigned const constexpr HEIGHT = 66;
 
-			inline float width() const override;
-			inline float height() const override;
+			inline double width() const override;
+			inline double height() const override;
 
 			/**
 			 * @return a @c RoundMissile instance shot by the calling @c Bunker
@@ -66,14 +66,14 @@ namespace gvt {
 	// to simplify the inheritance for Bunker2D and Bunker3D?
 	class Bunker2D: public Bunker {
 		public:
-			Bunker2D(Vectorf position);
+			Bunker2D(Vectord position);
 
 			bool operator==(Shape const &o) const override;
 	};
 
 	class Bunker3D: public Bunker {
 		public:
-			Bunker3D(Vectorf position);
+			Bunker3D(Vectord position);
 
 			bool operator==(Shape const &o) const override;
 	};
@@ -81,11 +81,11 @@ namespace gvt {
 
 
 // Implementation of Bunker inline functions
-float gvt::Bunker::width() const {
+double gvt::Bunker::width() const {
 	return WIDTH;
 }
 
-float gvt::Bunker::height() const {
+double gvt::Bunker::height() const {
 	return HEIGHT;
 }
 

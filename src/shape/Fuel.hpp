@@ -40,7 +40,7 @@ namespace gvt {
 			static unsigned const constexpr WIDTH = 41;
 			static unsigned const constexpr HEIGHT = 43;
 
-			Fuel(Vectorf position, unsigned fuel);
+			Fuel(Vectord position, unsigned fuel);
 			/**
 			 * @return The current fuel amount.
 			 */
@@ -51,8 +51,8 @@ namespace gvt {
 			void empty();
 			void accept(ShapeVisitor &visitor) override;
 			
-			float width() const override;
-			float height() const override;
+			double width() const override;
+			double height() const override;
 
 			BoundingPolygon collisionPolygon() const override;
 			bool operator== (Shape const &o) const override;

@@ -54,15 +54,15 @@ void Rectangle::accept (ShapeVisitor &visitor) {
 }
 
 gvt::BoundingPolygon Rectangle::collisionPolygon() const {
-    BoundingRectangle r {mPosition, mPosition + Vectorf{width(), height()}};
+    BoundingRectangle r {mPosition, mPosition + Vectord{width(), height()}};
 
     r.rotate(mRotation);
 
     return r;
 }
 
-Rectangle::Rectangle(Vectorf topLeft, Vectorf bottomRight):
-	Shape(topLeft), mEnd{bottomRight} {
+Rectangle::Rectangle(Vectord topLeft, Vectord bottomRight):
+		Shape(topLeft), mEnd{bottomRight} {
 }
 
 bool Rectangle::operator==(Shape const &o) const {
@@ -74,10 +74,10 @@ bool Rectangle::operator==(Shape const &o) const {
 	return false;
 }
 
-float Rectangle::width() const {
+double Rectangle::width() const {
 	return std::abs(mEnd.x - mPosition.x);
 }
 
-float Rectangle::height() const {
+double Rectangle::height() const {
 	return std::abs(mEnd.y - mPosition.y);
 }

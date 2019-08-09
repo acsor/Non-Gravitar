@@ -31,8 +31,8 @@ namespace gvt {
 		public:
 			static constexpr unsigned DEFAULT_RADIUS = 2;
 
-			explicit RoundMissile(Vectorf position);
-			explicit RoundMissile(Vectorf position, float radius);
+			explicit RoundMissile(Vectord position);
+			explicit RoundMissile(Vectord position, double radius);
 			
 			void accept (ShapeVisitor &visitor) override;
 

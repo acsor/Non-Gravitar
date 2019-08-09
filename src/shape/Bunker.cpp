@@ -33,16 +33,16 @@ using RoundMissile = gvt::RoundMissile;
 using Shape = gvt::Shape;
 
 
-Bunker::Bunker(Vectorf position, size_t directions):
-	Shape(position), mPaths{directions} {
-	std::uniform_real_distribution<float> angles{
-		static_cast<float>(mRotation - M_PI / 2.0),
-		static_cast<float>(mRotation + M_PI / 2.0)
+Bunker::Bunker(Vectord position, size_t directions):
+		Shape(gvt::Vectord()), mPaths{directions} {
+	std::uniform_real_distribution<double> angles{
+		mRotation - M_PI / 2.0,
+		mRotation + M_PI / 2.0
 	};
 	std::default_random_engine e(time(NULL));
 
 	while (directions > 0) {
-		mPaths[directions - 1] = Vectorf(angles(e));
+		mPaths[directions - 1] = Vectord(angles(e));
 
 		directions--;
 	}
@@ -53,7 +53,7 @@ RoundMissile Bunker::shoot() {
 	// rotated by default by 90. deg (the normal out of its ceiling has
 	// direction (1, 0))
 	RoundMissile m{
-		mPosition + Vectorf{height(), static_cast<float>(width() / 2.0)}
+		mPosition + Vectord{height(), width() / 2.0}
 	};
 
 	m.rotation(mRotation);
@@ -69,7 +69,7 @@ void Bunker::accept (ShapeVisitor &visitor) {
 
 gvt::BoundingPolygon Bunker::collisionPolygon() const {
     BoundingRectangle r = {
-		mPosition, mPosition + Vectorf{COLLIDING_WIDTH, COLLIDING_HEIGHT}
+		mPosition, mPosition + Vectord{COLLIDING_WIDTH, COLLIDING_HEIGHT}
     };
     r.rotate(mRotation);
 
@@ -86,7 +86,7 @@ bool Bunker::operator== (Shape const &o) const {
 }
 
 
-Bunker2D::Bunker2D(Vectorf position): Bunker(position, 2) {
+Bunker2D::Bunker2D(Vectord position): Bunker(position, 2) {
 }
 
 bool Bunker2D::operator== (Shape const &o) const {
@@ -99,7 +99,7 @@ bool Bunker2D::operator== (Shape const &o) const {
 }
 
 
-Bunker3D::Bunker3D(Vectorf position): Bunker(position, 3) {
+Bunker3D::Bunker3D(Vectord position): Bunker(position, 3) {
 }
 
 bool Bunker3D::operator== (Shape const &o) const {

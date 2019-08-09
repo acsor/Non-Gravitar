@@ -42,74 +42,70 @@ namespace gvt {
 		protected:
 			// mPosition encodes coordinates of the top-left corner, not of an
 			// arbitrary center
-            Vectorf mPosition, mVelocity, mAccel;
-			float mRotation{0};
+            Vectord mPosition, mVelocity, mAccel;
+			double mRotation{0};
 
 			bool mDestroyed{false};
 
 			Shape() = default;
-			explicit Shape(Vectorf position);
+			explicit Shape(Vectord position);
 		public:
 			using ostream = std::ostream;
 
 			virtual ~Shape();
 
-			inline virtual float width() const = 0;
-			inline virtual float height() const = 0;
+			virtual double width() const = 0;
+			virtual double height() const = 0;
 			/**
 			 * @return The position vector associated to this @c Shape.
 			 */
-			inline Vectorf position() const;
+			inline Vectord position() const;
 			/**
 			 * @param position Position vector to set for this @c Shape.
 			 */
-			void position(Vectorf position);
+			void position(Vectord position);
 			/**
 			 * @return The center point of this @c Shape.
 			 */
-			inline Vectorf center() const;
-			/**
-			 * @brief Move the current object along the given trajectory.
-			 * @param t Trajectory to follow
-			 */
+			inline Vectord center() const;
 			/**
 			 * Sets the velocity of this @c Shape. Note that the unit measure
 			 * utilized is point/sec.
 			 * @param t Velocity value to set to the current @c Shape instance.
 			 */
-			void velocity(Vectorf const &t);
+			void velocity(Vectord const &t);
 			/**
 			 * @return The velocity vector associated with the current
 			 * @c Shape.
 			 */
-			inline Vectorf velocity() const;
+			inline Vectord velocity() const;
 			/**
 			 * @return The current @c Shape speed, as a scalar value.
 			 */
-			inline float speed() const;
+			inline double speed() const;
 			/**
 			 * @param a Acceleration vector to set for this @c Shape.
 			 */
-			inline void acceleration(Vectorf const &a);
+			inline void acceleration(Vectord const &a);
 			/**
 			 * @return The acceleration vector associated to this @c Shape.
 			 */
-			inline Vectorf acceleration() const;
+			inline Vectord acceleration() const;
 
 			/**
 			 * @return The angle with respect to the object origin of the
 			 * current @c Shape instance, given in radians.
 			 */
-			inline float rotation() const;
+			inline double rotation() const;
 			/**
 			 * @param r The rotation angle to set for this object, in radians
 			 * @todo Test the implementation
 			 */
-			void rotation(float r);
+			void rotation(double r);
 			/**
 			 * @param r Amount of radians to add to the current rotation value
 			 */
-			inline void rotate(float r);
+			inline void rotate(double r);
 			/**
 			 * @return @c true if this @c Shape instance was marked as
 			 * destroyed, @c false otherwise.
@@ -139,7 +135,11 @@ namespace gvt {
 			 * @param time Velocity factor, in seconds.
 			 */
 			void animate(float time);
-			void move(Vectorf const &t);
+			/**
+			 * @brief Move the current object along the given trajectory.
+			 * @param t Trajectory to follow
+			 */
+			void move(Vectord const &t);
 
 			/**
 			 * Lets a @c ShapeVisitor perform its operation on the 

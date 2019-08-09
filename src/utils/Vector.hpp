@@ -48,11 +48,11 @@ namespace gvt {
 		 * module of the vector it represents has unitary length
 		 */
 		void normalize();
-		void rotate(float rad);
+		void rotate(double rad);
 		/**
 		 * Rotate the vector by @c rad radiants around 2D point @c center.
 		 */
-		void rotate(float rad, Vector center);
+		void rotate(double rad, Vector center);
 		/**
 		 * @return The norm, aka length, of the given vector
 		 */

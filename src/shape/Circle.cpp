@@ -29,14 +29,14 @@ using Shape = gvt::Shape;
 using Rectangle = gvt::Rectangle;
 
 
-Circle::Circle(Vectorf position, float radius):
-	Shape{position}, mRadius{radius} {
+Circle::Circle(Vectord position, double radius):
+		Shape{position}, mRadius{radius} {
 }
 
 bool Circle::clashes(Circle const &o) const {
 	// TODO Test
-	return (mPosition + Vectorf{mRadius, mRadius}).distance(
-			o.mPosition + Vectorf{o.mRadius, o.mRadius}
+	return (mPosition + Vectord{mRadius, mRadius}).distance(
+			o.mPosition + Vectord{o.mRadius, o.mRadius}
 	) <= mRadius + o.mRadius;
 }
 
@@ -46,7 +46,7 @@ void Circle::accept (ShapeVisitor &visitor) {
 
 gvt::BoundingPolygon Circle::collisionPolygon() const {
 	BoundingPolygon r = BoundingRectangle{
-		mPosition, mPosition + 2 * Vectorf{mRadius, mRadius}
+		mPosition, mPosition + 2 * Vectord{mRadius, mRadius}
 	};
 
 	r.rotate(mRotation);

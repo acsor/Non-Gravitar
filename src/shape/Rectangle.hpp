@@ -56,20 +56,20 @@ namespace gvt {
 		friend ostream& std::operator<< (ostream &out, Rectangle const &r);
 
 		private:
-			Vectorf mEnd{0, 0};
+			Vectord mEnd{0, 0};
     	public:
     		/**
     		 * @brief Constructs a @c Rectangle with width > 0 and height > 0.
     		 * @throw std::domain_error if width < 0 or height < 0.
     		 */
-			Rectangle(Vectorf topLeft, Vectorf bottomRight);
+			Rectangle(Vectord topLeft, Vectord bottomRight);
 
 			void accept (ShapeVisitor &visitor) override;
 			BoundingPolygon collisionPolygon() const override;
 			bool operator==(Shape const &o) const override;
 
-			float width() const override;
-			float height() const override;
+			double width() const override;
+			double height() const override;
     };
 }
 

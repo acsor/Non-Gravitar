@@ -27,11 +27,11 @@ using Shape = gvt::Shape;
 
 
 
-RoundMissile::RoundMissile(Vectorf position):
+RoundMissile::RoundMissile(Vectord position):
 	RoundMissile(position, RoundMissile::DEFAULT_RADIUS) {
 }
 
-RoundMissile::RoundMissile(Vectorf position, float radius):
+RoundMissile::RoundMissile(Vectord position, double radius):
 	Circle(position, radius) {
 }
 

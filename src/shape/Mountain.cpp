@@ -2,7 +2,7 @@
 
 
 gvt::Mountain::Mountain(Vectorf left, Vectorf top, Vectorf right):
-	Shape({left.x, top.y}) {
+		Shape(gvt::Vectord()) {
     mLeft = left;
 	mTop = top;
     mRight = right;

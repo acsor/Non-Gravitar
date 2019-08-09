@@ -26,7 +26,7 @@
 using namespace gvt;
 
 
-Fuel::Fuel(Vectorf position, unsigned fuel): Shape(position) {
+Fuel::Fuel(Vectord position, unsigned fuel): Shape(position) {
 	mFuel = fuel;
 }
 
@@ -42,17 +42,17 @@ void Fuel::accept(ShapeVisitor &visitor) {
 	visitor.visitFuel(*this);
 }
 
-float Fuel::width() const {
+double Fuel::width() const {
 	return Fuel::WIDTH;
 }
 
-float Fuel::height() const {
+double Fuel::height() const {
 	return Fuel::HEIGHT;
 }
 
 BoundingPolygon Fuel::collisionPolygon() const {
 	BoundingRectangle r = {
-		mPosition, mPosition + Vectorf{WIDTH, HEIGHT}
+		mPosition, mPosition + Vectord{WIDTH, HEIGHT}
 	};
 	r.rotate(mRotation);
 

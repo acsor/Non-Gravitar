@@ -26,7 +26,7 @@ using Shape = gvt::Shape;
 using ShapeEvent = gvt::ShapeEvent;
 
 
-Shape::Shape(Vectorf position): mPosition{position} {
+Shape::Shape(Vectord position) : mPosition{position} {
 }
 
 Shape::~Shape() {
@@ -35,7 +35,7 @@ Shape::~Shape() {
 	notify(&e);
 }
 
-void Shape::position(gvt::Vectorf position) {
+void Shape::position(Vectord position) {
 	ShapeEvent e{ShapeEvent::Type::moved, this};
 
 	mPosition = position;
@@ -43,10 +43,10 @@ void Shape::position(gvt::Vectorf position) {
 	notify(&e);
 }
 
-void Shape::move(Vectorf const &t) {
+void Shape::move(const Vectord &t) {
 	ShapeEvent e{ShapeEvent::Type::moved, this};
 
-	mPosition += Vectorf(t.x, t.y);
+	mPosition += Vectord(t.x, t.y);
 
 	notify(&e);
 }
@@ -58,7 +58,7 @@ void Shape::animate(float time) {
 	}
 }
 
-void Shape::rotation(float r) {
+void Shape::rotation(double r) {
 	ShapeEvent e {ShapeEvent::Type::rotated, this};
 
 	// TODO Shorten, if at all possible, this code that I have produced,
@@ -71,7 +71,7 @@ void Shape::rotation(float r) {
 	notify(&e);
 }
 
-void Shape::velocity(Vectorf const &t) {
+void Shape::velocity(const Vectord &t) {
 	mVelocity = t;
 }
 

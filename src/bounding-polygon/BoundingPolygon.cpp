@@ -62,12 +62,12 @@ namespace gvt {
 			v += translation;
 	}
 
-	void BoundingPolygon::rotate(float rad) {
+	void BoundingPolygon::rotate(float_type rad) {
 		for (Vector<float_type>& v: mVertices)
 			v.rotate(rad);
 	}
 
-	void BoundingPolygon::rotate(float rad, Vertex center) {
+	void BoundingPolygon::rotate(float_type rad, Vertex center) {
 		for (Vertex& v: mVertices)
 			v.rotate(rad, center);
 	}

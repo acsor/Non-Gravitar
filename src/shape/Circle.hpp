@@ -29,14 +29,14 @@
 namespace gvt {
 	class Circle: public Shape {
 		protected:
-			float mRadius;
+			double mRadius;
 		public:
-			Circle(Vectorf position, float radius);
+			Circle(Vectord position, double radius);
 
-			inline float width() const override;
-			inline float height() const override;
+			inline double width() const override;
+			inline double height() const override;
 
-			inline float area() const;
+			inline double area() const;
 			bool clashes(Circle const &o) const;
 
 			void accept (ShapeVisitor &visitor) override;
@@ -47,15 +47,15 @@ namespace gvt {
 
 
 namespace gvt {
-	float Circle::width() const {
+	double Circle::width() const {
         return 2 * mRadius;
 	}
 
-	float Circle::height() const {
+	double Circle::height() const {
 		return 2 * mRadius;
 	}
 
-	float Circle::area() const {
+	double Circle::area() const {
 		return M_PI * pow(mRadius, 2);
 	}
 }

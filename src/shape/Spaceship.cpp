@@ -26,23 +26,24 @@ using Spaceship = gvt::Spaceship;
 using Rectangle = gvt::Rectangle;
 
 
-gvt::Vectorf const Spaceship::sCollisionOffset = {3, 0};
+gvt::Vectord const Spaceship::sCollisionOffset = {3, 0};
 
 
-Spaceship::Spaceship(Vectorf position, unsigned fuel): Shape::Shape(position) {
+Spaceship::Spaceship(Vectord position, unsigned fuel): Shape::Shape(
+		gvt::Vectord()) {
 	mFuel = fuel;
 }
 
 gvt::BoundingPolygon Spaceship::collisionPolygon() const {
 	BoundingTriangle t = {
 		mPosition + sCollisionOffset,
-		mPosition + sCollisionOffset + Vectorf{
+		mPosition + sCollisionOffset + Vectord{
 			height(), static_cast<float>(width() / 2.0)
 		},
-		mPosition + sCollisionOffset + Vectorf{0, width()}
+		mPosition + sCollisionOffset + Vectord{0, width()}
 	};
 	
-	t.rotate(mRotation);
+	t.rotate(mRotation, t.center());
 
 	return t;
 }
@@ -62,6 +63,10 @@ void Spaceship::discharge(unsigned amount) {
 
 bool Spaceship::charged() const {
 	return mFuel > 0;
+}
+
+gvt::Vectord Spaceship::center() const {
+	return (mPosition + Vectord{WIDTH, HEIGHT}) / 2.0;
 }
 
 void gvt::Spaceship::accept(gvt::ShapeVisitor &visitor) {

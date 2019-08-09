@@ -36,7 +36,7 @@ namespace gvt {
 			unsigned mFuel;
 
 			// Offset for the Spaceship collision polygon
-			static Vectorf const sCollisionOffset;
+			static Vectord const sCollisionOffset;
 		public:
 			/** Width and height properties of any given spaceship. Note that
 			 * these measures depend on the texture data found in
@@ -48,7 +48,7 @@ namespace gvt {
 			static unsigned const constexpr WIDTH = 45;
 			static unsigned const constexpr HEIGHT = 46;
 
-			Spaceship(Vectorf position, unsigned fuel);
+			Spaceship(Vectord position, unsigned fuel);
 			unsigned fuel() const;
 			/**
 			 * @brief Recharges the current @c Spaceship instance by the fuel
@@ -70,11 +70,12 @@ namespace gvt {
 			 * fuel in it, @c false otherwise.
 			 */
 			bool charged() const;
+			Vectord center() const;
 
 			void accept(ShapeVisitor &visitor) override;
 
-			inline float width() const override;
-			inline float height() const override;
+			inline double width() const override;
+			inline double height() const override;
 
 			BoundingPolygon collisionPolygon() const override;
 			bool operator== (Shape const &o) const override;
@@ -82,11 +83,11 @@ namespace gvt {
 }
 
 
-float gvt::Spaceship::width() const {
+double gvt::Spaceship::width() const {
 	return WIDTH;
 }
 
-float gvt::Spaceship::height() const {
+double gvt::Spaceship::height() const {
 	return HEIGHT;
 }
 

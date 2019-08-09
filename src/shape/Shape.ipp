@@ -32,35 +32,35 @@ namespace gvt {
 		this->shape = shape;
 	}
 
-	gvt::Vectorf Shape::position() const {
+	Vectord Shape::position() const {
 		return mPosition;
 	}
 
-	gvt::Vectorf Shape::center() const {
-		return mPosition.midpoint(mPosition + Vectorf{width(), height()});
+	Vectord Shape::center() const {
+		return mPosition.midpoint(mPosition + Vectord{width(), height()});
 	}
 
-	gvt::Vectorf Shape::velocity() const {
+	Vectord Shape::velocity() const {
 		return mVelocity;
 	}
 
-	float Shape::speed() const {
+	double Shape::speed() const {
 		return mVelocity.norm();
 	}
 
-	void Shape::acceleration(Vectorf const &a) {
+	void Shape::acceleration(const Vectord &a) {
 		mAccel = a;
 	}
 
-	gvt::Vectorf Shape::acceleration() const {
+	Vectord Shape::acceleration() const {
 		return mAccel;
 	}
 
-	float Shape::rotation() const {
+	double Shape::rotation() const {
 		return mRotation;
 	}
 
-	void Shape::rotate(float r) {
+	void Shape::rotate(double r) {
 		rotation(mRotation + r);
 	}
 

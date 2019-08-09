@@ -38,7 +38,7 @@ namespace gvt {
 	}
 
 	template<typename T> void Vector<T>::normalize() {
-		float length = norm();
+		double length = norm();
 
 		if (length != 0) {
 			x /= length;
@@ -46,7 +46,7 @@ namespace gvt {
 		}
 	}
 
-	template<typename T> void Vector<T>::rotate(float rad) {
+	template<typename T> void Vector<T>::rotate(double rad) {
 		auto n = norm();
 		auto theta = angle();
 
@@ -54,7 +54,7 @@ namespace gvt {
 		y = n * sin(theta + rad);
 	}
 
-	template<typename T> void Vector<T>::rotate(float rad, Vector center) {
+	template<typename T> void Vector<T>::rotate(double rad, Vector center) {
 		// partial represents the `(v - c)' vector rotated by `rad' radians
 		// around the center
 		Vector<T> partial = (*this - center);
