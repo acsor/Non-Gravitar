@@ -49,7 +49,7 @@ void ShapeView::updateDebugBounds() {
     	// is only performed when mDebug == true, so this is not a real concern
 		vector<BoundingPolygon::Vertex>
 		        vertices = shape->collisionPolygon().vertices();
-		mBounds = sf::VertexArray(sf::LineStrip, vertices.size() + 1);
+		mBounds = sf::VertexArray(sf::Quads, vertices.size() + 1);
 		size_t i = 0;
 
         for (i = 0; i < vertices.size(); i++) {
@@ -66,7 +66,6 @@ ShapeView::ShapeView(shared_ptr<Shape> const &shape):
 	Debuggable(false), mShape{shape} {
 
 	updateTransforms();
-	updateDebugBounds();
 
 	shape->addHandler(*this);
 }

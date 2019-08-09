@@ -69,9 +69,9 @@ void Bunker::accept (ShapeVisitor &visitor) {
 
 gvt::BoundingPolygon Bunker::collisionPolygon() const {
     BoundingRectangle r = {
-		mPosition, mPosition + Vectord{COLLIDING_WIDTH, COLLIDING_HEIGHT}
+		mPosition, mPosition + Vectord{WIDTH, HEIGHT}
     };
-    r.rotate(mRotation);
+    r.rotate(mRotation, center());
 
     return r;
 }

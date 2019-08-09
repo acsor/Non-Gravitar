@@ -50,9 +50,9 @@ BunkerView::BunkerView(const shared_ptr<Bunker>& bunker):
 }
 
 void BunkerView::draw(RenderTarget &target, RenderStates state) const {
-	target.draw(mSprite, mTranslation * mRotation);
-
 	ShapeView::draw(target, state);
+
+	target.draw(mSprite, mTranslation * mRotation);
 }
 
 void BunkerView::onDestroyed () {
