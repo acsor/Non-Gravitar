@@ -63,17 +63,12 @@ void SpaceshipView::draw(RenderTarget &target, RenderStates state) const {
 	}
 }
 
-void SpaceshipView::handle(Event *e) {
-	ShapeView::handle(e);
+void SpaceshipView::onMoved () {
+	ShapeView::onMoved();
+	mAccel = true;
+}
 
-	auto event = dynamic_cast<ShapeEvent*>(e);
-	auto shape = mSpaceship.lock();
-
-	if (event) {
-		if (shape && event->type == ShapeEvent::Type::moved) {
-			mAccel = true;
-		} else if (event->type == ShapeEvent::Type::destroyed) {
-			mSprite = sf::Sprite();
-		}
-	}
+void SpaceshipView::onDestroyed () {
+	ShapeView::onDestroyed();
+	mSprite = sf::Sprite();
 }

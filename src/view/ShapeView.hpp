@@ -45,7 +45,11 @@ namespace gvt {
 			sf::Transform mTransform;
 			weak_ptr<Shape> mShape;
 
-			ShapeView(const shared_ptr<Shape>& shape, bool debug=false);
+			explicit ShapeView(const shared_ptr<Shape>& shape, bool debug=false);
+
+			virtual void onMoved();
+			virtual void onRotated();
+			virtual void onDestroyed();
 		public:
 			virtual ~ShapeView();
 

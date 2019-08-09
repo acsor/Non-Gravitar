@@ -55,14 +55,7 @@ void BunkerView::draw(RenderTarget &target, RenderStates state) const {
 	ShapeView::draw(target, state);
 }
 
-void BunkerView::handle(Event *e) {
-	auto event = dynamic_cast<ShapeEvent*>(e);
-
-	ShapeView::handle(e);
-
-	if (event) {
-		if (event->type == ShapeEvent::Type::destroyed) {
-			mSprite = sf::Sprite();
-		}
-	}
+void BunkerView::onDestroyed () {
+	ShapeView::onDestroyed();
+	mSprite = sf::Sprite();
 }

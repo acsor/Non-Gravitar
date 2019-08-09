@@ -26,7 +26,7 @@
 #include <memory>
 #include <SFML/Graphics.hpp>
 #include "ShapeView.hpp"
-#include "../shape/Spaceship.hpp"
+#include "shape/Spaceship.hpp"
 #include "utils/Event.hpp"
 
 template<typename T> using weak_ptr = std::weak_ptr<T>;
@@ -42,13 +42,16 @@ namespace gvt {
 			weak_ptr<Spaceship> mSpaceship;
 			bool mutable mAccel{false};
 
-			sf::Sprite mutable mSprite{};
+			sf::Sprite mutable mSprite;
 			/**
 			 * Three @c Texture attributes that correspond to, respectively, an
 			 * unalterated @c Spaceship, an accelerating @c Spaceship and a @c
 			 * Spaceship whose shield is momentarily activated.
 			 */
 			Texture mTexture, mAccelTexture, mShieldTexture;
+		protected:
+			void onMoved() override;
+			void onDestroyed() override;
 		public:
 			static const std::string SPACESHIP_TEXTURE;
 			static const std::string ACCEL_SPACESHIP_TEXTURE;
@@ -58,7 +61,6 @@ namespace gvt {
 			);
 
 			void draw(RenderTarget &target, RenderStates state) const override;
-			void handle(Event *e) override;
 	};
 }
 

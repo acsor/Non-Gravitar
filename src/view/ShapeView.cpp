@@ -70,6 +70,24 @@ ShapeView::ShapeView(shared_ptr<Shape> const &shape, bool debug):
 	shape->addHandler(*this);
 }
 
+void ShapeView::onMoved () {
+	if (!mShape.expired()) {
+		updateTransform();
+		updateDebugBounds();
+	}
+}
+
+void ShapeView::onRotated () {
+	if (!mShape.expired()) {
+		updateTransform();
+		updateDebugBounds();
+	}
+}
+
+void ShapeView::onDestroyed() {
+	mBounds.clear();
+}
+
 ShapeView::~ShapeView() {
 	if (auto p = mShape.lock())
 		p->removeHandler(*this);
@@ -95,15 +113,14 @@ void ShapeView::handle(Event *e) {
 
 	switch (event->type) {
 		case (ShapeEvent::Type::moved):
+			onMoved();
+			break;
 		case (ShapeEvent::Type::rotated):
-			if (!mShape.expired()) {
-				updateTransform();
-				updateDebugBounds();
-			}
+			onRotated();
 			break;
 		case (ShapeEvent::Type::destroyed):
+			onDestroyed();
 			mShape.reset();
-			mBounds.clear();
 			event->shape->removeHandler(*this);
 			break;
 		default:
