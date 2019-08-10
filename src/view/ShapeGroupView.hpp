@@ -27,7 +27,7 @@
 #include <SFML/Graphics.hpp>
 #include "utils/Event.hpp"
 #include "shape-group/ShapeGroup.hpp"
-#include "view/ShapeView.hpp"
+#include "view/Shape2DView.hpp"
 #include "ShapeViewFactory.hpp"
 #include "Debuggable.hpp"
 
@@ -43,7 +43,7 @@ namespace gvt {
 			ShapeViewFactory mFactory;
 		protected:
 			weak_ptr<ShapeGroup> mGroup;
-			std::map<Shape*, shared_ptr<ShapeView>> mViews;
+			std::map<Shape*, shared_ptr<Shape2DView>> mViews;
 
 		public:
 			explicit ShapeGroupView(shared_ptr<ShapeGroup> group);

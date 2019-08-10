@@ -22,12 +22,11 @@
 #ifndef NON_GRAVITAR_CIRCLE_HPP
 #define NON_GRAVITAR_CIRCLE_HPP
 
-#include "Shape.hpp"
-#include "Rectangle.hpp"
+#include "Shape2D.hpp"
 
 
 namespace gvt {
-	class Circle: public Shape {
+	class Circle: public Shape2D {
 		protected:
 			double mRadius;
 		public:

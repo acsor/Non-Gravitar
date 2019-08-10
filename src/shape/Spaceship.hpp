@@ -23,14 +23,14 @@
 #define NON_GRAVITAR_SPACESHIP_HPP
 
 #include "Fuel.hpp"
-#include "Shape.hpp"
+#include "Shape2D.hpp"
 #include "Rectangle.hpp"
 #include "ShapeVisitor.hpp"
 #include "bounding-polygon/BoundingPolygon.hpp"
 
 
 namespace gvt {
-	class Spaceship: public Shape {
+	class Spaceship: public Shape2D {
 		private:
 			// Represents the current fuel amount in the ship
 			unsigned mFuel;

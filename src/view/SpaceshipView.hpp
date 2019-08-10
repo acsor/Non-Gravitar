@@ -25,7 +25,7 @@
 #include <string>
 #include <memory>
 #include <SFML/Graphics.hpp>
-#include "ShapeView.hpp"
+#include "Shape2DView.hpp"
 #include "shape/Spaceship.hpp"
 #include "utils/Event.hpp"
 
@@ -37,7 +37,7 @@ using Texture = sf::Texture;
 
 
 namespace gvt {
-	class SpaceshipView: public ShapeView {
+	class SpaceshipView: public Shape2DView {
 		private:
 			weak_ptr<Spaceship> mSpaceship;
 			bool mutable mAccel{false};

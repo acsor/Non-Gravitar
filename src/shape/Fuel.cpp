@@ -26,7 +26,7 @@
 using namespace gvt;
 
 
-Fuel::Fuel(Vectord position, unsigned fuel): Shape(position) {
+Fuel::Fuel(Vectord position, unsigned fuel): Shape2D(position) {
 	mFuel = fuel;
 }
 

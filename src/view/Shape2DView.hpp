@@ -24,7 +24,7 @@
 
 #include <memory>
 #include <SFML/Graphics.hpp>
-#include "shape/Shape.hpp"
+#include "shape/Shape2D.hpp"
 #include "Debuggable.hpp"
 
 template<typename T> using weak_ptr = std::weak_ptr<T>;
@@ -34,7 +34,7 @@ using RenderTarget = sf::RenderTarget;
 
 
 namespace gvt {
-	class ShapeView: public sf::Drawable, public GVTEventHandler,
+	class Shape2DView: public sf::Drawable, public GVTEventHandler,
 			public Debuggable {
 		private:
 			sf::VertexArray mBounds;
@@ -43,15 +43,15 @@ namespace gvt {
 			void updateDebugBounds();
 		protected:
 			sf::Transform mTranslation, mRotation;
-			weak_ptr<Shape> mShape;
+			weak_ptr<Shape2D> mShape;
 
-			explicit ShapeView(const shared_ptr<Shape>& shape);
+			explicit Shape2DView(shared_ptr<Shape2D> const &shape);
 
 			virtual void onMoved();
 			virtual void onRotated();
 			virtual void onDestroyed();
 		public:
-			virtual ~ShapeView();
+			virtual ~Shape2DView();
 
 			void debug(bool debug) override;
 

@@ -24,7 +24,7 @@
 
 
 namespace gvt {
-	ShapeView* ShapeViewFactory::makeView (std::shared_ptr<Shape> shape) const {
+	Shape2DView* ShapeViewFactory::makeView (std::shared_ptr<Shape> shape) const {
 		if (std::dynamic_pointer_cast<Spaceship>(shape)) {
 			return new SpaceshipView(
 					std::dynamic_pointer_cast<Spaceship>(shape)

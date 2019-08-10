@@ -23,7 +23,7 @@
 #define NON_GRAVITAR_BUNKER_HPP
 
 #include <vector>
-#include "Shape.hpp"
+#include "Shape2D.hpp"
 #include "Rectangle.hpp"
 #include "RoundMissile.hpp"
 #include "ShapeVisitor.hpp"
@@ -32,7 +32,7 @@ template<typename T> using vector = std::vector<T>;
 
 
 namespace gvt {
-	class Bunker: public Shape {
+	class Bunker: public Shape2D {
 		protected:
 			vector<Vectord> mPaths;
 			unsigned mCurr{0};
@@ -66,14 +66,14 @@ namespace gvt {
 	// to simplify the inheritance for Bunker2D and Bunker3D?
 	class Bunker2D: public Bunker {
 		public:
-			Bunker2D(Vectord position);
+			explicit Bunker2D(Vectord position);
 
 			bool operator==(Shape const &o) const override;
 	};
 
 	class Bunker3D: public Bunker {
 		public:
-			Bunker3D(Vectord position);
+			explicit Bunker3D(Vectord position);
 
 			bool operator==(Shape const &o) const override;
 	};

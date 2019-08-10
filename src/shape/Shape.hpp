@@ -23,7 +23,7 @@
 #define NON_GRAVITAR_SHAPE_HPP
 
 #include <ostream>
-#include <bounding-polygon/BoundingPolygon.hpp>
+#include "bounding-polygon/BoundingPolygon.hpp"
 #include "utils/Event.hpp"
 #include "utils/Vector.hpp"
 
@@ -54,8 +54,6 @@ namespace gvt {
 
 			virtual ~Shape();
 
-			virtual double width() const = 0;
-			virtual double height() const = 0;
 			/**
 			 * @return The position vector associated to this @c Shape.
 			 */
@@ -64,11 +62,6 @@ namespace gvt {
 			 * @param position Position vector to set for this @c Shape.
 			 */
 			void position(Vectord position);
-			/**
-			 * @return The center point of this @c Shape <b>relative</b> to
-			 * this object position.
-			 */
-			virtual inline Vectord center() const;
 			/**
 			 * Sets the velocity of this @c Shape. Note that the unit measure
 			 * utilized is point/sec.
@@ -116,18 +109,7 @@ namespace gvt {
 			 * @param state @c true to mark this @c Shape as destroyed.
 			 */
 			inline void destroyed(bool state);
-			/**
-			 * @return A @c Rectangle object representing the bounds used to
-			 * detect collisions with another @c Shape. The coordinates
-			 * accounted for are <i>global</i>, that is are measured against
-			 * the global coordinate system.
-			 */
-			virtual BoundingPolygon collisionPolygon() const = 0;
-			/**
-			 * @return @c true if the boundaries of the current @c Shape clash
-			 * with those of the object @c o.
-			 */
-			bool clashes(Shape const &o) const;
+			virtual bool clashes(Shape const &o) const = 0;
 
 			/**
 			 * Moves the object along the trajectory described by the @c

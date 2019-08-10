@@ -48,7 +48,7 @@ namespace gvt {
 		}
 	}
 
-	MountainView::MountainView(shared_ptr<Mountain> const &m): ShapeView(m) {
+	MountainView::MountainView(shared_ptr<Mountain> const &m): Shape2DView(m) {
         mVertices = sf::VertexArray(sf::LineStrip, 4);
 
 		updatePosition();
@@ -59,7 +59,7 @@ namespace gvt {
 	}
 
 	void MountainView::draw(RenderTarget &target, RenderStates state) const {
-		ShapeView::draw(target, state);
+		Shape2DView::draw(target, state);
 
 		if (!mShape.expired())
             target.draw(mVertices, mRotation);

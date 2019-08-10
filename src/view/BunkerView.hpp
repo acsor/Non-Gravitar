@@ -25,7 +25,7 @@
 #include <string>
 #include <memory>
 #include <SFML/Graphics.hpp>
-#include "ShapeView.hpp"
+#include "Shape2DView.hpp"
 #include "../shape/Bunker.hpp"
 
 template<typename T> using weak_ptr = std::weak_ptr<T>;
@@ -36,7 +36,7 @@ using Texture = sf::Texture;
 
 
 namespace gvt {
-	class BunkerView: public ShapeView {
+	class BunkerView: public Shape2DView {
 		private:
 			weak_ptr<Bunker> mBunker;
 

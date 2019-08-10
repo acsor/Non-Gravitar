@@ -3,6 +3,7 @@
 
 
 namespace gvt {
+	class Shape2D;
 	class Spaceship;
 	class Rectangle;
 	class Bunker;
@@ -21,6 +22,7 @@ namespace gvt {
 		protected:
 			ShapeVisitor() = default;
 		public:
+			virtual void visitShape2D(Shape2D &shape) {};
 			virtual void visitBunker(Bunker &bunker) {};
 			virtual void visitCircle(Circle &circle) {};
 			virtual void visitFuel(Fuel &fuel) {};

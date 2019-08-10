@@ -60,7 +60,7 @@ void ShapeGroupView::handle(Event *e) {
 
 	if (event) {
 		if (event->type == ShapeGroupEvent::Type::attached) {
-			mViews[event->shape.get()] = shared_ptr<ShapeView>(
+			mViews[event->shape.get()] = shared_ptr<Shape2DView>(
 				mFactory.makeView(event->shape)
 			);
 		} else if (event->type == ShapeGroupEvent::Type::detached) {

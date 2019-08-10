@@ -25,7 +25,7 @@
 
 namespace gvt {
 	gvt::Mountain::Mountain(Vectord left, Vectord top, Vectord right):
-			Shape({left.x, top.y}) {
+			Shape2D({left.x, top.y}) {
 		mLeft = left;
 		mTop = top;
 		mRight = right;

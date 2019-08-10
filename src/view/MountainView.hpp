@@ -24,11 +24,11 @@
 
 #include <SFML/Graphics.hpp>
 #include "shape/Mountain.hpp"
-#include "ShapeView.hpp"
+#include "Shape2DView.hpp"
 
 
 namespace gvt {
-	class MountainView: public ShapeView {
+	class MountainView: public Shape2DView {
 		private:
 			sf::VertexArray mVertices;
 

@@ -29,8 +29,8 @@ using Rectangle = gvt::Rectangle;
 gvt::Vectord const Spaceship::sCollisionOffset = {3, 0};
 
 
-Spaceship::Spaceship(Vectord position, unsigned fuel): Shape::Shape(
-		gvt::Vectord()) {
+Spaceship::Spaceship(Vectord position, unsigned fuel):
+		Shape2D::Shape2D(position) {
 	mFuel = fuel;
 }
 

@@ -36,10 +36,6 @@ namespace gvt {
 		return mPosition;
 	}
 
-	Vectord Shape::center() const {
-		return Vectord{width() / 2.0, height() / 2.0};
-	}
-
 	Vectord Shape::velocity() const {
 		return mVelocity;
 	}

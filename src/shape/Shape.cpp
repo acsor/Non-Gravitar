@@ -76,10 +76,6 @@ void Shape::velocity(const Vectord &t) {
 }
 
 
-bool Shape::clashes(gvt::Shape const &o) const {
-    return collisionPolygon().intersects(o.collisionPolygon());
-}
-
 bool Shape::operator== (Shape const &o) const {
 	return mPosition == o.mPosition && mVelocity == mVelocity &&
 			mAccel == o .mAccel && mRotation == o.mRotation;

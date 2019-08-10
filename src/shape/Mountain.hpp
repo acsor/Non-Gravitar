@@ -22,13 +22,13 @@
 #ifndef NON_GRAVITAR_MOUNTAIN_HPP
 #define NON_GRAVITAR_MOUNTAIN_HPP
 
-#include "Shape.hpp"
+#include "Shape2D.hpp"
 #include "ShapeVisitor.hpp"
 #include "utils/Vector.hpp"
 
 
 namespace gvt {
-	class Mountain: public Shape {
+	class Mountain: public Shape2D {
 		private:
 			Vectord mLeft, mTop, mRight;
 		public:
