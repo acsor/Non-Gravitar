@@ -19,59 +19,17 @@
 // LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
-#include "ShapeView.hpp"
+#include <stdexcept>
+#include "Polyline.hpp"
 
 
 namespace gvt {
-	void ShapeView::updateTranslation() {
-		auto shape = mShape.lock();
-
-		if (shape) {
-			auto pos = shape->position();
-
-			mTranslation = sf::Transform::Identity;
-			mTranslation.translate(pos.x, pos.y);
+	Polyline::Polyline(size_t vertices) {
+		if (vertices < 2) {
+			throw std::domain_error(
+					"No polyline can have fewer than 2 vertices"
+			);
 		}
-	}
-
-	ShapeView::ShapeView(shared_ptr<Shape> const &shape):
-		Debuggable(false), mShape(shape) {
-		mTranslation = sf::Transform::Identity;
-		mRotation = sf::Transform::Identity;
-
-		updateTranslation();
-	}
-
-	void ShapeView::onMoved() {
-		if (!mShape.expired()) {
-			updateTranslation();
-		}
-	}
-
-	ShapeView::~ShapeView() {
-		if (auto p = mShape.lock())
-			p->removeHandler(*this);
-	}
-
-	void ShapeView::handle(Event *e) {
-		auto event = dynamic_cast<ShapeEvent *>(e);
-
-		if (event) {
-			switch (event->type) {
-				case (ShapeEvent::Type::moved):
-					onMoved();
-					break;
-				case (ShapeEvent::Type::rotated):
-					onRotated();
-					break;
-				case (ShapeEvent::Type::destroyed):
-					onDestroyed();
-					mShape.reset();
-					event->shape->removeHandler(*this);
-					break;
-				default:
-					break;
-			}
-		}
+		mVertices.reserve(vertices);
 	}
 }

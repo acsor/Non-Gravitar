@@ -36,10 +36,14 @@ target_link_libraries(BoundingTriangle BoundingPolygon)
 
 add_library(BoundingRectangle "${DIR_BOUND}/BoundingRectangle.cpp")
 target_link_libraries(BoundingRectangle BoundingPolygon)
-add_library(Shape "${DIR_SHAPE}/Shape.cpp")
 
 
 # Shapes section
+add_library(Shape "${DIR_SHAPE}/Shape.cpp")
+
+add_library(Polyline "${DIR_SHAPE}/Polyline.cpp")
+target_link_libraries(Polyline Shape)
+
 add_library(ShapeGroup "${DIR_SHAPE_GROUP}/ShapeGroup.cpp")
 target_link_libraries(ShapeGroup Shape)
 
