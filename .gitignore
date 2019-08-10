@@ -18,6 +18,8 @@ CMakeCache.txt
 cmake_install.cmake
 Makefile
 NonGravitar
+SFMLOrigin
+SFMLCollision
 
 test-all
 Session.vim
