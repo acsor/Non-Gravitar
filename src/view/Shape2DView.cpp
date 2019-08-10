@@ -26,22 +26,25 @@
 
 
 namespace gvt {
-	void Shape2DView::updateTransforms() {
-		if (auto shape = mShape.lock()) {
-			auto pos = shape->position();
+	void Shape2DView::updateRotation() {
+		shared_ptr<Shape2D> shape = std::dynamic_pointer_cast<Shape2D>(
+			mShape.lock()
+		);
+
+		if (shape) {
 			auto center = shape->center();
 
-			mTranslation = sf::Transform::Identity;
 			mRotation = sf::Transform::Identity;
-
-			mTranslation.translate(pos.x, pos.y);
-			mRotation.rotate(gvt::rad2deg(shape->rotation()), center.x,
-							 center.y);
+			mRotation.rotate(
+					gvt::rad2deg(shape->rotation()), center.x, center.y
+			);
 		}
 	}
 
 	void Shape2DView::updateDebugBounds() {
-		auto shape = mShape.lock();
+		shared_ptr<Shape2D> shape = std::dynamic_pointer_cast<Shape2D>(
+			mShape.lock()
+		);
 
 		if (mDebug && shape != nullptr) {
 			// Reallocating mBounds each time is not efficient, but this
@@ -63,22 +66,24 @@ namespace gvt {
 	}
 
 	Shape2DView::Shape2DView(shared_ptr<Shape2D> const &shape):
-			Debuggable(false), mShape{shape} {
-		updateTransforms();
+			ShapeView{shape} {
+		updateRotation();
 
 		shape->addHandler(*this);
 	}
 
 	void Shape2DView::onMoved() {
+		ShapeView::onMoved();
+
 		if (!mShape.expired()) {
-			updateTransforms();
+			updateRotation();
 			updateDebugBounds();
 		}
 	}
 
 	void Shape2DView::onRotated() {
 		if (!mShape.expired()) {
-			updateTransforms();
+			updateRotation();
 			updateDebugBounds();
 		}
 	}
@@ -87,40 +92,15 @@ namespace gvt {
 		mBounds.clear();
 	}
 
-	Shape2DView::~Shape2DView() {
-		if (auto p = mShape.lock())
-			p->removeHandler(*this);
-	}
-
 	void Shape2DView::debug(bool debug) {
-		Debuggable::debug(debug);
+		ShapeView::debug(debug);
 		updateDebugBounds();
 	}
 
 	void Shape2DView::draw(RenderTarget &target, RenderStates s) const {
+		ShapeView::draw(target, s);
+
 		if (mDebug && !mShape.expired())
 			target.draw(mBounds);
-	}
-
-	void Shape2DView::handle(Event *e) {
-		auto event = dynamic_cast<ShapeEvent *>(e);
-
-		if (event) {
-			switch (event->type) {
-				case (ShapeEvent::Type::moved):
-					onMoved();
-					break;
-				case (ShapeEvent::Type::rotated):
-					onRotated();
-					break;
-				case (ShapeEvent::Type::destroyed):
-					onDestroyed();
-					mShape.reset();
-					event->shape->removeHandler(*this);
-					break;
-				default:
-					break;
-			}
-		}
 	}
 }

@@ -69,8 +69,11 @@ target_link_libraries(Mountain Shape)
 
 
 # Shape views section
+add_library(ShapeView "${DIR_VIEWS}/ShapeView.cpp")
+target_link_libraries(ShapeView Shape)
+
 add_library(Shape2DView "${DIR_VIEWS}/Shape2DView.cpp")
-target_link_libraries(Shape2DView Shape)
+target_link_libraries(Shape2DView ShapeView)
 
 add_library(BunkerView "${DIR_VIEWS}/BunkerView.cpp")
 target_link_libraries(BunkerView Bunker Shape2DView Utils)
