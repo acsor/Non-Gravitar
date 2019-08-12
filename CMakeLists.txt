@@ -68,9 +68,6 @@ target_link_libraries(RoundMissile Circle)
 add_library(Bunker "${DIR_SHAPE}/Bunker.cpp")
 target_link_libraries(Bunker RoundMissile)
 
-add_library(Mountain "${DIR_SHAPE}/Mountain.cpp")
-target_link_libraries(Mountain Shape)
-
 
 # Shape views section
 add_library(ShapeView "${DIR_VIEWS}/ShapeView.cpp")
@@ -85,14 +82,11 @@ target_link_libraries(PolylineView Polyline ShapeView)
 add_library(BunkerView "${DIR_VIEWS}/BunkerView.cpp")
 target_link_libraries(BunkerView Bunker Shape2DView Utils)
 
-add_library(MountainView "${DIR_VIEWS}/MountainView.cpp")
-target_link_libraries(MountainView Mountain Shape2DView Utils)
-
 add_library(ShapeGroupView "${DIR_VIEWS}/ShapeGroupView.cpp")
 target_link_libraries(ShapeGroupView ShapeGroup ShapeViewFactory)
 
 add_library(ShapeViewFactory "${DIR_VIEWS}/ShapeViewFactory.cpp")
-target_link_libraries(ShapeViewFactory SpaceshipView BunkerView MountainView)
+target_link_libraries(ShapeViewFactory SpaceshipView BunkerView)
 
 add_library(SpaceshipView "${DIR_VIEWS}/SpaceshipView.cpp")
 target_link_libraries(SpaceshipView Spaceship Shape2DView Utils)

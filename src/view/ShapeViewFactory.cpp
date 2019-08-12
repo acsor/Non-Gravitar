@@ -20,7 +20,6 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 #include "ShapeViewFactory.hpp"
-#include "MountainView.hpp"
 
 
 namespace gvt {
@@ -29,8 +28,6 @@ namespace gvt {
 			return new SpaceshipView(ship);
 		} else if (auto b = std::dynamic_pointer_cast<Bunker>(shape)) {
 			return new BunkerView(b);
-		} else if (auto m = std::dynamic_pointer_cast<Mountain>(shape)) {
-			return new MountainView(m);
 		} else {
 			throw std::domain_error("Unrecognized type of shape");
 		}
