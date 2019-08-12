@@ -64,6 +64,11 @@ namespace gvt {
 			inline void draw(
 				RenderTarget &target, RenderStates states
 			) const override;
+
+			/**
+			 * Highlights the debug outline of this @c ShapeView.
+			 */
+			virtual void hightlight (bool highlighted) = 0;
 	};
 }
 

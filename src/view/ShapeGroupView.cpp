@@ -74,3 +74,9 @@ void ShapeGroupView::handle(Event *e) {
 		}
 	}
 }
+
+void ShapeGroupView::highlight(weak_ptr<Shape> shape, bool highlighted) {
+    if (auto shared = shape.lock()) {
+    	mViews[shared].hightlight(highlighted);
+    }
+}

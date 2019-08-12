@@ -58,6 +58,11 @@ namespace gvt {
 				sf::RenderTarget &target, sf::RenderStates state
 			) const override;
 			void handle(Event *e) override;
+			/**
+			 * Turns the @c shape colliding bounds color into a more visible
+			 * state, such that it can be considered hightlighted.
+			 */
+			void highlight(weak_ptr<Shape> shape, bool highlighted);
 	};
 }
 

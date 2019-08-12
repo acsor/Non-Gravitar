@@ -31,6 +31,9 @@ namespace gvt {
 		private:
 			// Debugs bounds used for the 'debug view'
 			sf::VertexArray mBounds;
+			sf::Color mDebugColor = DEBUG_COLOR;
+
+			static sf::Color const DEBUG_COLOR, HIGHLIGHT_COLOR;
 
 			void updateDebugBounds();
 		protected:
@@ -45,6 +48,7 @@ namespace gvt {
 			void debug(bool debug) override;
 
 			void draw(RenderTarget &target, RenderStates s) const override;
+			void hightlight (bool highlighted) override;
 	};
 }
 
