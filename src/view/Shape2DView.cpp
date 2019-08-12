@@ -28,7 +28,7 @@
 namespace gvt {
 	sf::Color const Shape2DView::DEBUG_COLOR = sf::Color::Green;
 	sf::Color const Shape2DView::HIGHLIGHT_COLOR = sf::Color::Red;
-	
+
 	void Shape2DView::updateRotation() {
 		shared_ptr<Shape2D> shape = std::dynamic_pointer_cast<Shape2D>(
 			mShape.lock()
@@ -73,6 +73,13 @@ namespace gvt {
 		updateRotation();
 	}
 
+	void Shape2DView::onDraw(
+			shared_ptr<Shape> shape, RenderTarget &target, RenderStates s
+	) const {
+		if (mDebug)
+			target.draw(mBounds);
+	}
+
 	void Shape2DView::onMoved() {
 		ShapeView::onMoved();
 
@@ -96,13 +103,6 @@ namespace gvt {
 	void Shape2DView::debug(bool debug) {
 		ShapeView::debug(debug);
 		updateDebugBounds();
-	}
-
-	void Shape2DView::draw(RenderTarget &target, RenderStates s) const {
-		ShapeView::draw(target, s);
-
-		if (mDebug && !mShape.expired())
-			target.draw(mBounds);
 	}
 
 	void Shape2DView::hightlight (bool highlighted) {

@@ -52,6 +52,17 @@ namespace gvt {
 			 * exploited by subclasses when moving the drawn object.
 			 */
 			virtual void updateTranslation();
+
+			/**
+			 * Called during the drawing phase, only when the shape referenced
+			 * to by this @c ShapeView can be accessed, in which case it is
+			 * passed as a parameter.
+			 *
+			 * @param shape @c Shape to draw
+			 */
+			virtual void onDraw(
+				shared_ptr<Shape> shape, RenderTarget &t, RenderStates s
+			) const = 0;
 			// TODO I wonder if it is necessary to mark these functions as
 			//  virtual, considering they'll never be invoked through pointers.
 			virtual void onMoved();
@@ -61,21 +72,13 @@ namespace gvt {
 			~ShapeView() override;
 
 			void handle(Event *e) override;
-			inline void draw(
-				RenderTarget &target, RenderStates states
-			) const override;
+			void draw(RenderTarget &target, RenderStates states) const override;
 
 			/**
 			 * Highlights the debug outline of this @c ShapeView.
 			 */
 			virtual void hightlight (bool highlighted) = 0;
 	};
-}
-
-
-namespace gvt {
-	void ShapeView::draw(RenderTarget &target, RenderStates states) const {
-	}
 }
 
 

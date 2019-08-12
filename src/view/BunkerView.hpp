@@ -38,19 +38,18 @@ using Texture = sf::Texture;
 namespace gvt {
 	class BunkerView: public Shape2DView {
 		private:
-			weak_ptr<Bunker> mBunker;
-
 			sf::Sprite mSprite;
 			Texture mTexture;
 		protected:
+			void onDraw(
+				shared_ptr<Shape> shape, RenderTarget &t, RenderStates s
+			) const override;
 			void onDestroyed() override;
 		public:
 			static const std::string BUNKER2D_GRAPHICS;
 			static const std::string BUNKER3D_GRAPHICS;
 
 			explicit BunkerView(const shared_ptr<Bunker> &bunker);
-
-			void draw(RenderTarget &target, RenderStates state) const override;
 	};
 }
 

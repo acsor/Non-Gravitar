@@ -50,6 +50,9 @@ namespace gvt {
 			 */
 			Texture mTexture, mAccelTexture, mShieldTexture;
 		protected:
+			void onDraw(
+					shared_ptr<Shape> shape, RenderTarget &t, RenderStates s
+			) const override;
 			void onMoved() override;
 			void onDestroyed() override;
 		public:
@@ -57,8 +60,6 @@ namespace gvt {
 			static const std::string ACCEL_SPACESHIP_TEXTURE;
 
 			explicit SpaceshipView(const shared_ptr<Spaceship>& spaceship);
-
-			void draw(RenderTarget &target, RenderStates state) const override;
 	};
 }
 

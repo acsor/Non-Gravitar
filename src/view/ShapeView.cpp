@@ -54,6 +54,12 @@ namespace gvt {
 			p->removeHandler(*this);
 	}
 
+	void ShapeView::draw(RenderTarget &target, RenderStates states) const {
+		if (auto shared = mShape.lock()) {
+			onDraw(shared, target, states);
+		}
+	}
+
 	void ShapeView::handle(Event *e) {
 		auto event = dynamic_cast<ShapeEvent *>(e);
 

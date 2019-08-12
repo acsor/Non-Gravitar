@@ -41,13 +41,15 @@ namespace gvt {
 
 			void updateRotation() override;
 
+			void onDraw(
+				shared_ptr<Shape> shape, RenderTarget &t, RenderStates s
+			) const override;
 			void onMoved() override;
 			void onRotated() override;
 			void onDestroyed() override;
 		public:
 			void debug(bool debug) override;
 
-			void draw(RenderTarget &target, RenderStates s) const override;
 			void hightlight (bool highlighted) override;
 	};
 }

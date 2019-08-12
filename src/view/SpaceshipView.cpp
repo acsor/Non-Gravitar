@@ -49,8 +49,10 @@ SpaceshipView::SpaceshipView(shared_ptr<Spaceship> const &spaceship):
 	mSprite.setTexture(mTexture);
 }
 
-void SpaceshipView::draw(RenderTarget &target, RenderStates state) const {
-	Shape2DView::draw(target, state);
+void SpaceshipView::onDraw(
+		shared_ptr<Shape> shape, RenderTarget &target, RenderStates s
+) const {
+	Shape2DView::onDraw(shape, target, s);
 
 	if (mAccel) {
 		mSprite.setTexture(mAccelTexture);
