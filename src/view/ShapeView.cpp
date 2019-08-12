@@ -39,6 +39,7 @@ namespace gvt {
 		mTranslation = sf::Transform::Identity;
 		mRotation = sf::Transform::Identity;
 
+		shape->addHandler(this);
 		updateTranslation();
 	}
 

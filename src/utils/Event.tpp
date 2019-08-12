@@ -28,7 +28,7 @@ namespace gvt {
 	}
 
 	template<typename E> void EventDispatcher<E>::notify(E *e) const {
-		for (auto i = mHandlers.begin(); i != mHandlers.end(); i++)
-			(*i)->handle(e);
+		for (auto handler: mHandlers)
+			handler->handle(e);
 	}
 }

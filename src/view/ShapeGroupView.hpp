@@ -43,11 +43,11 @@ namespace gvt {
 			ShapeViewFactory mFactory;
 		protected:
 			weak_ptr<ShapeGroup> mGroup;
-			std::map<Shape*, shared_ptr<Shape2DView>> mViews;
+			mutable std::map<weak_ptr<Shape>, unique_ptr<ShapeView>> mViews;
 
 		public:
 			explicit ShapeGroupView(shared_ptr<ShapeGroup> group);
-			virtual ~ShapeGroupView();
+			~ShapeGroupView() override;
 
 			// TODO Why was there no visibility for Debuggable::debug()?
 			//  Eliminate the declaration below.

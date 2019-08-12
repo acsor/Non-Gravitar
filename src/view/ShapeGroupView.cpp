@@ -22,8 +22,8 @@
 #include "ShapeGroupView.hpp"
 
 #include <stdexcept>
-#include "../view/SpaceshipView.hpp"
-#include "../view/BunkerView.hpp"
+#include "view/SpaceshipView.hpp"
+#include "view/BunkerView.hpp"
 
 using ShapeGroupEvent = gvt::ShapeGroupEvent;
 using ShapeGroupView = gvt::ShapeGroupView;
@@ -31,7 +31,7 @@ using ShapeGroupView = gvt::ShapeGroupView;
 
 ShapeGroupView::ShapeGroupView(shared_ptr<ShapeGroup> group):
 	Debuggable(false), mGroup{group} {
-	group->addHandler(*this);
+	group->addHandler(this);
 }
 
 ShapeGroupView::~ShapeGroupView() {
@@ -42,16 +42,18 @@ ShapeGroupView::~ShapeGroupView() {
 void ShapeGroupView::debug(bool state) {
 	Debuggable::debug(state);
 
-	for (auto &mView : mViews) {
+	for (auto &mView : mViews)
 		mView.second->debug(state);
-	}
 }
 
 void ShapeGroupView::draw(
 	sf::RenderTarget &target, sf::RenderStates state
 ) const {
-	for (auto i = mViews.begin(); i != mViews.end(); i++) {
-		i->second->draw(target, state);
+    for (auto &view : mViews) {
+		if (view.first.expired())
+			mViews.erase(view.first);
+		else
+			view.second->draw(target, state);
 	}
 }
 
@@ -60,11 +62,12 @@ void ShapeGroupView::handle(Event *e) {
 
 	if (event) {
 		if (event->type == ShapeGroupEvent::Type::attached) {
-			mViews[event->shape.get()] = shared_ptr<Shape2DView>(
+			mViews[event->shape] = unique_ptr<ShapeView>(
 				mFactory.makeView(event->shape)
 			);
 		} else if (event->type == ShapeGroupEvent::Type::detached) {
-			mViews.erase(event->shape.get());
+            // No need to detach the view here -- it is going to be deleted
+            // in the draw cycle (see ShapeGroupView::draw())
 		} else if (event->type == ShapeGroupEvent::Type::destroyed) {
 			mViews.clear();
 			mGroup.reset();

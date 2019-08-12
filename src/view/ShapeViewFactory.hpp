@@ -23,10 +23,9 @@
 #define NON_GRAVITAR_SHAPE_VIEW_FACTORY_HPP
 
 #include "shape/Shape.hpp"
-#include "view/Shape2DView.hpp"
+#include "view/ShapeView.hpp"
 #include "view/BunkerView.hpp"
 #include "view/SpaceshipView.hpp"
-#include "Debuggable.hpp"
 
 
 namespace gvt {
@@ -36,7 +35,7 @@ namespace gvt {
 	 */
     class ShapeViewFactory {
     	public:
-            Shape2DView* makeView (std::shared_ptr<Shape> shape) const;
+            ShapeView* makeView (shared_ptr<Shape> shape) const;
     };
 }
 
