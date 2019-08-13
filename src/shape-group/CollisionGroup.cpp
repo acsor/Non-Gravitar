@@ -19,69 +19,41 @@
 // LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
-#include <memory>
 #include "CollisionGroup.hpp"
 
-#include "shape/Spaceship.hpp"
-#include "shape/Bunker.hpp"
-#include "shape/RoundMissile.hpp"
-#include "shape/Fuel.hpp"
-#include "shape/Rectangle.hpp"
-#include "shape/Circle.hpp"
+namespace gvt {
+	void CollisionGroup::updateCollisions() {
+		CollisionEvent e;
 
-using CollisionGroup = gvt::CollisionGroup;
-using Event = gvt::Event;
-using Shape = gvt::Shape;
+		// This is deliberately a brute-force algorithm. A simple
+		// optimization technique, which we have no time for, consists of
+		// managing a neighbourhood of shapes and checking collisions against
+		// them only
+		for (auto &first: mShapes) {
+			for (auto &second: mShapes) {
+				if (*first != *second && first->clashes(*second)) {
+					e.first = first;
+					e.second = second;
 
-template<typename T> using shared_ptr = std::shared_ptr<T>;
-
-gvt::CollisionListener::CollisionListener(CollisionGroup &group):
-	mGroup{group} {
-}
-
-void gvt::CollisionListener::handle(Event *e) {
-	auto shapeEvent = dynamic_cast<ShapeEvent *>(e);
-
-	if (shapeEvent) {
-        switch (shapeEvent->type) {
-        	case ShapeEvent::Type::moved:
-			case ShapeEvent::Type::rotated:
-                mGroup.updateCollisions();
-        	default:
-        		break;
-        }
+					notify(&e);
+				}
+			}
+		}
 	}
-}
 
+	void CollisionGroup::handle(Event *e) {
+		ShapeGroup::handle(e);
+		auto shapeEvent = dynamic_cast<ShapeEvent *>(e);
 
-gvt::CollisionVisitor::CollisionVisitor(CollisionGroup &group):
-	mGroup{group} {
-}
-
-void gvt::CollisionVisitor::visitMissile(gvt::RoundMissile &missile) {
-	missile.destroyed(true);
-}
-
-void gvt::CollisionVisitor::visitBunker(gvt::Bunker &bunker) {
-    // Bunkers are indestructible
-}
-
-void gvt::CollisionVisitor::visitSpaceship(gvt::Spaceship &spaceship) {
-	spaceship.destroyed(true);
-}
-
-void gvt::CollisionVisitor::visitFuel(gvt::Fuel &fuel) {
-	fuel.destroyed(true);
-}
-
-
-void gvt::CollisionGroup::updateCollisions() {
-	for (auto first: mShapes) {
-        for (auto second: mShapes) {
-        	if (*first != *second && first->clashes(*second)) {
-        		first->accept(mVisitor);
-				second->accept(mVisitor);
-        	}
-        }
+		if (shapeEvent) {
+			switch (shapeEvent->type) {
+				case ShapeEvent::Type::moved:
+				case ShapeEvent::Type::rotated:
+					updateCollisions();
+					break;
+				default:
+					break;
+			}
+		}
 	}
 }

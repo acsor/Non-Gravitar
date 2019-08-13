@@ -21,44 +21,39 @@
 // SOFTWARE.
 #include "ShapeGroup.hpp"
 
-using Event = gvt::Event;
-using ShapeGroup = gvt::ShapeGroup;
-using ShapeGroupEvent = gvt::ShapeGroupEvent;
-using Shape = gvt::Shape;
 
+namespace gvt {
+	ShapeGroup::~ShapeGroup() {
+		ShapeGroupEvent e{ShapeGroupEvent::Type::destroyed, this, nullptr};
 
-gvt::DestroyedListener::DestroyedListener(ShapeGroup &group):
-	mGroup{group} {
-}
+		notify(&e);
+	}
 
-void gvt::DestroyedListener::handle (Event *e) {
-    auto groupEvent = dynamic_cast<ShapeGroupEvent *>(e);
+	void ShapeGroup::insert(shared_ptr<Shape> shape) {
+		ShapeGroupEvent e{ShapeGroupEvent::Type::attached, this, shape};
+		// Not checking for null-pointer arguments is intended behavior, as code
+		// feeding in null-pointer values should not exist in the first place: a
+		// segmentation fault acts as a proper signaling mechanism
+		mShapes.push_front(shape);
+		shape->addHandler(this);
 
-    if (groupEvent) {
-        switch (groupEvent->type) {
-            case (ShapeGroupEvent::Type::destroyed):
-                mGroup.mShapes.remove(groupEvent->shape);
-                break;
-            default:
-                break;
+		notify(&e);
+	}
+
+	void ShapeGroup::remove(shared_ptr<Shape> shape) {
+		ShapeGroupEvent e;
+
+		// TODO Improve deletion -- in particular, ensure we are deleting one
+		//  and only one shape During remove() invocation
+        for (auto i = mShapes.begin(); i != mShapes.end(); i++) {
+        	if (**i == *shape) {
+				e = {ShapeGroupEvent::Type::detached, this, shape};
+
+				shape->removeHandler(this);
+				mShapes.erase(i);
+
+				notify(&e);
+			}
         }
-    }
-}
-
-
-ShapeGroup::~ShapeGroup() {
-	ShapeGroupEvent e{ShapeGroupEvent::Type::destroyed, this, nullptr};
-
-	notify(&e);
-}
-
-void ShapeGroup::insert(shared_ptr<Shape> shape) {
-	ShapeGroupEvent e{ShapeGroupEvent::Type::attached, this, shape};
-	// Not checking for null-pointer arguments is intended behavior, as code
-	// feeding in null-pointer values should not exist in the first place: a
-	// segmentation fault acts as a proper signaling mechanism
-	mShapes.push_front(shape);
-	shape->addHandler(mListener);
-
-	notify(&e);
+	}
 }

@@ -22,57 +22,29 @@
 #ifndef NON_GRAVITAR_COLLISION_GROUP_HPP
 #define NON_GRAVITAR_COLLISION_GROUP_HPP
 
-#include "utils/Event.hpp"
+#include <memory>
 #include "ShapeGroup.hpp"
-#include "shape/ShapeVisitor.hpp"
+#include "utils/Event.hpp"
 
 
 namespace gvt {
 	class CollisionGroup;
 
-	// TODO Replace by lambda
-	class CollisionListener: public GVTEventHandler {
-		private:
-			CollisionGroup &mGroup;
-		public:
-			explicit CollisionListener(CollisionGroup &group);
-			void handle (Event *e) override;
-	};
-
-	/**
-	 * An implementation of @c ShapeVisitor taking action when two objects
-	 * collide together. When such an event takes place, it is not always
-	 * obvious what operation perform (e.g. a @c Missile colliding with a
-	 * mountain, the @c Spaceship with another @c Missile etc.). @c
-	 * CollisionVisitor is delegated this complex decision.
-	 *
-	 * TODO Improve documentation.
-	 */
-	class CollisionVisitor: public ShapeVisitor {
-		private:
-			CollisionGroup &mGroup;
-		public:
-			explicit CollisionVisitor(CollisionGroup &group);
-
-			void visitSpaceship(Spaceship &spaceship) override;
-			void visitBunker(Bunker &bunker) override;
-			void visitMissile(RoundMissile &missile) override;
-			void visitFuel(Fuel &fuel) override;
-	};
-
 	/**
 	 * A subclass of @c ShapeGroup handling collision between objects.
 	 */
 	class CollisionGroup: public ShapeGroup {
-		friend class CollisionListener;
-
         private:
-			CollisionListener mCollisionListener{*this};
-			CollisionVisitor mVisitor{*this};
-
 			void updateCollisions();
 		public:
 			CollisionGroup() = default;
+
+			void handle (Event *e) override;
+	};
+
+	struct CollisionEvent: public Event {
+		public:
+			shared_ptr<Shape> first, second;
 	};
 }
 
