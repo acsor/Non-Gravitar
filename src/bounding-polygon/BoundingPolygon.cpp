@@ -31,9 +31,14 @@ namespace gvt {
 
 	std::vector<Vector<float_type>> BoundingPolygon::normalAxes() const {
 		Vector<float_type> diff;
-		std::vector<Vector<float_type>> axes(mVertices.size());
+		// How many normal axes does a "polygon" hold? If it is a line, just
+		// one.
+		std::vector<Vector<float_type>> axes(
+			mVertices.size() > 2 ? mVertices.size(): 1
+		);
 		size_t i = 1;
 
+		// Add the normal axes, from the first to the second to last
         while (i < mVertices.size()) {
 			diff = mVertices[i] - mVertices[i - 1];
 			axes[i - 1] = Vector<float_type>(diff.angle() - M_PI / 2.0);
@@ -41,17 +46,20 @@ namespace gvt {
 			i++;
 		}
 
-		// Add last axis
-		diff = mVertices[0] - mVertices[i - 1];
-		axes[i - 1] = Vector<float_type>(diff.angle() - M_PI / 2.0);
+		// Add last axis only if it makes sense to do so -- namely, we are
+		// dealing with a polygon and not a straight line
+        if (mVertices.size() > 2) {
+			diff = mVertices[0] - mVertices[i - 1];
+			axes[i - 1] = Vector<float_type>(diff.angle() - M_PI / 2.0);
+        }
 
 		return axes;
 	}
 
 	BoundingPolygon::BoundingPolygon(std::initializer_list<Vertex> vertices) {
-		if (vertices.size() < 3)
+		if (vertices.size() < 2)
 			throw std::domain_error(
-				"No known 2D polygon has fewer than 3 vertices!"
+				"Unable to instantiate a BoundingPolygon with fewer than 2 vertices"
 			);
 
 		mVertices.assign(vertices);
