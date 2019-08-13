@@ -9,6 +9,7 @@ set(DIR_SRC "src")
 set(DIR_SHAPE "${DIR_SRC}/shape")
 set(DIR_SHAPE_GROUP "${DIR_SRC}/shape-group")
 set(DIR_VIEWS "${DIR_SRC}/view")
+set(DIR_CONTROL "${DIR_SRC}/control")
 set(DIR_UTILS "${DIR_SRC}/utils")
 set(DIR_BOUND "${DIR_SRC}/bounding-polygon")
 set(DIR_SAMPLES "samples/")
@@ -92,6 +93,11 @@ add_library(SpaceshipView "${DIR_VIEWS}/SpaceshipView.cpp")
 target_link_libraries(SpaceshipView Spaceship Shape2DView Utils)
 
 
+# Controller section
+add_library(CollisionController "${DIR_CONTROL}/CollisionController.cpp")
+target_link_libraries(CollisionController ShapeGroup ShapeGroupView)
+
+
 # Samples section
 add_executable(SFMLCollision "${DIR_SAMPLES}/SFMLCollision.cpp")
 target_link_libraries(SFMLCollision sfml-window sfml-graphics sfml-system)
@@ -105,7 +111,8 @@ add_executable(NonGravitar "${DIR_SRC}/NonGravitar.cpp")
 target_link_libraries(
 	NonGravitar
 	sfml-window sfml-graphics sfml-system
-	ShapeGroup ShapeGroupView
+	CollisionGroup ShapeGroupView
+    CollisionController
 )
 
 

@@ -26,12 +26,13 @@
 #include <SFML/Window.hpp>
 #include "shape/Spaceship.hpp"
 #include "shape-group/ShapeGroup.hpp"
-#include "shape-group/DummyGroup.hpp"
+#include "shape-group/CollisionGroup.hpp"
 #include "shape/Bunker.hpp"
 #include "utils/Vector.hpp"
 #include "view/BunkerView.hpp"
 #include "view/ShapeGroupView.hpp"
 #include "view/SpaceshipView.hpp"
+#include "control/CollisionController.hpp"
 
 template<typename T> using shared_ptr = std::shared_ptr<T>;
 
@@ -47,7 +48,7 @@ using Bunker = gvt::Bunker;
 using BunkerView = gvt::BunkerView;
 
 
-#define STEP_SIZE 5.0
+#define STEP_SIZE 10.0
 #define ANGLE_SIZE (10 * M_PI / 180.0)
 
 
@@ -122,10 +123,12 @@ int main () {
 	sf::VideoMode const mode = sf::VideoMode::getDesktopMode();
 	RenderWindow w{mode, "Non-Gravitar"};
 
-	shared_ptr<ShapeGroup> group{new gvt::DummyGroup()};
+	shared_ptr<ShapeGroup> group{new gvt::CollisionGroup()};
 	shared_ptr<Spaceship> ship{new Spaceship({22, 23}, 1000)};
 	shared_ptr<Bunker> bunker{new gvt::Bunker2D({700, 500})};
-	gvt::ShapeGroupView rootView(group);
+	shared_ptr<gvt::ShapeGroupView> rootView {new gvt::ShapeGroupView(group)};
+
+	gvt::CollisionController c{group, rootView};
 
 	gvt::EventDispatcher<sf::Event> loopDispatcher;
 	Event e;
@@ -134,12 +137,12 @@ int main () {
 
 	group->insert(ship);
 	group->insert(bunker);
-	group->insert(shared_ptr<Bunker>(new gvt::Bunker2D({600, 500})));
+	group->insert(shared_ptr<Bunker>(new gvt::Bunker2D({100, 100})));
 	group->insert(shared_ptr<Bunker>(new gvt::Bunker3D({500, 500})));
 
 	loopDispatcher.addHandler(new CloseWindowHandler(w));
 	loopDispatcher.addHandler(new MoveShipHandler(ship));
-	loopDispatcher.addHandler(new DebugToggleHandler(rootView));
+	loopDispatcher.addHandler(new DebugToggleHandler(*rootView));
 
 	bunker->rotate(M_PI / -2.0);
 
@@ -148,7 +151,7 @@ int main () {
 			loopDispatcher.notify(&e);
 
 		w.clear();
-		w.draw(rootView);
+		w.draw(*rootView);
 		w.display();
 	}
 
