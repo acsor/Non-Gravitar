@@ -49,8 +49,8 @@ void ShapeGroupView::debug(bool state) {
 void ShapeGroupView::draw(
 	sf::RenderTarget &target, sf::RenderStates state
 ) const {
-    for (auto &view : mViews) {
-		if (view.first.expired())
+    for (auto &view: mViews) {
+		if (view.second->expired())
 			mViews.erase(view.first);
 		else
 			view.second->draw(target, state);
@@ -66,8 +66,7 @@ void ShapeGroupView::handle(Event *e) {
 				mFactory.makeView(event->shape)
 			);
 		} else if (event->type == ShapeGroupEvent::Type::detached) {
-            // No need to detach the view here -- it is going to be deleted
-            // in the draw cycle (see ShapeGroupView::draw())
+            mViews.erase(event->shape);
 		} else if (event->type == ShapeGroupEvent::Type::destroyed) {
 			mViews.clear();
 			mGroup.reset();
@@ -75,8 +74,6 @@ void ShapeGroupView::handle(Event *e) {
 	}
 }
 
-void ShapeGroupView::highlight(weak_ptr<Shape> shape, bool highlighted) {
-    if (auto shared = shape.lock()) {
-    	mViews[shared].hightlight(highlighted);
-    }
+void ShapeGroupView::highlight(shared_ptr<Shape> shape, bool highlighted) {
+	mViews[shape]->hightlight(highlighted);
 }

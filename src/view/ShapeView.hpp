@@ -75,6 +75,12 @@ namespace gvt {
 			void draw(RenderTarget &target, RenderStates states) const override;
 
 			/**
+			 * @return @c true if the shape visualized by this @c ShapeView
+			 * terminated its lifetime, @c false otherwise. If this view
+			 * expired, references to it may be freed up.
+			 */
+			bool expired() const;
+			/**
 			 * Highlights the debug outline of this @c ShapeView.
 			 */
 			virtual void hightlight (bool highlighted) = 0;

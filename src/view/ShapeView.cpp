@@ -81,4 +81,8 @@ namespace gvt {
 			}
 		}
 	}
+
+	bool ShapeView::expired() const {
+		return mShape.expired();
+	}
 }

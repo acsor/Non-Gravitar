@@ -22,7 +22,7 @@
 #ifndef NON_GRAVITAR_SHAPE_GROUP_VIEW
 #define NON_GRAVITAR_SHAPE_GROUP_VIEW
 
-#include <map>
+#include <unordered_map>
 #include <memory>
 #include <SFML/Graphics.hpp>
 #include "utils/Event.hpp"
@@ -43,7 +43,7 @@ namespace gvt {
 			ShapeViewFactory mFactory;
 		protected:
 			weak_ptr<ShapeGroup> mGroup;
-			mutable std::map<weak_ptr<Shape>, unique_ptr<ShapeView>> mViews;
+			mutable std::unordered_map<shared_ptr<Shape>, unique_ptr<ShapeView>> mViews;
 
 		public:
 			explicit ShapeGroupView(shared_ptr<ShapeGroup> group);
@@ -60,9 +60,9 @@ namespace gvt {
 			void handle(Event *e) override;
 			/**
 			 * Turns the @c shape colliding bounds color into a more visible
-			 * state, such that it can be considered hightlighted.
+			 * state, such that it can be considered highlighted.
 			 */
-			void highlight(weak_ptr<Shape> shape, bool highlighted);
+			void highlight(shared_ptr<Shape> shape, bool highlighted);
 	};
 }
 
