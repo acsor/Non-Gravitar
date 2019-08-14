@@ -22,9 +22,11 @@
 #include <iostream>
 #include <cmath>
 #include <memory>
+#include <utility>
 #include <SFML/Graphics.hpp>
 #include <SFML/Window.hpp>
 #include "shape/Spaceship.hpp"
+#include "shape/MountainChain.hpp"
 #include "shape-group/ShapeGroup.hpp"
 #include "shape-group/CollisionGroup.hpp"
 #include "shape/Bunker.hpp"
@@ -139,6 +141,7 @@ int main () {
 	group->insert(bunker);
 	group->insert(shared_ptr<Bunker>(new gvt::Bunker2D({100, 100})));
 	group->insert(shared_ptr<Bunker>(new gvt::Bunker3D({500, 500})));
+	group->insert(gvt::MountainChain::randomChain({0, 350}, 10));
 
 	loopDispatcher.addHandler(new CloseWindowHandler(w));
 	loopDispatcher.addHandler(new MoveShipHandler(ship));

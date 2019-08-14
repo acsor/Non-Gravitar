@@ -117,7 +117,8 @@ add_executable(NonGravitar "${DIR_SRC}/NonGravitar.cpp")
 target_link_libraries(
 	NonGravitar
 	sfml-window sfml-graphics sfml-system
-	CollisionGroup ShapeGroupView
+	CollisionGroup MountainChain
+    ShapeGroupView
     CollisionController
 )
 
