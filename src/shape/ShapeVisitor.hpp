@@ -10,7 +10,7 @@ namespace gvt {
 	class RoundMissile;
 	class Fuel;
 	class Circle;
-	class Mountain;
+	class Polyline;
 
 	/**
 	 * An implementation of the design pattern Visitor as described in the
@@ -27,7 +27,7 @@ namespace gvt {
 			virtual void visitCircle(Circle &circle) {};
 			virtual void visitFuel(Fuel &fuel) {};
 			virtual void visitMissile(RoundMissile &missile) {};
-			virtual void visitMountain(Mountain &mountain) {};
+			virtual void visitPolyline(Polyline &polyline) {};
 			virtual void visitRectangle(Rectangle &rectangle) {};
 			virtual void visitSpaceship(Spaceship &spaceship) {};
 	};

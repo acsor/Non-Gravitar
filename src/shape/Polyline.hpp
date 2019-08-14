@@ -22,11 +22,25 @@
 #ifndef NON_GRAVITAR_POLYLINE_HPP
 #define NON_GRAVITAR_POLYLINE_HPP
 
+#include <functional>
+#include <iterator>
+#include <list>
+#include <memory>
 #include <vector>
 #include "Shape.hpp"
+#include "ShapeVisitor.hpp"
+
+template<typename T> using shared_ptr = std::shared_ptr<T>;
 
 
 namespace gvt {
+	/**
+	 * A @c ShapeGenerator is a function returning part of a polyline shape,
+	 * like a mountain, hill or any other subcomponent. This interface allows
+	 * their construction to be modularized.
+	 */
+	using ShapeGenerator = std::function<std::vector<Vectord> ()>;
+
 	/**
 	 * Abstract @c Shape encapsulating primitives for point-to-point shapes.
 	 * Note that vertices (points representing extremes of various lines)
@@ -34,15 +48,28 @@ namespace gvt {
 	 * Polyline.
 	 */
 	class Polyline: public Shape {
-		private:
+		public:
+			using iterator = std::vector<Vectord>::iterator;
+		protected:
 			// Polyline subclasses will often have a fixed number of vertices.
 			// Employing a std::vector looks like a more reasonable choice
 			// compared to std::list
 			std::vector<Vectord> mVertices;
-		protected:
-			explicit Polyline (size_t vertices);
+
+			/**
+			 * @param vertices Vertices to initialize this polyline with. @c
+			 * vertices will be emptied after this call.
+			 */
+			 // TODO How is C++ able to detect templates arguments without
+			 //  them being specified?
+			template<typename iterator>
+			Polyline (Vectord position, iterator begin, iterator end):
+					Shape(position), mVertices{begin, end} {
+			}
+
+			bool clashes (Shape2D const &other) const;
+			bool clashes (Polyline const &other) const;
 		public:
-			using iterator = std::vector<Vectord>::iterator;
 
 			inline size_t size() const;
 
@@ -51,6 +78,17 @@ namespace gvt {
 
 			inline iterator begin();
 			inline iterator end();
+
+			void accept (ShapeVisitor &v) override;
+			/**
+			 * Detects a collision again this object and @c other. If other
+			 * is of type @c Shape2D, than the control is made against its
+			 * own bounding polygon and all the lines comprising this polyline.
+			 *
+			 * @return @c true if @c *this clashes with @c other, @c false
+			 * otherwise.
+			 */
+			bool clashes (Shape const &other) const override;
 	};
 }
 

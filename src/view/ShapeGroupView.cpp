@@ -24,8 +24,6 @@
 #include "view/SpaceshipView.hpp"
 #include "view/BunkerView.hpp"
 
-using ShapeGroupEvent = gvt::ShapeGroupEvent;
-using ShapeGroupView = gvt::ShapeGroupView;
 
 namespace gvt {
 	void ShapeGroupView::updateDebugView () {
@@ -65,6 +63,20 @@ namespace gvt {
 		}
 	}
 
-void ShapeGroupView::highlight(shared_ptr<Shape> shape, bool highlighted) {
-	mViews[shape]->hightlight(highlighted);
+	void ShapeGroupView::handle(Event *e) {
+		auto event = dynamic_cast<ShapeGroupEvent*>(e);
+
+		if (event) {
+			if (event->type == ShapeGroupEvent::Type::attached) {
+				mViews[event->shape] = shared_ptr<ShapeView>(
+						mFactory.makeView(event->shape)
+				);
+			} else if (event->type == ShapeGroupEvent::Type::detached) {
+				mViews.erase(event->shape);
+			} else if (event->type == ShapeGroupEvent::Type::destroyed) {
+				mViews.clear();
+				mGroup.reset();
+			}
+		}
+	}
 }

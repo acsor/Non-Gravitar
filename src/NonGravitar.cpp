@@ -70,7 +70,7 @@ class MoveShipHandler: public gvt::EventHandler<sf::Event> {
 		shared_ptr<Spaceship> mShip;
 	public:
 		explicit MoveShipHandler(shared_ptr<Spaceship> spaceship):
-				mShip{spaceship} {};
+				mShip{std::move(spaceship)} {};
 
 		void handle (sf::Event *e) override {
 			switch (e->type) {

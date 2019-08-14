@@ -75,22 +75,6 @@ namespace gvt {
 			target.draw(mBounds);
 	}
 
-	void Shape2DView::onMoved() {
-		ShapeView::onMoved();
-
-		if (!mShape.expired()) {
-			updateRotation();
-			updateDebugBounds();
-		}
-	}
-
-	void Shape2DView::onRotated() {
-		if (!mShape.expired()) {
-			updateRotation();
-			updateDebugBounds();
-		}
-	}
-
 	void Shape2DView::onDestroyed() {
 		mBounds.clear();
 	}

@@ -41,8 +41,6 @@ namespace gvt {
 			void onDraw(
 				shared_ptr<Shape> shape, RenderTarget &t, RenderStates s
 			) const override;
-			void onMoved() override;
-			void onRotated() override;
 			void onDestroyed() override;
 	};
 }

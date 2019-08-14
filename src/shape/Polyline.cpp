@@ -20,16 +20,59 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 #include <stdexcept>
+#include <utility>
 #include "Polyline.hpp"
+#include "Shape2D.hpp"
 
 
 namespace gvt {
-	Polyline::Polyline(size_t vertices) {
-		if (vertices < 2) {
+	void Polyline::accept (ShapeVisitor &visitor) {
+		visitor.visitPolyline(*this);
+	}
+
+	bool Polyline::clashes (Shape2D const &other) const {
+		auto polygon = other.collisionPolygon();
+
+		for (size_t i = 0; i < mVertices.size() - 1; i++) {
+			auto line = BoundingPolygon({mVertices[i], mVertices[i + 1]});
+			line.shift(mPosition);
+
+			if (line.intersects(polygon))
+				return true;
+		}
+
+		return false;
+	}
+
+	bool Polyline::clashes (Polyline const &other) const {
+		// TODO Test
+		for (size_t i = 0; i < mVertices.size() - 1; i++) {
+			auto const firstLine = BoundingPolygon(
+					{mVertices[i], mVertices[i + 1]}
+			);
+
+			for (size_t j = 0; i < other.size() - 1; j++) {
+				auto const secondLine = BoundingPolygon(
+						{other.mVertices[j], other.mVertices[j + 1]}
+				);
+
+				if (firstLine.intersects(secondLine))
+					return true;
+			}
+		}
+
+		return false;
+	}
+
+	bool Polyline::clashes (Shape const &other) const {
+		if (auto shape2d = dynamic_cast<Shape2D const *>(&other)) {
+			return clashes(*shape2d);
+		}  else if (auto polyline = dynamic_cast<Polyline const *>(&other)) {
+			return clashes(*polyline);
+		} else {
 			throw std::domain_error(
-					"No polyline can have fewer than 2 vertices"
+				"Unrecognized type of shape to detect collisions with"
 			);
 		}
-		mVertices.reserve(vertices);
 	}
 }

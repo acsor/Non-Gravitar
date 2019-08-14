@@ -93,7 +93,7 @@ add_library(ShapeGroupView "${DIR_VIEWS}/ShapeGroupView.cpp")
 target_link_libraries(ShapeGroupView ShapeGroup ShapeViewFactory)
 
 add_library(ShapeViewFactory "${DIR_VIEWS}/ShapeViewFactory.cpp")
-target_link_libraries(ShapeViewFactory SpaceshipView BunkerView)
+target_link_libraries(ShapeViewFactory SpaceshipView BunkerView PolylineView)
 
 add_library(SpaceshipView "${DIR_VIEWS}/SpaceshipView.cpp")
 target_link_libraries(SpaceshipView Spaceship Shape2DView Utils)
