@@ -25,7 +25,7 @@
 #include <memory>
 #include <SFML/Graphics.hpp>
 #include "shape/Shape.hpp"
-#include "Debuggable.hpp"
+#include "DebuggableView.hpp"
 
 template<typename T> using weak_ptr = std::weak_ptr<T>;
 template<typename T> using shared_ptr = std::shared_ptr<T>;
@@ -35,7 +35,7 @@ using RenderTarget = sf::RenderTarget;
 
 namespace gvt {
 	class ShapeView: public sf::Drawable, public GVTEventHandler,
-			public Debuggable {
+			public DebuggableView {
 		protected:
 			sf::Transform mTranslation, mRotation;
 			weak_ptr<Shape> mShape;
@@ -63,11 +63,9 @@ namespace gvt {
 			virtual void onDraw(
 				shared_ptr<Shape> shape, RenderTarget &t, RenderStates s
 			) const = 0;
-			// TODO I wonder if it is necessary to mark these functions as
-			//  virtual, considering they'll never be invoked through pointers.
 			virtual void onMoved();
-			virtual void onRotated() = 0;
-			virtual void onDestroyed() = 0;
+			virtual void onRotated();
+			virtual void onDestroyed() {};
 		public:
 			~ShapeView() override;
 
@@ -80,10 +78,6 @@ namespace gvt {
 			 * expired, references to it may be freed up.
 			 */
 			bool expired() const;
-			/**
-			 * Highlights the debug outline of this @c ShapeView.
-			 */
-			virtual void hightlight (bool highlighted) = 0;
 	};
 }
 

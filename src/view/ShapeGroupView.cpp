@@ -19,60 +19,51 @@
 // LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
-#include "ShapeGroupView.hpp"
-
 #include <stdexcept>
+#include "ShapeGroupView.hpp"
 #include "view/SpaceshipView.hpp"
 #include "view/BunkerView.hpp"
 
 using ShapeGroupEvent = gvt::ShapeGroupEvent;
 using ShapeGroupView = gvt::ShapeGroupView;
 
-
-ShapeGroupView::ShapeGroupView(shared_ptr<ShapeGroup> group):
-	Debuggable(false), mGroup{group} {
-	group->addHandler(this);
-}
-
-ShapeGroupView::~ShapeGroupView() {
-	if (auto p = mGroup.lock())
-		p->removeHandler(*this);
-}
-
-void ShapeGroupView::debug(bool state) {
-	Debuggable::debug(state);
-
-	for (auto &mView : mViews)
-		mView.second->debug(state);
-}
-
-void ShapeGroupView::draw(
-	sf::RenderTarget &target, sf::RenderStates state
-) const {
-    for (auto &view: mViews) {
-		if (view.second->expired())
-			mViews.erase(view.first);
-		else
-			view.second->draw(target, state);
+namespace gvt {
+	void ShapeGroupView::updateDebugView () {
 	}
-}
 
-void ShapeGroupView::handle(Event *e) {
-	auto event = dynamic_cast<ShapeGroupEvent*>(e);
+	ShapeGroupView::ShapeGroupView(shared_ptr<ShapeGroup> group): mGroup{group} {
+		group->addHandler(this);
+	}
 
-	if (event) {
-		if (event->type == ShapeGroupEvent::Type::attached) {
-			mViews[event->shape] = unique_ptr<ShapeView>(
-				mFactory.makeView(event->shape)
-			);
-		} else if (event->type == ShapeGroupEvent::Type::detached) {
-            mViews.erase(event->shape);
-		} else if (event->type == ShapeGroupEvent::Type::destroyed) {
-			mViews.clear();
-			mGroup.reset();
+	ShapeGroupView::~ShapeGroupView() {
+		if (auto p = mGroup.lock())
+			p->removeHandler(*this);
+	}
+
+	void ShapeGroupView::setDebug(bool state) {
+		DebuggableView::setDebug(state);
+
+		for (auto &mView : mViews)
+			mView.second->setDebug(state);
+	}
+
+	void ShapeGroupView::debugColor (sf::Color color) {
+		DebuggableView::debugColor(color);
+
+		for (auto &mView : mViews)
+			mView.second->debugColor(color);
+	}
+
+	void ShapeGroupView::draw(
+			sf::RenderTarget &target, sf::RenderStates state
+	) const {
+		for (auto &view: mViews) {
+			if (view.second->expired())
+				mViews.erase(view.first);
+			else
+				view.second->draw(target, state);
 		}
 	}
-}
 
 void ShapeGroupView::highlight(shared_ptr<Shape> shape, bool highlighted) {
 	mViews[shape]->hightlight(highlighted);

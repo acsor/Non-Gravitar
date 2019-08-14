@@ -71,8 +71,10 @@ target_link_libraries(Bunker RoundMissile)
 
 
 # Shape views section
+add_library(DebuggableView "${DIR_VIEWS}/DebuggableView.cpp")
+
 add_library(ShapeView "${DIR_VIEWS}/ShapeView.cpp")
-target_link_libraries(ShapeView Shape)
+target_link_libraries(ShapeView Shape DebuggableView)
 
 add_library(Shape2DView "${DIR_VIEWS}/Shape2DView.cpp")
 target_link_libraries(Shape2DView ShapeView)

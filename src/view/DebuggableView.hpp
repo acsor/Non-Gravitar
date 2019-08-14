@@ -19,25 +19,51 @@
 // LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
-#ifndef NON_GRAVITAR_POLYLINEVIEW_HPP
-#define NON_GRAVITAR_POLYLINEVIEW_HPP
+#ifndef NON_GRAVITAR_DEBUGGABLE_VIEW_HPP
+#define NON_GRAVITAR_DEBUGGABLE_VIEW_HPP
 
-#include "shape/Polyline.hpp"
-#include "view/ShapeView.hpp"
+#include <SFML/Graphics.hpp>
 
 
 namespace gvt {
-	class PolylineView: public ShapeView {
+	class DebuggableView {
 		protected:
-			static sf::Color const DEFAULT_COLOR;
+			bool mDebug {false};
+			sf::Color mDebugColor {DEFAULT_DEBUG_COLOR};
 
-			sf::Color mColor {DEFAULT_COLOR};
-			sf::VertexArray mVertices;
+			DebuggableView() = default;
+			virtual void updateDebugView() = 0;
 		public:
-			explicit PolylineView(shared_ptr<Polyline> shape);
+			static sf::Color const DEFAULT_DEBUG_COLOR;
+			static sf::Color const COLLISION_DEBUG_COLOR;
 
-			void setDebug (bool debug) override;
+			inline bool isDebug() const;
+			inline virtual void setDebug(bool debug);
+
+			inline sf::Color debugColor () const;
+			inline virtual void debugColor (sf::Color color);
 	};
 }
+
+
+namespace gvt {
+	bool DebuggableView::isDebug() const {
+		return mDebug;
+	}
+
+	void DebuggableView::setDebug(bool debug) {
+		mDebug = debug;
+	}
+
+	sf::Color DebuggableView::debugColor () const {
+        return mDebugColor;
+	}
+
+	void DebuggableView::debugColor (sf::Color color) {
+		mDebugColor = color;
+		updateDebugView();
+	}
+}
+
 
 #endif

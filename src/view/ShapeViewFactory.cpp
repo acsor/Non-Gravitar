@@ -20,6 +20,7 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 #include "ShapeViewFactory.hpp"
+#include "PolylineView.hpp"
 
 
 namespace gvt {
@@ -28,6 +29,8 @@ namespace gvt {
 			return new SpaceshipView(ship);
 		} else if (auto b = std::dynamic_pointer_cast<Bunker>(shape)) {
 			return new BunkerView(b);
+		} else if (auto p = std::dynamic_pointer_cast<Polyline>(shape)) {
+			return new PolylineView(p);
 		} else {
 			throw std::domain_error("Unrecognized type of shape");
 		}

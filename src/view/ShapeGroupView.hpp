@@ -29,7 +29,7 @@
 #include "shape-group/ShapeGroup.hpp"
 #include "view/Shape2DView.hpp"
 #include "ShapeViewFactory.hpp"
-#include "Debuggable.hpp"
+#include "DebuggableView.hpp"
 
 template<typename T> using weak_ptr = std::weak_ptr<T>;
 template<typename T> using shared_ptr = std::shared_ptr<T>;
@@ -38,31 +38,29 @@ template<typename T> using unique_ptr = std::unique_ptr<T>;
 
 namespace gvt {
 	class ShapeGroupView: public sf::Drawable, public GVTEventHandler,
-			public Debuggable {
+			public DebuggableView {
 		private:
 			ShapeViewFactory mFactory;
 		protected:
 			weak_ptr<ShapeGroup> mGroup;
-			mutable std::unordered_map<shared_ptr<Shape>, unique_ptr<ShapeView>> mViews;
+			mutable std::unordered_map<shared_ptr<Shape>, shared_ptr<ShapeView>> mViews;
 
+			void updateDebugView () override;
 		public:
 			explicit ShapeGroupView(shared_ptr<ShapeGroup> group);
 			~ShapeGroupView() override;
 
-			// TODO Why was there no visibility for Debuggable::debug()?
-			//  Eliminate the declaration below.
-			bool debug() const {return mDebug;};
-			void debug (bool debug) override;
+			void setDebug(bool debug) override;
+			void debugColor(sf::Color color) override;
 
 			void draw(
 				sf::RenderTarget &target, sf::RenderStates state
 			) const override;
 			void handle(Event *e) override;
-			/**
-			 * Turns the @c shape colliding bounds color into a more visible
-			 * state, such that it can be considered highlighted.
-			 */
-			void highlight(shared_ptr<Shape> shape, bool highlighted);
+			
+			shared_ptr<ShapeView> viewFor (shared_ptr<Shape> shape) {
+				return mViews[shape];
+			}
 	};
 }
 

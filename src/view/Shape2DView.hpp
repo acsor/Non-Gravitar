@@ -31,11 +31,8 @@ namespace gvt {
 		private:
 			// Debugs bounds used for the 'debug view'
 			sf::VertexArray mBounds;
-			sf::Color mDebugColor = DEBUG_COLOR;
 
-			static sf::Color const DEBUG_COLOR, HIGHLIGHT_COLOR;
-
-			void updateDebugBounds();
+			void updateDebugView () override;
 		protected:
 			explicit Shape2DView(std::shared_ptr<Shape2D> const &shape);
 
@@ -47,10 +44,6 @@ namespace gvt {
 			void onMoved() override;
 			void onRotated() override;
 			void onDestroyed() override;
-		public:
-			void debug(bool debug) override;
-
-			void hightlight (bool highlighted) override;
 	};
 }
 

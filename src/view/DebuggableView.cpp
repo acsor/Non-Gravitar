@@ -19,25 +19,9 @@
 // LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
-#ifndef NON_GRAVITAR_POLYLINEVIEW_HPP
-#define NON_GRAVITAR_POLYLINEVIEW_HPP
-
-#include "shape/Polyline.hpp"
-#include "view/ShapeView.hpp"
-
+#include "DebuggableView.hpp"
 
 namespace gvt {
-	class PolylineView: public ShapeView {
-		protected:
-			static sf::Color const DEFAULT_COLOR;
-
-			sf::Color mColor {DEFAULT_COLOR};
-			sf::VertexArray mVertices;
-		public:
-			explicit PolylineView(shared_ptr<Polyline> shape);
-
-			void setDebug (bool debug) override;
-	};
+	sf::Color const DebuggableView::DEFAULT_DEBUG_COLOR = sf::Color::Green;
+	sf::Color const DebuggableView::COLLISION_DEBUG_COLOR = sf::Color::Red;
 }
-
-#endif

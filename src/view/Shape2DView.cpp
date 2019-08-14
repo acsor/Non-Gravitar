@@ -26,9 +26,6 @@
 
 
 namespace gvt {
-	sf::Color const Shape2DView::DEBUG_COLOR = sf::Color::Green;
-	sf::Color const Shape2DView::HIGHLIGHT_COLOR = sf::Color::Red;
-
 	void Shape2DView::updateRotation() {
 		shared_ptr<Shape2D> shape = std::dynamic_pointer_cast<Shape2D>(
 			mShape.lock()
@@ -44,15 +41,12 @@ namespace gvt {
 		}
 	}
 
-	void Shape2DView::updateDebugBounds() {
+	void Shape2DView::updateDebugView() {
 		shared_ptr<Shape2D> shape = std::dynamic_pointer_cast<Shape2D>(
 			mShape.lock()
 		);
 
-		if (mDebug && shape != nullptr) {
-			// Reallocating mBounds each time is not efficient, but this
-			// computation is only performed when mDebug == true, so this is not
-			// a real concern
+		if (shape != nullptr) {
 			vector<BoundingPolygon::Vertex>
 					vertices = shape->collisionPolygon().vertices();
 			mBounds = sf::VertexArray(sf::Quads, vertices.size() + 1);
@@ -71,6 +65,7 @@ namespace gvt {
 	Shape2DView::Shape2DView(shared_ptr<Shape2D> const &shape):
 			ShapeView{shape} {
 		updateRotation();
+		updateDebugView();
 	}
 
 	void Shape2DView::onDraw(
@@ -98,15 +93,5 @@ namespace gvt {
 
 	void Shape2DView::onDestroyed() {
 		mBounds.clear();
-	}
-
-	void Shape2DView::debug(bool debug) {
-		ShapeView::debug(debug);
-		updateDebugBounds();
-	}
-
-	void Shape2DView::hightlight (bool highlighted) {
-        mDebugColor = highlighted ? HIGHLIGHT_COLOR: DEBUG_COLOR;
-        updateDebugBounds();
 	}
 }

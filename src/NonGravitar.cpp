@@ -113,7 +113,7 @@ class DebugToggleHandler: public gvt::EventHandler<sf::Event> {
 				e->type == Event::KeyPressed &&
 				e->key.code == Keyboard::Key::B && e->key.control
 			) {
-                mRootView.debug(!mRootView.debug());
+				mRootView.setDebug(!mRootView.isDebug());
 			}
 		};
 };

@@ -23,23 +23,47 @@
 
 
 namespace gvt {
-	PolylineView::PolylineView(shared_ptr<Polyline> shape): ShapeView(shape) {
-		mVertices = sf::VertexArray(sf::LineStrip, shape->size() + 1);
+	sf::Color const PolylineView::DEFAULT_COLOR = sf::Color::Yellow;
 
-        for (size_t i = 0; i < shape->size(); i++) {
-        	mVertices[i] = sf::Vertex(
-				sf::Vector2f((*shape)[i].x, (*shape)[i] .y), mColor
-			);
+	void PolylineView::updateView() {
+		auto polyline = std::dynamic_pointer_cast<Polyline>(mShape.lock());
+
+		if (polyline) {
+			mVertices = sf::VertexArray(sf::LineStrip, polyline->size());
+			auto vertex = polyline->begin();
+
+			for (size_t i = 0; i < polyline->size(); i++, vertex++) {
+				mVertices[i] = sf::Vertex(
+						sf::Vector2f(vertex->x, vertex->y), mColor
+				);
+			}
 		}
-
-		mVertices[shape->size()] = sf::Vertex(
-			sf::Vector2f((*shape)[0].x, (*shape)[0] .y), mColor
-		);
 	}
 
-	void PolylineView::draw(RenderTarget &target, RenderStates state) const {
-		ShapeView::draw(target, state);
+	void PolylineView::updateDebugView() {
+		mColor = mDebug ? mDebugColor: DEFAULT_COLOR;
+		updateView();
+	}
 
-		target.draw(mVertices, mTranslation * mRotation);
+	void PolylineView::updateRotation() {
+		// TODO Implement, if necessary
+	}
+
+	void PolylineView::onDraw(
+			shared_ptr<Shape> shape, RenderTarget &t, RenderStates s
+	) const {
+		t.draw(mVertices, mTranslation * mRotation);
+	}
+
+	PolylineView::PolylineView(shared_ptr<Polyline> shape): ShapeView(shape) {
+		updateView();
+	}
+
+	void PolylineView::setDebug (bool debug) {
+		// Contrary to other ShapeView subclasses, PolylineView directly uses
+		// its own normal view for debug too
+        DebuggableView::setDebug(debug);
+
+        updateDebugView();
 	}
 }

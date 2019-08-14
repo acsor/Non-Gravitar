@@ -34,8 +34,7 @@ namespace gvt {
 		}
 	}
 
-	ShapeView::ShapeView(shared_ptr<Shape> const &shape):
-		Debuggable(false), mShape(shape) {
+	ShapeView::ShapeView(shared_ptr<Shape> const &shape): mShape(shape) {
 		mTranslation = sf::Transform::Identity;
 		mRotation = sf::Transform::Identity;
 
@@ -46,6 +45,14 @@ namespace gvt {
 	void ShapeView::onMoved() {
 		if (!mShape.expired()) {
 			updateTranslation();
+			updateDebugView();
+		}
+	}
+
+	void ShapeView::onRotated() {
+		if (!mShape.expired()) {
+			updateRotation();
+			updateDebugView();
 		}
 	}
 

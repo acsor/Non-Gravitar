@@ -40,8 +40,12 @@ namespace gvt {
 		auto sharedView = mView.lock();
 
 		if (collision && sharedView) {
-            sharedView->highlight(collision->first, true);
-			sharedView->highlight(collision->second, true);
+			sharedView->viewFor(collision->first)->debugColor(
+					DebuggableView::COLLISION_DEBUG_COLOR
+			);
+			sharedView->viewFor(collision->second)->debugColor(
+					DebuggableView::COLLISION_DEBUG_COLOR
+			);
 		}
 	}
 }
