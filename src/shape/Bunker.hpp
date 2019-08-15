@@ -38,13 +38,9 @@ namespace gvt {
 			unsigned mCurr{0};
 
 			Bunker(Vectord position, size_t directions);
-
-			// Width and height measures of the collision boxes
-			static unsigned const constexpr COLLIDING_WIDTH = 29;
-			static unsigned const constexpr COLLIDING_HEIGHT = 42;
 		public:
-			static unsigned const constexpr WIDTH = 45;
-			static unsigned const constexpr HEIGHT = 66;
+			static unsigned const constexpr WIDTH = 66;
+			static unsigned const constexpr HEIGHT = 45;
 
 			inline double width() const override;
 			inline double height() const override;

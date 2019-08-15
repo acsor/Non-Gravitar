@@ -34,9 +34,6 @@ namespace gvt {
 		private:
 			// Represents the current fuel amount in the ship
 			unsigned mFuel;
-
-			// Offset for the Spaceship collision polygon
-			static Vectord const sCollisionOffset;
 		public:
 			/** Width and height properties of any given spaceship. Note that
 			 * these measures depend on the texture data found in
@@ -45,8 +42,13 @@ namespace gvt {
 			 * updated accordingly (gruntwork, but avoids the use of an
 			 * external image library).
 			 */
-			static unsigned const constexpr WIDTH = 45;
-			static unsigned const constexpr HEIGHT = 46;
+			static unsigned const constexpr WIDTH = 46;
+			static unsigned const constexpr HEIGHT = 45;
+
+			// Variables specifying the width and height and the bounding
+			// polygon (which needs not necessarily be a rectangle).
+			static unsigned const constexpr BOUNDING_WIDTH = 46;
+			static unsigned const constexpr BOUNDING_HEIGHT = 42;
 
 			Spaceship(Vectord position, unsigned fuel);
 			unsigned fuel() const;
@@ -82,12 +84,14 @@ namespace gvt {
 }
 
 
-double gvt::Spaceship::width() const {
-	return WIDTH;
-}
+namespace gvt {
+	double Spaceship::width() const {
+		return WIDTH;
+	}
 
-double gvt::Spaceship::height() const {
-	return HEIGHT;
+	double Spaceship::height() const {
+		return HEIGHT;
+	}
 }
 
 

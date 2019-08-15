@@ -75,6 +75,9 @@ class MoveShipHandler: public gvt::EventHandler<sf::Event> {
 				mShip{std::move(spaceship)} {};
 
 		void handle (sf::Event *e) override {
+			auto movement = STEP_SIZE * gvt::Vectord(mShip->rotation());
+			movement.rotate(M_PI / -2.0);
+
 			switch (e->type) {
 				case (Event::KeyPressed):
 					switch (e->key.code) {
@@ -82,9 +85,7 @@ class MoveShipHandler: public gvt::EventHandler<sf::Event> {
 							mShip->rotate(-ANGLE_SIZE);
 							break;
 						case (Keyboard::Key::W):
-							mShip->move(
-								gvt::Vectord(mShip->rotation()) * STEP_SIZE
-							);
+							mShip->move(movement);
 							break;
 						case (Keyboard::Key::D):
 							mShip->rotate(ANGLE_SIZE);

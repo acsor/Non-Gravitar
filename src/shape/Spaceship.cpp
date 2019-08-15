@@ -22,57 +22,52 @@
 #include "bounding-polygon/BoundingTriangle.hpp"
 #include "Spaceship.hpp"
 
-using Spaceship = gvt::Spaceship;
-using Rectangle = gvt::Rectangle;
 
+namespace gvt {
+	Spaceship::Spaceship(Vectord position, unsigned fuel):
+			Shape2D::Shape2D(position) {
+		mFuel = fuel;
+	}
 
-gvt::Vectord const Spaceship::sCollisionOffset = {3, 0};
+	gvt::BoundingPolygon Spaceship::collisionPolygon() const {
+		BoundingTriangle t = {
+			mPosition + Vectord{0, BOUNDING_HEIGHT},
+			mPosition + Vectord{BOUNDING_WIDTH / 2.0, 0},
+			mPosition + Vectord{BOUNDING_WIDTH, BOUNDING_HEIGHT}
+		};
 
+		t.rotate(mRotation, mPosition + rotationCenter());
 
-Spaceship::Spaceship(Vectord position, unsigned fuel):
-		Shape2D::Shape2D(position) {
-	mFuel = fuel;
+		return t;
+	}
+
+	unsigned Spaceship::fuel() const {
+		return mFuel;
+	}
+
+	void Spaceship::recharge(Fuel &fuel) {
+		mFuel += fuel.fuel();
+		fuel.empty();
+	}
+
+	void Spaceship::discharge(unsigned amount) {
+		mFuel -= amount;
+	}
+
+	bool Spaceship::charged() const {
+		return mFuel > 0;
+	}
+
+	void gvt::Spaceship::accept(gvt::ShapeVisitor &visitor) {
+		visitor.visitSpaceship(*this);
+	}
+
+	bool Spaceship::operator==(Shape const &o) const {
+		auto *other = dynamic_cast<Spaceship const *>(&o);
+
+		if (other)
+			return Shape::operator==(*other) && mFuel == other->mFuel;
+
+		return false;
+	}
 }
-
-gvt::BoundingPolygon Spaceship::collisionPolygon() const {
-	BoundingTriangle t = {
-		mPosition + sCollisionOffset,
-		mPosition + sCollisionOffset + Vectord{HEIGHT, WIDTH / 2.0},
-		mPosition + sCollisionOffset + Vectord{0, width()}
-	};
-	
-	t.rotate(mRotation, t.center());
-
-	return t;
-}
-
-unsigned Spaceship::fuel() const {
-	return mFuel;
-}
-
-void Spaceship::recharge(Fuel &fuel) {
-	mFuel += fuel.fuel();
-	fuel.empty();
-}
-
-void Spaceship::discharge(unsigned amount) {
-	mFuel -= amount;
-}
-
-bool Spaceship::charged() const {
-	return mFuel > 0;
-}
-
-void gvt::Spaceship::accept(gvt::ShapeVisitor &visitor) {
-	visitor.visitSpaceship(*this);
-}
-
-bool Spaceship::operator==(Shape const &o) const {
-	auto *other = dynamic_cast<Spaceship const *>(&o);
-
-	if (other)
-		return Shape::operator==(*other) && mFuel == other->mFuel;
-
-	return false;
-}
-
