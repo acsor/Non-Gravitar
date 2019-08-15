@@ -35,7 +35,7 @@ namespace gvt {
 	class MountainChain: public Polyline {
 		protected:
 			static double const constexpr MAX_HEIGHT = 100;
-			static double const constexpr MAX_WIDTH = 150;
+			static double const constexpr MAX_WIDTH = 200;
 
 			static ShapeGenerator const sMountainGen, sHillGen, sPlainGen;
 		public:

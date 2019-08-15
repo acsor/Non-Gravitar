@@ -127,8 +127,13 @@ int main () {
 	RenderWindow w{mode, "Non-Gravitar"};
 
 	shared_ptr<ShapeGroup> group{new gvt::CollisionGroup()};
-	shared_ptr<Spaceship> ship{new Spaceship({22, 23}, 1000)};
-	shared_ptr<Bunker> bunker{new gvt::Bunker2D({700, 500})};
+	shared_ptr<Spaceship> ship{new Spaceship({600, 500}, 1000)};
+	shared_ptr<Bunker> bunker1{new gvt::Bunker2D({0, 0})};
+	shared_ptr<Bunker> bunker2{new gvt::Bunker2D({0, 0})};
+	shared_ptr<Bunker> bunker3{new gvt::Bunker3D({0, 0})};
+	shared_ptr<gvt::Polyline> mountains{
+		gvt::MountainChain::randomChain({0, 350}, 9)
+	};
 	shared_ptr<gvt::ShapeGroupView> rootView {new gvt::ShapeGroupView(group)};
 
 	gvt::CollisionController c{group, rootView};
@@ -139,16 +144,18 @@ int main () {
 	w.setFramerateLimit(45);
 
 	group->insert(ship);
-	group->insert(bunker);
-	group->insert(shared_ptr<Bunker>(new gvt::Bunker2D({100, 100})));
-	group->insert(shared_ptr<Bunker>(new gvt::Bunker3D({500, 500})));
-	group->insert(gvt::MountainChain::randomChain({0, 350}, 10));
+	group->insert(bunker1);
+	group->insert(bunker2);
+	group->insert(bunker3);
+	group->insert(mountains);
 
 	loopDispatcher.addHandler(new CloseWindowHandler(w));
 	loopDispatcher.addHandler(new MoveShipHandler(ship));
 	loopDispatcher.addHandler(new DebugToggleHandler(*rootView));
 
-	bunker->rotate(M_PI / -2.0);
+    mountains->align(1, *bunker1);
+	mountains->align(mountains->size() / 2, *bunker2);
+	mountains->align(mountains->size() - 3, *bunker3);
 
 	while (w.isOpen()) {
 		while (w.pollEvent(e))

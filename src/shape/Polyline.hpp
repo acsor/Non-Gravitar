@@ -61,19 +61,31 @@ namespace gvt {
 			 * vertices will be emptied after this call.
 			 */
 			template<typename iterator>
-			Polyline (Vectord position, iterator begin, iterator end):
-					Shape(position), mVertices{begin, end} {
-			}
+			Polyline (Vectord position, iterator begin, iterator end);
 
 			bool clashes (Shape2D const &other) const;
 			bool clashes (Polyline const &other) const;
 		public:
-
 			inline size_t size() const;
 
 			inline Vectord& operator[] (size_t index);
 			inline const Vectord& operator[] (size_t index) const;
 
+			/**
+			 * Orients @c shape in such a way as to align it to the @c line-th
+			 * segment of this polyline, setting its position and rotation
+			 * appropriately.
+			 *
+			 * @param line Index associated to the segment to align @c shape
+			 * with. Note that if this polyline possesses n vertices, then it
+			 * has n - 1 segments.
+			 * @param shape Shape to align
+			 * @param offset Where to align @c shape within the available
+			 * segment space (assumes values in [0, 1]). A value of @c 0 sets it
+			 * at the beginning, @c 0 .5 at the middle and @c 1 at the very end
+			 * of the segment. Defaults to @c 0.5.
+			 */
+			void align (unsigned line, Shape2D &shape, double offset = 0.5);
 			inline iterator begin();
 			inline iterator end();
 
@@ -92,6 +104,10 @@ namespace gvt {
 
 
 namespace gvt {
+	template<typename I> Polyline::Polyline (Vectord position, I begin, I end):
+			Shape(position), mVertices{begin, end} {
+	}
+
 	size_t Polyline::size() const {
 		return mVertices.size();
 	}

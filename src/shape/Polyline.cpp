@@ -26,6 +26,36 @@
 
 
 namespace gvt {
+	void Polyline::align (unsigned line, Shape2D &shape, double offset) {
+        if (line >= mVertices.size() - 1)
+        	throw std::domain_error("line argument out of bounds");
+        if (offset < 0 || offset > 1)
+			throw std::domain_error("offset can only assume values in [0, 1]");
+
+        // TODO Optimize this code by reducing the number of mathematical steps
+        auto const &start = mVertices[line], &finish = mVertices[line + 1];
+        auto normalizedDiff = (finish - start);
+        auto const
+        		// The angle by which rotate the given shape
+				theta = (finish - start).angle(),
+				spaceLeft = (finish - start).norm() - shape.width();
+        auto newCenter = (
+			shape.rotationCenter() - Vectord{0, shape.height()} + start
+		);
+
+		normalizedDiff.normalize();
+        newCenter.rotate(theta, start);
+
+        shape.position(
+			mPosition
+			// The line below could be subject to optimization
+			+ newCenter - shape.rotationCenter()
+			// The line below decides the offset of the shape
+			+ spaceLeft * offset * normalizedDiff
+		);
+        shape.rotation(theta);
+	}
+
 	void Polyline::accept (ShapeVisitor &visitor) {
 		visitor.visitPolyline(*this);
 	}
