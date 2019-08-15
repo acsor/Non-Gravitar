@@ -32,7 +32,7 @@ namespace gvt {
 		);
 
 		if (shape) {
-			auto center = shape->center();
+			auto center = shape->rotationCenter();
 
 			mRotation = sf::Transform::Identity;
 			mRotation.rotate(

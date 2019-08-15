@@ -43,7 +43,7 @@ namespace gvt {
 			 * @return The center point of this @c Shape <b>relative</b> to
 			 * this object position.
 			 */
-			virtual inline Vectord center() const;
+			virtual inline Vectord rotationCenter() const;
 			/**
 			 * @return A @c Rectangle object representing the bounds used to
 			 * detect collisions with another @c Shape. The coordinates
@@ -60,7 +60,7 @@ namespace gvt {
 	Shape2D::Shape2D(Vectord position): Shape(position) {
 	}
 
-	Vectord Shape2D::center() const {
+	Vectord Shape2D::rotationCenter() const {
 		return Vectord{width() / 2.0, height() / 2.0};
 	}
 

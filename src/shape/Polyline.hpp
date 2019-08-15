@@ -60,8 +60,6 @@ namespace gvt {
 			 * @param vertices Vertices to initialize this polyline with. @c
 			 * vertices will be emptied after this call.
 			 */
-			 // TODO How is C++ able to detect templates arguments without
-			 //  them being specified?
 			template<typename iterator>
 			Polyline (Vectord position, iterator begin, iterator end):
 					Shape(position), mVertices{begin, end} {
