@@ -62,7 +62,7 @@ gvt::BoundingPolygon Rectangle::collisionPolygon() const {
 }
 
 Rectangle::Rectangle(Vectord topLeft, Vectord bottomRight):
-		Shape(topLeft), mEnd{bottomRight} {
+		Shape2D(topLeft), mEnd{bottomRight} {
 }
 
 bool Rectangle::operator==(Shape const &o) const {

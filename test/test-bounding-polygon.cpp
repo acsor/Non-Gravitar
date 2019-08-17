@@ -66,6 +66,56 @@ TEST_CASE("BoundingPolygon::intersects()", "[BoundingPolygon]") {
 }
 
 TEST_CASE(
+	"BoundingPolygon::intersects() w/ straight lines", "[BoundingPolygon]"
+) {
+	std::vector<BoundingPolygon> first = {
+		// Does a line intersect with itself?
+		{{-2, -2}, {2, 2}},
+		// Do two crossed lines intersect?
+		{{-2, -2}, {2, 2}},
+		// Do two lines that only share a point intersect? (They should.)
+		{{0, 0}, {2, 2}},
+		// Do two parallel lines intersect?
+		{{0, 0}, {2, 2}},
+		// Do two almost-near lines intersect? (They should not.)
+		{{0, 0}, {2, 2}},
+
+		// Does a square intersect with its diagonal?
+		{{-2, 2}, {2, 2}, {2, -2}, {-2, -2}},
+		// Does a square intersect with one of its sides?
+		{{-2, 2}, {2, 2}, {2, -2}, {-2, -2}},
+		// Does a square intersect with a tangent line? (It should.)
+		{{-2, 2}, {2, 2}, {2, -2}, {-2, -2}},
+		// Does a square intersect with a line close to its tangent? (It
+		// should not.)
+		{{-2, 2}, {2, 2}, {2, -2}, {-2, -2}}
+	};
+	std::vector<BoundingPolygon> second = {
+		{{-2, -2}, {2, 2}},
+		{{2, 2}, {-2, -2}},
+		{{2, 2}, {4, 0}},
+		{{2, 0}, {4, 2}},
+		{{2.05, 2}, {4.05, 0}},
+
+		{{-2, -2}, {2, 2}},
+		{{0, 2}, {2, 2}},
+		{{0, 4}, {4, 0}},
+		{{0, 4.1}, {4.1, 0}},
+	};
+
+	std::vector<bool> expected {
+	    true, true, true, false, false,
+
+	    true, true, true, false
+	};
+
+	for (size_t i = 0; i < first.size(); i++) {
+	    INFO("[" << i << "]");
+		REQUIRE(first[i].intersects(second[i]) == expected[i]);
+	}
+}
+
+TEST_CASE(
 	"AxialProjection::intersects()", "[BoundingPolygon][AxialProjection]"
 ) {
 	std::pair<AxialProjection, AxialProjection> projections[] = {

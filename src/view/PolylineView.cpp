@@ -19,37 +19,51 @@
 // LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
-#ifndef NON_GRAVITAR_COLLISION_GROUP_HPP
-#define NON_GRAVITAR_COLLISION_GROUP_HPP
-
-#include <memory>
-#include "ShapeGroup.hpp"
-#include "utils/Event.hpp"
+#include "PolylineView.hpp"
 
 
 namespace gvt {
-	class CollisionGroup;
+	sf::Color const PolylineView::DEFAULT_COLOR = sf::Color::Yellow;
 
-	/**
-	 * A subclass of @c ShapeGroup handling collision between objects.
-	 */
-	class CollisionGroup: public ShapeGroup {
-        private:
-			shared_ptr<gvt_callback> mCallback;
+	void PolylineView::updateView() {
+		auto polyline = std::dynamic_pointer_cast<Polyline>(mShape.lock());
 
-			void onInsertShape (shared_ptr<Shape> shape) override;
-			void onRemoveShape (shared_ptr<Shape> shape) override;
-			
-			void shapeChangeCallback (shared_ptr<Event> e);
-			void updateCollisions();
-		public:
-			CollisionGroup();
-	};
+		if (polyline) {
+			mVertices = sf::VertexArray(sf::LineStrip, polyline->size());
+			auto vertex = polyline->begin();
 
-	struct CollisionEvent: public Event {
-		shared_ptr<Shape> first, second;
-	};
+			for (size_t i = 0; i < polyline->size(); i++, vertex++) {
+				mVertices[i] = sf::Vertex(
+						sf::Vector2f(vertex->x, vertex->y), mColor
+				);
+			}
+		}
+	}
+
+	void PolylineView::updateDebugView() {
+		mColor = mDebug ? mDebugColor: DEFAULT_COLOR;
+		updateView();
+	}
+
+	void PolylineView::updateRotation() {
+		// TODO Implement, if necessary
+	}
+
+	void PolylineView::onDraw(
+			shared_ptr<Shape> shape, RenderTarget &t, RenderStates s
+	) const {
+		t.draw(mVertices, mTranslation * mRotation);
+	}
+
+	PolylineView::PolylineView(shared_ptr<Polyline> shape): ShapeView(shape) {
+		updateView();
+	}
+
+	void PolylineView::setDebug (bool debug) {
+		// Contrary to other ShapeView subclasses, PolylineView directly uses
+		// its own normal view for debug too
+        DebuggableView::setDebug(debug);
+
+        updateDebugView();
+	}
 }
-
-
-#endif

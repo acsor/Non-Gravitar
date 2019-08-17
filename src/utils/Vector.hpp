@@ -31,6 +31,7 @@ namespace gvt {
 	template <typename T> struct Vector {
 		T x, y;
 
+		// TODO Have gvt::Vector provide a return value for most of its methods
 		Vector();
 		/**
 		 * @brief Instantiates a 2D-vector from its @a x and @a y components.

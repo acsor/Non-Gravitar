@@ -20,9 +20,11 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 #include <cmath>
-#include <bounding-polygon/BoundingRectangle.hpp>
-#include "Circle.hpp"
+#include "bounding-polygon/BoundingRectangle.hpp"
+#include "shape/Circle.hpp"
 #include "utils/Utils.hpp"
+#include "shape/ShapeVisitor.hpp"
+
 
 using Circle = gvt::Circle;
 using Shape = gvt::Shape;
@@ -30,7 +32,7 @@ using Rectangle = gvt::Rectangle;
 
 
 Circle::Circle(Vectord position, double radius):
-		Shape{position}, mRadius{radius} {
+		Shape2D{position}, mRadius{radius} {
 }
 
 bool Circle::clashes(Circle const &o) const {

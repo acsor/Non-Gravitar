@@ -20,6 +20,8 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 #include "RoundMissile.hpp"
+#include "ShapeVisitor.hpp"
+
 
 using RoundMissile = gvt::RoundMissile;
 using Circle = gvt::Circle;

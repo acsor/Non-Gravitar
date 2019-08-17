@@ -19,49 +19,28 @@
 // LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
-//
-#include "MountainView.hpp"
+#ifndef NON_GRAVITAR_COLLISION_CONTROLLER_HPP
+#define NON_GRAVITAR_COLLISION_CONTROLLER_HPP
+
+#include <memory>
+#include "shape-group/ShapeGroup.hpp"
+#include "view/ShapeGroupView.hpp"
 
 
 namespace gvt {
-	// TODO Improve color
-	const sf::Color MountainView::sColor = sf::Color::Yellow;
+	class CollisionController {
+		private:
+			weak_ptr<ShapeGroup> mGroup;
+			weak_ptr<ShapeGroupView> mView;
+			shared_ptr<gvt_callback> mCallback;
 
-	void MountainView::updatePosition() {
-		std::shared_ptr<Mountain> shape = std::dynamic_pointer_cast<Mountain>(
-			mShape.lock()
-		);
-
-		if (shape) {
-			mVertices[0] = {
-					sf::Vector2f(shape->left().x, shape->left().y), sColor
-			};
-			mVertices[1] = {
-					sf::Vector2f(shape->top().x, shape->top().y), sColor
-			};
-			mVertices[2] = {
-					sf::Vector2f(shape->right().x, shape->right().y), sColor
-			};
-			mVertices[3] = {
-					sf::Vector2f(shape->left().x, shape->left().y), sColor
-			};
-		}
-	}
-
-	MountainView::MountainView(shared_ptr<Mountain> const &m): ShapeView(m) {
-        mVertices = sf::VertexArray(sf::LineStrip, 4);
-
-		updatePosition();
-	}
-
-	void MountainView::onMoved() {
-		updatePosition();
-	}
-
-	void MountainView::draw(RenderTarget &target, RenderStates state) const {
-		ShapeView::draw(target, state);
-
-		if (!mShape.expired())
-            target.draw(mVertices, mRotation);
-	}
+			void onCollisionDetected (std::shared_ptr<Event> e);
+		public:
+			explicit CollisionController (
+				shared_ptr<ShapeGroup> group, shared_ptr<ShapeGroupView> view
+			);
+			~CollisionController ();
+	};
 }
+
+#endif

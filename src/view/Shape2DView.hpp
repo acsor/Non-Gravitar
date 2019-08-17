@@ -1,17 +1,17 @@
 // MIT License
-//
+// 
 // Copyright (c) 2018 Oscar B. et al.
-//
+// 
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
 // in the Software without restriction, including without limitation the rights
 // to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
 // copies of the Software, and to permit persons to whom the Software is
 // furnished to do so, subject to the following conditions:
-//
+// 
 // The above copyright notice and this permission notice shall be included in all
 // copies or substantial portions of the Software.
-//
+// 
 // THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
 // IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
 // FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
@@ -19,36 +19,31 @@
 // LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
-#include "bounding-polygon/BoundingTriangle.hpp"
-#include "Mountain.hpp"
+#ifndef NON_GRAVITAR_SHAPE_VIEW
+#define NON_GRAVITAR_SHAPE_VIEW
+
+#include "view/ShapeView.hpp"
+#include "shape/Shape2D.hpp"
 
 
 namespace gvt {
-	gvt::Mountain::Mountain(Vectord left, Vectord top, Vectord right):
-			Shape({left.x, top.y}) {
-		mLeft = left;
-		mTop = top;
-		mRight = right;
-	}
+	class Shape2DView: public ShapeView {
+		private:
+			// Debugs bounds used for the 'debug view'
+			sf::VertexArray mBounds;
 
-	double Mountain::width() const {
-		return mLeft.distance(mRight);
-	}
+			void updateDebugView () override;
+		protected:
+			explicit Shape2DView(std::shared_ptr<Shape2D> const &shape);
 
-	double Mountain::height() const {
-        Vectord const baseCenter = mLeft.midpoint(mRight);
+			void updateRotation() override;
 
-        return baseCenter.distance(mTop);
-	}
-
-	BoundingPolygon Mountain::collisionPolygon() const {
-		BoundingTriangle t{mLeft, mTop, mRight};
-		t.rotate(mRotation, t.center());
-
-		return t;
-	}
-
-	void gvt::Mountain::accept (ShapeVisitor &visitor) {
-		visitor.visitMountain(*this);
-	}
+			void onDraw(
+				shared_ptr<Shape> shape, RenderTarget &t, RenderStates s
+			) const override;
+			void onDestroyed() override;
+	};
 }
+
+
+#endif

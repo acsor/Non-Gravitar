@@ -19,30 +19,9 @@
 // LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
-#ifndef NON_GRAVITAR_MOUNTAIN_VIEW_HPP
-#define NON_GRAVITAR_MOUNTAIN_VIEW_HPP
-
-#include <SFML/Graphics.hpp>
-#include "shape/Mountain.hpp"
-#include "ShapeView.hpp"
-
+#include "DebuggableView.hpp"
 
 namespace gvt {
-	class MountainView: public ShapeView {
-		private:
-			sf::VertexArray mVertices;
-
-			static const sf::Color sColor;
-
-			void updatePosition();
-		protected:
-			void onMoved () override;
-		public:
-			explicit MountainView(shared_ptr<Mountain> const &m);
-
-			void draw(RenderTarget &target, RenderStates state) const override;
-	};
+	sf::Color const DebuggableView::DEFAULT_DEBUG_COLOR = sf::Color::Green;
+	sf::Color const DebuggableView::COLLISION_DEBUG_COLOR = sf::Color::Red;
 }
-
-
-#endif

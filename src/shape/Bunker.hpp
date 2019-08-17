@@ -23,7 +23,7 @@
 #define NON_GRAVITAR_BUNKER_HPP
 
 #include <vector>
-#include "Shape.hpp"
+#include "Shape2D.hpp"
 #include "Rectangle.hpp"
 #include "RoundMissile.hpp"
 #include "ShapeVisitor.hpp"
@@ -32,19 +32,15 @@ template<typename T> using vector = std::vector<T>;
 
 
 namespace gvt {
-	class Bunker: public Shape {
+	class Bunker: public Shape2D {
 		protected:
 			vector<Vectord> mPaths;
 			unsigned mCurr{0};
 
 			Bunker(Vectord position, size_t directions);
-
-			// Width and height measures of the collision boxes
-			static unsigned const constexpr COLLIDING_WIDTH = 29;
-			static unsigned const constexpr COLLIDING_HEIGHT = 42;
 		public:
-			static unsigned const constexpr WIDTH = 45;
-			static unsigned const constexpr HEIGHT = 66;
+			static unsigned const constexpr WIDTH = 66;
+			static unsigned const constexpr HEIGHT = 45;
 
 			inline double width() const override;
 			inline double height() const override;
@@ -66,14 +62,14 @@ namespace gvt {
 	// to simplify the inheritance for Bunker2D and Bunker3D?
 	class Bunker2D: public Bunker {
 		public:
-			Bunker2D(Vectord position);
+			explicit Bunker2D(Vectord position);
 
 			bool operator==(Shape const &o) const override;
 	};
 
 	class Bunker3D: public Bunker {
 		public:
-			Bunker3D(Vectord position);
+			explicit Bunker3D(Vectord position);
 
 			bool operator==(Shape const &o) const override;
 	};

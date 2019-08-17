@@ -22,7 +22,6 @@
 #ifndef NON_GRAVITAR_ROUND_MISSILE_HPP
 #define NON_GRAVITAR_ROUND_MISSILE_HPP
 
-#include "Shape.hpp"
 #include "Circle.hpp"
 
 

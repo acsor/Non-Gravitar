@@ -28,35 +28,32 @@
 #include "utils/Event.hpp"
 
 template<typename T> using shared_ptr = std::shared_ptr<T>;
+template<typename T> using weak_ptr = std::weak_ptr<T>;
 
 
 namespace gvt {
-	class Shape;
-	class ShapeGroup;
-
-	// TODO Convert to lambda function
-	class DestroyedListener: public GVTEventHandler {
-        private:
-	        ShapeGroup &mGroup;
-        public:
-			DestroyedListener(ShapeGroup &group);
-	        void handle (Event *e) override;
-	};
-
 	class ShapeGroup: public GVTEventDispatcher {
-	    friend class DestroyedListener;
-
-        private:
-            DestroyedListener mListener{*this};
         protected:
             std::list<shared_ptr<Shape>> mShapes;
+
+            /**
+             * Defined by @c ShapeGroup subclasses to define additional
+             * actions to be performed when adding a @c Shape.
+             */
+            virtual void onInsertShape (shared_ptr<Shape> shape) {};
+			/**
+			 * Like @c onInsertShape, but when removing a @c Shape.
+			 */
+			virtual void onRemoveShape (shared_ptr<Shape> shape) {};
 
             ShapeGroup() = default;
 		public:
 			using iterator = std::list<shared_ptr<Shape>>::iterator;
 
 			virtual ~ShapeGroup();
-			virtual void insert(shared_ptr<Shape> shape);
+			void insert(shared_ptr<Shape> shape);
+			void remove(shared_ptr<Shape> shape);
+			inline size_t size () const;
 
 			inline iterator begin();
 			inline iterator end();
@@ -72,15 +69,17 @@ namespace gvt {
         shared_ptr<Shape> shape;
 
         ShapeGroupEvent() = default;
-        inline ShapeGroupEvent(
-                Type type, ShapeGroup *group, shared_ptr<Shape> shape
-        );
+        inline ShapeGroupEvent(Type t, ShapeGroup *g, shared_ptr<Shape> s);
     };
 }
 
 
 // Implementation of inline functions
 namespace gvt {
+	size_t ShapeGroup::size() const {
+        return mShapes.size();
+	}
+
 	ShapeGroup::iterator ShapeGroup::begin() {
 		return mShapes.begin();
 	}
@@ -90,8 +89,8 @@ namespace gvt {
 	}
 
 	ShapeGroupEvent::ShapeGroupEvent(
-		ShapeGroupEvent::Type t, ShapeGroup *b, shared_ptr<Shape> s
-	): type{t}, group{b}, shape{s} {
+		ShapeGroupEvent::Type t, ShapeGroup *g, shared_ptr<Shape> s
+	): type{t}, group{g}, shape{s} {
 	}
 }
 

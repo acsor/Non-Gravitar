@@ -20,23 +20,17 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 #include "ShapeViewFactory.hpp"
-#include "MountainView.hpp"
+#include "PolylineView.hpp"
 
 
 namespace gvt {
-	ShapeView* ShapeViewFactory::makeView (std::shared_ptr<Shape> shape) const {
-		if (std::dynamic_pointer_cast<Spaceship>(shape)) {
-			return new SpaceshipView(
-					std::dynamic_pointer_cast<Spaceship>(shape)
-			);
-		} else if (std::dynamic_pointer_cast<Bunker>(shape)) {
-			return new BunkerView(
-					std::dynamic_pointer_cast<Bunker>(shape)
-			);
-		} else if (std::dynamic_pointer_cast<Mountain>(shape)) {
-			return new MountainView(
-					std::dynamic_pointer_cast<Mountain>(shape)
-			);
+	ShapeView* ShapeViewFactory::makeView (shared_ptr<Shape> shape) const {
+		if (auto ship = std::dynamic_pointer_cast<Spaceship>(shape)) {
+			return new SpaceshipView(ship);
+		} else if (auto b = std::dynamic_pointer_cast<Bunker>(shape)) {
+			return new BunkerView(b);
+		} else if (auto p = std::dynamic_pointer_cast<Polyline>(shape)) {
+			return new PolylineView(p);
 		} else {
 			throw std::domain_error("Unrecognized type of shape");
 		}

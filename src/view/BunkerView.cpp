@@ -31,8 +31,20 @@ const std::string BunkerView::BUNKER2D_GRAPHICS = "graphics/bunker-2.png";
 const std::string BunkerView::BUNKER3D_GRAPHICS = "graphics/bunker-3.png";
 
 
+void BunkerView::onDraw(shared_ptr<Shape> shape, RenderTarget &target,
+						RenderStates state) const {
+	Shape2DView::onDraw(shape, target, state);
+
+	target.draw(mSprite, mTranslation * mRotation);
+}
+
+void BunkerView::onDestroyed () {
+	Shape2DView::onDestroyed();
+	mSprite = sf::Sprite();
+}
+
 BunkerView::BunkerView(const shared_ptr<Bunker>& bunker):
-	ShapeView(bunker), mBunker{bunker} {
+	Shape2DView(bunker) {
 	std::string texturePath;
 
 	// TODO Replace Bunker subclasses with the identifying integer parameter n
@@ -49,13 +61,3 @@ BunkerView::BunkerView(const shared_ptr<Bunker>& bunker):
 	mSprite.setTexture(mTexture);
 }
 
-void BunkerView::draw(RenderTarget &target, RenderStates state) const {
-	ShapeView::draw(target, state);
-
-	target.draw(mSprite, mTranslation * mRotation);
-}
-
-void BunkerView::onDestroyed () {
-	ShapeView::onDestroyed();
-	mSprite = sf::Sprite();
-}

@@ -32,7 +32,7 @@ const std::string SpaceshipView::ACCEL_SPACESHIP_TEXTURE =
 
 
 SpaceshipView::SpaceshipView(shared_ptr<Spaceship> const &spaceship):
-	ShapeView(spaceship), mSpaceship{spaceship} {
+	Shape2DView(spaceship), mSpaceship{spaceship} {
 	if (
 			!mTexture.loadFromFile(gvt::staticsGet(SPACESHIP_TEXTURE)) ||
 			!mAccelTexture.loadFromFile(
@@ -49,8 +49,10 @@ SpaceshipView::SpaceshipView(shared_ptr<Spaceship> const &spaceship):
 	mSprite.setTexture(mTexture);
 }
 
-void SpaceshipView::draw(RenderTarget &target, RenderStates state) const {
-	ShapeView::draw(target, state);
+void SpaceshipView::onDraw(
+		shared_ptr<Shape> shape, RenderTarget &target, RenderStates s
+) const {
+	Shape2DView::onDraw(shape, target, s);
 
 	if (mAccel) {
 		mSprite.setTexture(mAccelTexture);
@@ -64,11 +66,11 @@ void SpaceshipView::draw(RenderTarget &target, RenderStates state) const {
 }
 
 void SpaceshipView::onMoved () {
-	ShapeView::onMoved();
+	Shape2DView::onMoved();
 	mAccel = true;
 }
 
 void SpaceshipView::onDestroyed () {
-	ShapeView::onDestroyed();
+	Shape2DView::onDestroyed();
 	mSprite = sf::Sprite();
 }

@@ -19,54 +19,32 @@
 // LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
-#ifndef NON_GRAVITAR_MOUNTAIN_HPP
-#define NON_GRAVITAR_MOUNTAIN_HPP
+#ifndef NON_GRAVITAR_POLYLINEVIEW_HPP
+#define NON_GRAVITAR_POLYLINEVIEW_HPP
 
-#include "Shape.hpp"
-#include "ShapeVisitor.hpp"
-#include "utils/Vector.hpp"
+#include "shape/Polyline.hpp"
+#include "view/ShapeView.hpp"
 
 
 namespace gvt {
-	class Mountain: public Shape {
-		private:
-			Vectord mLeft, mTop, mRight;
+	class PolylineView: public ShapeView {
+		protected:
+			static sf::Color const DEFAULT_COLOR;
+
+			sf::Color mColor {DEFAULT_COLOR};
+			sf::VertexArray mVertices;
+
+			void updateView ();
+			void updateDebugView() override;
+			void updateRotation() override;
+			void onDraw(
+				shared_ptr<Shape> shape, RenderTarget &t, RenderStates s
+			) const override;
 		public:
-			Mountain(Vectord left, Vectord top, Vectord right);
+			explicit PolylineView(shared_ptr<Polyline> shape);
 
-			inline Vectord left () const;
-			inline Vectord top () const;
-			inline Vectord right () const;
-
-			/**
-			 * @return The base of the triangle this mountain is associated to.
-			 */
-			double width() const override;
-			/**
-			 * @return The height of the triangle this mountain is associated
-			 * to.
-			 */
-			double height() const override;
-			BoundingPolygon collisionPolygon() const override;
-
-			void accept (ShapeVisitor &visitor) override;
+			void setDebug (bool debug) override;
 	};
 }
-
-
-namespace gvt {
-	Vectord Mountain::left () const {
-		return mLeft;
-	}
-
-	Vectord Mountain::top () const {
-		return mTop;
-	}
-
-	Vectord Mountain::right () const {
-		return mRight;
-	}
-}
-
 
 #endif

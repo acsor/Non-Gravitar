@@ -19,55 +19,69 @@
 // LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
-#include "ShapeGroupView.hpp"
-
+#include <functional>
 #include <stdexcept>
-#include "../view/SpaceshipView.hpp"
-#include "../view/BunkerView.hpp"
+#include "ShapeGroupView.hpp"
+#include "view/SpaceshipView.hpp"
+#include "view/BunkerView.hpp"
 
-using ShapeGroupEvent = gvt::ShapeGroupEvent;
-using ShapeGroupView = gvt::ShapeGroupView;
+using namespace std::placeholders;
 
 
-ShapeGroupView::ShapeGroupView(shared_ptr<ShapeGroup> group):
-	Debuggable(false), mGroup{group} {
-	group->addHandler(*this);
-}
+namespace gvt {
+	void ShapeGroupView::shapesCallback (shared_ptr<Event> e) {
+		auto event = std::dynamic_pointer_cast<ShapeGroupEvent>(e);
 
-ShapeGroupView::~ShapeGroupView() {
-	if (auto p = mGroup.lock())
-		p->removeHandler(*this);
-}
-
-void ShapeGroupView::debug(bool state) {
-	Debuggable::debug(state);
-
-	for (auto &mView : mViews) {
-		mView.second->debug(state);
+		if (event) {
+			if (event->type == ShapeGroupEvent::Type::attached) {
+				mViews[event->shape] = shared_ptr<ShapeView>(
+						mFactory.makeView(event->shape)
+				);
+			} else if (event->type == ShapeGroupEvent::Type::detached) {
+				mViews.erase(event->shape);
+			} else if (event->type == ShapeGroupEvent::Type::destroyed) {
+				mViews.clear();
+				mGroup.reset();
+			}
+		}
 	}
-}
 
-void ShapeGroupView::draw(
-	sf::RenderTarget &target, sf::RenderStates state
-) const {
-	for (auto i = mViews.begin(); i != mViews.end(); i++) {
-		i->second->draw(target, state);
+	void ShapeGroupView::updateDebugView () {
 	}
-}
 
-void ShapeGroupView::handle(Event *e) {
-	auto event = dynamic_cast<ShapeGroupEvent*>(e);
+	ShapeGroupView::ShapeGroupView(shared_ptr<ShapeGroup> group): mGroup{group} {
+		mCallback = group->addCallback(
+				std::bind(&ShapeGroupView::shapesCallback, this, _1)
+		);
+	}
 
-	if (event) {
-		if (event->type == ShapeGroupEvent::Type::attached) {
-			mViews[event->shape.get()] = shared_ptr<ShapeView>(
-				mFactory.makeView(event->shape)
-			);
-		} else if (event->type == ShapeGroupEvent::Type::detached) {
-			mViews.erase(event->shape.get());
-		} else if (event->type == ShapeGroupEvent::Type::destroyed) {
-			mViews.clear();
-			mGroup.reset();
+	ShapeGroupView::~ShapeGroupView() {
+		if (auto p = mGroup.lock())
+			p->removeCallback(mCallback);
+	}
+
+	void ShapeGroupView::setDebug(bool state) {
+		DebuggableView::setDebug(state);
+
+		for (auto &mView : mViews)
+			mView.second->setDebug(state);
+	}
+
+	void ShapeGroupView::debugColor (sf::Color color) {
+		DebuggableView::debugColor(color);
+
+		for (auto &mView : mViews)
+			mView.second->debugColor(color);
+	}
+
+	void ShapeGroupView::draw(
+			sf::RenderTarget &target, sf::RenderStates state
+	) const {
+		for (auto &view: mViews) {
+			if (view.second->expired())
+				mViews.erase(view.first);
+			else
+				view.second->draw(target, state);
 		}
 	}
 }

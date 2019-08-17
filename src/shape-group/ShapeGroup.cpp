@@ -21,44 +21,44 @@
 // SOFTWARE.
 #include "ShapeGroup.hpp"
 
-using Event = gvt::Event;
-using ShapeGroup = gvt::ShapeGroup;
-using ShapeGroupEvent = gvt::ShapeGroupEvent;
-using Shape = gvt::Shape;
 
+namespace gvt {
+	ShapeGroup::~ShapeGroup() {
+		auto *e = new ShapeGroupEvent{
+			ShapeGroupEvent::Type::destroyed, this, nullptr
+		};
 
-gvt::DestroyedListener::DestroyedListener(ShapeGroup &group):
-	mGroup{group} {
-}
+		notify(std::shared_ptr<ShapeGroupEvent>(e));
+	}
 
-void gvt::DestroyedListener::handle (Event *e) {
-    auto groupEvent = dynamic_cast<ShapeGroupEvent *>(e);
+	void ShapeGroup::insert(shared_ptr<Shape> shape) {
+		auto *e = new ShapeGroupEvent{
+				ShapeGroupEvent::Type::attached, this, shape
+		};
 
-    if (groupEvent) {
-        switch (groupEvent->type) {
-            case (ShapeGroupEvent::Type::destroyed):
-                mGroup.mShapes.remove(groupEvent->shape);
-                break;
-            default:
-                break;
+		// Not checking for null-pointer arguments is intended behavior, as code
+		// feeding in null-pointer values should not exist in the first place: a
+		// segmentation fault acts as a proper signaling mechanism
+		onInsertShape(shape);
+		mShapes.push_front(shape);
+
+		notify(std::shared_ptr<ShapeGroupEvent>(e));
+	}
+
+	void ShapeGroup::remove(shared_ptr<Shape> shape) {
+		ShapeGroupEvent *e;
+
+        for (auto i = mShapes.begin(); i != mShapes.end(); i++) {
+        	if (**i == *shape) {
+				e = new ShapeGroupEvent{
+					ShapeGroupEvent::Type::detached, this, shape
+				};
+
+				onRemoveShape(shape);
+				mShapes.erase(i);
+
+				notify(std::shared_ptr<ShapeGroupEvent>(e));
+			}
         }
-    }
-}
-
-
-ShapeGroup::~ShapeGroup() {
-	ShapeGroupEvent e{ShapeGroupEvent::Type::destroyed, this, nullptr};
-
-	notify(&e);
-}
-
-void ShapeGroup::insert(shared_ptr<Shape> shape) {
-	ShapeGroupEvent e{ShapeGroupEvent::Type::attached, this, shape};
-	// Not checking for null-pointer arguments is intended behavior, as code
-	// feeding in null-pointer values should not exist in the first place: a
-	// segmentation fault acts as a proper signaling mechanism
-	mShapes.push_front(shape);
-	shape->addHandler(mListener);
-
-	notify(&e);
+	}
 }

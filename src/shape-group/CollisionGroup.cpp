@@ -19,69 +19,57 @@
 // LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
-#include <memory>
 #include "CollisionGroup.hpp"
 
-#include "shape/Spaceship.hpp"
-#include "shape/Bunker.hpp"
-#include "shape/RoundMissile.hpp"
-#include "shape/Fuel.hpp"
-#include "shape/Rectangle.hpp"
-#include "shape/Circle.hpp"
-
-using CollisionGroup = gvt::CollisionGroup;
-using Event = gvt::Event;
-using Shape = gvt::Shape;
-
-template<typename T> using shared_ptr = std::shared_ptr<T>;
-
-gvt::CollisionListener::CollisionListener(CollisionGroup &group):
-	mGroup{group} {
-}
-
-void gvt::CollisionListener::handle(Event *e) {
-	auto shapeEvent = dynamic_cast<ShapeEvent *>(e);
-
-	if (shapeEvent) {
-        switch (shapeEvent->type) {
-        	case ShapeEvent::Type::moved:
-			case ShapeEvent::Type::rotated:
-                mGroup.updateCollisions();
-        	default:
-        		break;
-        }
+namespace gvt {
+	void CollisionGroup::onInsertShape (shared_ptr<Shape> shape) {
+        shape->addCallback(mCallback);
 	}
-}
 
+	void CollisionGroup::onRemoveShape (shared_ptr<Shape> shape) {
+        shape->removeCallback(mCallback);
+	}
 
-gvt::CollisionVisitor::CollisionVisitor(CollisionGroup &group):
-	mGroup{group} {
-}
+	void CollisionGroup::shapeChangeCallback (shared_ptr<Event> e) {
+		auto shapeEvent = std::dynamic_pointer_cast<ShapeEvent>(e);
 
-void gvt::CollisionVisitor::visitMissile(gvt::RoundMissile &missile) {
-	missile.destroyed(true);
-}
+		if (shapeEvent) {
+			switch (shapeEvent->type) {
+				case ShapeEvent::Type::moved:
+				case ShapeEvent::Type::rotated:
+					updateCollisions();
+					break;
+				default:
+					break;
+			}
+		}
+	}
 
-void gvt::CollisionVisitor::visitBunker(gvt::Bunker &bunker) {
-    // Bunkers are indestructible
-}
+	void CollisionGroup::updateCollisions() {
+		CollisionEvent *e;
 
-void gvt::CollisionVisitor::visitSpaceship(gvt::Spaceship &spaceship) {
-	spaceship.destroyed(true);
-}
+		// This is deliberately a brute-force algorithm. A simple
+		// optimization technique, which we have no time for, consists of
+		// managing a neighbourhood of shapes and checking collisions against
+		// them only
+		for (auto &first: mShapes) {
+			for (auto &second: mShapes) {
+				if (*first != *second && first->clashes(*second)) {
+					e = new CollisionEvent();
+					e->first = first;
+					e->second = second;
 
-void gvt::CollisionVisitor::visitFuel(gvt::Fuel &fuel) {
-	fuel.destroyed(true);
-}
+					notify(std::shared_ptr<CollisionEvent>(e));
+				}
+			}
+		}
+	}
 
+	CollisionGroup::CollisionGroup() {
+		using namespace std::placeholders;
 
-void gvt::CollisionGroup::updateCollisions() {
-	for (auto first: mShapes) {
-        for (auto second: mShapes) {
-        	if (*first != *second && first->clashes(*second)) {
-        		first->accept(mVisitor);
-				second->accept(mVisitor);
-        	}
-        }
+		mCallback = std::make_shared<gvt_callback>(
+			std::bind(&CollisionGroup::shapeChangeCallback, this, _1)
+		);
 	}
 }

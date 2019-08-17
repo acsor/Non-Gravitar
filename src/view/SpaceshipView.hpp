@@ -25,7 +25,7 @@
 #include <string>
 #include <memory>
 #include <SFML/Graphics.hpp>
-#include "ShapeView.hpp"
+#include "Shape2DView.hpp"
 #include "shape/Spaceship.hpp"
 #include "utils/Event.hpp"
 
@@ -37,7 +37,7 @@ using Texture = sf::Texture;
 
 
 namespace gvt {
-	class SpaceshipView: public ShapeView {
+	class SpaceshipView: public Shape2DView {
 		private:
 			weak_ptr<Spaceship> mSpaceship;
 			bool mutable mAccel{false};
@@ -50,6 +50,9 @@ namespace gvt {
 			 */
 			Texture mTexture, mAccelTexture, mShieldTexture;
 		protected:
+			void onDraw(
+					shared_ptr<Shape> shape, RenderTarget &t, RenderStates s
+			) const override;
 			void onMoved() override;
 			void onDestroyed() override;
 		public:
@@ -57,8 +60,6 @@ namespace gvt {
 			static const std::string ACCEL_SPACESHIP_TEXTURE;
 
 			explicit SpaceshipView(const shared_ptr<Spaceship>& spaceship);
-
-			void draw(RenderTarget &target, RenderStates state) const override;
 	};
 }
 

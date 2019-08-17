@@ -32,6 +32,17 @@ template<typename T> using vector = std::vector<T>;
 namespace gvt {
 	struct AxialProjection;
 
+	/**
+	 * An auxiliary class aiding in the detection of collision between shape
+	 * objects. @c BoundingPolygon instances are generally instantiated as an
+	 * approximation to the area the user wants to check collisions for, and
+	 * they are specified in absolute coordinates. The algorithm for
+	 * detecting collisions is an implementation of the Separating Axes Theorem:
+	 * https://www.metanetsoftware.com/technique/tutorialA.html.
+	 *
+	 * Note that @c BoundingPolygons also accept the case of a straight line,
+	 * which can be specified with just two vertices.
+	 */
 	class BoundingPolygon {
 		public:
 			using float_type = double;

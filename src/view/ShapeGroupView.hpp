@@ -22,14 +22,14 @@
 #ifndef NON_GRAVITAR_SHAPE_GROUP_VIEW
 #define NON_GRAVITAR_SHAPE_GROUP_VIEW
 
-#include <map>
+#include <unordered_map>
 #include <memory>
 #include <SFML/Graphics.hpp>
 #include "utils/Event.hpp"
 #include "shape-group/ShapeGroup.hpp"
-#include "view/ShapeView.hpp"
+#include "view/Shape2DView.hpp"
 #include "ShapeViewFactory.hpp"
-#include "Debuggable.hpp"
+#include "DebuggableView.hpp"
 
 template<typename T> using weak_ptr = std::weak_ptr<T>;
 template<typename T> using shared_ptr = std::shared_ptr<T>;
@@ -37,27 +37,35 @@ template<typename T> using unique_ptr = std::unique_ptr<T>;
 
 
 namespace gvt {
-	class ShapeGroupView: public sf::Drawable, public GVTEventHandler,
-			public Debuggable {
+	class ShapeGroupView: public sf::Drawable, public DebuggableView {
 		private:
+			shared_ptr<gvt_callback> mCallback;
 			ShapeViewFactory mFactory;
+
+			/**
+			 * Monitors rendered shapes, taking actions when their states
+			 * changes.
+			 */
+			void shapesCallback (shared_ptr<Event> e);
 		protected:
 			weak_ptr<ShapeGroup> mGroup;
-			std::map<Shape*, shared_ptr<ShapeView>> mViews;
+			mutable std::unordered_map<shared_ptr<Shape>, shared_ptr<ShapeView>> mViews;
 
+			void updateDebugView () override;
 		public:
 			explicit ShapeGroupView(shared_ptr<ShapeGroup> group);
-			virtual ~ShapeGroupView();
+			~ShapeGroupView() override;
 
-			// TODO Why was there no visibility for Debuggable::debug()?
-			//  Eliminate the declaration below.
-			bool debug() const {return mDebug;};
-			void debug (bool debug) override;
+			void setDebug(bool debug) override;
+			void debugColor(sf::Color color) override;
 
 			void draw(
 				sf::RenderTarget &target, sf::RenderStates state
 			) const override;
-			void handle(Event *e) override;
+
+			shared_ptr<ShapeView> viewFor (shared_ptr<Shape> shape) {
+				return mViews[shape];
+			}
 	};
 }
 

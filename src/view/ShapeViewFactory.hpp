@@ -26,7 +26,6 @@
 #include "view/ShapeView.hpp"
 #include "view/BunkerView.hpp"
 #include "view/SpaceshipView.hpp"
-#include "Debuggable.hpp"
 
 
 namespace gvt {
@@ -36,7 +35,7 @@ namespace gvt {
 	 */
     class ShapeViewFactory {
     	public:
-            ShapeView* makeView (std::shared_ptr<Shape> shape) const;
+            ShapeView* makeView (shared_ptr<Shape> shape) const;
     };
 }
 

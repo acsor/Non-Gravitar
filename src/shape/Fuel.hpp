@@ -22,14 +22,14 @@
 #ifndef NON_GRAVITAR_FUEL_HPP
 #define NON_GRAVITAR_FUEL_HPP
 
-#include "Shape.hpp"
+#include "Shape2D.hpp"
 #include "ShapeVisitor.hpp"
 
 
 namespace gvt {
 	class Spaceship;
 
-	class Fuel: public Shape {
+	class Fuel: public Shape2D {
 		private:
 			unsigned mFuel;
 		public:
