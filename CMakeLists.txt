@@ -86,6 +86,9 @@ target_link_libraries(ShapeView Shape DebuggableView)
 add_library(Shape2DView "${DIR_VIEWS}/Shape2DView.cpp")
 target_link_libraries(Shape2DView ShapeView)
 
+add_library(PlanetView "${DIR_VIEWS}/PlanetView.cpp")
+target_link_libraries(PlanetView Planet Shape2DView)
+
 add_library(PolylineView "${DIR_VIEWS}/PolylineView.cpp")
 target_link_libraries(PolylineView Polyline ShapeView)
 

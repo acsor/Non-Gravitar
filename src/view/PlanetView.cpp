@@ -19,24 +19,31 @@
 // LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
-#include "ShapeViewFactory.hpp"
-#include "PolylineView.hpp"
+
 #include "PlanetView.hpp"
 
 
 namespace gvt {
-	ShapeView* ShapeViewFactory::makeView (shared_ptr<Shape> shape) const {
-		if (auto ship = std::dynamic_pointer_cast<Spaceship>(shape)) {
-			return new SpaceshipView(ship);
-		} else if (auto b = std::dynamic_pointer_cast<Bunker>(shape)) {
-			return new BunkerView(b);
-		} else if (auto pl = std::dynamic_pointer_cast<Planet>(shape)) {
-			return new PlanetView(pl);
-		} else if (auto p = std::dynamic_pointer_cast<Polyline>(shape)) {
-			return new PolylineView(p);
-		} else {
-			throw std::domain_error("Unrecognized type of shape");
-		}
+	const sf::Color PlanetView::DEFAULT_OUTLINE_COLOR = sf::Color(0, 138, 0);
+
+	PlanetView::PlanetView (shared_ptr<Planet> const &planet):
+			Shape2DView{planet} {
+		mCircle = sf::CircleShape(planet->radius());
+
+		mCircle.setFillColor(sf::Color::Transparent);
+		mCircle.setOutlineColor(DEFAULT_OUTLINE_COLOR);
+		mCircle.setOutlineThickness(2);
+	}
+
+	void PlanetView::onDraw(
+			shared_ptr<Shape> shape, RenderTarget &t, RenderStates s
+	) const {
+		Shape2DView::onDraw(shape, t, s);
+
+        auto planet = std::dynamic_pointer_cast<Planet>(shape);
+
+        if (planet) {
+        	t.draw(mCircle, mTranslation * mRotation);
+        }
 	}
 }
-

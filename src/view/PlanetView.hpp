@@ -19,24 +19,26 @@
 // LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
-#include "ShapeViewFactory.hpp"
-#include "PolylineView.hpp"
-#include "PlanetView.hpp"
+#ifndef NON_GRAVITAR_PLANET_VIEW_HPP
+#define NON_GRAVITAR_PLANET_VIEW_HPP
+
+#include "shape/Planet.hpp"
+#include "Shape2DView.hpp"
 
 
 namespace gvt {
-	ShapeView* ShapeViewFactory::makeView (shared_ptr<Shape> shape) const {
-		if (auto ship = std::dynamic_pointer_cast<Spaceship>(shape)) {
-			return new SpaceshipView(ship);
-		} else if (auto b = std::dynamic_pointer_cast<Bunker>(shape)) {
-			return new BunkerView(b);
-		} else if (auto pl = std::dynamic_pointer_cast<Planet>(shape)) {
-			return new PlanetView(pl);
-		} else if (auto p = std::dynamic_pointer_cast<Polyline>(shape)) {
-			return new PolylineView(p);
-		} else {
-			throw std::domain_error("Unrecognized type of shape");
-		}
-	}
+	class PlanetView: public Shape2DView {
+		private:
+			sf::CircleShape mCircle;
+
+			static const sf::Color DEFAULT_OUTLINE_COLOR;
+		public:
+			explicit PlanetView (shared_ptr<Planet> const &planet);
+			void onDraw(
+					shared_ptr<Shape> shape, RenderTarget &t, RenderStates s
+			) const override;
+	};
 }
 
+
+#endif
