@@ -38,7 +38,7 @@ RoundMissile::RoundMissile(Vectord position, double radius):
 }
 
 void gvt::RoundMissile::accept(ShapeVisitor &visitor) {
-	visitor.visitMissile(*this);
+	visitor.visitRoundMissile(*this);
 }
 
 bool RoundMissile::operator== (Shape const &o) const {
