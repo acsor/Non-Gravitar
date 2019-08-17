@@ -116,6 +116,9 @@ target_link_libraries(SpaceshipView Spaceship Shape2DView Utils)
 add_library(CollisionController "${DIR_CONTROL}/CollisionController.cpp")
 target_link_libraries(CollisionController ShapeGroup ShapeGroupView)
 
+add_library(GameViewController "${DIR_CONTROL}/GameViewController.cpp")
+target_link_libraries(GameViewController Spaceship)
+
 
 # Samples section
 add_executable(SFMLCollision "${DIR_SAMPLES}/SFMLCollision.cpp")
@@ -132,7 +135,7 @@ target_link_libraries(
 	sfml-window sfml-graphics sfml-system
 	SolarSystem
     ShapeGroupView
-    CollisionController
+    CollisionController GameViewController
 )
 
 

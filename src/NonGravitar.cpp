@@ -32,6 +32,7 @@
 #include "utils/Vector.hpp"
 #include "view/ShapeGroupView.hpp"
 #include "control/CollisionController.hpp"
+#include "control/GameViewController.hpp"
 
 // While I know using-declarations are considered bad practice, setting up
 // aliases was generating too much code
@@ -42,7 +43,7 @@ using namespace std::placeholders;
 using sf_callback = callback<sf::Event>;
 
 
-#define STEP_SIZE 10.0
+#define STEP_SIZE 15.0
 #define ANGLE_SIZE (10 * M_PI / 180.0)
 
 
@@ -59,14 +60,16 @@ void toggleDebugCallback (
 int main () {
 	VideoMode const mode = VideoMode::getDesktopMode();
 	RenderWindow w{mode, "Non-Gravitar"};
+	sf::View gameView = w.getDefaultView();
 
 	shared_ptr<ShapeGroup> solarSystem{
 		SolarSystem::makeRandom(8, 30, 50, {0, 0}, {1920, 1080})
 	};
-	shared_ptr<Spaceship> ship {new Spaceship({600, 500}, 1000)};
+	shared_ptr<Spaceship> ship {new Spaceship({0, 0}, 1000)};
 	shared_ptr<ShapeGroupView> rootView {new ShapeGroupView(solarSystem)};
 
-	CollisionController c{solarSystem, rootView};
+	CollisionController collisionControl{solarSystem, rootView};
+	GameViewController viewControl{gameView, ship};
 
 	EventDispatcher<sf::Event> loopDispatcher;
 	sf::Event e;
@@ -74,18 +77,23 @@ int main () {
 	w.setFramerateLimit(45);
 
 	solarSystem->insert(ship);
+	ship->move({600, 500});
 
 	loopDispatcher.addCallback(
-		[&] (shared_ptr<sf::Event> e) -> void { closeWindowCallback(w, e); }
+		[&w] (shared_ptr<sf::Event> e) -> void { closeWindowCallback(w, e); }
 	);
 	loopDispatcher.addCallback(std::bind(moveShipCallback, ship, _1));
 	loopDispatcher.addCallback(std::bind(toggleDebugCallback, rootView, _1));
+	loopDispatcher.addCallback(std::bind(
+		&GameViewController::resizeView, &viewControl, _1
+	));
 
 	while (w.isOpen()) {
 		while (w.pollEvent(e))
 			loopDispatcher.notify(std::make_shared<sf::Event>(e));
 
 		w.clear();
+		w.setView(gameView);
 		w.draw(*rootView);
 		w.display();
 	}
