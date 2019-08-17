@@ -24,35 +24,40 @@
 
 namespace gvt {
 	ShapeGroup::~ShapeGroup() {
-		ShapeGroupEvent e{ShapeGroupEvent::Type::destroyed, this, nullptr};
+		auto *e = new ShapeGroupEvent{
+			ShapeGroupEvent::Type::destroyed, this, nullptr
+		};
 
-		notify(&e);
+		notify(std::shared_ptr<ShapeGroupEvent>(e));
 	}
 
 	void ShapeGroup::insert(shared_ptr<Shape> shape) {
-		ShapeGroupEvent e{ShapeGroupEvent::Type::attached, this, shape};
+		auto *e = new ShapeGroupEvent{
+				ShapeGroupEvent::Type::attached, this, shape
+		};
+
 		// Not checking for null-pointer arguments is intended behavior, as code
 		// feeding in null-pointer values should not exist in the first place: a
 		// segmentation fault acts as a proper signaling mechanism
+		onInsertShape(shape);
 		mShapes.push_front(shape);
-		shape->addHandler(this);
 
-		notify(&e);
+		notify(std::shared_ptr<ShapeGroupEvent>(e));
 	}
 
 	void ShapeGroup::remove(shared_ptr<Shape> shape) {
-		ShapeGroupEvent e;
+		ShapeGroupEvent *e;
 
-		// TODO Improve deletion -- in particular, ensure we are deleting one
-		//  and only one shape During remove() invocation
         for (auto i = mShapes.begin(); i != mShapes.end(); i++) {
         	if (**i == *shape) {
-				e = {ShapeGroupEvent::Type::detached, this, shape};
+				e = new ShapeGroupEvent{
+					ShapeGroupEvent::Type::detached, this, shape
+				};
 
-				shape->removeHandler(this);
+				onRemoveShape(shape);
 				mShapes.erase(i);
 
-				notify(&e);
+				notify(std::shared_ptr<ShapeGroupEvent>(e));
 			}
         }
 	}

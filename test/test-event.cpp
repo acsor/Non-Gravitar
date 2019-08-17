@@ -19,22 +19,16 @@
 // LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
-#include <iostream>
+#include <functional>
 #include <stdexcept>
 #include "utils/Event.hpp"
 #include "catch.hpp"
 
 using Event = gvt::Event;
 using GVTEventDispatcher = gvt::GVTEventDispatcher;
-using GVTEventListener = gvt::GVTEventHandler;
 
 
 namespace gvt {
-	class SimpleDispatcher: public GVTEventDispatcher {
-		public:
-			SimpleDispatcher() = default;
-	};
-
 	struct SimpleEvent: public Event {
 		enum class Type {unspecified = 0, a, b};
 
@@ -45,12 +39,12 @@ namespace gvt {
 		}
 	};
 
-	class SimpleListener: public GVTEventHandler {
+	class SimpleCallback {
 		public:
 			unsigned eventA{0}, eventB{0};
 
-			void handle(Event *e) override {
-                auto event = dynamic_cast<SimpleEvent*>(e);
+			void operator() (shared_ptr<gvt::Event> e) {
+                auto event = std::dynamic_pointer_cast<SimpleEvent>(e);
 
                 if (event) {
 					if (event->type == SimpleEvent::Type::a) {
@@ -71,21 +65,26 @@ namespace gvt {
 TEST_CASE("EventHandler::handle(), EventDispatcher::notify()", "[Event]") {
 	using SE = gvt::SimpleEvent;
 
-	gvt::SimpleDispatcher s;
-	gvt::SimpleListener l;
+	gvt::EventDispatcher<gvt::SimpleEvent> s;
+    gvt::SimpleCallback l;
 	SE a{SE::Type::a}, b{SE::Type::b};
 	unsigned const repeatA = 43, repeatB = 55;
+    auto callback = s.addCallback(
+		std::bind(&gvt::SimpleCallback::operator(), &l, std::placeholders::_1)
+	);
 
-	s.addHandler(l);
+	REQUIRE(s.callbacks() == 1);
 
 	for (unsigned i = 0; i < repeatA; i++)
-		s.notify(&a);
+		s.notify(std::make_shared<SE>(SE::Type::a));
 
 	for (unsigned i = 0; i < repeatB; i++)
-		s.notify(&b);
+		s.notify(std::make_shared<SE>(SE::Type::b));
 
 	REQUIRE(l.eventA == repeatA);
 	REQUIRE(l.eventB == repeatB);
 
-	s.removeHandler(l);
+	REQUIRE(s.callbacks() == 1);
+	s.removeCallback(callback);
+	REQUIRE(s.callbacks() == 0);
 }

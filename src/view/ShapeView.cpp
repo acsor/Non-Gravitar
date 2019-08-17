@@ -21,8 +21,32 @@
 // SOFTWARE.
 #include "ShapeView.hpp"
 
+using namespace std::placeholders;
+
 
 namespace gvt {
+	void ShapeView::shapeChangeCallback (shared_ptr<Event> e) {
+		auto event = std::dynamic_pointer_cast<ShapeEvent>(e);
+
+		if (event) {
+			switch (event->type) {
+				case (ShapeEvent::Type::moved):
+					onMoved();
+					break;
+				case (ShapeEvent::Type::rotated):
+					onRotated();
+					break;
+				case (ShapeEvent::Type::destroyed):
+					onDestroyed();
+					mShape.reset();
+					event->shape->removeCallback(mCallback);
+					break;
+				default:
+					break;
+			}
+		}
+	}
+
 	void ShapeView::updateTranslation() {
 		auto shape = mShape.lock();
 
@@ -38,7 +62,9 @@ namespace gvt {
 		mTranslation = sf::Transform::Identity;
 		mRotation = sf::Transform::Identity;
 
-		shape->addHandler(this);
+		mCallback = shape->addCallback(
+			std::bind(&ShapeView::shapeChangeCallback, this, _1)
+		);
 		updateTranslation();
 	}
 
@@ -57,35 +83,13 @@ namespace gvt {
 	}
 
 	ShapeView::~ShapeView() {
-		if (auto p = mShape.lock())
-			p->removeHandler(*this);
+		if (auto shape = mShape.lock())
+			shape->removeCallback(mCallback);
 	}
 
 	void ShapeView::draw(RenderTarget &target, RenderStates states) const {
 		if (auto shared = mShape.lock()) {
 			onDraw(shared, target, states);
-		}
-	}
-
-	void ShapeView::handle(Event *e) {
-		auto event = dynamic_cast<ShapeEvent *>(e);
-
-		if (event) {
-			switch (event->type) {
-				case (ShapeEvent::Type::moved):
-					onMoved();
-					break;
-				case (ShapeEvent::Type::rotated):
-					onRotated();
-					break;
-				case (ShapeEvent::Type::destroyed):
-					onDestroyed();
-					mShape.reset();
-					event->shape->removeHandler(*this);
-					break;
-				default:
-					break;
-			}
 		}
 	}
 

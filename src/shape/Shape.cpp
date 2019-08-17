@@ -30,25 +30,27 @@ Shape::Shape(Vectord position) : mPosition{position} {
 }
 
 Shape::~Shape() {
-	ShapeEvent e{ShapeEvent::Type::destroyed, this};
+	auto e = new ShapeEvent{ShapeEvent::Type::destroyed, this};
 
-	notify(&e);
+	notify(std::shared_ptr<Event>(e));
 }
 
 void Shape::position(Vectord position) {
-	ShapeEvent e{ShapeEvent::Type::moved, this};
+	auto *e = new ShapeEvent{ShapeEvent::Type::moved, this};
 
 	mPosition = position;
 
-	notify(&e);
+	// TODO Why is make_shared() ineffective here? I'd prefer that over
+	//  manually allocating with new
+	notify(std::shared_ptr<Event>(e));
 }
 
 void Shape::move(const Vectord &t) {
-	ShapeEvent e{ShapeEvent::Type::moved, this};
+	auto e = new ShapeEvent{ShapeEvent::Type::moved, this};
 
 	mPosition += Vectord(t.x, t.y);
 
-	notify(&e);
+	notify(std::shared_ptr<Event>(e));
 }
 
 void Shape::animate(float time) {
@@ -59,7 +61,7 @@ void Shape::animate(float time) {
 }
 
 void Shape::rotation(double r) {
-	ShapeEvent e {ShapeEvent::Type::rotated, this};
+	auto e = new ShapeEvent{ShapeEvent::Type::rotated, this};
 
 	// TODO Shorten, if at all possible, this code that I have produced,
 	//  which at first sight looks orribly bigger than it ought to be
@@ -68,7 +70,7 @@ void Shape::rotation(double r) {
 	else
 		mRotation = r - (2.0 * M_PI) * ceil(r / (2.0 * M_PI));
 
-	notify(&e);
+	notify(std::shared_ptr<ShapeEvent>(e));
 }
 
 void Shape::velocity(const Vectord &t) {

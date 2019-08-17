@@ -32,9 +32,19 @@ template<typename T> using weak_ptr = std::weak_ptr<T>;
 
 
 namespace gvt {
-	class ShapeGroup: public GVTEventDispatcher, public GVTEventHandler {
+	class ShapeGroup: public GVTEventDispatcher {
         protected:
             std::list<shared_ptr<Shape>> mShapes;
+
+            /**
+             * Defined by @c ShapeGroup subclasses to define additional
+             * actions to be performed when adding a @c Shape.
+             */
+            virtual void onInsertShape (shared_ptr<Shape> shape) {};
+			/**
+			 * Like @c onInsertShape, but when removing a @c Shape.
+			 */
+			virtual void onRemoveShape (shared_ptr<Shape> shape) {};
 
             ShapeGroup() = default;
 		public:
@@ -44,8 +54,6 @@ namespace gvt {
 			void insert(shared_ptr<Shape> shape);
 			void remove(shared_ptr<Shape> shape);
 			inline size_t size () const;
-
-			void handle (Event *e) override {};
 
 			inline iterator begin();
 			inline iterator end();

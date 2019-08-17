@@ -22,28 +22,16 @@
 #include "CollisionGroup.hpp"
 
 namespace gvt {
-	void CollisionGroup::updateCollisions() {
-		CollisionEvent e;
-
-		// This is deliberately a brute-force algorithm. A simple
-		// optimization technique, which we have no time for, consists of
-		// managing a neighbourhood of shapes and checking collisions against
-		// them only
-		for (auto &first: mShapes) {
-			for (auto &second: mShapes) {
-				if (*first != *second && first->clashes(*second)) {
-					e.first = first;
-					e.second = second;
-
-					notify(&e);
-				}
-			}
-		}
+	void CollisionGroup::onInsertShape (shared_ptr<Shape> shape) {
+        shape->addCallback(mCallback);
 	}
 
-	void CollisionGroup::handle(Event *e) {
-		ShapeGroup::handle(e);
-		auto shapeEvent = dynamic_cast<ShapeEvent *>(e);
+	void CollisionGroup::onRemoveShape (shared_ptr<Shape> shape) {
+        shape->removeCallback(mCallback);
+	}
+
+	void CollisionGroup::shapeChangeCallback (shared_ptr<Event> e) {
+		auto shapeEvent = std::dynamic_pointer_cast<ShapeEvent>(e);
 
 		if (shapeEvent) {
 			switch (shapeEvent->type) {
@@ -55,5 +43,33 @@ namespace gvt {
 					break;
 			}
 		}
+	}
+
+	void CollisionGroup::updateCollisions() {
+		CollisionEvent *e;
+
+		// This is deliberately a brute-force algorithm. A simple
+		// optimization technique, which we have no time for, consists of
+		// managing a neighbourhood of shapes and checking collisions against
+		// them only
+		for (auto &first: mShapes) {
+			for (auto &second: mShapes) {
+				if (*first != *second && first->clashes(*second)) {
+					e = new CollisionEvent();
+					e->first = first;
+					e->second = second;
+
+					notify(std::shared_ptr<CollisionEvent>(e));
+				}
+			}
+		}
+	}
+
+	CollisionGroup::CollisionGroup() {
+		using namespace std::placeholders;
+
+		mCallback = std::make_shared<gvt_callback>(
+			std::bind(&CollisionGroup::shapeChangeCallback, this, _1)
+		);
 	}
 }

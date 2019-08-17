@@ -22,15 +22,14 @@
 #ifndef NON_GRAVITAR_EVENT_LISTENER
 #define NON_GRAVITAR_EVENT_LISTENER
 
-#include <cstdint>
-#include <set>
+#include <functional>
+#include <list>
+#include <memory>
 
-template<typename T> using set = std::set<T>;
+template<typename T> using shared_ptr = std::shared_ptr<T>;
 
 
 namespace gvt {
-	template<typename E> class EventHandler;
-
     struct Event {
     	protected:
     		Event() = default;
@@ -38,25 +37,50 @@ namespace gvt {
 			virtual ~Event() = default;
     };
 
+	template<typename E> using callback = std::function<void (shared_ptr<E>)>;
+	using gvt_callback = callback<Event>;
+
+	/**
+	 * Class transmitting events to registered objects. Such events will be 
+	 * handled by "callbacks", which can be functions, function objects, 
+	 * lambdas and more (e.g. std::bind() expressions).
+	 * 
+	 * The template parameter @c E is there for permitting multiple event 
+	 * hierarchies to operate with this (and related) classes.
+	 * 
+	 * @tparam E Event type to be transmitted.
+	 */
 	template<typename E> class EventDispatcher {
+		public:
+			virtual ~EventDispatcher();
+
+			void addCallback(shared_ptr<callback<E>> c);
+			/**
+			 * Stores @c c as a callback to be invoked during a call to @c
+			 * notify().
+			 * @param c Callback to store
+			 * @return A pointer to the stored data so that the
+			 * callback can be removed at a later time.
+			 */
+			shared_ptr<callback<E>> addCallback(callback<E> c);
+			/**
+			 * Removes a callback, wrapped by a @c shared_ptr<callback<E>>
+			 * usually returned by @c addCallback().
+			 * @param c Callback to remove from this dispatcher.
+			 */
+			void removeCallback(shared_ptr<callback<E>> c);
+			/**
+			 * Notify registered callbacks the rising of @c event.
+			 */
+			void notify(shared_ptr<E> event);
+
+			size_t callbacks() const;
 		private:
-			set<EventHandler<E>*> mHandlers;
-		public:
-			~EventDispatcher();
-			void addHandler(EventHandler<E> *h);
-			void removeHandler(EventHandler<E> *h);
-			void addHandler(EventHandler<E> &h);
-			void removeHandler(EventHandler<E> &h);
-			void notify(E *e) const;
+			std::list<shared_ptr<callback<E>>> mCallbacks;
 	};
 
-	template<typename E> class EventHandler {
-		public:
-			virtual void handle(E *e) = 0;
-	};
-
-	using GVTEventHandler = EventHandler<Event>;
-	using GVTEventDispatcher = EventDispatcher<Event>;
+	using gvt_callback = callback<gvt::Event>;
+	using GVTEventDispatcher = EventDispatcher<gvt::Event>;
 }
 
 

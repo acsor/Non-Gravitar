@@ -28,17 +28,18 @@
 
 
 namespace gvt {
-	class CollisionController: public GVTEventHandler {
+	class CollisionController {
 		private:
 			weak_ptr<ShapeGroup> mGroup;
 			weak_ptr<ShapeGroupView> mView;
+			shared_ptr<gvt_callback> mCallback;
+
+			void onCollisionDetected (std::shared_ptr<Event> e);
 		public:
 			explicit CollisionController (
 				shared_ptr<ShapeGroup> group, shared_ptr<ShapeGroupView> view
 			);
 			~CollisionController ();
-			
-			void handle (Event *e) override;
 	};
 }
 

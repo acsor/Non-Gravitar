@@ -22,21 +22,12 @@
 #include "shape-group/CollisionGroup.hpp"
 #include "CollisionController.hpp"
 
+using namespace std::placeholders;
+
 
 namespace gvt {
-	CollisionController::CollisionController (
-			shared_ptr<ShapeGroup> group, shared_ptr<ShapeGroupView> view
-	): mGroup{group}, mView{view} {
-        group->addHandler(this);
-	}
-
-	CollisionController::~CollisionController () {
-        if (auto shared = mGroup.lock())
-        	shared->removeHandler(this);
-	}
-
-	void CollisionController::handle (Event *e) {
-		auto collision = dynamic_cast<CollisionEvent *>(e);
+	void CollisionController::onCollisionDetected (std::shared_ptr<Event> e) {
+		auto collision = std::dynamic_pointer_cast<CollisionEvent>(e);
 		auto sharedView = mView.lock();
 
 		if (collision && sharedView) {
@@ -47,5 +38,18 @@ namespace gvt {
 					DebuggableView::COLLISION_DEBUG_COLOR
 			);
 		}
+	}
+
+	CollisionController::CollisionController (
+			shared_ptr<ShapeGroup> group, shared_ptr<ShapeGroupView> view
+	): mGroup{group}, mView{view} {
+		mCallback = group->addCallback(std::bind(
+				&CollisionController::onCollisionDetected, this, _1
+		));
+	}
+
+	CollisionController::~CollisionController () {
+        if (auto group = mGroup.lock())
+			group->removeCallback(mCallback);
 	}
 }

@@ -20,6 +20,7 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 #include <iostream>
+#include <functional>
 #include <cmath>
 #include <memory>
 #include <utility>
@@ -36,110 +37,48 @@
 #include "view/SpaceshipView.hpp"
 #include "control/CollisionController.hpp"
 
-template<typename T> using shared_ptr = std::shared_ptr<T>;
+// While I know using-declarations are considered bad practice, setting up
+// aliases was generating too much code
+using namespace gvt;
+using namespace sf;
+using namespace std::placeholders;
 
-using Event = sf::Event;
-using Keyboard = sf::Keyboard;
-using RenderWindow = sf::RenderWindow;
-
-using ShapeGroup = gvt::ShapeGroup;
-using Spaceship = gvt::Spaceship;
-using SpaceshipView = gvt::SpaceshipView;
-
-using Bunker = gvt::Bunker;
-using BunkerView = gvt::BunkerView;
+using sf_callback = callback<sf::Event>;
+using gvt_callback = callback<gvt::Event>;
 
 
 #define STEP_SIZE 10.0
 #define ANGLE_SIZE (10 * M_PI / 180.0)
 
 
-// TODO Replace with exceedingly succint lambda
-class CloseWindowHandler: public gvt::EventHandler<sf::Event> {
-	private:
-		sf::Window &mWindow;
-	public:
-		explicit CloseWindowHandler(sf::Window &window): mWindow{window} {};
-		void handle (sf::Event *e) override {
-			if (e->type == sf::Event::Closed)
-				mWindow.close();
-		}
-};
-
-// TODO Replace with lambda
-class MoveShipHandler: public gvt::EventHandler<sf::Event> {
-	private:
-		shared_ptr<Spaceship> mShip;
-	public:
-		explicit MoveShipHandler(shared_ptr<Spaceship> spaceship):
-				mShip{std::move(spaceship)} {};
-
-		void handle (sf::Event *e) override {
-			auto movement = STEP_SIZE * gvt::Vectord(mShip->rotation());
-			movement.rotate(M_PI / -2.0);
-
-			switch (e->type) {
-				case (Event::KeyPressed):
-					switch (e->key.code) {
-						case (Keyboard::Key::A):
-							mShip->rotate(-ANGLE_SIZE);
-							break;
-						case (Keyboard::Key::W):
-							mShip->move(movement);
-							break;
-						case (Keyboard::Key::D):
-							mShip->rotate(ANGLE_SIZE);
-							break;
-						case (Keyboard::Key::S):
-							// Should activate the shields in a future version
-							// of the program
-							break;
-						default:
-							break;
-					}
-				default:
-					break;
-			}
-		}
-};
-
-// TODO Replace with lambda
-class DebugToggleHandler: public gvt::EventHandler<sf::Event> {
-	private:
-		gvt::ShapeGroupView &mRootView;
-	public:
-        explicit DebugToggleHandler(gvt::ShapeGroupView &rootView):
-        	mRootView{rootView} {};
-
-		void handle (sf::Event *e) override {
-			if (
-				e->type == Event::KeyPressed &&
-				e->key.code == Keyboard::Key::B && e->key.control
-			) {
-				mRootView.setDebug(!mRootView.isDebug());
-			}
-		};
-};
+void closeWindowCallback (RenderWindow &w, shared_ptr<sf::Event> e);
+void moveShipCallback (shared_ptr<Spaceship> ship, shared_ptr<sf::Event> e);
+/**
+ * Toggles @c rootView debug state depending on the event @c e.
+ */
+void toggleDebugCallback (
+		shared_ptr<ShapeGroupView> rootView, shared_ptr<sf::Event> e
+);
 
 
 int main () {
-	sf::VideoMode const mode = sf::VideoMode::getDesktopMode();
+	VideoMode const mode = VideoMode::getDesktopMode();
 	RenderWindow w{mode, "Non-Gravitar"};
 
-	shared_ptr<ShapeGroup> group{new gvt::CollisionGroup()};
+	shared_ptr<ShapeGroup> group{new CollisionGroup()};
 	shared_ptr<Spaceship> ship{new Spaceship({600, 500}, 1000)};
-	shared_ptr<Bunker> bunker1{new gvt::Bunker2D({0, 0})};
-	shared_ptr<Bunker> bunker2{new gvt::Bunker2D({0, 0})};
-	shared_ptr<Bunker> bunker3{new gvt::Bunker3D({0, 0})};
-	shared_ptr<gvt::Polyline> mountains{
-		gvt::MountainChain::randomChain({0, 350}, 9)
+	shared_ptr<Bunker> bunker1{new Bunker2D({0, 0})};
+	shared_ptr<Bunker> bunker2{new Bunker2D({0, 0})};
+	shared_ptr<Bunker> bunker3{new Bunker3D({0, 0})};
+	shared_ptr<Polyline> mountains{
+		MountainChain::randomChain({0, 350}, 9)
 	};
-	shared_ptr<gvt::ShapeGroupView> rootView {new gvt::ShapeGroupView(group)};
+	shared_ptr<ShapeGroupView> rootView {new ShapeGroupView(group)};
 
-	gvt::CollisionController c{group, rootView};
+	CollisionController c{group, rootView};
 
-	gvt::EventDispatcher<sf::Event> loopDispatcher;
-	Event e;
+	EventDispatcher<sf::Event> loopDispatcher;
+	sf::Event e;
 
 	w.setFramerateLimit(45);
 
@@ -149,9 +88,11 @@ int main () {
 	group->insert(bunker3);
 	group->insert(mountains);
 
-	loopDispatcher.addHandler(new CloseWindowHandler(w));
-	loopDispatcher.addHandler(new MoveShipHandler(ship));
-	loopDispatcher.addHandler(new DebugToggleHandler(*rootView));
+	loopDispatcher.addCallback(
+		[&] (shared_ptr<sf::Event> e) -> void { closeWindowCallback(w, e); }
+	);
+	loopDispatcher.addCallback(std::bind(moveShipCallback, ship, _1));
+	loopDispatcher.addCallback(std::bind(toggleDebugCallback, rootView, _1));
 
     mountains->align(1, *bunker1);
 	mountains->align(mountains->size() / 2, *bunker2);
@@ -159,7 +100,7 @@ int main () {
 
 	while (w.isOpen()) {
 		while (w.pollEvent(e))
-			loopDispatcher.notify(&e);
+			loopDispatcher.notify(std::make_shared<sf::Event>(e));
 
 		w.clear();
 		w.draw(*rootView);
@@ -167,4 +108,46 @@ int main () {
 	}
 
 	return EXIT_SUCCESS;
+}
+
+
+void closeWindowCallback (RenderWindow &w, shared_ptr<sf::Event> e) {
+	if (e->type == sf::Event::Closed)
+		w.close();
+}
+
+void moveShipCallback (shared_ptr<Spaceship> ship, shared_ptr<sf::Event> e) {
+	auto movement = STEP_SIZE * Vectord(ship->rotation());
+	movement.rotate(M_PI / -2.0);
+
+	switch (e->type) {
+		case (sf::Event::KeyPressed):
+			switch (e->key.code) {
+				case (Keyboard::Key::A):
+					ship->rotate(-ANGLE_SIZE);
+					break;
+				case (Keyboard::Key::W):
+					ship->move(movement);
+					break;
+				case (Keyboard::Key::D):
+					ship->rotate(ANGLE_SIZE);
+					break;
+				case (Keyboard::Key::S):
+					// Should activate the shields in a future version
+					// of the program
+					break;
+				default:
+					break;
+			}
+		default:
+			break;
+	}
+}
+
+void toggleDebugCallback(
+		shared_ptr<ShapeGroupView> rootView, shared_ptr<sf::Event> e
+) {
+	if (e->type == sf::Event::KeyPressed && e->key.code == Keyboard::Key::B && e->key.control) {
+		rootView->setDebug(!rootView->isDebug());
+	}
 }

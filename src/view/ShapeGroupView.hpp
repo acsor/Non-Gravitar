@@ -37,10 +37,16 @@ template<typename T> using unique_ptr = std::unique_ptr<T>;
 
 
 namespace gvt {
-	class ShapeGroupView: public sf::Drawable, public GVTEventHandler,
-			public DebuggableView {
+	class ShapeGroupView: public sf::Drawable, public DebuggableView {
 		private:
+			shared_ptr<gvt_callback> mCallback;
 			ShapeViewFactory mFactory;
+
+			/**
+			 * Monitors rendered shapes, taking actions when their states
+			 * changes.
+			 */
+			void shapesCallback (shared_ptr<Event> e);
 		protected:
 			weak_ptr<ShapeGroup> mGroup;
 			mutable std::unordered_map<shared_ptr<Shape>, shared_ptr<ShapeView>> mViews;
@@ -56,8 +62,7 @@ namespace gvt {
 			void draw(
 				sf::RenderTarget &target, sf::RenderStates state
 			) const override;
-			void handle(Event *e) override;
-			
+
 			shared_ptr<ShapeView> viewFor (shared_ptr<Shape> shape) {
 				return mViews[shape];
 			}

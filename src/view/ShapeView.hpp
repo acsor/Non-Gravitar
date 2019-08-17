@@ -34,8 +34,11 @@ using RenderTarget = sf::RenderTarget;
 
 
 namespace gvt {
-	class ShapeView: public sf::Drawable, public GVTEventHandler,
-			public DebuggableView {
+	class ShapeView: public sf::Drawable, public DebuggableView {
+		private:
+			shared_ptr<gvt_callback> mCallback;
+
+			void shapeChangeCallback (shared_ptr<Event> e);
 		protected:
 			sf::Transform mTranslation, mRotation;
 			weak_ptr<Shape> mShape;
@@ -69,7 +72,6 @@ namespace gvt {
 		public:
 			~ShapeView() override;
 
-			void handle(Event *e) override;
 			void draw(RenderTarget &target, RenderStates states) const override;
 
 			/**

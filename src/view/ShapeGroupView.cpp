@@ -19,23 +19,45 @@
 // LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
+#include <functional>
 #include <stdexcept>
 #include "ShapeGroupView.hpp"
 #include "view/SpaceshipView.hpp"
 #include "view/BunkerView.hpp"
 
+using namespace std::placeholders;
+
 
 namespace gvt {
+	void ShapeGroupView::shapesCallback (shared_ptr<Event> e) {
+		auto event = std::dynamic_pointer_cast<ShapeGroupEvent>(e);
+
+		if (event) {
+			if (event->type == ShapeGroupEvent::Type::attached) {
+				mViews[event->shape] = shared_ptr<ShapeView>(
+						mFactory.makeView(event->shape)
+				);
+			} else if (event->type == ShapeGroupEvent::Type::detached) {
+				mViews.erase(event->shape);
+			} else if (event->type == ShapeGroupEvent::Type::destroyed) {
+				mViews.clear();
+				mGroup.reset();
+			}
+		}
+	}
+
 	void ShapeGroupView::updateDebugView () {
 	}
 
 	ShapeGroupView::ShapeGroupView(shared_ptr<ShapeGroup> group): mGroup{group} {
-		group->addHandler(this);
+		mCallback = group->addCallback(
+				std::bind(&ShapeGroupView::shapesCallback, this, _1)
+		);
 	}
 
 	ShapeGroupView::~ShapeGroupView() {
 		if (auto p = mGroup.lock())
-			p->removeHandler(*this);
+			p->removeCallback(mCallback);
 	}
 
 	void ShapeGroupView::setDebug(bool state) {
@@ -60,23 +82,6 @@ namespace gvt {
 				mViews.erase(view.first);
 			else
 				view.second->draw(target, state);
-		}
-	}
-
-	void ShapeGroupView::handle(Event *e) {
-		auto event = dynamic_cast<ShapeGroupEvent*>(e);
-
-		if (event) {
-			if (event->type == ShapeGroupEvent::Type::attached) {
-				mViews[event->shape] = shared_ptr<ShapeView>(
-						mFactory.makeView(event->shape)
-				);
-			} else if (event->type == ShapeGroupEvent::Type::detached) {
-				mViews.erase(event->shape);
-			} else if (event->type == ShapeGroupEvent::Type::destroyed) {
-				mViews.clear();
-				mGroup.reset();
-			}
 		}
 	}
 }
