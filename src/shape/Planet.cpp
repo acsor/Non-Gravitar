@@ -19,50 +19,28 @@
 // LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
-#ifndef NON_GRAVITAR_CIRCLE_HPP
-#define NON_GRAVITAR_CIRCLE_HPP
-
-#include "Shape2D.hpp"
+#include "Planet.hpp"
 
 
 namespace gvt {
-	class Circle: public Shape2D {
-		protected:
-			double mRadius;
-		public:
-			Circle(Vectord position, double radius);
-
-			inline double width() const override;
-			inline double height() const override;
-
-			inline double radius() const;
-			inline double area() const;
-			bool clashes(Circle const &o) const;
-
-			void accept (ShapeVisitor &visitor) override;
-			BoundingPolygon collisionPolygon() const override;
-			bool operator== (Shape const &o) const override;
-	};
-}
-
-
-namespace gvt {
-	double Circle::radius() const {
-		return mRadius;
+	Planet::Planet (Vectord position, double radius): Circle(position, radius) {
 	}
 
-	double Circle::area() const {
-		return M_PI * pow(mRadius, 2);
+	shared_ptr<PlanetSurface> Planet::surface() {
+		return mSurface;
 	}
 
-	double Circle::width() const {
-        return 2 * mRadius;
+	void Planet::accept (ShapeVisitor &visitor) {
+		visitor.visitPlanet(*this);
 	}
 
-	double Circle::height() const {
-		return 2 * mRadius;
+	bool Planet::operator== (Shape const &o) const {
+        auto other = dynamic_cast<Planet const *>(&o);
+
+        if (other)
+        	return Circle::operator==(o);
+
+        return false;
 	}
 }
 
-
-#endif

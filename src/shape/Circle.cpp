@@ -26,41 +26,39 @@
 #include "shape/ShapeVisitor.hpp"
 
 
-using Circle = gvt::Circle;
-using Shape = gvt::Shape;
-using Rectangle = gvt::Rectangle;
+namespace gvt {
+	Circle::Circle(Vectord position, double radius):
+			Shape2D{position}, mRadius{radius} {
+	}
 
+	bool Circle::clashes(Circle const &o) const {
+		// TODO Test
+		return (mPosition + Vectord{mRadius, mRadius}).distance(
+				o.mPosition + Vectord{o.mRadius, o.mRadius}
+		) <= mRadius + o.mRadius;
+	}
 
-Circle::Circle(Vectord position, double radius):
-		Shape2D{position}, mRadius{radius} {
-}
+	void Circle::accept (ShapeVisitor &visitor) {
+		visitor.visitCircle(*this);
+	}
 
-bool Circle::clashes(Circle const &o) const {
-	// TODO Test
-	return (mPosition + Vectord{mRadius, mRadius}).distance(
-			o.mPosition + Vectord{o.mRadius, o.mRadius}
-	) <= mRadius + o.mRadius;
-}
+	gvt::BoundingPolygon Circle::collisionPolygon() const {
+		// TODO Return an heptagon
+		BoundingPolygon r = BoundingRectangle{
+				mPosition, mPosition + 2 * Vectord{mRadius, mRadius}
+		};
 
-void Circle::accept (ShapeVisitor &visitor) {
-	visitor.visitCircle(*this);
-}
+		r.rotate(mRotation);
 
-gvt::BoundingPolygon Circle::collisionPolygon() const {
-	BoundingPolygon r = BoundingRectangle{
-		mPosition, mPosition + 2 * Vectord{mRadius, mRadius}
-	};
+		return r;
+	}
 
-	r.rotate(mRotation);
+	bool Circle::operator== (Shape const &o) const {
+		auto *other = dynamic_cast<Circle const *>(&o);
 
-	return r;
-}
+		if (other)
+			return Shape::operator==(*other) && mRadius == other->mRadius;
 
-bool Circle::operator== (Shape const &o) const {
-	auto *other = dynamic_cast<Circle const *>(&o);
-
-	if (other)
-		return Shape::operator==(*other) && mRadius == other->mRadius;
-
-	return false;
+		return false;
+	}
 }

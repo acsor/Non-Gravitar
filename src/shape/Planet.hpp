@@ -19,49 +19,32 @@
 // LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
-#ifndef NON_GRAVITAR_CIRCLE_HPP
-#define NON_GRAVITAR_CIRCLE_HPP
+#ifndef NON_GRAVITAR_PLANET_HPP
+#define NON_GRAVITAR_PLANET_HPP
 
-#include "Shape2D.hpp"
+#include "Circle.hpp"
+#include "utils/Vector.hpp"
 
 
 namespace gvt {
-	class Circle: public Shape2D {
+	class PlanetSurface;
+
+	class Planet: public Circle {
 		protected:
-			double mRadius;
+			shared_ptr<PlanetSurface> mSurface;
 		public:
-			Circle(Vectord position, double radius);
+			Planet (Vectord position, double radius);
 
-			inline double width() const override;
-			inline double height() const override;
-
-			inline double radius() const;
-			inline double area() const;
-			bool clashes(Circle const &o) const;
+			/**
+			 * @return The @c PlanetSurface of this @c Planet, comprising an
+			 * area where various mountains, bunkers and other game objects
+			 * are placed.
+			 */
+			shared_ptr<PlanetSurface> surface();
 
 			void accept (ShapeVisitor &visitor) override;
-			BoundingPolygon collisionPolygon() const override;
 			bool operator== (Shape const &o) const override;
 	};
-}
-
-
-namespace gvt {
-	double Circle::radius() const {
-		return mRadius;
-	}
-
-	double Circle::area() const {
-		return M_PI * pow(mRadius, 2);
-	}
-
-	double Circle::width() const {
-        return 2 * mRadius;
-	}
-
-	double Circle::height() const {
-		return 2 * mRadius;
-	}
 }
 
 

@@ -58,6 +58,9 @@ target_link_libraries(CollisionGroup ShapeGroup)
 add_library(Circle "${DIR_SHAPE}/Circle.cpp")
 target_link_libraries(Circle Shape Rectangle)
 
+add_library(Planet "${DIR_SHAPE}/Planet.cpp")
+target_link_libraries(Planet Circle)
+
 add_library(Rectangle "${DIR_SHAPE}/Rectangle.cpp")
 target_link_libraries(Rectangle Shape BoundingRectangle)
 
