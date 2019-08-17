@@ -19,46 +19,23 @@
 // LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
-#include "ShapeGroup.hpp"
+#ifndef NON_GRAVITAR_SOLAR_SYSTEM_HPP
+#define NON_GRAVITAR_SOLAR_SYSTEM_HPP
+
+#include <memory>
+#include "shape/Planet.hpp"
+#include "CollisionGroup.hpp"
 
 
 namespace gvt {
-	ShapeGroup::~ShapeGroup() {
-		auto *e = new ShapeGroupEvent{
-			ShapeGroupEvent::Type::destroyed, this, nullptr
-		};
-
-		notify(std::shared_ptr<ShapeGroupEvent>(e));
-	}
-
-	void ShapeGroup::insert(shared_ptr<Shape> shape) {
-		auto *e = new ShapeGroupEvent{
-				ShapeGroupEvent::Type::attached, this, shape
-		};
-
-		// Not checking for null-pointer arguments is intended behavior, as code
-		// feeding in null-pointer values should not exist in the first place: a
-		// segmentation fault acts as a proper signaling mechanism
-		mShapes.push_front(shape);
-		onInsertShape(shape);
-
-		notify(std::shared_ptr<ShapeGroupEvent>(e));
-	}
-
-	void ShapeGroup::remove(shared_ptr<Shape> shape) {
-		ShapeGroupEvent *e;
-
-        for (auto i = mShapes.begin(); i != mShapes.end(); i++) {
-        	if (**i == *shape) {
-				e = new ShapeGroupEvent{
-					ShapeGroupEvent::Type::detached, this, shape
-				};
-
-				mShapes.erase(i);
-				onRemoveShape(shape);
-
-				notify(std::shared_ptr<ShapeGroupEvent>(e));
-			}
-        }
-	}
+	class SolarSystem: public CollisionGroup {
+		public:
+			static std::shared_ptr<SolarSystem> makeRandom (
+				unsigned planets, double minRadius, double maxRadius,
+				Vectord minPos, Vectord maxPos
+			);
+	};
 }
+
+
+#endif

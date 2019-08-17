@@ -19,46 +19,33 @@
 // LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
-#include "ShapeGroup.hpp"
+#include <cstdlib>
+#include <random>
+#include "SolarSystem.hpp"
 
 
 namespace gvt {
-	ShapeGroup::~ShapeGroup() {
-		auto *e = new ShapeGroupEvent{
-			ShapeGroupEvent::Type::destroyed, this, nullptr
-		};
+	std::shared_ptr<SolarSystem> SolarSystem::makeRandom (
+		unsigned planets, double minRadius, double maxRadius, Vectord minPos,
+		Vectord maxPos
+	) {
+        std::shared_ptr<SolarSystem> system {new SolarSystem()};
+        std::default_random_engine e;
+		std::uniform_real_distribution<double> radius{minRadius, maxRadius};
+        std::uniform_real_distribution<double>
+				xCoord{minPos.x, maxPos.x}, yCoord{minPos.y, maxPos.y};
 
-		notify(std::shared_ptr<ShapeGroupEvent>(e));
-	}
+        e.seed(time(nullptr));
 
-	void ShapeGroup::insert(shared_ptr<Shape> shape) {
-		auto *e = new ShapeGroupEvent{
-				ShapeGroupEvent::Type::attached, this, shape
-		};
+        while (planets > 0) {
+			auto p = std::shared_ptr<Planet>(
+				new Planet(Vectord{xCoord(e), yCoord(e)}, radius(e))
+			);
+			system->insert(p);
 
-		// Not checking for null-pointer arguments is intended behavior, as code
-		// feeding in null-pointer values should not exist in the first place: a
-		// segmentation fault acts as a proper signaling mechanism
-		mShapes.push_front(shape);
-		onInsertShape(shape);
-
-		notify(std::shared_ptr<ShapeGroupEvent>(e));
-	}
-
-	void ShapeGroup::remove(shared_ptr<Shape> shape) {
-		ShapeGroupEvent *e;
-
-        for (auto i = mShapes.begin(); i != mShapes.end(); i++) {
-        	if (**i == *shape) {
-				e = new ShapeGroupEvent{
-					ShapeGroupEvent::Type::detached, this, shape
-				};
-
-				mShapes.erase(i);
-				onRemoveShape(shape);
-
-				notify(std::shared_ptr<ShapeGroupEvent>(e));
-			}
+        	planets--;
         }
+
+        return system;
 	}
 }

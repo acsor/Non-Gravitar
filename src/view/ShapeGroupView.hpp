@@ -53,7 +53,7 @@ namespace gvt {
 
 			void updateDebugView () override;
 		public:
-			explicit ShapeGroupView(shared_ptr<ShapeGroup> group);
+			explicit ShapeGroupView(const shared_ptr<ShapeGroup>& group);
 			~ShapeGroupView() override;
 
 			void setDebug(bool debug) override;

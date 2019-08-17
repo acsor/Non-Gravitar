@@ -24,6 +24,7 @@
 namespace gvt {
 	void CollisionGroup::onInsertShape (shared_ptr<Shape> shape) {
         shape->addCallback(mCallback);
+        updateCollisions();
 	}
 
 	void CollisionGroup::onRemoveShape (shared_ptr<Shape> shape) {

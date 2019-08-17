@@ -49,12 +49,6 @@ target_link_libraries(Polyline Shape)
 add_library(MountainChain "${DIR_SHAPE}/MountainChain.cpp")
 target_link_libraries(MountainChain Polyline Random)
 
-add_library(ShapeGroup "${DIR_SHAPE_GROUP}/ShapeGroup.cpp")
-target_link_libraries(ShapeGroup Shape)
-
-add_library(CollisionGroup "${DIR_SHAPE_GROUP}/CollisionGroup.cpp")
-target_link_libraries(CollisionGroup ShapeGroup)
-
 add_library(Circle "${DIR_SHAPE}/Circle.cpp")
 target_link_libraries(Circle Shape Rectangle)
 
@@ -75,6 +69,17 @@ target_link_libraries(RoundMissile Circle)
 
 add_library(Bunker "${DIR_SHAPE}/Bunker.cpp")
 target_link_libraries(Bunker RoundMissile)
+
+
+# Shape group section
+add_library(ShapeGroup "${DIR_SHAPE_GROUP}/ShapeGroup.cpp")
+target_link_libraries(ShapeGroup Shape)
+
+add_library(CollisionGroup "${DIR_SHAPE_GROUP}/CollisionGroup.cpp")
+target_link_libraries(CollisionGroup ShapeGroup)
+
+add_library(SolarSystem "${DIR_SHAPE_GROUP}/SolarSystem.cpp")
+target_link_libraries(SolarSystem Planet CollisionGroup)
 
 
 # Shape views section
@@ -99,7 +104,9 @@ add_library(ShapeGroupView "${DIR_VIEWS}/ShapeGroupView.cpp")
 target_link_libraries(ShapeGroupView ShapeGroup ShapeViewFactory)
 
 add_library(ShapeViewFactory "${DIR_VIEWS}/ShapeViewFactory.cpp")
-target_link_libraries(ShapeViewFactory SpaceshipView BunkerView PolylineView)
+target_link_libraries(
+		ShapeViewFactory SpaceshipView BunkerView PolylineView PlanetView
+)
 
 add_library(SpaceshipView "${DIR_VIEWS}/SpaceshipView.cpp")
 target_link_libraries(SpaceshipView Spaceship Shape2DView Utils)
@@ -123,7 +130,7 @@ add_executable(NonGravitar "${DIR_SRC}/NonGravitar.cpp")
 target_link_libraries(
 	NonGravitar
 	sfml-window sfml-graphics sfml-system
-	CollisionGroup MountainChain
+	SolarSystem
     ShapeGroupView
     CollisionController
 )

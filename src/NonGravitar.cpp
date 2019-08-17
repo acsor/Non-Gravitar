@@ -19,22 +19,18 @@
 // LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
-#include <iostream>
 #include <functional>
-#include <cmath>
 #include <memory>
 #include <utility>
 #include <SFML/Graphics.hpp>
 #include <SFML/Window.hpp>
+#include "shape-group/SolarSystem.hpp"
 #include "shape/Spaceship.hpp"
 #include "shape/MountainChain.hpp"
 #include "shape-group/ShapeGroup.hpp"
 #include "shape-group/CollisionGroup.hpp"
-#include "shape/Bunker.hpp"
 #include "utils/Vector.hpp"
-#include "view/BunkerView.hpp"
 #include "view/ShapeGroupView.hpp"
-#include "view/SpaceshipView.hpp"
 #include "control/CollisionController.hpp"
 
 // While I know using-declarations are considered bad practice, setting up
@@ -44,7 +40,6 @@ using namespace sf;
 using namespace std::placeholders;
 
 using sf_callback = callback<sf::Event>;
-using gvt_callback = callback<gvt::Event>;
 
 
 #define STEP_SIZE 10.0
@@ -65,38 +60,26 @@ int main () {
 	VideoMode const mode = VideoMode::getDesktopMode();
 	RenderWindow w{mode, "Non-Gravitar"};
 
-	shared_ptr<ShapeGroup> group{new CollisionGroup()};
-	shared_ptr<Spaceship> ship{new Spaceship({600, 500}, 1000)};
-	shared_ptr<Bunker> bunker1{new Bunker2D({0, 0})};
-	shared_ptr<Bunker> bunker2{new Bunker2D({0, 0})};
-	shared_ptr<Bunker> bunker3{new Bunker3D({0, 0})};
-	shared_ptr<Polyline> mountains{
-		MountainChain::randomChain({0, 350}, 9)
+	shared_ptr<ShapeGroup> solarSystem{
+		SolarSystem::makeRandom(8, 30, 50, {0, 0}, {1920, 1080})
 	};
-	shared_ptr<ShapeGroupView> rootView {new ShapeGroupView(group)};
+	shared_ptr<Spaceship> ship {new Spaceship({600, 500}, 1000)};
+	shared_ptr<ShapeGroupView> rootView {new ShapeGroupView(solarSystem)};
 
-	CollisionController c{group, rootView};
+	CollisionController c{solarSystem, rootView};
 
 	EventDispatcher<sf::Event> loopDispatcher;
 	sf::Event e;
 
 	w.setFramerateLimit(45);
 
-	group->insert(ship);
-	group->insert(bunker1);
-	group->insert(bunker2);
-	group->insert(bunker3);
-	group->insert(mountains);
+	solarSystem->insert(ship);
 
 	loopDispatcher.addCallback(
 		[&] (shared_ptr<sf::Event> e) -> void { closeWindowCallback(w, e); }
 	);
 	loopDispatcher.addCallback(std::bind(moveShipCallback, ship, _1));
 	loopDispatcher.addCallback(std::bind(toggleDebugCallback, rootView, _1));
-
-    mountains->align(1, *bunker1);
-	mountains->align(mountains->size() / 2, *bunker2);
-	mountains->align(mountains->size() - 3, *bunker3);
 
 	while (w.isOpen()) {
 		while (w.pollEvent(e))

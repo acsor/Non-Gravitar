@@ -49,9 +49,13 @@ namespace gvt {
 	void ShapeGroupView::updateDebugView () {
 	}
 
-	ShapeGroupView::ShapeGroupView(shared_ptr<ShapeGroup> group): mGroup{group} {
+	ShapeGroupView::ShapeGroupView(const shared_ptr<ShapeGroup>& group):
+			mGroup{group} {
+		for (auto const &shape: *group)
+			mViews[shape] = shared_ptr<ShapeView>(mFactory.makeView(shape));
+
 		mCallback = group->addCallback(
-				std::bind(&ShapeGroupView::shapesCallback, this, _1)
+			std::bind(&ShapeGroupView::shapesCallback, this, _1)
 		);
 	}
 
