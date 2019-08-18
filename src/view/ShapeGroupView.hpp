@@ -51,13 +51,13 @@ namespace gvt {
 			weak_ptr<ShapeGroup> mGroup;
 			mutable std::unordered_map<shared_ptr<Shape>, shared_ptr<ShapeView>> mViews;
 
-			void updateDebugView () override;
+			void onCreateDebugView() override;
+			void onUpdateDebugColor () override;
 		public:
 			explicit ShapeGroupView(const shared_ptr<ShapeGroup>& group);
 			~ShapeGroupView() override;
 
 			void setDebug(bool debug) override;
-			void debugColor(sf::Color color) override;
 
 			void draw(
 				sf::RenderTarget &target, sf::RenderStates state

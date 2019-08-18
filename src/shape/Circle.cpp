@@ -44,7 +44,7 @@ namespace gvt {
 
 	gvt::BoundingPolygon Circle::collisionPolygon() const {
         std::vector<Vectord> vertices {COLLISION_PRECISION};
-        Vectord const center = mPosition + Vectord{mRadius, mRadius};
+        Vectord const center = Vectord{mRadius, mRadius};
         double const step = 2.0 * M_PI / COLLISION_PRECISION;
 
         for (unsigned i = 0; i < COLLISION_PRECISION; i++) {
@@ -53,7 +53,10 @@ namespace gvt {
 			);
         }
 
-        return BoundingPolygon(vertices.begin(), vertices.end());
+        auto p = BoundingPolygon(vertices.begin(), vertices.end());
+        p.position(mPosition);
+
+        return p;
 	}
 
 	bool Circle::operator== (Shape const &o) const {

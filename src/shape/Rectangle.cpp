@@ -54,10 +54,10 @@ void Rectangle::accept (ShapeVisitor &visitor) {
 }
 
 gvt::BoundingPolygon Rectangle::collisionPolygon() const {
-	auto r = BoundingPolygon::rectangle(
-		mPosition, mPosition + Vectord{width(), height()}
-	);
-    r.rotate(mRotation);
+	auto r = BoundingPolygon::rectangle({0, 0}, {width(), height()});
+
+	r.position(mPosition);
+	r.rotate(mRotation, rotationCenter());
 
     return r;
 }

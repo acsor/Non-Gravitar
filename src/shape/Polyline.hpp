@@ -80,7 +80,7 @@ namespace gvt {
 			 * with. Note that if this polyline possesses n vertices, then it
 			 * has n - 1 segments.
 			 * @param shape Shape to align
-			 * @param offset Where to align @c shape within the available
+			 * @param offset Where to align @c shape within the leftover
 			 * segment space (assumes values in [0, 1]). A value of @c 0 sets it
 			 * at the beginning, @c 0 .5 at the middle and @c 1 at the very end
 			 * of the segment. Defaults to @c 0.5.

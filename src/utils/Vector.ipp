@@ -47,8 +47,8 @@ namespace gvt {
 	}
 
 	template<typename T> void Vector<T>::rotate(double rad) {
-		auto n = norm();
-		auto theta = angle();
+		auto const n = norm();
+		auto const theta = angle();
 
 		x = n * cos(theta + rad);
 		y = n * sin(theta + rad);

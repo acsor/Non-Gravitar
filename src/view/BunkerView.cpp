@@ -38,8 +38,8 @@ void BunkerView::onDraw(shared_ptr<Shape> shape, RenderTarget &target,
 	target.draw(mSprite, mTranslation * mRotation);
 }
 
-void BunkerView::onDestroyed () {
-	Shape2DView::onDestroyed();
+void BunkerView::onShapeDestroyed() {
+	Shape2DView::onShapeDestroyed();
 	mSprite = sf::Sprite();
 }
 

@@ -66,9 +66,9 @@ namespace gvt {
 			virtual void onDraw(
 				shared_ptr<Shape> shape, RenderTarget &t, RenderStates s
 			) const = 0;
-			virtual void onMoved();
-			virtual void onRotated();
-			virtual void onDestroyed() {};
+			virtual void onShapeMoved();
+			virtual void onShapeRotated();
+			virtual void onShapeDestroyed() {};
 		public:
 			~ShapeView() override;
 

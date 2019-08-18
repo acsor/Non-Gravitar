@@ -41,41 +41,44 @@ namespace gvt {
 		}
 	}
 
-	void Shape2DView::updateDebugView() {
+	void Shape2DView::onCreateDebugView() {
 		shared_ptr<Shape2D> shape = std::dynamic_pointer_cast<Shape2D>(
 			mShape.lock()
 		);
 
 		if (shape != nullptr) {
-			vector<BoundingPolygon::Vertex>
-					vertices = shape->collisionPolygon().vertices();
+			auto vertices = shape->collisionPolygon().vertices();
 			mBounds = sf::VertexArray(sf::LineStrip, vertices.size() + 1);
 			size_t i = 0;
 
-			for (i = 0; i < vertices.size(); i++) {
+			for (i = 0; i < vertices.size(); i++)
 				mBounds[i] = sf::Vector2f(vertices[i].x, vertices[i].y);
-				mBounds[i].color = mDebugColor;
-			}
 
 			mBounds[i] = sf::Vector2f(vertices[0].x, vertices[0].y);
-			mBounds[i].color = mDebugColor;
 		}
+	}
+
+	void Shape2DView::onUpdateDebugColor() {
+        for (unsigned i = 0; i < mBounds.getVertexCount(); i++)
+        	mBounds[i].color = mDebugColor;
 	}
 
 	Shape2DView::Shape2DView(shared_ptr<Shape2D> const &shape):
 			ShapeView{shape} {
 		updateRotation();
-		updateDebugView();
+
+		onCreateDebugView();
+		onUpdateDebugColor();
 	}
 
 	void Shape2DView::onDraw(
 			shared_ptr<Shape> shape, RenderTarget &target, RenderStates s
 	) const {
 		if (mDebug)
-			target.draw(mBounds);
+			target.draw(mBounds, mTranslation * mRotation);
 	}
 
-	void Shape2DView::onDestroyed() {
+	void Shape2DView::onShapeDestroyed() {
 		mBounds.clear();
 	}
 }

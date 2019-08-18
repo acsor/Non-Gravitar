@@ -34,8 +34,10 @@ namespace gvt {
 			sf::Color mColor {DEFAULT_COLOR};
 			sf::VertexArray mVertices;
 
-			void updateView ();
-			void updateDebugView() override;
+			void onCreateDebugView() override {};
+			void onUpdateDebugColor () override {};
+
+			void onCreateView();
 			void updateRotation() override;
 			void onDraw(
 				shared_ptr<Shape> shape, RenderTarget &t, RenderStates s

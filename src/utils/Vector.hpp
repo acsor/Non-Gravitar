@@ -51,7 +51,8 @@ namespace gvt {
 		void normalize();
 		void rotate(double rad);
 		/**
-		 * Rotate the vector by @c rad radiants around 2D point @c center.
+		 * Rotate the vector by an additional @c rad radians around 2D point @c
+		 * center.
 		 */
 		void rotate(double rad, Vector center);
 		/**

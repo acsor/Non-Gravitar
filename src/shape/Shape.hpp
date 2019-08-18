@@ -23,7 +23,6 @@
 #define NON_GRAVITAR_SHAPE_HPP
 
 #include <ostream>
-#include "bounding-polygon/BoundingPolygon.hpp"
 #include "utils/Event.hpp"
 #include "utils/Vector.hpp"
 

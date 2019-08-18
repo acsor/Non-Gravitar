@@ -31,11 +31,13 @@ namespace gvt {
 
 	gvt::BoundingPolygon Spaceship::collisionPolygon() const {
 		auto t = BoundingPolygon::triangle(
-			mPosition + Vectord{0, BOUNDING_HEIGHT},
-			mPosition + Vectord{BOUNDING_WIDTH / 2.0, 0},
-			mPosition + Vectord{BOUNDING_WIDTH, BOUNDING_HEIGHT}
+			Vectord{0, BOUNDING_HEIGHT},
+			Vectord{BOUNDING_WIDTH / 2.0, 0},
+			Vectord{BOUNDING_WIDTH, BOUNDING_HEIGHT}
 		);
-		t.rotate(mRotation, mPosition + rotationCenter());
+
+		t.position(mPosition);
+		t.rotate(mRotation, rotationCenter());
 
 		return t;
 	}

@@ -58,21 +58,19 @@ void SpaceshipView::onDraw(
 		mSprite.setTexture(mAccelTexture);
 		target.draw(mSprite, mTranslation * mRotation);
 		mSprite.setTexture(mTexture);
-
-		mAccel = false;
 	} else {
 		target.draw(mSprite, mTranslation * mRotation);
 	}
 }
 
-void SpaceshipView::onMoved () {
-	Shape2DView::onMoved();
+void SpaceshipView::onShapeMoved() {
+	Shape2DView::onShapeMoved();
 
     if (auto ship = mSpaceship.lock())
     	mAccel = ship->acceleration().norm() != 0;
 }
 
-void SpaceshipView::onDestroyed () {
-	Shape2DView::onDestroyed();
+void SpaceshipView::onShapeDestroyed() {
+	Shape2DView::onShapeDestroyed();
 	mSprite = sf::Sprite();
 }

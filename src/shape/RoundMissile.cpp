@@ -23,30 +23,25 @@
 #include "ShapeVisitor.hpp"
 
 
-using RoundMissile = gvt::RoundMissile;
-using Circle = gvt::Circle;
-using Shape = gvt::Shape;
+namespace gvt {
+	RoundMissile::RoundMissile(Vectord position):
+			RoundMissile(position, RoundMissile::DEFAULT_RADIUS) {
+	}
 
+	RoundMissile::RoundMissile(Vectord position, double radius):
+			Circle(position, radius) {
+	}
 
+	void gvt::RoundMissile::accept(ShapeVisitor &visitor) {
+		visitor.visitRoundMissile(*this);
+	}
 
-RoundMissile::RoundMissile(Vectord position):
-	RoundMissile(position, RoundMissile::DEFAULT_RADIUS) {
+	bool RoundMissile::operator== (Shape const &o) const {
+		auto *other = dynamic_cast<RoundMissile const *>(&o);
+
+		if (other)
+			return Circle::operator==(o);
+
+		return false;
+	}
 }
-
-RoundMissile::RoundMissile(Vectord position, double radius):
-	Circle(position, radius) {
-}
-
-void gvt::RoundMissile::accept(ShapeVisitor &visitor) {
-	visitor.visitRoundMissile(*this);
-}
-
-bool RoundMissile::operator== (Shape const &o) const {
-	auto *other = dynamic_cast<RoundMissile const *>(&o);
-
-	if (other)
-		return Circle::operator==(o);
-
-	return false;
-}
-

@@ -46,7 +46,12 @@ namespace gvt {
 		}
 	}
 
-	void ShapeGroupView::updateDebugView () {
+	void ShapeGroupView::onCreateDebugView() {
+	}
+
+	void ShapeGroupView::onUpdateDebugColor () {
+        for (auto &mView: mViews)
+        	mView.second->onUpdateDebugColor();
 	}
 
 	ShapeGroupView::ShapeGroupView(const shared_ptr<ShapeGroup>& group):
@@ -67,15 +72,8 @@ namespace gvt {
 	void ShapeGroupView::setDebug(bool state) {
 		DebuggableView::setDebug(state);
 
-		for (auto &mView : mViews)
+		for (auto &mView: mViews)
 			mView.second->setDebug(state);
-	}
-
-	void ShapeGroupView::debugColor (sf::Color color) {
-		DebuggableView::debugColor(color);
-
-		for (auto &mView : mViews)
-			mView.second->debugColor(color);
 	}
 
 	void ShapeGroupView::draw(

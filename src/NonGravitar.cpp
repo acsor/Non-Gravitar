@@ -44,7 +44,7 @@ using namespace std::placeholders;
 using sf_callback = callback<sf::Event>;
 
 
-#define ACCEL_INCREMENT 50.0
+#define ACCEL_INCREMENT 100.0
 #define ANGLE_SIZE (10 * M_PI / 180.0)
 
 

@@ -31,13 +31,13 @@ namespace gvt {
 		if (event) {
 			switch (event->type) {
 				case (ShapeEvent::Type::moved):
-					onMoved();
+					onShapeMoved();
 					break;
 				case (ShapeEvent::Type::rotated):
-					onRotated();
+					onShapeRotated();
 					break;
 				case (ShapeEvent::Type::destroyed):
-					onDestroyed();
+					onShapeDestroyed();
 					mShape.reset();
 					event->shape->removeCallback(mCallback);
 					break;
@@ -59,7 +59,6 @@ namespace gvt {
 	}
 
 	ShapeView::ShapeView(shared_ptr<Shape> const &shape): mShape(shape) {
-		mTranslation = sf::Transform::Identity;
 		mRotation = sf::Transform::Identity;
 
 		mCallback = shape->addCallback(
@@ -68,18 +67,14 @@ namespace gvt {
 		updateTranslation();
 	}
 
-	void ShapeView::onMoved() {
-		if (!mShape.expired()) {
+	void ShapeView::onShapeMoved() {
+		if (!mShape.expired())
 			updateTranslation();
-			updateDebugView();
-		}
 	}
 
-	void ShapeView::onRotated() {
-		if (!mShape.expired()) {
+	void ShapeView::onShapeRotated() {
+		if (!mShape.expired())
 			updateRotation();
-			updateDebugView();
-		}
 	}
 
 	ShapeView::~ShapeView() {
