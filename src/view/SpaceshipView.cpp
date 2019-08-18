@@ -67,7 +67,9 @@ void SpaceshipView::onDraw(
 
 void SpaceshipView::onMoved () {
 	Shape2DView::onMoved();
-	mAccel = true;
+
+    if (auto ship = mSpaceship.lock())
+    	mAccel = ship->acceleration().norm() != 0;
 }
 
 void SpaceshipView::onDestroyed () {

@@ -33,6 +33,7 @@
 #include "view/ShapeGroupView.hpp"
 #include "control/CollisionController.hpp"
 #include "control/GameViewController.hpp"
+#include "control/MotionController.hpp"
 
 // While I know using-declarations are considered bad practice, setting up
 // aliases was generating too much code
@@ -43,7 +44,7 @@ using namespace std::placeholders;
 using sf_callback = callback<sf::Event>;
 
 
-#define STEP_SIZE 15.0
+#define ACCEL_INCREMENT 50.0
 #define ANGLE_SIZE (10 * M_PI / 180.0)
 
 
@@ -70,6 +71,7 @@ int main () {
 
 	CollisionController collisionControl{solarSystem, rootView};
 	GameViewController viewControl{gameView, ship};
+	MotionController motionControl{solarSystem};
 
 	EventDispatcher<sf::Event> loopDispatcher;
 	sf::Event e;
@@ -88,9 +90,13 @@ int main () {
 		&GameViewController::resizeView, &viewControl, _1
 	));
 
+	motionControl.start();
+
 	while (w.isOpen()) {
 		while (w.pollEvent(e))
 			loopDispatcher.notify(std::make_shared<sf::Event>(e));
+
+		motionControl.nextCycle();
 
 		w.clear();
 		w.setView(gameView);
@@ -108,30 +114,31 @@ void closeWindowCallback (RenderWindow &w, shared_ptr<sf::Event> e) {
 }
 
 void moveShipCallback (shared_ptr<Spaceship> ship, shared_ptr<sf::Event> e) {
-	auto movement = STEP_SIZE * Vectord(ship->rotation());
-	movement.rotate(M_PI / -2.0);
+	auto accelIncrement = ACCEL_INCREMENT * Vectord(ship->rotation());
+	accelIncrement.rotate(M_PI / -2.0);
 
-	switch (e->type) {
-		case (sf::Event::KeyPressed):
-			switch (e->key.code) {
-				case (Keyboard::Key::A):
-					ship->rotate(-ANGLE_SIZE);
-					break;
-				case (Keyboard::Key::W):
-					ship->move(movement);
-					break;
-				case (Keyboard::Key::D):
-					ship->rotate(ANGLE_SIZE);
-					break;
-				case (Keyboard::Key::S):
-					// Should activate the shields in a future version
-					// of the program
-					break;
-				default:
-					break;
-			}
-		default:
-			break;
+	if (e->type == sf::Event::KeyPressed) {
+		switch (e->key.code) {
+			case (Keyboard::Key::A):
+				ship->rotate(-ANGLE_SIZE);
+				break;
+			case (Keyboard::Key::W):
+				ship->acceleration(accelIncrement);
+				break;
+			case (Keyboard::Key::D):
+				ship->rotate(ANGLE_SIZE);
+				break;
+			case (Keyboard::Key::S):
+				// Should activate the shields in a future version
+				// of the program
+				break;
+			default:
+				break;
+		}
+	} else if (e->type == sf::Event::KeyReleased) {
+		if (e->key.code == Keyboard::Key::W) {
+			ship->acceleration(Vectord{0, 0});
+		}
 	}
 }
 
