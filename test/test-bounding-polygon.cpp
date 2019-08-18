@@ -23,12 +23,10 @@
 #include <utility>
 
 #include "catch.hpp"
-#include "../src/bounding-polygon/BoundingPolygon.hpp"
-#include "../src/bounding-polygon/BoundingTriangle.hpp"
-#include "../src/bounding-polygon/BoundingRectangle.hpp"
+#include "bounding-polygon/BoundingPolygon.hpp"
 
-using Triangle = gvt::BoundingTriangle;
-using Rect = gvt::BoundingRectangle;
+auto Triangle = &gvt::BoundingPolygon::triangle;
+auto Rect = &gvt::BoundingPolygon::rectangle;
 using namespace gvt;
 
 

@@ -33,12 +33,6 @@ add_library(Random "${DIR_UTILS}/Random.cpp")
 # Bounding polygon section
 add_library(BoundingPolygon "${DIR_BOUND}/BoundingPolygon.cpp")
 
-add_library(BoundingTriangle "${DIR_BOUND}/BoundingTriangle.cpp")
-target_link_libraries(BoundingTriangle BoundingPolygon)
-
-add_library(BoundingRectangle "${DIR_BOUND}/BoundingRectangle.cpp")
-target_link_libraries(BoundingRectangle BoundingPolygon)
-
 
 # Shapes section
 add_library(Shape "${DIR_SHAPE}/Shape.cpp")
@@ -56,13 +50,13 @@ add_library(Planet "${DIR_SHAPE}/Planet.cpp")
 target_link_libraries(Planet Circle)
 
 add_library(Rectangle "${DIR_SHAPE}/Rectangle.cpp")
-target_link_libraries(Rectangle Shape BoundingRectangle)
+target_link_libraries(Rectangle Shape BoundingPolygon)
 
 add_library(Spaceship "${DIR_SHAPE}/Spaceship.cpp")
-target_link_libraries(Spaceship Fuel BoundingTriangle)
+target_link_libraries(Spaceship Fuel BoundingPolygon)
 
 add_library(Fuel "${DIR_SHAPE}/Fuel.cpp")
-target_link_libraries(Fuel Spaceship BoundingRectangle)
+target_link_libraries(Fuel Spaceship BoundingPolygon)
 
 add_library(RoundMissile "${DIR_SHAPE}/RoundMissile.cpp")
 target_link_libraries(RoundMissile Circle)

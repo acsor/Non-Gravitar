@@ -119,6 +119,25 @@ namespace gvt {
 			 */
 			Vertex center () const;
 
+			/**
+			 * Constructs a bounding triangle, assuming an initial
+			 * orientation of zero radians.
+			 * @return What you expect it to return.
+			 */
+			static BoundingPolygon triangle (
+					Vectord first, Vectord second, Vectord third
+			);
+			/**
+			 * Constructs a bounding rectangle, assuming an initial
+			 * orientation of zero radians.
+			 * @param topLeft Top-left corner of the rectangle,
+			 * @param bottomRight  Bottom-right corner of the triangle
+			 * @return What you expect it to return.
+			 */
+			static BoundingPolygon rectangle (
+				Vectord topLeft, Vectord bottomRight
+			);
+
 			virtual bool operator== (BoundingPolygon const &o) const;
 			virtual bool operator!= (BoundingPolygon const &o) const;
 	};

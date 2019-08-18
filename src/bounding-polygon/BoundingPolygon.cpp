@@ -124,6 +124,21 @@ namespace gvt {
 		return center;
 	}
 
+	BoundingPolygon BoundingPolygon::triangle (
+			Vectord first, Vectord second, Vectord third
+	) {
+		return BoundingPolygon{first, second, third};
+	}
+
+	BoundingPolygon BoundingPolygon::rectangle (
+			Vectord topLeft, Vectord bottomRight
+	) {
+		return BoundingPolygon{
+			topLeft, {bottomRight.x, topLeft.y}, bottomRight,
+			{topLeft.x, bottomRight.y}
+		};
+	}
+
 	bool BoundingPolygon::operator== (BoundingPolygon const &o) const {
 		return mVertices == o.mVertices;
 	}

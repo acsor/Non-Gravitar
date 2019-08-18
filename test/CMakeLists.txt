@@ -17,7 +17,7 @@ add_executable(
 target_link_libraries(
 	test-all
 	Rectangle Circle Bunker RoundMissile
-	BoundingPolygon BoundingTriangle BoundingRectangle
+	BoundingPolygon
 	Observer Utils
 )
 

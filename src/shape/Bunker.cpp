@@ -23,7 +23,7 @@
 #include <cmath>
 #include <ctime>
 #include "Bunker.hpp"
-#include "bounding-polygon/BoundingRectangle.hpp"
+#include "bounding-polygon/BoundingPolygon.hpp"
 
 using Bunker = gvt::Bunker;
 using Bunker2D = gvt::Bunker2D;
@@ -68,9 +68,9 @@ void Bunker::accept (ShapeVisitor &visitor) {
 }
 
 gvt::BoundingPolygon Bunker::collisionPolygon() const {
-    BoundingRectangle r = {
+    auto r = BoundingPolygon::rectangle(
 		mPosition, mPosition + Vectord{WIDTH, HEIGHT}
-    };
+    );
     r.rotate(mRotation, r.center());
 
     return r;

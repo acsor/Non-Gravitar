@@ -19,7 +19,7 @@
 // LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
-#include "bounding-polygon/BoundingTriangle.hpp"
+#include "bounding-polygon/BoundingPolygon.hpp"
 #include "Spaceship.hpp"
 
 
@@ -30,12 +30,11 @@ namespace gvt {
 	}
 
 	gvt::BoundingPolygon Spaceship::collisionPolygon() const {
-		BoundingTriangle t = {
+		auto t = BoundingPolygon::triangle(
 			mPosition + Vectord{0, BOUNDING_HEIGHT},
 			mPosition + Vectord{BOUNDING_WIDTH / 2.0, 0},
 			mPosition + Vectord{BOUNDING_WIDTH, BOUNDING_HEIGHT}
-		};
-
+		);
 		t.rotate(mRotation, mPosition + rotationCenter());
 
 		return t;
