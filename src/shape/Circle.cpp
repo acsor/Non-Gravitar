@@ -43,14 +43,17 @@ namespace gvt {
 	}
 
 	gvt::BoundingPolygon Circle::collisionPolygon() const {
-		// TODO Return an heptagon
-		BoundingPolygon r = BoundingRectangle{
-				mPosition, mPosition + 2 * Vectord{mRadius, mRadius}
-		};
+        std::vector<Vectord> vertices {COLLISION_PRECISION};
+        Vectord const center = mPosition + Vectord{mRadius, mRadius};
+        double const step = 2.0 * M_PI / COLLISION_PRECISION;
 
-		r.rotate(mRotation);
+        for (unsigned i = 0; i < COLLISION_PRECISION; i++) {
+        	vertices[i] = center + mRadius * Vectord(
+				cos(mRotation + i * step), sin(mRotation + i * step)
+			);
+        }
 
-		return r;
+        return BoundingPolygon(vertices.begin(), vertices.end());
 	}
 
 	bool Circle::operator== (Shape const &o) const {

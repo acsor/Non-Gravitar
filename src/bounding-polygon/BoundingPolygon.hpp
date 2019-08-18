@@ -69,9 +69,11 @@ namespace gvt {
 			 * lead to unspecified behavior in some @c BoundingPolygon
 			 * primitives.
 			 * @throw std::domain_error if the number of vertices is minor
-			 * than 3
+			 * than 2
 			 */
 			BoundingPolygon(std::initializer_list<Vertex> vertices);
+			template<typename iterator>
+			BoundingPolygon(iterator begin, iterator end);
 
 			/**
 			 * @brief Shifts (i.e. translates) the polygon by the given vector
@@ -131,6 +133,19 @@ namespace gvt {
 		 */
 		bool intersects(AxialProjection const &o) const;
 	};
+}
+
+
+namespace gvt {
+	template<typename iterator>
+	BoundingPolygon::BoundingPolygon(iterator begin, iterator end) {
+		if (std::distance(begin, end) < 2)
+			throw std::domain_error(
+				"Unable to instantiate a BoundingPolygon with fewer than 2 vertices"
+			);
+
+		mVertices.assign(begin, end);
+	}
 }
 
 

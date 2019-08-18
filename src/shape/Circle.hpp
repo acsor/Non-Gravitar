@@ -27,6 +27,8 @@
 
 namespace gvt {
 	class Circle: public Shape2D {
+		private:
+			static unsigned const constexpr COLLISION_PRECISION = 8;
 		protected:
 			double mRadius;
 		public:

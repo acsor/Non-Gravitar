@@ -49,7 +49,7 @@ namespace gvt {
 		if (shape != nullptr) {
 			vector<BoundingPolygon::Vertex>
 					vertices = shape->collisionPolygon().vertices();
-			mBounds = sf::VertexArray(sf::Quads, vertices.size() + 1);
+			mBounds = sf::VertexArray(sf::LineStrip, vertices.size() + 1);
 			size_t i = 0;
 
 			for (i = 0; i < vertices.size(); i++) {
