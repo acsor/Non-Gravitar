@@ -25,6 +25,7 @@ set(VERSION_PATCH 0)
 include_directories("${DIR_SRC}")
 
 
+# Utils section
 add_library(Observer "${DIR_UTILS}/Observer.cpp")
 add_library(Utils "${DIR_UTILS}/Utils.cpp")
 add_library(Random "${DIR_UTILS}/Random.cpp")
