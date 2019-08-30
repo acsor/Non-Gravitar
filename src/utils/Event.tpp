@@ -23,6 +23,11 @@ namespace gvt {
 	}
 
 	template<typename E>
+	void EventDispatcher<E>::clearCallbacks() {
+		mCallbacks.clear();
+	}
+
+	template<typename E>
 	void EventDispatcher<E>::notify(shared_ptr<E> event) {
 		for (shared_ptr<callback<E>> callback: mCallbacks)
 			callback->operator()(event);

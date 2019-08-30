@@ -70,6 +70,10 @@ namespace gvt {
 			 */
 			void removeCallback(shared_ptr<callback<E>> c);
 			/**
+			 * Clears out all callbacks presently stored.
+			 */
+			void clearCallbacks();
+			/**
 			 * Notify registered callbacks the rising of @c event.
 			 */
 			void notify(shared_ptr<E> event);
