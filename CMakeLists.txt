@@ -107,17 +107,13 @@ add_library(SpaceshipView "${DIR_VIEWS}/SpaceshipView.cpp")
 target_link_libraries(SpaceshipView Spaceship Shape2DView Utils)
 
 
-# Controller section
-add_library(CollisionController "${DIR_CONTROL}/CollisionController.cpp")
-target_link_libraries(CollisionController ShapeGroup ShapeGroupView)
+# Game and scenes section
+add_library(Game "${DIR_CONTROL}/Game.cpp")
+target_link_libraries(Game Spaceship SolarSystemScene)
 
-add_library(GameViewController "${DIR_CONTROL}/GameViewController.cpp")
-target_link_libraries(GameViewController Spaceship)
 add_library(Scene "${DIR_CONTROL}/Scene.cpp")
 target_link_libraries(Scene ShapeGroup ShapeGroupView)
 
-add_library(MotionController "${DIR_CONTROL}/MotionController.cpp")
-target_link_libraries(MotionController ShapeGroup)
 add_library(SolarSystemScene "${DIR_CONTROL}/SolarSystemScene.cpp")
 target_link_libraries(SolarSystemScene Scene SolarSystem)
 
@@ -135,9 +131,7 @@ add_executable(NonGravitar "${DIR_SRC}/NonGravitar.cpp")
 target_link_libraries(
 	NonGravitar
 	sfml-window sfml-graphics sfml-system
-	SolarSystem
-    ShapeGroupView
-    CollisionController GameViewController MotionController
+	Game
 )
 
 
