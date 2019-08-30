@@ -113,9 +113,13 @@ target_link_libraries(CollisionController ShapeGroup ShapeGroupView)
 
 add_library(GameViewController "${DIR_CONTROL}/GameViewController.cpp")
 target_link_libraries(GameViewController Spaceship)
+add_library(Scene "${DIR_CONTROL}/Scene.cpp")
+target_link_libraries(Scene ShapeGroup ShapeGroupView)
 
 add_library(MotionController "${DIR_CONTROL}/MotionController.cpp")
 target_link_libraries(MotionController ShapeGroup)
+add_library(SolarSystemScene "${DIR_CONTROL}/SolarSystemScene.cpp")
+target_link_libraries(SolarSystemScene Scene SolarSystem)
 
 
 # Samples section
