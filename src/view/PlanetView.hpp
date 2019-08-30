@@ -34,9 +34,7 @@ namespace gvt {
 			static const sf::Color DEFAULT_OUTLINE_COLOR;
 		public:
 			explicit PlanetView (shared_ptr<Planet> const &planet);
-			void onDraw(
-					shared_ptr<Shape> shape, RenderTarget &t, RenderStates s
-			) const override;
+			void draw(RenderTarget &t, RenderStates s) const override;
 	};
 }
 

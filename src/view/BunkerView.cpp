@@ -19,7 +19,6 @@
 // LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
-#include <typeinfo>
 #include "shape/Shape.hpp"
 #include "utils/Utils.hpp"
 #include "BunkerView.hpp"
@@ -31,9 +30,8 @@ const std::string BunkerView::BUNKER2D_GRAPHICS = "graphics/bunker-2.png";
 const std::string BunkerView::BUNKER3D_GRAPHICS = "graphics/bunker-3.png";
 
 
-void BunkerView::onDraw(shared_ptr<Shape> shape, RenderTarget &target,
-						RenderStates state) const {
-	Shape2DView::onDraw(shape, target, state);
+void BunkerView::draw(RenderTarget &target, RenderStates state) const {
+	Shape2DView::draw(target, state);
 
 	target.draw(mSprite, mTranslation * mRotation);
 }

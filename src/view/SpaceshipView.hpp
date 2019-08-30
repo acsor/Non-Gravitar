@@ -39,7 +39,7 @@ using Texture = sf::Texture;
 namespace gvt {
 	class SpaceshipView: public Shape2DView {
 		private:
-			weak_ptr<Spaceship> mSpaceship;
+			shared_ptr<Spaceship> mShip;
 			bool mAccel{false};
 
 			sf::Sprite mutable mSprite;
@@ -50,9 +50,7 @@ namespace gvt {
 			 */
 			Texture mTexture, mAccelTexture, mShieldTexture;
 		protected:
-			void onDraw(
-					shared_ptr<Shape> shape, RenderTarget &t, RenderStates s
-			) const override;
+			void draw(RenderTarget &t, RenderStates s) const override;
 			void onShapeMoved() override;
 			void onShapeDestroyed() override;
 		public:

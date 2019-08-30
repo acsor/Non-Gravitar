@@ -48,14 +48,10 @@ namespace gvt {
 	}
 
 	void ShapeView::updateTranslation() {
-		auto shape = mShape.lock();
+		auto const pos = mShape->position();
 
-		if (shape) {
-			auto pos = shape->position();
-
-			mTranslation = sf::Transform::Identity;
-			mTranslation.translate(pos.x, pos.y);
-		}
+		mTranslation = sf::Transform::Identity;
+		mTranslation.translate(pos.x, pos.y);
 	}
 
 	ShapeView::ShapeView(shared_ptr<Shape> const &shape): mShape(shape) {
@@ -68,27 +64,14 @@ namespace gvt {
 	}
 
 	void ShapeView::onShapeMoved() {
-		if (!mShape.expired())
-			updateTranslation();
+		updateTranslation();
 	}
 
 	void ShapeView::onShapeRotated() {
-		if (!mShape.expired())
-			updateRotation();
+		updateRotation();
 	}
 
 	ShapeView::~ShapeView() {
-		if (auto shape = mShape.lock())
-			shape->removeCallback(mCallback);
-	}
-
-	void ShapeView::draw(RenderTarget &target, RenderStates states) const {
-		if (auto shared = mShape.lock()) {
-			onDraw(shared, target, states);
-		}
-	}
-
-	bool ShapeView::expired() const {
-		return mShape.expired();
+		mShape->removeCallback(mCallback);
 	}
 }

@@ -35,15 +35,9 @@ namespace gvt {
 		mCircle.setOutlineThickness(2);
 	}
 
-	void PlanetView::onDraw(
-			shared_ptr<Shape> shape, RenderTarget &t, RenderStates s
-	) const {
-		Shape2DView::onDraw(shape, t, s);
+	void PlanetView::draw(RenderTarget &t, RenderStates s) const {
+		Shape2DView::draw(t, s);
 
-        auto planet = std::dynamic_pointer_cast<Planet>(shape);
-
-        if (planet) {
-        	t.draw(mCircle, mTranslation * mRotation);
-        }
+		t.draw(mCircle, mTranslation * mRotation);
 	}
 }
