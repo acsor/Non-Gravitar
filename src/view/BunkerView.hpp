@@ -41,7 +41,6 @@ namespace gvt {
 			sf::Sprite mSprite;
 			Texture mTexture;
 		protected:
-			void onShapeDestroyed() override;
 			void draw(RenderTarget &target, RenderStates state) const override;
 		public:
 			static const std::string BUNKER2D_GRAPHICS;

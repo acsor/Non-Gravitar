@@ -44,14 +44,12 @@ namespace gvt {
             Vectord mPosition, mVelocity, mAccel;
 			double mRotation{0};
 
-			bool mDestroyed{false};
+			bool mCollided{false};
 
 			Shape() = default;
 			explicit Shape(Vectord position);
 		public:
 			using ostream = std::ostream;
-
-			virtual ~Shape();
 
 			/**
 			 * @return The position vector associated to this @c Shape.
@@ -84,6 +82,20 @@ namespace gvt {
 			 * @return The acceleration vector associated to this @c Shape.
 			 */
 			inline Vectord acceleration() const;
+			/**
+			 * @return @c true if this @c Shape currently overlaps with
+			 * another one, @c false otherwise.
+			 */
+			inline bool collided() const;
+			/**
+			 * Marks the current @c Shape object as collided or not,
+			 * depending on argument values. The implementation will lazily
+			 * notify attached event listeners, in an attempt to minimize the
+			 * number of updated events.
+			 * @param collided Whether this shape should be marked as
+			 * collided or not.
+			 */
+			void collided(bool collided);
 
 			/**
 			 * @return The angle with respect to the object origin of the
@@ -99,15 +111,6 @@ namespace gvt {
 			 * @param r Amount of radians to add to the current rotation value
 			 */
 			inline void rotate(double r);
-			/**
-			 * @return @c true if this @c Shape instance was marked as
-			 * destroyed, @c false otherwise.
-			 */
-			inline bool destroyed() const;
-			/**
-			 * @param state @c true to mark this @c Shape as destroyed.
-			 */
-			inline void destroyed(bool state);
 			virtual bool clashes(Shape const &o) const = 0;
 
 			/**
@@ -143,7 +146,7 @@ namespace gvt {
 
 	struct ShapeEvent: public Event {
 		enum class Type {
-			unspecified = 0, moved, rotated, destroyed
+			unspecified = 0, moved, rotated, collided
 		};
 
 		ShapeEvent::Type type{ShapeEvent::Type::unspecified};

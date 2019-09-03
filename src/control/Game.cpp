@@ -41,6 +41,17 @@ namespace gvt {
 		}
 	}
 
+	void Game::toggleDebug (std::shared_ptr<sf::Event> const &e) {
+		if (
+			e->type == sf::Event::KeyPressed && e->key.control &&
+			e->key.code == sf::Keyboard::Key::B
+		) {
+			mCurrScene->mShapesView->setDebug(
+					!mCurrScene->mShapesView->isDebug()
+			);
+		}
+	}
+
 	Game::Game () {
 		mShip.reset(new Spaceship(Vectord{0, 0}, 1000));
 		mViewEvents.reset(new EventDispatcher<sf::Event>());
@@ -52,7 +63,12 @@ namespace gvt {
 		mViewEvents->addCallback(
 			std::bind(&Game::resizeSceneView, this, std::placeholders::_1)
 		);
-		mViewEvents->addCallback(MoveShipCallback(mShip, 100.0, gvt::deg2rad(10)));
+		mViewEvents->addCallback(
+			MoveShipCallback(mShip, 100.0, gvt::deg2rad(10))
+		);
+		mViewEvents->addCallback(
+			std::bind(&Game::toggleDebug, this, std::placeholders::_1)
+		);
 	}
 
 	Game::~Game () {

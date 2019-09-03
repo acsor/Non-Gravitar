@@ -25,15 +25,6 @@
 
 
 namespace gvt {
-	void Shape2DView::updateRotation() {
-		auto center = mShape2D->rotationCenter();
-
-		mRotation = sf::Transform::Identity;
-		mRotation.rotate(
-				gvt::rad2deg(mShape->rotation()), center.x, center.y
-		);
-	}
-
 	void Shape2DView::onCreateDebugView() {
 		auto vertices = mShape2D->collisionPolygon().vertices();
 
@@ -56,15 +47,28 @@ namespace gvt {
 		updateRotation();
 
 		onCreateDebugView();
-		onUpdateDebugColor();
+		onShapeCollided();
+	}
+
+	void Shape2DView::updateRotation() {
+		auto center = mShape2D->rotationCenter();
+
+		mRotation = sf::Transform::Identity;
+		mRotation.rotate(
+				gvt::rad2deg(mShape->rotation()), center.x, center.y
+		);
+	}
+
+	void Shape2DView::onShapeCollided() {
+		ShapeView::onShapeCollided();
+
+		debugColor(
+			mShape->collided() ? COLLISION_DEBUG_COLOR: DEFAULT_DEBUG_COLOR
+		);
 	}
 
 	void Shape2DView::draw(RenderTarget &target, RenderStates s) const {
 		if (mDebug)
 			target.draw(mBounds, mTranslation * mRotation);
-	}
-
-	void Shape2DView::onShapeDestroyed() {
-		mBounds.clear();
 	}
 }

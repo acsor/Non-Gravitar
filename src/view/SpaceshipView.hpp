@@ -52,7 +52,6 @@ namespace gvt {
 		protected:
 			void draw(RenderTarget &t, RenderStates s) const override;
 			void onShapeMoved() override;
-			void onShapeDestroyed() override;
 		public:
 			static const std::string SPACESHIP_TEXTURE;
 			static const std::string ACCEL_SPACESHIP_TEXTURE;

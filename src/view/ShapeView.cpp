@@ -36,10 +36,8 @@ namespace gvt {
 				case (ShapeEvent::Type::rotated):
 					onShapeRotated();
 					break;
-				case (ShapeEvent::Type::destroyed):
-					onShapeDestroyed();
-					mShape.reset();
-					event->shape->removeCallback(mCallback);
+				case (ShapeEvent::Type::collided):
+					onShapeCollided();
 					break;
 				default:
 					break;

@@ -21,6 +21,9 @@
 // SOFTWARE.
 #include "CollisionGroup.hpp"
 
+#include <memory>
+#include <unordered_map>
+
 namespace gvt {
 	void CollisionGroup::onInsertShape (shared_ptr<Shape> shape) {
         shape->addCallback(mCallback);
@@ -47,22 +50,38 @@ namespace gvt {
 	}
 
 	void CollisionGroup::updateCollisions() {
-		CollisionEvent *e;
+		std::unordered_map<shared_ptr<Shape>, bool> collided{mShapes.size()};
+
+		for (auto const &e: mShapes)
+			collided[e] = false;
 
 		// This is deliberately a brute-force algorithm. A simple
 		// optimization technique, which we have no time for, consists of
 		// managing a neighbourhood of shapes and checking collisions against
 		// them only
-		for (auto &first: mShapes) {
-			for (auto &second: mShapes) {
-				if (*first != *second && first->clashes(*second)) {
-					e = new CollisionEvent();
-					e->first = first;
-					e->second = second;
+		for (auto first = mShapes.begin(); first != mShapes.end(); first++) {
+			auto second = first;
 
-					notify(std::shared_ptr<CollisionEvent>(e));
+			second++;
+
+			while (second != mShapes.end()) {
+				if (first->get()->clashes(**second)) {
+					collided[*first] = true;
+					collided[*second] = true;
+
+					first->get()->collided(true);
+					second->get()->collided(true);
+
+					notify(std::make_shared<CollisionEvent>(*first, *second));
 				}
+
+				second++;
 			}
+		}
+
+		for (auto const &pair: collided) {
+			if (!pair.second)
+				pair.first->collided(false);
 		}
 	}
 
@@ -72,5 +91,11 @@ namespace gvt {
 		mCallback = std::make_shared<gvt_callback>(
 			std::bind(&CollisionGroup::shapeChangeCallback, this, _1)
 		);
+	}
+
+
+	CollisionEvent::CollisionEvent(
+		shared_ptr<Shape> first, shared_ptr<Shape> second
+	): mFirst{std::move(first)}, mSecond{std::move(second)} {
 	}
 }

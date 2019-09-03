@@ -47,7 +47,9 @@ namespace gvt {
 	};
 
 	struct CollisionEvent: public Event {
-		shared_ptr<Shape> first, second;
+		shared_ptr<Shape> mFirst, mSecond;
+
+		CollisionEvent(shared_ptr<Shape> first, shared_ptr<Shape> second);
 	};
 }
 

@@ -36,11 +36,6 @@ void BunkerView::draw(RenderTarget &target, RenderStates state) const {
 	target.draw(mSprite, mTranslation * mRotation);
 }
 
-void BunkerView::onShapeDestroyed() {
-	Shape2DView::onShapeDestroyed();
-	mSprite = sf::Sprite();
-}
-
 BunkerView::BunkerView(const shared_ptr<Bunker>& bunker):
 	Shape2DView(bunker) {
 	std::string texturePath;

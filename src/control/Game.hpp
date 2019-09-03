@@ -56,6 +56,7 @@ namespace gvt {
 			 * Resizes the scene view as a resize event from the window arises.
 			 */
 			void resizeSceneView (std::shared_ptr<sf::Event> const &e);
+			void toggleDebug (std::shared_ptr<sf::Event> const &e);
 		public:
 			Game();
 			~Game() override;

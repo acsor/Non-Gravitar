@@ -66,8 +66,3 @@ void SpaceshipView::onShapeMoved() {
 
 	mAccel = mShip->acceleration().norm() != 0;
 }
-
-void SpaceshipView::onShapeDestroyed() {
-	Shape2DView::onShapeDestroyed();
-	mSprite = sf::Sprite();
-}

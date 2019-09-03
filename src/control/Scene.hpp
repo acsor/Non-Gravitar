@@ -47,8 +47,10 @@ namespace gvt {
 			);
 			void moveShapes (double seconds);
 		public:
+			friend class Game;
+			
 			/**
-			 * @param seconds Seconds elapsed since the last scene computation.
+			 * @param seconds Seconds elapsed since the last scene computation
 			 */
 			virtual void onUpdateGame (double seconds);
 			void draw (sf::RenderTarget &t, sf::RenderStates s) const override;

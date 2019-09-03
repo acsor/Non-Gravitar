@@ -29,12 +29,6 @@ using ShapeEvent = gvt::ShapeEvent;
 Shape::Shape(Vectord position) : mPosition{position} {
 }
 
-Shape::~Shape() {
-	auto e = new ShapeEvent{ShapeEvent::Type::destroyed, this};
-
-	notify(std::shared_ptr<Event>(e));
-}
-
 void Shape::position(Vectord position) {
 	auto *e = new ShapeEvent{ShapeEvent::Type::moved, this};
 
@@ -75,6 +69,16 @@ void Shape::rotation(double r) {
 
 void Shape::velocity(const Vectord &t) {
 	mVelocity = t;
+}
+
+void Shape::collided(bool collided) {
+	if (collided != mCollided) {
+		auto e = new ShapeEvent(ShapeEvent::Type::collided, this);
+
+		mCollided = collided;
+
+		notify(std::shared_ptr<ShapeEvent>(e));
+	}
 }
 
 

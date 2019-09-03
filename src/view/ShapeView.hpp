@@ -58,7 +58,7 @@ namespace gvt {
 
 			virtual void onShapeMoved();
 			virtual void onShapeRotated();
-			virtual void onShapeDestroyed() {};
+			virtual void onShapeCollided() {};
 		public:
 			friend class ShapeGroupView;
 
