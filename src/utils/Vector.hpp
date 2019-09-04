@@ -38,9 +38,9 @@ namespace gvt {
 		 */
 		Vector(T x, T y);
 		/**
-		 * @brief Instantiates a normalized @c Vector<T> object from the angle
+		 * @brief Instantiates a normalized @c Vector<T> object from an angle
 		 * value
-		 * @param degrees Value (specified in radians) in [0, 2π). Any outside
+		 * @param r Value (specified in radians) in [0, 2π). Any outside
 		 * value will be reduced to this range
 		 **/
 		explicit Vector(T r);

@@ -26,8 +26,6 @@
 #include "bounding-polygon/BoundingPolygon.hpp"
 
 using Bunker = gvt::Bunker;
-using Bunker2D = gvt::Bunker2D;
-using Bunker3D = gvt::Bunker3D;
 using Rectangle = gvt::Rectangle;
 using RoundMissile = gvt::RoundMissile;
 using Shape = gvt::Shape;
@@ -52,7 +50,7 @@ RoundMissile Bunker::shoot() {
 	// Bear in mind that by default, on the graphics layer the Bunker is
 	// rotated by default by 90. deg (the normal out of its ceiling has
 	// direction (1, 0))
-	RoundMissile m{
+	RoundMissile m {
 		mPosition + Vectord{height(), width() / 2.0}
 	};
 
@@ -81,32 +79,6 @@ bool Bunker::operator== (Shape const &o) const {
 
 	if (other)
 		return mPaths == other->mPaths && Shape::operator==(o);
-
-	return false;
-}
-
-
-Bunker2D::Bunker2D(Vectord position): Bunker(position, 2) {
-}
-
-bool Bunker2D::operator== (Shape const &o) const {
-	auto other = dynamic_cast<Bunker2D const *>(&o);
-
-	if (other)
-		return Bunker::operator==(o);
-
-	return false;
-}
-
-
-Bunker3D::Bunker3D(Vectord position): Bunker(position, 3) {
-}
-
-bool Bunker3D::operator== (Shape const &o) const {
-	auto other = dynamic_cast<Bunker3D const *>(&o);
-
-	if (other)
-		return Bunker::operator==(o);
 
 	return false;
 }

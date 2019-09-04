@@ -33,14 +33,14 @@ template<typename T> using vector = std::vector<T>;
 
 namespace gvt {
 	class Bunker: public Shape2D {
-		protected:
+		private:
 			vector<Vectord> mPaths;
 			unsigned mCurr{0};
 
-			Bunker(Vectord position, size_t directions);
-		public:
 			static unsigned const constexpr WIDTH = 66;
 			static unsigned const constexpr HEIGHT = 45;
+		public:
+			Bunker(Vectord position, size_t directions);
 
 			inline double width() const override;
 			inline double height() const override;
@@ -50,40 +50,29 @@ namespace gvt {
 			 * object.
 			 */
 			RoundMissile shoot();
+			inline unsigned directions() const;
 
 			void accept (ShapeVisitor &visitor) override;
 
 			BoundingPolygon collisionPolygon() const override;
 			bool operator==(Shape const &o) const override;
 	};
-
-	// If I recall correctly, templates can even be used to pass concrete
-	// values between specializations, e.g. ClassName<4>. Could that be an idea
-	// to simplify the inheritance for Bunker2D and Bunker3D?
-	class Bunker2D: public Bunker {
-		public:
-			explicit Bunker2D(Vectord position);
-
-			bool operator==(Shape const &o) const override;
-	};
-
-	class Bunker3D: public Bunker {
-		public:
-			explicit Bunker3D(Vectord position);
-
-			bool operator==(Shape const &o) const override;
-	};
 }
 
 
-// Implementation of Bunker inline functions
-double gvt::Bunker::width() const {
-	return WIDTH;
-}
+namespace gvt {
+	// Implementation of inline Bunker functions
+	double Bunker::width() const {
+		return WIDTH;
+	}
 
-double gvt::Bunker::height() const {
-	return HEIGHT;
-}
+	double Bunker::height() const {
+		return HEIGHT;
+	}
 
+	unsigned Bunker::directions() const {
+		return mPaths.size();
+	}
+}
 
 #endif
