@@ -33,10 +33,12 @@
 
 namespace gvt {
 	/**
-	 * TODO Document
+	 * A singleton class controlling the game and user logic.
 	 */
 	class Game: public sf::Drawable {
 		private:
+			static Game* sInstance;
+
 			// TODO Might turn mShip into a singleton instance, through
 			//  SpaceshipHandle, for example
 			shared_ptr<Spaceship> mShip;
@@ -46,7 +48,7 @@ namespace gvt {
 			sf::View mSceneView;
 			sf::Clock mClock;
 			shared_ptr<EventDispatcher<sf::Event>> mViewEvents;
-		protected:
+
 			/**
 			 * Centers the scene view around the spaceship as a move event
 			 * arises from it.
@@ -57,9 +59,14 @@ namespace gvt {
 			 */
 			void resizeSceneView (std::shared_ptr<sf::Event> const &e);
 			void toggleDebug (std::shared_ptr<sf::Event> const &e);
-		public:
+
 			Game();
+		public:
 			~Game() override;
+			/**
+			 * @return The singleton @c Game instance.
+			 */
+			static Game* getInstance();
 
 			void updateGameLoop ();
 

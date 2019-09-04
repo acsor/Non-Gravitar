@@ -25,6 +25,8 @@
 
 
 namespace gvt {
+	Game* Game::sInstance = nullptr;
+
 	void Game::centerSceneView (std::shared_ptr<gvt::Event> e) {
 		auto shapeEvent = std::dynamic_pointer_cast<ShapeEvent>(e);
 
@@ -74,6 +76,14 @@ namespace gvt {
 	Game::~Game () {
 		mShip->clearCallbacks();
 		mViewEvents->clearCallbacks();
+	}
+
+	Game* Game::getInstance () {
+		if (sInstance == nullptr) {
+			sInstance = new Game();
+		}
+
+		return sInstance;
 	}
 
 	void Game::updateGameLoop () {
