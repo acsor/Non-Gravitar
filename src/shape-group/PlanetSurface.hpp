@@ -19,15 +19,32 @@
 // LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
-#include "Random.hpp"
+#ifndef NON_GRAVITAR_PLANET_SURFACE_HPP
+#define NON_GRAVITAR_PLANET_SURFACE_HPP
+
+#include <vector>
+#include "shape/MountainChain.hpp"
+#include "shape/Bunker.hpp"
+#include "shape-group/CollisionGroup.hpp"
 
 
 namespace gvt {
-	UniRandInt::UniRandInt(int low, int high): mDist{low, high} {
-		mEngine.seed(time(nullptr));
-	}
+	class PlanetSurface: public CollisionGroup {
+		private:
+			std::vector<std::shared_ptr<Bunker>> mBunkers;
+			std::unique_ptr<MountainChain> mMountains;
 
-	int UniRandInt::operator() () {
-        return mDist(mEngine);
-	}
+			/**
+			 * Default positions of the mountain chain with respect to this
+			 * planet surface.
+			 */
+			static const Vectord MOUNTAINS_POS;
+		public:
+			static shared_ptr<gvt::PlanetSurface> makeRandom(
+				unsigned bunkers, unsigned mountainsPerBunker
+			);
+	};
 }
+
+
+#endif

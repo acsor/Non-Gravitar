@@ -21,6 +21,7 @@
 // SOFTWARE.
 #include <algorithm>
 #include <list>
+#include <vector>
 #include <memory>
 #include "MountainChain.hpp"
 #include "utils/Random.hpp"
@@ -47,11 +48,11 @@ namespace gvt {
 			Vectord position, size_t pieces
 	) {
 		std::list<Vectord> vertices;
-		vector<Vectord> generated;
-        vector<ShapeGenerator> generators = {
+		std::vector<Vectord> generated;
+        std::vector<ShapeGenerator> generators = {
         		sMountainGen, sHillGen, sPlainGen
         };
-		IteratorRandomizer<vector<ShapeGenerator>::iterator> randGen {
+		IteratorRandomizer<std::vector<ShapeGenerator>::iterator> randGen {
 				generators.begin(), generators.end()
 		};
         Vectord offset{0, 0};

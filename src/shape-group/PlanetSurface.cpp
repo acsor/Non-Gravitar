@@ -19,15 +19,29 @@
 // LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
-#include "Random.hpp"
+#include <utils/Random.hpp>
+#include "PlanetSurface.hpp"
 
 
 namespace gvt {
-	UniRandInt::UniRandInt(int low, int high): mDist{low, high} {
-		mEngine.seed(time(nullptr));
-	}
+	Vectord const PlanetSurface::MOUNTAINS_POS = Vectord{0, 800};
 
-	int UniRandInt::operator() () {
-        return mDist(mEngine);
+	shared_ptr<gvt::PlanetSurface>
+	PlanetSurface::makeRandom(unsigned bunkers, unsigned mountainsPerBunker) {
+		shared_ptr<PlanetSurface> s {new PlanetSurface};
+		UniRandInt bunkerType{2, 3};
+
+		s->mMountains.reset(MountainChain::randomChain(
+				MOUNTAINS_POS, mountainsPerBunker * bunkers
+		).get());
+
+		for (unsigned i = 0; i < bunkers; i++)
+			s->mBunkers[i] = std::make_shared<Bunker>(
+					Vectord{0, 0}, bunkerType()
+			);
+
+		s->mMountains->alignRandomly(s->mBunkers.begin(), s->mBunkers.end());
+
+		return s;
 	}
 }

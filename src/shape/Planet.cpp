@@ -26,6 +26,10 @@ namespace gvt {
 	Planet::Planet (Vectord position, double radius): Circle(position, radius) {
 	}
 
+	void Planet::surface(shared_ptr<PlanetSurface> s) {
+		mSurface = s;
+	}
+
 	shared_ptr<PlanetSurface> Planet::surface() {
 		return mSurface;
 	}

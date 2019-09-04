@@ -35,6 +35,7 @@ namespace gvt {
 		public:
 			Planet (Vectord position, double radius);
 
+			void surface(shared_ptr<PlanetSurface> s);
 			/**
 			 * @return The @c PlanetSurface of this @c Planet, comprising an
 			 * area where various mountains, bunkers and other game objects

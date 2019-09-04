@@ -19,8 +19,9 @@
 // LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
-#include <cstdlib>
+#include <memory>
 #include <random>
+#include "PlanetSurface.hpp"
 #include "SolarSystem.hpp"
 
 
@@ -38,9 +39,11 @@ namespace gvt {
         e.seed(time(nullptr));
 
         while (planets > 0) {
-			auto p = std::shared_ptr<Planet>(
-				new Planet(Vectord{xCoord(e), yCoord(e)}, radius(e))
+			auto p = std::make_shared<Planet>(
+				Vectord{xCoord(e), yCoord(e)}, radius(e)
 			);
+			p->surface(PlanetSurface::makeRandom(4, 5));
+
 			system->insert(p);
 
         	planets--;

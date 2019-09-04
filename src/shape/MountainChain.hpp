@@ -22,9 +22,10 @@
 #ifndef NON_GRAVITAR_MOUNTAIN_CHAIN_HPP
 #define NON_GRAVITAR_MOUNTAIN_CHAIN_HPP
 
+#include <set>
 #include <utility>
+#include "utils/Random.hpp"
 #include "Polyline.hpp"
-
 
 
 namespace gvt {
@@ -53,7 +54,33 @@ namespace gvt {
 			static shared_ptr<MountainChain> randomChain (
 				Vectord position, size_t pieces
 			);
+			template<typename iter>
+			/**
+			 * Aligns an iterator of @c Shapes objects in a random fashion
+			 * along this @c MountainChain.
+			 */
+			void alignRandomly(iter shapesBegin, iter shapesEnd);
 	};
 }
+
+
+namespace gvt {
+	template<typename iter>
+	void MountainChain::alignRandomly(iter shapesBegin, iter shapesEnd) {
+		unsigned const toInsert = std::distance(shapesBegin, shapesEnd);
+		std::set<unsigned> positions;
+		UniRandInt randomPos{0, static_cast<int>(size() - 2)};
+
+		while (positions.size() < toInsert)
+			positions.insert(randomPos());
+
+		for (unsigned int position: positions) {
+			align(position, *shapesBegin);
+
+			shapesBegin++;
+		}
+	}
+}
+
 
 #endif
