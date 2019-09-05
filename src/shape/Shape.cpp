@@ -30,21 +30,17 @@ Shape::Shape(Vectord position) : mPosition{position} {
 }
 
 void Shape::position(Vectord position) {
-	auto *e = new ShapeEvent{ShapeEvent::Type::moved, this};
+	if (position != mPosition) {
+		mPosition = position;
 
-	mPosition = position;
-
-	// TODO Why is make_shared() ineffective here? I'd prefer that over
-	//  manually allocating with new
-	notify(std::shared_ptr<Event>(e));
+		notify(std::make_shared<ShapeEvent>(ShapeEvent::Type::moved, this));
+	}
 }
 
 void Shape::move(const Vectord &t) {
-	auto e = new ShapeEvent{ShapeEvent::Type::moved, this};
-
 	mPosition += Vectord(t.x, t.y);
 
-	notify(std::shared_ptr<Event>(e));
+	notify(std::make_shared<ShapeEvent>(ShapeEvent::Type::moved, this));
 }
 
 void Shape::animate(float time) {
@@ -55,8 +51,6 @@ void Shape::animate(float time) {
 }
 
 void Shape::rotation(double r) {
-	auto e = new ShapeEvent{ShapeEvent::Type::rotated, this};
-
 	// TODO Shorten, if at all possible, this code that I have produced,
 	//  which at first sight looks orribly bigger than it ought to be
 	if (r >= 0)
@@ -64,7 +58,7 @@ void Shape::rotation(double r) {
 	else
 		mRotation = r - (2.0 * M_PI) * ceil(r / (2.0 * M_PI));
 
-	notify(std::shared_ptr<ShapeEvent>(e));
+	notify(std::make_shared<ShapeEvent>(ShapeEvent::Type::rotated, this));
 }
 
 void Shape::velocity(const Vectord &t) {
@@ -73,11 +67,9 @@ void Shape::velocity(const Vectord &t) {
 
 void Shape::collided(bool collided) {
 	if (collided != mCollided) {
-		auto e = new ShapeEvent(ShapeEvent::Type::collided, this);
-
 		mCollided = collided;
 
-		notify(std::shared_ptr<ShapeEvent>(e));
+		notify(std::make_shared<ShapeEvent>(ShapeEvent::Type::collided, this));
 	}
 }
 

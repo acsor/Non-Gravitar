@@ -50,7 +50,7 @@ namespace gvt {
 		public:
 			using iterator = std::list<shared_ptr<Shape>>::iterator;
 
-			virtual ~ShapeGroup();
+			~ShapeGroup() override;
 			void insert(shared_ptr<Shape> shape);
 			void remove(shared_ptr<Shape> shape);
 			inline size_t size () const;
