@@ -92,7 +92,6 @@ namespace gvt {
 			shared_ptr<Scene> popScene ();
 
 			shared_ptr<EventDispatcher<sf::Event>> viewEventsDispatcher() const;
-			void handleViewEvent (shared_ptr<sf::Event> event);
 
 			/**
 			 * Renders the scene at the top of the stack.

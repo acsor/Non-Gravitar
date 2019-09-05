@@ -55,7 +55,7 @@ int main () {
 
 	while (w.isOpen()) {
 		while (w.pollEvent(e))
-			game->handleViewEvent(std::make_shared<sf::Event>(e));
+			game->viewEventsDispatcher()->notify(std::make_shared<sf::Event>(e));
 
 		game->updateGameLoop();
 

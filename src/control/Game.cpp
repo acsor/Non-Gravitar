@@ -119,10 +119,6 @@ namespace gvt {
 		return mViewEvents;
 	}
 
-	void Game::handleViewEvent (shared_ptr<sf::Event> event) {
-		mViewEvents->notify(std::move(event));
-	}
-
 	void Game::draw(sf::RenderTarget &target, sf::RenderStates states) const {
 		target.setView(mSceneView);
 		target.draw(*mCurrScene);
