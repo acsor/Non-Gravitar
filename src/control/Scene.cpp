@@ -29,7 +29,12 @@ namespace gvt {
 	}
 
 	void Scene::moveShapes (double seconds) {
-		for (auto &shape: *mShapes) {
+		// TODO Pick a better copy data structure
+		auto shapesCopy = std::vector<shared_ptr<Shape>>(
+				mShapes->begin(), mShapes->end()
+		);
+
+		for (auto &shape: shapesCopy) {
 			shape->velocity(
 					shape->velocity() + seconds * shape->acceleration()
 			);

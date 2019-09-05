@@ -52,7 +52,7 @@ namespace gvt {
         	mView.second->onUpdateDebugColor();
 	}
 
-	ShapeGroupView::ShapeGroupView(const shared_ptr<ShapeGroup>& group):
+	ShapeGroupView::ShapeGroupView(const shared_ptr<ShapeGroup> &group):
 			mGroup{group} {
 		for (auto const &shape: *group)
 			mViews[shape] = shared_ptr<ShapeView>(mFactory.makeView(shape));

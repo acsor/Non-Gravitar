@@ -18,7 +18,7 @@ namespace gvt {
 	}
 
 	template<typename E>
-	void EventDispatcher<E>::removeCallback(shared_ptr<callback<E>> c) {
+	void EventDispatcher<E>::removeCallback(shared_ptr<callback<E>> &c) {
 		mCallbacks.remove(c);
 	}
 
@@ -29,7 +29,9 @@ namespace gvt {
 
 	template<typename E>
 	void EventDispatcher<E>::notify(shared_ptr<E> event) {
-		for (shared_ptr<callback<E>> callback: mCallbacks)
+		auto callbacksCopy = mCallbacks;
+
+		for (shared_ptr<callback<E>> &callback: callbacksCopy)
 			callback->operator()(event);
 	}
 

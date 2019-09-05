@@ -51,21 +51,22 @@ namespace gvt {
 	}
 
 	void CollisionGroup::updateCollisions() {
-		std::unordered_map<shared_ptr<Shape>, bool> collided{mShapes.size()};
+		auto shapes = mShapes;
+		std::unordered_map<shared_ptr<Shape>, bool> collided{shapes.size()};
 
-		for (auto const &e: mShapes)
+		for (auto const &e: shapes)
 			collided[e] = false;
 
 		// This is deliberately a brute-force algorithm. A simple
 		// optimization technique, which we have no time for, consists of
 		// managing a neighbourhood of shapes and checking collisions against
 		// them only
-		for (auto first = mShapes.begin(); first != mShapes.end(); first++) {
+		for (auto first = shapes.begin(); first != shapes.end(); first++) {
 			auto second = first;
 
 			second++;
 
-			while (second != mShapes.end()) {
+			while (second != shapes.end()) {
 				if (first->get()->clashes(**second)) {
 					collided[*first] = true;
 					collided[*second] = true;
