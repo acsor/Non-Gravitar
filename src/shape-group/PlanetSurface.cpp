@@ -24,23 +24,29 @@
 
 
 namespace gvt {
-	Vectord const PlanetSurface::MOUNTAINS_POS = Vectord{0, 800};
+	Vectord const PlanetSurface::MOUNTAINS_POS = Vectord{0, 500};
 
 	shared_ptr<gvt::PlanetSurface>
 	PlanetSurface::makeRandom(unsigned bunkers, unsigned mountainsPerBunker) {
 		shared_ptr<PlanetSurface> s {new PlanetSurface};
+		std::vector<shared_ptr<Bunker>> bs;
+		auto mountains = MountainChain::randomChain(
+				MOUNTAINS_POS, mountainsPerBunker * bunkers
+		);
 		UniRandInt bunkerType{2, 3};
 
-		s->mMountains.reset(MountainChain::randomChain(
-				MOUNTAINS_POS, mountainsPerBunker * bunkers
-		).get());
+		bs.reserve(bunkers);
 
 		for (unsigned i = 0; i < bunkers; i++)
-			s->mBunkers[i] = std::make_shared<Bunker>(
-					Vectord{0, 0}, bunkerType()
+			bs.push_back(
+				std::make_shared<Bunker>(Vectord{0, 0}, bunkerType())
 			);
 
-		s->mMountains->alignRandomly(s->mBunkers.begin(), s->mBunkers.end());
+		mountains->alignRandomly(bs.begin(), bs.end());
+
+		s->insert(mountains);
+		for (auto const &b: bs)
+			s->insert(b);
 
 		return s;
 	}

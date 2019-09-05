@@ -39,12 +39,8 @@ namespace gvt {
 		protected:
 			shared_ptr<ShapeGroup> mShapes;
 			shared_ptr<ShapeGroupView> mShapesView;
-			shared_ptr<EventDispatcher<sf::Event>> mUserEvents;
 
-			Scene(
-				shared_ptr<ShapeGroup> shapes,
-				shared_ptr<EventDispatcher<sf::Event>> userEvents
-			);
+			explicit Scene(shared_ptr<ShapeGroup> shapes);
 			void moveShapes (double seconds);
 		public:
 			friend class Game;

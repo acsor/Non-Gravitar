@@ -19,16 +19,40 @@
 // LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
-#include "SolarSystemScene.hpp"
-
 #include <utility>
+
+#include "Game.hpp"
+#include "SolarSystemScene.hpp"
+#include "PlanetSurfaceScene.hpp"
 
 
 namespace gvt {
-	SolarSystemScene::SolarSystemScene (
-		shared_ptr<SolarSystem> system, shared_ptr<Spaceship> ship,
-		shared_ptr<EventDispatcher<sf::Event>> viewEvents
-	): Scene(std::move(system), std::move(viewEvents)), mShip(std::move(ship)) {
-		mShapes->insert(mShip);
+	SolarSystemScene::SolarSystemScene (shared_ptr<SolarSystem> system):
+			Scene(std::move(system)) {
+		mShapes->addCallback(EnterPlanetCallback());
+	}
+
+
+	void EnterPlanetCallback::operator() (shared_ptr<gvt::Event> e) {
+		auto ce = std::dynamic_pointer_cast<CollisionEvent>(e);
+
+		if (ce) {
+			auto ship = std::dynamic_pointer_cast<Spaceship>(ce->mFirst);
+			auto planet = std::dynamic_pointer_cast<Planet>(ce->mSecond);
+
+			if (!ship)
+				ship = std::dynamic_pointer_cast<Spaceship>(ce->mSecond);
+			if (!planet)
+				planet = std::dynamic_pointer_cast<Planet>(ce->mFirst);
+
+			if (ship && planet) {
+				Game *game = Game::getInstance();
+
+				planet->surface()->insert(game->acquireSpaceship());
+				game->pushScene(
+					std::make_shared<PlanetSurfaceScene>(planet)
+				);
+			}
+		}
 	}
 }

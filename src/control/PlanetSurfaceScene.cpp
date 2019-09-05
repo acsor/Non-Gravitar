@@ -19,28 +19,11 @@
 // LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
-#ifndef NON_GRAVITAR_SOLAR_SYSTEM_SCENE_HPP
-#define NON_GRAVITAR_SOLAR_SYSTEM_SCENE_HPP
-
-#include <typeindex>
-#include "shape-group/SolarSystem.hpp"
-#include "Scene.hpp"
+#include "PlanetSurfaceScene.hpp"
 
 
 namespace gvt {
-	/**
-	 * A @c SolarSystemScene features a solar system, giving the possibility
-	 * to enter planets which the spaceship runs into.
-	 */
-	class SolarSystemScene: public Scene {
-		public:
-			explicit SolarSystemScene (shared_ptr<SolarSystem> system);
-	};
-
-	class EnterPlanetCallback {
-		public:
-			void operator() (shared_ptr<gvt::Event> e);
-	};
+	PlanetSurfaceScene::PlanetSurfaceScene (shared_ptr<Planet> const &planet):
+			Scene(planet->surface()) {
+	}
 }
-
-#endif

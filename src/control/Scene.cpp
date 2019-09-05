@@ -19,16 +19,12 @@
 // LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
-#include "Scene.hpp"
-
 #include <utility>
+#include "Scene.hpp"
 
 
 namespace gvt {
-	Scene::Scene(
-		shared_ptr<ShapeGroup> shapes,
-		shared_ptr<EventDispatcher<sf::Event>> userEvents
-	): mShapes{std::move(shapes)}, mUserEvents{std::move(userEvents)} {
+	Scene::Scene(shared_ptr<ShapeGroup> shapes): mShapes{std::move(shapes)} {
 		mShapesView.reset(new ShapeGroupView(mShapes));
 	}
 

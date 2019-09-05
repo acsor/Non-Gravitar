@@ -86,6 +86,10 @@ namespace gvt {
 			 * of the segment. Defaults to @c 0.5.
 			 */
 			void align (unsigned line, Shape2D &shape, double offset = 0.5);
+			inline void align (
+				unsigned line, std::shared_ptr<Shape2D> const &shape,
+				double offset = 0.5
+			);
 			inline iterator begin();
 			inline iterator end();
 
@@ -126,6 +130,12 @@ namespace gvt {
 
 	Polyline::iterator  Polyline::end() {
 		return mVertices.end();
+	}
+
+	void Polyline::align (
+			unsigned line, shared_ptr<Shape2D> const &shape, double offset
+	) {
+		align(line, *shape, offset);
 	}
 }
 

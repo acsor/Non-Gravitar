@@ -23,6 +23,7 @@
 
 #include <memory>
 #include <unordered_map>
+#include <shape/Spaceship.hpp>
 
 namespace gvt {
 	void CollisionGroup::onInsertShape (shared_ptr<Shape> shape) {

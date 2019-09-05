@@ -20,6 +20,10 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 #include <SFML/Graphics.hpp>
+
+#include "shape/Planet.hpp"
+#include "shape-group/CollisionGroup.hpp"
+#include "shape-group/PlanetSurface.hpp"
 #include "utils/Utils.hpp"
 #include "Game.hpp"
 
@@ -27,7 +31,7 @@
 namespace gvt {
 	Game* Game::sInstance = nullptr;
 
-	void Game::centerSceneView (std::shared_ptr<gvt::Event> e) {
+	void Game::centerSceneView (std::shared_ptr<gvt::Event> const &e) {
 		auto shapeEvent = std::dynamic_pointer_cast<ShapeEvent>(e);
 
 		if (shapeEvent && shapeEvent->type == ShapeEvent::Type::moved) {
@@ -55,22 +59,18 @@ namespace gvt {
 	}
 
 	Game::Game () {
+		auto _1 = std::placeholders::_1;
+
 		mShip.reset(new Spaceship(Vectord{0, 0}, 1000));
 		mViewEvents.reset(new EventDispatcher<sf::Event>());
 
-		mShip->addCallback(
-			std::bind(&Game::centerSceneView, this, std::placeholders::_1)
-		);
+		mShip->addCallback(std::bind(&Game::centerSceneView, this, _1));
 
-		mViewEvents->addCallback(
-			std::bind(&Game::resizeSceneView, this, std::placeholders::_1)
-		);
-		mViewEvents->addCallback(
-			MoveShipCallback(mShip, 100.0, gvt::deg2rad(10))
-		);
-		mViewEvents->addCallback(
-			std::bind(&Game::toggleDebug, this, std::placeholders::_1)
-		);
+		mViewEvents->addCallback(std::bind(&Game::resizeSceneView, this, _1));
+		mViewEvents->addCallback(MoveShipCallback(mShip, 150.0, deg2rad(10)));
+		mViewEvents->addCallback(std::bind(&Game::toggleDebug, this, _1));
+
+		mShip->position({960, 540});
 	}
 
 	Game::~Game () {
@@ -86,6 +86,13 @@ namespace gvt {
 		return sInstance;
 	}
 
+	shared_ptr<Spaceship> Game::acquireSpaceship() {
+		if (mCurrScene)
+			mCurrScene->mShapes->remove(mShip);
+
+		return mShip;
+	}
+
 	void Game::updateGameLoop () {
 		auto elapsed = mClock.restart().asSeconds();
 
@@ -96,11 +103,7 @@ namespace gvt {
 		mCurrScene = std::move(scene);
 		mSceneStack.push(mCurrScene);
 	}
-	/**
-	 * Eliminates and returns the top-most scene from the stack.
-	 * @return The @c Scene object which was being shown prior to this
-	 * call.
-	 */
+
 	shared_ptr<Scene> Game::popScene () {
 		if (mSceneStack.empty()) {
 			throw std::logic_error("No scene to pop out from the stack");
@@ -110,10 +113,6 @@ namespace gvt {
 		}
 
 		return mCurrScene;
-	}
-
-	shared_ptr<Spaceship> Game::spaceship() const {
-		return mShip;
 	}
 
 	shared_ptr<EventDispatcher<sf::Event>> Game::viewEventsDispatcher() const {

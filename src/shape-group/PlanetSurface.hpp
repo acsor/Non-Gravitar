@@ -31,9 +31,6 @@
 namespace gvt {
 	class PlanetSurface: public CollisionGroup {
 		private:
-			std::vector<std::shared_ptr<Bunker>> mBunkers;
-			std::unique_ptr<MountainChain> mMountains;
-
 			/**
 			 * Default positions of the mountain chain with respect to this
 			 * planet surface.

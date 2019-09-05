@@ -26,6 +26,7 @@
 #include "control/Game.hpp"
 #include "control/SolarSystemScene.hpp"
 #include "shape-group/SolarSystem.hpp"
+#include "shape-group/PlanetSurface.hpp"
 
 using sf_callback = gvt::callback<sf::Event>;
 
@@ -38,26 +39,28 @@ int main () {
 	sf::RenderWindow w{mode, "Non-Gravitar"};
 	sf::Event e;
 
-	gvt::Game game;
+	gvt::Game *game = gvt::Game::getInstance();
+	auto solarSystem = gvt::SolarSystem::makeRandom(
+			8, 30, 50, {0, 0}, {1920, 1080}
+	);
+	auto rootScene = std::make_shared<gvt::SolarSystemScene>(solarSystem);
 
-	w.setFramerateLimit(45);
+	w.setFramerateLimit(60);
 
-	game.pushScene(std::make_shared<gvt::SolarSystemScene>(
-		gvt::SolarSystem::makeRandom(8, 30, 50, {0, 0}, {1920, 1080}),
-		game.spaceship(), game.viewEventsDispatcher()
-	));
-	game.viewEventsDispatcher()->addCallback(
-		[&w] (shared_ptr<sf::Event> const &e) -> void { closeWindow(w, e); }
+	solarSystem->insert(game->acquireSpaceship());
+	game->pushScene(rootScene);
+	game->viewEventsDispatcher()->addCallback(
+			[&w] (shared_ptr<sf::Event> const &e) -> void { closeWindow(w, e); }
 	);
 
 	while (w.isOpen()) {
 		while (w.pollEvent(e))
-			game.handleViewEvent(std::make_shared<sf::Event>(e));
+			game->handleViewEvent(std::make_shared<sf::Event>(e));
 
-		game.updateGameLoop();
+		game->updateGameLoop();
 
 		w.clear();
-		w.draw(game);
+		w.draw(*game);
 		w.display();
 	}
 

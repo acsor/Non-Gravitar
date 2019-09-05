@@ -23,7 +23,9 @@
 #define NON_GRAVITAR_GAME_HPP
 
 #include <memory>
+#include <set>
 #include <stack>
+#include <typeinfo>
 #include <SFML/Graphics.hpp>
 #include "Scene.hpp"
 #include "shape-group/ShapeGroup.hpp"
@@ -33,14 +35,16 @@
 
 namespace gvt {
 	/**
-	 * A singleton class controlling the game and user logic.
+	 * A singleton class controlling the game and user logic. A @c Game
+	 * instance will manage an unique instance of @c Spaceship, making it
+	 * available for subsequent scenes via appropriate accessor functions.
 	 */
 	class Game: public sf::Drawable {
 		private:
 			static Game* sInstance;
 
-			// TODO Might turn mShip into a singleton instance, through
-			//  SpaceshipHandle, for example
+			// By virtue of the fact that Game is a singleton instance, mShip
+			// is too
 			shared_ptr<Spaceship> mShip;
 			shared_ptr<Scene> mCurrScene;
 			std::stack<shared_ptr<Scene>> mSceneStack;
@@ -53,7 +57,7 @@ namespace gvt {
 			 * Centers the scene view around the spaceship as a move event
 			 * arises from it.
 			 */
-			void centerSceneView (std::shared_ptr<gvt::Event> e);
+			void centerSceneView (std::shared_ptr<gvt::Event> const &e);
 			/**
 			 * Resizes the scene view as a resize event from the window arises.
 			 */
@@ -67,6 +71,12 @@ namespace gvt {
 			 * @return The singleton @c Game instance.
 			 */
 			static Game* getInstance();
+			/**
+			 * @return The unique @c Spaceship instance, detaching it from
+			 * the current scene and making it eventually available for
+			 * another one.
+			 */
+			shared_ptr<Spaceship> acquireSpaceship();
 
 			void updateGameLoop ();
 
@@ -80,7 +90,6 @@ namespace gvt {
 			 * call.
 			 */
 			shared_ptr<Scene> popScene ();
-			shared_ptr<Spaceship> spaceship() const;
 
 			shared_ptr<EventDispatcher<sf::Event>> viewEventsDispatcher() const;
 			void handleViewEvent (shared_ptr<sf::Event> event);
