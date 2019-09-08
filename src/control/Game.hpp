@@ -34,6 +34,8 @@
 
 
 namespace gvt {
+	class SceneFrame;
+
 	/**
 	 * A singleton class controlling the game and user logic. A @c Game
 	 * instance will manage an unique instance of @c Spaceship, making it
@@ -48,20 +50,11 @@ namespace gvt {
 			shared_ptr<Spaceship> mShip;
 			shared_ptr<Scene> mCurrScene;
 			std::stack<shared_ptr<Scene>> mSceneStack;
+			shared_ptr<SceneFrame> mSceneFrame;
 
-			sf::View mSceneView;
 			sf::Clock mClock;
 			shared_ptr<EventDispatcher<sf::Event>> mViewEvents;
 
-			/**
-			 * Centers the scene view around the spaceship as a move event
-			 * arises from it.
-			 */
-			void centerSceneView (std::shared_ptr<gvt::Event> const &e);
-			/**
-			 * Resizes the scene view as a resize event from the window arises.
-			 */
-			void resizeSceneView (std::shared_ptr<sf::Event> const &e);
 			void toggleDebug (std::shared_ptr<sf::Event> const &e);
 
 			Game();
@@ -90,6 +83,10 @@ namespace gvt {
 			 * call.
 			 */
 			shared_ptr<Scene> popScene ();
+			/**
+			 * @return Thew @c Scene that should be currently displayed.
+			 */
+			shared_ptr<Scene> currentScene();
 
 			shared_ptr<EventDispatcher<sf::Event>> viewEventsDispatcher() const;
 
@@ -99,6 +96,36 @@ namespace gvt {
 			void draw(
 				sf::RenderTarget &target, sf::RenderStates states
 			) const override;
+	};
+
+	/**
+	 * Wrapper class responsible for managing the sf::View instance into
+	 * which the current Game scene is shown, performing operations like
+	 * resizing and recentering.
+	 */
+	class SceneFrame {
+		private:
+			Game *mGame;
+			sf::View mView;
+			// Variables representing the min and max values mView center
+			// point can assume
+			Vectord mMin, mMax;
+			shared_ptr<Spaceship> mShip;
+
+			shared_ptr<callback<sf::Event>> mResizeHandle;
+			shared_ptr<gvt_callback> mShipHandle;
+
+			void onWindowResized(shared_ptr<sf::Event> const &e);
+			void onShipMoved (shared_ptr<gvt::Event> const &e);
+		public:
+			SceneFrame(Game *game, shared_ptr<Spaceship> ship);
+			~SceneFrame ();
+
+			/**
+			 * @return The @c sf::View instance inside which the current @c
+			 * Scene is displayed.
+			 */
+			inline sf::View& sceneView();
 	};
 
 	/**
@@ -116,6 +143,13 @@ namespace gvt {
 
 			void operator() (shared_ptr<sf::Event> e);
 	};
+}
+
+
+namespace gvt {
+	sf::View& SceneFrame::sceneView() {
+		return mView;
+	}
 }
 
 

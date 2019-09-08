@@ -29,23 +29,8 @@
 
 
 namespace gvt {
+	// Game class section
 	Game* Game::sInstance = nullptr;
-
-	void Game::centerSceneView (std::shared_ptr<gvt::Event> const &e) {
-		auto shapeEvent = std::dynamic_pointer_cast<ShapeEvent>(e);
-
-		if (shapeEvent && shapeEvent->type == ShapeEvent::Type::moved) {
-			auto position = mShip->position();
-
-			mSceneView.setCenter(position.x, position.y);
-		}
-	}
-
-	void Game::resizeSceneView (std::shared_ptr<sf::Event> const &e) {
-		if (e->type == sf::Event::Resized) {
-			mSceneView.setSize(e->size.width, e->size.height);
-		}
-	}
 
 	void Game::toggleDebug (std::shared_ptr<sf::Event> const &e) {
 		if (
@@ -63,10 +48,8 @@ namespace gvt {
 
 		mShip.reset(new Spaceship(Vectord{0, 0}, 1000));
 		mViewEvents.reset(new EventDispatcher<sf::Event>());
+		mSceneFrame.reset(new SceneFrame(this, mShip));
 
-		mShip->addCallback(std::bind(&Game::centerSceneView, this, _1));
-
-		mViewEvents->addCallback(std::bind(&Game::resizeSceneView, this, _1));
 		mViewEvents->addCallback(MoveShipCallback(mShip, 150.0, deg2rad(10)));
 		mViewEvents->addCallback(std::bind(&Game::toggleDebug, this, _1));
 
@@ -115,16 +98,70 @@ namespace gvt {
 		return mCurrScene;
 	}
 
+	shared_ptr<Scene> Game::currentScene() {
+		return mCurrScene;
+	}
+
 	shared_ptr<EventDispatcher<sf::Event>> Game::viewEventsDispatcher() const {
 		return mViewEvents;
 	}
 
 	void Game::draw(sf::RenderTarget &target, sf::RenderStates states) const {
-		target.setView(mSceneView);
+		target.setView(mSceneFrame->sceneView());
 		target.draw(*mCurrScene);
 	}
 
 
+	// SceneFrame class section
+	void SceneFrame::onWindowResized(shared_ptr<sf::Event> const &e) {
+		if (e->type == sf::Event::Resized) {
+			auto windowSize = Vectord(e->size.width, e->size.height);
+			auto sceneSize = Vectord{
+				static_cast<double>(mGame->currentScene()->size().x),
+				static_cast<double>(mGame->currentScene()->size().y)
+			};
+
+			mView.setSize(windowSize.x, windowSize.y);
+
+			mMin = windowSize / 2.0;
+			mMax = sceneSize - mMin;
+		}
+	}
+
+	void SceneFrame::onShipMoved (shared_ptr<gvt::Event> const &e) {
+		auto shapeEvent = std::dynamic_pointer_cast<ShapeEvent>(e);
+
+		if (shapeEvent) {
+			auto position = mShip->position() + mShip->rotationCenter();
+
+			position.x = std::max(mMin.x, position.x);
+			position.x = std::min(mMax.x, position.x);
+			position.y = std::max(mMin.y, position.y);
+			position.y = std::min(mMax.y, position.y);
+
+			mView.setCenter(position.x, position.y);
+		}
+	}
+
+	SceneFrame::SceneFrame(Game *game, shared_ptr<Spaceship> ship):
+			mGame{game}, mShip{std::move(ship)} {
+		auto _1 = std::placeholders::_1;
+
+		mResizeHandle = mGame->viewEventsDispatcher()->addCallback(
+			std::bind(&SceneFrame::onWindowResized, this, _1)
+		);
+		mShipHandle = mShip->addCallback(
+			std::bind(&SceneFrame::onShipMoved, this, _1)
+		);
+	}
+
+	SceneFrame::~SceneFrame() {
+		mGame->viewEventsDispatcher()->removeCallback(mResizeHandle);
+		mShip->removeCallback(mShipHandle);
+	}
+
+
+	// MoveShipCallback class section
 	MoveShipCallback::MoveShipCallback (
 			shared_ptr<Spaceship> ship, double accel, double angle
 	): mShip(std::move(ship)) {
