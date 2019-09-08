@@ -24,7 +24,8 @@
 
 
 namespace gvt {
-	Scene::Scene(shared_ptr<ShapeGroup> shapes): mShapes{std::move(shapes)} {
+	Scene::Scene(dim size, shared_ptr<ShapeGroup> shapes):
+			mSize{size}, mShapes{std::move(shapes)} {
 		mShapesView.reset(new ShapeGroupView(mShapes));
 	}
 

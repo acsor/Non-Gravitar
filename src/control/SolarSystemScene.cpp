@@ -55,4 +55,14 @@ namespace gvt {
 			}
 		}
 	}
+
+	SolarSystemScene::SolarSystemScene (dim d, shared_ptr<SolarSystem> system):
+			Scene(d, std::move(system)) {
+		auto _1 = std::placeholders::_1;
+
+		// TODO Set up removal in destructor
+		mShapes->addCallback(
+			std::bind(&SolarSystemScene::enterPlanet, this, _1)
+		);
+	}
 }

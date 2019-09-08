@@ -41,7 +41,7 @@ namespace gvt {
 
 			/**
 			 * @return The center point of this @c Shape <b>relative</b> to
-			 * this object position (i.e. expresses in local coordinates).
+			 * this object position (i.e. expressed in local coordinates).
 			 */
 			virtual inline Vectord rotationCenter() const;
 			/**

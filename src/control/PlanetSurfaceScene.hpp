@@ -33,7 +33,7 @@ namespace gvt {
 		private:
 			shared_ptr<Planet> mPlanet;
 		public:
-			explicit PlanetSurfaceScene (shared_ptr<Planet> const &planet);
+			PlanetSurfaceScene(dim dimensions, shared_ptr<Planet> const &planet);
 	};
 }
 

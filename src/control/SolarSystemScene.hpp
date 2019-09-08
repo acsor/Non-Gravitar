@@ -34,12 +34,7 @@ namespace gvt {
 	 */
 	class SolarSystemScene: public Scene {
 		public:
-			explicit SolarSystemScene (shared_ptr<SolarSystem> system);
-	};
-
-	class EnterPlanetCallback {
-		public:
-			void operator() (shared_ptr<gvt::Event> e);
+			SolarSystemScene (dim dimension, shared_ptr<SolarSystem> system);
 	};
 }
 

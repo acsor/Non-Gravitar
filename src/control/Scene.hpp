@@ -31,16 +31,19 @@
 
 namespace gvt {
 	/**
-	 * A @c Scene represent the notion of contextual shapes to be rendered on
+	 * A @c Scene represents the notion of contextual shapes to be rendered on
 	 * screen. It encapsulates shape groups and manages their lifetimes,
 	 * adding semantic and event-handling operations.
 	 */
 	class Scene: public sf::Drawable {
+		public:
+			using dim = Vector<unsigned>;
 		protected:
+			dim mSize;
 			shared_ptr<ShapeGroup> mShapes;
 			shared_ptr<ShapeGroupView> mShapesView;
 
-			explicit Scene(shared_ptr<ShapeGroup> shapes);
+			Scene(dim size, shared_ptr<ShapeGroup> shapes);
 			void moveShapes (double seconds);
 		public:
 			friend class Game;
@@ -50,7 +53,17 @@ namespace gvt {
 			 */
 			virtual void onUpdateGame (double seconds);
 			void draw (sf::RenderTarget &t, sf::RenderStates s) const override;
+
+			inline dim size() const;
 	};
 }
+
+
+namespace gvt {
+	inline Scene::dim Scene::size() const {
+		return mSize;
+	}
+}
+
 
 #endif
