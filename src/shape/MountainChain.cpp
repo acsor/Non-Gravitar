@@ -30,18 +30,23 @@
 namespace gvt {
 	ShapeGenerator const MountainChain::sMountainGen = []() {
 		return std::vector<Vectord>{
-				{0, MAX_HEIGHT}, {MAX_WIDTH / 2.0, MAX_HEIGHT * 0.2},
-				{MAX_WIDTH, MAX_HEIGHT}
+				{0, MAX_MOUNTAIN_HEIGHT},
+				{MAX_MOUNTAIN_WIDTH / 2.0, MAX_MOUNTAIN_HEIGHT * 0.2},
+				{MAX_MOUNTAIN_WIDTH, MAX_MOUNTAIN_HEIGHT}
 		};
 	};
 	ShapeGenerator const MountainChain::sHillGen = []() {
 		return std::vector<Vectord>{
-				{0, MAX_HEIGHT}, {MAX_WIDTH * 0.2, MAX_HEIGHT * 0.4},
-				{MAX_WIDTH * 0.8, MAX_HEIGHT * 0.4}, {MAX_WIDTH, MAX_HEIGHT}
+				{0, MAX_MOUNTAIN_HEIGHT},
+				{MAX_MOUNTAIN_WIDTH * 0.2, MAX_MOUNTAIN_HEIGHT * 0.4},
+				{MAX_MOUNTAIN_WIDTH * 0.8, MAX_MOUNTAIN_HEIGHT * 0.4},
+				{MAX_MOUNTAIN_WIDTH, MAX_MOUNTAIN_HEIGHT}
 		};
 	};
 	ShapeGenerator const MountainChain::sPlainGen = []() {
-		return std::vector<Vectord>{{0, MAX_HEIGHT}, {MAX_WIDTH, MAX_HEIGHT}};
+		return std::vector<Vectord>{
+			{0, MAX_MOUNTAIN_HEIGHT}, {MAX_MOUNTAIN_WIDTH, MAX_MOUNTAIN_HEIGHT}
+		};
 	};
 
 	shared_ptr<MountainChain> MountainChain::randomChain (

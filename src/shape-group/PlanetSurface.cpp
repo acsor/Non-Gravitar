@@ -19,35 +19,42 @@
 // LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
+#include <stdexcept>
 #include <utils/Random.hpp>
 #include "PlanetSurface.hpp"
 
 
 namespace gvt {
-	Vectord const PlanetSurface::MOUNTAINS_POS = Vectord{0, 500};
+	void PlanetSurface::mountains(shared_ptr<MountainChain> mountains) {
+		if (mMountains)
+			remove(mMountains);
 
-	shared_ptr<gvt::PlanetSurface>
-	PlanetSurface::makeRandom(unsigned bunkers, unsigned mountainsPerBunker) {
-		shared_ptr<PlanetSurface> s {new PlanetSurface};
-		std::vector<shared_ptr<Bunker>> bs;
-		auto mountains = MountainChain::randomChain(
-				MOUNTAINS_POS, mountainsPerBunker * bunkers
-		);
+		mMountains = std::move(mountains);
+		insert(mMountains);
+	}
+
+	void PlanetSurface::randomBunkers(unsigned bunkers) {
 		UniRandInt bunkerType{2, 3};
 
-		bs.reserve(bunkers);
+		for (auto &b: mBunkers)
+			remove(b);
 
-		for (unsigned i = 0; i < bunkers; i++)
-			bs.push_back(
-				std::make_shared<Bunker>(Vectord{0, 0}, bunkerType())
-			);
+		if (mMountains) {
+			mBunkers.clear();
+			mBunkers.reserve(bunkers);
 
-		mountains->alignRandomly(bs.begin(), bs.end());
+			while (bunkers > 0) {
+				auto b = std::make_shared<Bunker>(Vectord{0, 0}, bunkerType());
 
-		s->insert(mountains);
-		for (auto const &b: bs)
-			s->insert(b);
+				mBunkers.push_back(b);
+				insert(b);
 
-		return s;
+				bunkers--;
+			}
+
+			mMountains->alignRandomly(mBunkers.begin(), mBunkers.end());
+		} else {
+			throw std::logic_error("Mountain chains not set");
+		}
 	}
 }

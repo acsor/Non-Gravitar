@@ -29,18 +29,57 @@
 
 
 namespace gvt {
+	/**
+	 * @c PlanetSurface represents the 2D layout of a planet view, where its
+	 * width and height measures are directly determined by that of the
+	 * mountain chain inside it.
+	 */
 	class PlanetSurface: public CollisionGroup {
 		private:
-			/**
-			 * Default positions of the mountain chain with respect to this
-			 * planet surface.
-			 */
-			static const Vectord MOUNTAINS_POS;
+			shared_ptr<MountainChain> mMountains;
+			std::vector<shared_ptr<Bunker>> mBunkers;
 		public:
-			static shared_ptr<gvt::PlanetSurface> makeRandom(
-				unsigned bunkers, unsigned mountainsPerBunker
-			);
+			inline double height() const;
+			inline double width() const;
+
+			void mountains(shared_ptr<MountainChain> mountains);
+			inline shared_ptr<MountainChain> mountains() const;
+
+			template<typename iter> void bunkers(iter begin, iter end);
+			inline std::vector<shared_ptr<Bunker>> bunkers() const;
+
+			/**
+			 * Allocates the given number of bunkers, aligning them randomly
+			 * along the already set mountain chain instance.
+			 *
+			 * @param bunkers Random bunkers to allocate
+			 * @throws std::logic_error if no mountain chains are set
+			 */
+			void randomBunkers(unsigned bunkers);
 	};
+}
+
+
+namespace gvt {
+	double PlanetSurface::height() const {
+		return mMountains ? mMountains->height(): 0;
+	}
+
+	double PlanetSurface::width() const {
+		return mMountains ? mMountains->width(): 0;
+	}
+
+	shared_ptr<MountainChain> PlanetSurface::mountains() const {
+		return mMountains;
+	}
+
+	template<typename iter> void PlanetSurface::bunkers(iter begin, iter end) {
+		mBunkers = std::vector<shared_ptr<Bunker>>(begin, end);
+	}
+
+	std::vector<shared_ptr<Bunker>> PlanetSurface::bunkers() const {
+		return mBunkers;
+	}
 }
 
 

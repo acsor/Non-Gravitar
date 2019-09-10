@@ -37,11 +37,11 @@ namespace gvt {
         private:
 			shared_ptr<gvt_callback> mCallback;
 
-			void onInsertShape (shared_ptr<Shape> shape) override;
-			void onRemoveShape (shared_ptr<Shape> shape) override;
-			
 			void shapeChangeCallback (shared_ptr<Event> e);
 			void updateCollisions();
+		protected:
+			void onInsertShape (shared_ptr<Shape> shape) override;
+			void onRemoveShape (shared_ptr<Shape> shape) override;
 		public:
 			CollisionGroup();
 	};

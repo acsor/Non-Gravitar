@@ -29,12 +29,33 @@
 
 namespace gvt {
 	class SolarSystem: public CollisionGroup {
+		private:
+			double mWidth, mHeight;
+
+			/**
+			 * Updates height and width values upon insertion of a new @c Shape.
+			 */
+			void onInsertShape (shared_ptr<Shape> shape) override;
 		public:
 			static std::shared_ptr<SolarSystem> makeRandom (
 				unsigned planets, double minRadius, double maxRadius,
 				Vectord minPos, Vectord maxPos
 			);
+
+			inline double height() const;
+			inline double width() const;
 	};
+}
+
+
+namespace gvt {
+	double SolarSystem::height() const {
+		return mHeight;
+	}
+
+	double SolarSystem::width() const {
+		return mWidth;
+	}
 }
 
 
