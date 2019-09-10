@@ -23,8 +23,12 @@
 
 
 namespace gvt {
+	PlanetSurfaceScene::PlanetSurfaceScene (shared_ptr<Planet> const &planet):
+			PlanetSurfaceScene(planet->surface()) {
+	}
+
 	PlanetSurfaceScene::PlanetSurfaceScene (
-		dim dimensions, shared_ptr<Planet> const &planet
-	): Scene(dimensions, planet->surface()) {
+			shared_ptr<PlanetSurface> const &surface
+	): Scene({surface->width(), surface->height()}, surface) {
 	}
 }

@@ -19,7 +19,7 @@
 // LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
-#include <utility>
+#include <cmath>
 
 #include "Game.hpp"
 #include "SolarSystemScene.hpp"
@@ -27,13 +27,7 @@
 
 
 namespace gvt {
-	SolarSystemScene::SolarSystemScene (shared_ptr<SolarSystem> system):
-			Scene(std::move(system)) {
-		mShapes->addCallback(EnterPlanetCallback());
-	}
-
-
-	void EnterPlanetCallback::operator() (shared_ptr<gvt::Event> e) {
+	void SolarSystemScene::onEnterPlanet (shared_ptr<gvt::Event> e) {
 		auto ce = std::dynamic_pointer_cast<CollisionEvent>(e);
 
 		if (ce) {
@@ -46,23 +40,26 @@ namespace gvt {
 				planet = std::dynamic_pointer_cast<Planet>(ce->mFirst);
 
 			if (ship && planet) {
-				Game *game = Game::getInstance();
+				auto *game = Game::getInstance();
 
 				planet->surface()->insert(game->acquireSpaceship());
-				game->pushScene(
-					std::make_shared<PlanetSurfaceScene>(planet)
-				);
+				game->pushScene(std::make_shared<PlanetSurfaceScene>(planet));
+
+				ship->acceleration({0, 0});
+				ship->velocity({0, 0});
+				ship->position({planet->surface()->width() / 2.0, 0});
+				ship->rotation(M_PI);
 			}
 		}
 	}
 
-	SolarSystemScene::SolarSystemScene (dim d, shared_ptr<SolarSystem> system):
-			Scene(d, std::move(system)) {
+	SolarSystemScene::SolarSystemScene (shared_ptr<SolarSystem> const &system):
+			Scene({system->width(), system->height()}, system) {
 		auto _1 = std::placeholders::_1;
 
 		// TODO Set up removal in destructor
 		mShapes->addCallback(
-			std::bind(&SolarSystemScene::enterPlanet, this, _1)
+			std::bind(&SolarSystemScene::onEnterPlanet, this, _1)
 		);
 	}
 }

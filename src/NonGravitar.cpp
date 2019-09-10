@@ -43,9 +43,7 @@ int main () {
 	auto solarSystem = gvt::SolarSystem::makeRandom(
 			8, 30, 50, {0, 0}, {3000, 2000}
 	);
-	auto rootScene = std::make_shared<gvt::SolarSystemScene>(
-			gvt::Scene::dim{3000, 2000}, solarSystem
-	);
+	auto rootScene = std::make_shared<gvt::SolarSystemScene>(solarSystem);
 
 	w.setFramerateLimit(60);
 

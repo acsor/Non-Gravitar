@@ -33,8 +33,10 @@ namespace gvt {
 	 * to enter planets which the spaceship runs into.
 	 */
 	class SolarSystemScene: public Scene {
+		private:
+			void onEnterPlanet (shared_ptr<gvt::Event> e);
 		public:
-			SolarSystemScene (dim dimension, shared_ptr<SolarSystem> system);
+			explicit SolarSystemScene (shared_ptr<SolarSystem> const &system);
 	};
 }
 

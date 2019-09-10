@@ -36,14 +36,12 @@ namespace gvt {
 	 * adding semantic and event-handling operations.
 	 */
 	class Scene: public sf::Drawable {
-		public:
-			using dim = Vector<unsigned>;
 		protected:
-			dim mSize;
+			Vectord mSize;
 			shared_ptr<ShapeGroup> mShapes;
 			shared_ptr<ShapeGroupView> mShapesView;
 
-			Scene(dim size, shared_ptr<ShapeGroup> shapes);
+			Scene(Vectord size, shared_ptr<ShapeGroup> shapes);
 			void moveShapes (double seconds);
 		public:
 			friend class Game;
@@ -54,13 +52,13 @@ namespace gvt {
 			virtual void onUpdateGame (double seconds);
 			void draw (sf::RenderTarget &t, sf::RenderStates s) const override;
 
-			inline dim size() const;
+			inline Vectord size() const;
 	};
 }
 
 
 namespace gvt {
-	inline Scene::dim Scene::size() const {
+	inline Vectord Scene::size() const {
 		return mSize;
 	}
 }
