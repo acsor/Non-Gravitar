@@ -37,11 +37,22 @@ namespace gvt {
 	class SceneFrame;
 
 	/**
+	 * Event issued when a new @c Scene is pushed/popped out of the game.
+	 */
+	struct SceneChangedEvent: public gvt::Event {
+			shared_ptr<Scene> oldScene, newScene;
+
+			SceneChangedEvent(
+					shared_ptr<Scene> old, shared_ptr<Scene> _new
+			);
+	};
+
+	/**
 	 * A singleton class controlling the game and user logic. A @c Game
 	 * instance will manage an unique instance of @c Spaceship, making it
 	 * available for subsequent scenes via appropriate accessor functions.
 	 */
-	class Game: public sf::Drawable {
+	class Game: public sf::Drawable, public GVTEventDispatcher {
 		private:
 			static Game* sInstance;
 
@@ -113,9 +124,10 @@ namespace gvt {
 			shared_ptr<Spaceship> mShip;
 
 			shared_ptr<callback<sf::Event>> mResizeHandle;
-			shared_ptr<gvt_callback> mShipHandle;
+			shared_ptr<gvt_callback> mSceneHandle, mShipHandle;
 
 			void onWindowResized(shared_ptr<sf::Event> const &e);
+			void onSceneChanged(shared_ptr<gvt::Event> const &e);
 			void onShipMoved (shared_ptr<gvt::Event> const &e);
 		public:
 			SceneFrame(Game *game, shared_ptr<Spaceship> ship);

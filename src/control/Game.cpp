@@ -29,6 +29,11 @@
 
 
 namespace gvt {
+	SceneChangedEvent::SceneChangedEvent(
+			shared_ptr<Scene> old, shared_ptr<Scene> _new
+	): oldScene{std::move(old)}, newScene{std::move(_new)} {
+	}
+
 	// Game class section
 	Game* Game::sInstance = nullptr;
 
@@ -83,16 +88,26 @@ namespace gvt {
 	}
 
 	void Game::pushScene (shared_ptr<Scene> scene) {
+		auto e = std::make_shared<SceneChangedEvent>(mCurrScene, scene);
+
 		mCurrScene = std::move(scene);
 		mSceneStack.push(mCurrScene);
+
+		notify(e);
 	}
 
 	shared_ptr<Scene> Game::popScene () {
 		if (mSceneStack.empty()) {
 			throw std::logic_error("No scene to pop out from the stack");
 		} else {
+			auto e = std::make_shared<SceneChangedEvent>(
+					mCurrScene, mSceneStack.top()
+			);
+
 			mCurrScene = mSceneStack.top();
 			mSceneStack.pop();
+
+			notify(e);
 		}
 
 		return mCurrScene;
@@ -116,15 +131,19 @@ namespace gvt {
 	void SceneFrame::onWindowResized(shared_ptr<sf::Event> const &e) {
 		if (e->type == sf::Event::Resized) {
 			auto windowSize = Vectord(e->size.width, e->size.height);
-			auto sceneSize = Vectord{
-				static_cast<double>(mGame->currentScene()->size().x),
-				static_cast<double>(mGame->currentScene()->size().y)
-			};
 
 			mView.setSize(windowSize.x, windowSize.y);
 
 			mMin = windowSize / 2.0;
-			mMax = sceneSize - mMin;
+			mMax = mGame->currentScene()->size() - mMin;
+		}
+	}
+
+	void SceneFrame::onSceneChanged(shared_ptr<gvt::Event> const &e) {
+		auto sceneEvent = std::dynamic_pointer_cast<SceneChangedEvent>(e);
+
+		if (sceneEvent) {
+			mMax = sceneEvent->newScene->size() - mMin;
 		}
 	}
 
@@ -150,6 +169,9 @@ namespace gvt {
 		mResizeHandle = mGame->viewEventsDispatcher()->addCallback(
 			std::bind(&SceneFrame::onWindowResized, this, _1)
 		);
+		mSceneHandle = mGame->addCallback(
+			std::bind(&SceneFrame::onSceneChanged, this, _1)
+		);
 		mShipHandle = mShip->addCallback(
 			std::bind(&SceneFrame::onShipMoved, this, _1)
 		);
@@ -157,6 +179,7 @@ namespace gvt {
 
 	SceneFrame::~SceneFrame() {
 		mGame->viewEventsDispatcher()->removeCallback(mResizeHandle);
+		mGame->removeCallback(mSceneHandle);
 		mShip->removeCallback(mShipHandle);
 	}
 
