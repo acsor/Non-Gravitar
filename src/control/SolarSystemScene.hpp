@@ -34,9 +34,12 @@ namespace gvt {
 	 */
 	class SolarSystemScene: public Scene {
 		private:
+			shared_ptr<gvt_callback> mPlanetHandle;
+
 			void onEnterPlanet (shared_ptr<gvt::Event> e);
 		public:
 			explicit SolarSystemScene (shared_ptr<SolarSystem> const &system);
+			~SolarSystemScene () override;
 	};
 }
 

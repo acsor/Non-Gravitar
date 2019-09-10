@@ -57,9 +57,12 @@ namespace gvt {
 			Scene({system->width(), system->height()}, system) {
 		auto _1 = std::placeholders::_1;
 
-		// TODO Set up removal in destructor
-		mShapes->addCallback(
+		mPlanetHandle = mShapes->addCallback(
 			std::bind(&SolarSystemScene::onEnterPlanet, this, _1)
 		);
+	}
+
+	SolarSystemScene::~SolarSystemScene () {
+		mShapes->removeCallback(mPlanetHandle);
 	}
 }
