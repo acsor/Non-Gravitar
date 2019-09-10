@@ -31,13 +31,13 @@ namespace gvt {
 		auto ce = std::dynamic_pointer_cast<CollisionEvent>(e);
 
 		if (ce) {
-			auto ship = std::dynamic_pointer_cast<Spaceship>(ce->mFirst);
-			auto planet = std::dynamic_pointer_cast<Planet>(ce->mSecond);
+			auto ship = std::dynamic_pointer_cast<Spaceship>(ce->first);
+			auto planet = std::dynamic_pointer_cast<Planet>(ce->second);
 
 			if (!ship)
-				ship = std::dynamic_pointer_cast<Spaceship>(ce->mSecond);
+				ship = std::dynamic_pointer_cast<Spaceship>(ce->second);
 			if (!planet)
-				planet = std::dynamic_pointer_cast<Planet>(ce->mFirst);
+				planet = std::dynamic_pointer_cast<Planet>(ce->first);
 
 			if (ship && planet) {
 				auto *game = Game::getInstance();

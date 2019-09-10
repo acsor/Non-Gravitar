@@ -97,7 +97,7 @@ namespace gvt {
 
 
 	CollisionEvent::CollisionEvent(
-		shared_ptr<Shape> first, shared_ptr<Shape> second
-	): mFirst{std::move(first)}, mSecond{std::move(second)} {
+			shared_ptr<Shape> _first, shared_ptr<Shape> _second
+	): first{std::move(_first)}, second{std::move(_second)} {
 	}
 }
