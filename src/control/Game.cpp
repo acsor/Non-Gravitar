@@ -81,6 +81,10 @@ namespace gvt {
 		return mShip;
 	}
 
+	shared_ptr<Spaceship> Game::spaceship() {
+		return mShip;
+	}
+
 	void Game::updateGameLoop () {
 		auto elapsed = mClock.restart().asSeconds();
 
@@ -104,8 +108,8 @@ namespace gvt {
 					mCurrScene, mSceneStack.top()
 			);
 
-			mCurrScene = mSceneStack.top();
 			mSceneStack.pop();
+			mCurrScene = mSceneStack.top();
 
 			notify(e);
 		}

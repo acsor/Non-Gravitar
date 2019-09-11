@@ -52,13 +52,18 @@ namespace gvt {
 			virtual void onUpdateGame (double seconds);
 			void draw (sf::RenderTarget &t, sf::RenderStates s) const override;
 
+			inline shared_ptr<ShapeGroup> shapes();
 			inline Vectord size() const;
 	};
 }
 
 
 namespace gvt {
-	inline Vectord Scene::size() const {
+	shared_ptr<ShapeGroup> Scene::shapes() {
+		return mShapes;
+	}
+
+	Vectord Scene::size() const {
 		return mSize;
 	}
 }

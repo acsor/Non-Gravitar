@@ -81,6 +81,10 @@ namespace gvt {
 			 * another one.
 			 */
 			shared_ptr<Spaceship> acquireSpaceship();
+			/**
+			 * @return A pointer to the singleton spaceship instance.
+			 */
+			shared_ptr<Spaceship> spaceship();
 
 			void updateGameLoop ();
 

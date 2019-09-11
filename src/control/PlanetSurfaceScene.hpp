@@ -32,11 +32,18 @@ namespace gvt {
 	class PlanetSurfaceScene: public Scene {
 		private:
 			shared_ptr<Planet> mPlanet;
+			shared_ptr<Spaceship> mShip;
+			shared_ptr<gvt_callback> mShipCallback;
+
+			/**
+			 * Invokes code responsible for popping out the current @c
+			 * PlanetSurfaceScene and returning back to the previous game scene.
+			 */
+			void exitPlanet();
+			void onShipMoved (shared_ptr<Event> e);
 		public:
 			explicit PlanetSurfaceScene(shared_ptr<Planet> const &planet);
-			explicit PlanetSurfaceScene(
-				shared_ptr<PlanetSurface> const &surface
-			);
+			~PlanetSurfaceScene() override;
 	};
 }
 

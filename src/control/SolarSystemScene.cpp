@@ -19,8 +19,6 @@
 // LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
-#include <cmath>
-
 #include "Game.hpp"
 #include "SolarSystemScene.hpp"
 #include "PlanetSurfaceScene.hpp"
@@ -46,9 +44,7 @@ namespace gvt {
 				game->pushScene(std::make_shared<PlanetSurfaceScene>(planet));
 
 				ship->acceleration({0, 0});
-				ship->velocity({0, 0});
 				ship->position({planet->surface()->width() / 2.0, 0});
-				ship->rotation(M_PI);
 			}
 		}
 	}

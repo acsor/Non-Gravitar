@@ -20,15 +20,44 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 #include "PlanetSurfaceScene.hpp"
+#include "Game.hpp"
 
 
 namespace gvt {
-	PlanetSurfaceScene::PlanetSurfaceScene (shared_ptr<Planet> const &planet):
-			PlanetSurfaceScene(planet->surface()) {
+	void PlanetSurfaceScene::exitPlanet() {
+		auto game = Game::getInstance();
+		auto ship = game->acquireSpaceship();
+		auto solarSystem = game->popScene();
+
+		ship->acceleration({0, 0});
+		ship->position(mPlanet->position() - Vectord{0, 100});
+
+		solarSystem->shapes()->insert(ship);
 	}
 
-	PlanetSurfaceScene::PlanetSurfaceScene (
-			shared_ptr<PlanetSurface> const &surface
-	): Scene({surface->width(), surface->height()}, surface) {
+	void PlanetSurfaceScene::onShipMoved (shared_ptr<Event> e) {
+		auto shapeEvent = std::dynamic_pointer_cast<ShapeEvent>(e);
+
+		if (shapeEvent && shapeEvent->type == ShapeEvent::Type::moved) {
+			if (mShip->position().y < 0)
+				exitPlanet();
+		}
+	}
+
+	PlanetSurfaceScene::PlanetSurfaceScene (shared_ptr<Planet> const &planet):
+			Scene({planet->surface()->width(), planet->surface()->height()}, planet->surface())
+	{
+		auto _1 = std::placeholders::_1;
+		auto surface = planet->surface();
+
+		mPlanet = planet;
+		mShip = Game::getInstance()->spaceship();
+		mShipCallback = mShip->addCallback(
+				std::bind(&PlanetSurfaceScene::onShipMoved, this, _1)
+		);
+	}
+
+	PlanetSurfaceScene::~PlanetSurfaceScene () {
+		mShip->removeCallback(mShipCallback);
 	}
 }
