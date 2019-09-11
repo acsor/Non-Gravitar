@@ -56,16 +56,22 @@ namespace gvt {
 			// compared to std::list
 			std::vector<Vectord> mVertices;
 
+			bool clashes (Shape2D const &other) const;
+			bool clashes (Polyline const &other) const;
+		public:
 			/**
 			 * @param vertices Vertices to initialize this polyline with. @c
 			 * vertices will be emptied after this call.
 			 */
 			template<typename iterator>
 			Polyline (Vectord position, iterator begin, iterator end);
+			Polyline (std::initializer_list<Vectord> vertices);
+			/**
+			 * Constructs a @c Polyline with the given number of
+			 * default-constructed vertices.
+			 */
+			Polyline (unsigned vertices);
 
-			bool clashes (Shape2D const &other) const;
-			bool clashes (Polyline const &other) const;
-		public:
 			inline size_t size() const;
 
 			inline Vectord& operator[] (size_t index);

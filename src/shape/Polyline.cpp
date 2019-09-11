@@ -107,4 +107,12 @@ namespace gvt {
 			);
 		}
 	}
+
+	Polyline::Polyline (std::initializer_list<Vectord> vertices):
+		mVertices{vertices} {
+	}
+
+	Polyline::Polyline (unsigned vertices) {
+		mVertices.resize(vertices);
+	}
 }
