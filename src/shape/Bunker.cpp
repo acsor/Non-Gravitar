@@ -34,8 +34,7 @@ using Shape = gvt::Shape;
 Bunker::Bunker(Vectord position, size_t directions):
 		Shape2D(position), mPaths{directions} {
 	std::uniform_real_distribution<double> angles{
-		mRotation - M_PI / 2.0,
-		mRotation + M_PI / 2.0
+		mRotation - M_PI / 2.0, mRotation + M_PI / 2.0
 	};
 	std::default_random_engine e(time(NULL));
 
@@ -46,16 +45,13 @@ Bunker::Bunker(Vectord position, size_t directions):
 	}
 }
 
-RoundMissile Bunker::shoot() {
-	// Bear in mind that by default, on the graphics layer the Bunker is
-	// rotated by default by 90. deg (the normal out of its ceiling has
-	// direction (1, 0))
-	RoundMissile m {
-		mPosition + Vectord{height(), width() / 2.0}
-	};
+shared_ptr<RoundMissile> Bunker::shoot() {
+	auto m = std::make_shared<RoundMissile>(
+			mPosition + Vectord{height(), width()} / 2.0
+	);
 
-	m.rotation(mRotation);
-	m.velocity(mPaths[mCurr]);
+	m->rotation(mRotation);
+	m->velocity(mPaths[mCurr]);
 	mCurr = (mCurr + 1) % mPaths.size();
 
 	return m;

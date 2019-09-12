@@ -37,6 +37,7 @@ namespace gvt {
 			inline double width() const override;
 			inline double height() const override;
 
+			inline void radius(double r);
 			inline double radius() const;
 			inline double area() const;
 			bool clashes(Circle const &o) const;
@@ -49,6 +50,10 @@ namespace gvt {
 
 
 namespace gvt {
+	void Circle::radius(double r) {
+		mRadius = r;
+	}
+
 	double Circle::radius() const {
 		return mRadius;
 	}

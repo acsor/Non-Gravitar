@@ -19,9 +19,10 @@
 // LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
-#ifndef NON_GRAVITAR_PLANET_SURFACESCENE_HPP
-#define NON_GRAVITAR_PLANET_SURFACESCENE_HPP
+#ifndef NON_GRAVITAR_PLANET_SURFACE_SCENE_HPP
+#define NON_GRAVITAR_PLANET_SURFACE_SCENE_HPP
 
+#include <list>
 #include <SFML/Window/Event.hpp>
 #include "shape/Planet.hpp"
 #include "shape-group/PlanetSurface.hpp"
@@ -33,7 +34,16 @@ namespace gvt {
 		private:
 			shared_ptr<Planet> mPlanet;
 			shared_ptr<Spaceship> mShip;
+			std::list<shared_ptr<RoundMissile>> mMissiles;
+
 			shared_ptr<gvt_callback> mShipCallback;
+
+			// New missiles' lifetime, given in seconds
+			static double const constexpr MISSILE_LIFETIME = 3.0;
+			static double const constexpr MISSILE_SPEED = 250.0;
+			static double const constexpr MISSILE_RADIUS = 8.0;
+			// Time to wait before a new missile is shot, in seconds
+			static double const constexpr MISSILE_DELAY = 4.0;
 
 			/**
 			 * Invokes code responsible for popping out the current @c
@@ -44,6 +54,8 @@ namespace gvt {
 		public:
 			explicit PlanetSurfaceScene(shared_ptr<Planet> const &planet);
 			~PlanetSurfaceScene() override;
+
+			void onUpdateGame (double seconds) override;
 	};
 }
 

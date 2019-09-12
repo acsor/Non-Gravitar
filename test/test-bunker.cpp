@@ -28,31 +28,30 @@ using RoundMissile = gvt::RoundMissile;
 
 
 TEST_CASE("Bunker::shoot() missiles have to be cyclic", "[Bunker]") {
-	Bunker b = gvt::Bunker({0, 0}, 3);
-	RoundMissile m1 = b.shoot(), m2 = b.shoot(), m3 = b.shoot();
+	auto b = gvt::Bunker({0, 0}, 3);
+	auto m1 = b.shoot(), m2 = b.shoot(), m3 = b.shoot();
 
-	REQUIRE(m1 == b.shoot());
-	REQUIRE(m2 == b.shoot());
-	REQUIRE(m3 == b.shoot());
+	REQUIRE(*m1 == *b.shoot());
+	REQUIRE(*m2 == *b.shoot());
+	REQUIRE(*m3 == *b.shoot());
 }
 
 TEST_CASE(
 	"Bunker::shoot() missiles have to be oriented within 90 deg. of the "
 	"shooting Bunker", "[Bunker]"
 ) {
-	Bunker b = gvt::Bunker({0, 0}, 3);
+	auto b = gvt::Bunker({0, 0}, 3);
 	size_t const samples = 300;
-	RoundMissile m{{0, 0}};
 
 	for (size_t i = 0; i < samples; i++) {
-		m = b.shoot();
+		auto m = b.shoot();
 
 		INFO(
-			"m.velocity() = " << "{" << m.velocity().x << ", " <<
-			m.velocity().y << "}"
+			"m.velocity() = " << "{" << m->velocity().x << ", " <<
+			m->velocity().y << "}"
 		);
-		INFO("angle = " << m.velocity().angle());
-		REQUIRE(abs(b.rotation() - m.velocity().angle()) <= M_PI);
+		INFO("angle = " << m->velocity().angle());
+		REQUIRE(fabs(b.rotation() - m->velocity().angle()) <= M_PI);
 
 		b = gvt::Bunker({0, 0}, 3);
 	}

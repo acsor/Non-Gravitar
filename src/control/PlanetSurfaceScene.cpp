@@ -60,4 +60,37 @@ namespace gvt {
 	PlanetSurfaceScene::~PlanetSurfaceScene () {
 		mShip->removeCallback(mShipCallback);
 	}
+
+	void PlanetSurfaceScene::onUpdateGame (double seconds) {
+		Scene::onUpdateGame(seconds);
+
+		// Update bunkers' shooting delay
+		for (auto const &bunker: mPlanet->surface()->bunkers())
+			bunker->missileDelay(bunker->missileDelay() - seconds);
+
+		// Update missiles' lifetime
+		for (auto const &mMissile : mMissiles)
+			mMissile->lifetime(mMissile->lifetime() - seconds);
+
+		while (!mMissiles.empty() && mMissiles.front()->lifetime() <= 0) {
+			mPlanet->surface()->remove(mMissiles.front());
+			mMissiles.pop_front();
+		}
+
+		// Shoot missiles
+		for (auto const &bunker: mPlanet->surface()->bunkers()) {
+			if (bunker->missileDelay() <= 0) {
+				auto missile = bunker->shoot();
+
+				missile->radius(MISSILE_RADIUS);
+				missile->lifetime(MISSILE_LIFETIME);
+				missile->velocity(MISSILE_SPEED * missile->velocity());
+
+				mMissiles.push_back(missile);
+				mPlanet->surface()->insert(missile);
+
+				bunker->missileDelay(MISSILE_DELAY);
+			}
+		}
+	}
 }

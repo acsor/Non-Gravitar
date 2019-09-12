@@ -34,6 +34,7 @@ template<typename T> using vector = std::vector<T>;
 namespace gvt {
 	class Bunker: public Shape2D {
 		private:
+			double mDelay{0};
 			vector<Vectord> mPaths;
 			unsigned mCurr{0};
 
@@ -46,10 +47,20 @@ namespace gvt {
 			inline double height() const override;
 
 			/**
-			 * @return a @c RoundMissile instance shot by the calling @c Bunker
-			 * object.
+			 * Sets the missile delay, i.e. the time to wait before the next
+			 * missile is shot.
 			 */
-			RoundMissile shoot();
+			inline void missileDelay (double delay);
+			/**
+			 * Getter method of @c missileDelay(double).
+			 */
+			inline double missileDelay () const;
+
+			/**
+			 * @return a @c RoundMissile instance shot by the calling @c Bunker
+			 * object, with a random velocity vector of unitary norm.
+			 */
+			shared_ptr<RoundMissile> shoot();
 			inline unsigned directions() const;
 
 			void accept (ShapeVisitor &visitor) override;
@@ -61,6 +72,14 @@ namespace gvt {
 
 
 namespace gvt {
+	void Bunker::missileDelay (double delay) {
+		mDelay = delay;
+	}
+
+	double Bunker::missileDelay () const {
+		return mDelay;
+	}
+
 	// Implementation of inline Bunker functions
 	double Bunker::width() const {
 		return WIDTH;
