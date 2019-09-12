@@ -27,16 +27,32 @@
 
 namespace gvt {
 	class RoundMissile: public Circle {
+		private:
+			double mLifetime;
 		public:
 			static constexpr unsigned DEFAULT_RADIUS = 2;
 
 			explicit RoundMissile(Vectord position);
 			explicit RoundMissile(Vectord position, double radius);
-			
-			void accept (ShapeVisitor &visitor) override;
 
+			inline void lifetime (double time);
+			inline double lifetime () const;
+
+			void accept (ShapeVisitor &visitor) override;
 			bool operator== (Shape const &o) const override;
 	};
+}
+
+
+// Implementation of inline functions
+namespace gvt {
+	void RoundMissile::lifetime (double time) {
+		mLifetime = time;
+	}
+
+	double RoundMissile::lifetime () const {
+		return mLifetime;
+	}
 }
 
 

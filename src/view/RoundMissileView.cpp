@@ -1,17 +1,17 @@
 // MIT License
-// 
+//
 // Copyright (c) 2018 Oscar B. et al.
-// 
+//
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
 // in the Software without restriction, including without limitation the rights
 // to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
 // copies of the Software, and to permit persons to whom the Software is
 // furnished to do so, subject to the following conditions:
-// 
+//
 // The above copyright notice and this permission notice shall be included in all
 // copies or substantial portions of the Software.
-// 
+//
 // THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
 // IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
 // FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
@@ -19,35 +19,24 @@
 // LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
-#include "shape/Shape.hpp"
-#include "utils/Utils.hpp"
-#include "BunkerView.hpp"
-
-using BunkerView = gvt::BunkerView;
+#include "RoundMissileView.hpp"
 
 
-const std::string BunkerView::BUNKER2D_GRAPHICS = "graphics/bunker-2.png";
-const std::string BunkerView::BUNKER3D_GRAPHICS = "graphics/bunker-3.png";
+namespace gvt {
+	sf::Color const RoundMissileView::DEFAULT_MISSILE_COLOR = sf::Color(
+			255, 245, 0
+	);
+
+	RoundMissileView::RoundMissileView (shared_ptr<RoundMissile> missile):
+		Shape2DView(missile), mMissile(std::move(missile)) {
+		mCircle = sf::CircleShape(mMissile->radius());
+		mCircle.setFillColor(DEFAULT_MISSILE_COLOR);
+	}
 
 
-void BunkerView::draw(RenderTarget &target, RenderStates state) const {
-	Shape2DView::draw(target, state);
+	void RoundMissileView::draw(RenderTarget &t, RenderStates s) const {
+		Shape2DView::draw(t, s);
 
-	target.draw(mSprite, mTranslation * mRotation);
+		t.draw(mCircle, mTranslation * mRotation);
+	}
 }
-
-BunkerView::BunkerView(const shared_ptr<Bunker>& bunker): Shape2DView(bunker) {
-	std::string texturePath;
-
-	// TODO Add a further texture for bunkers having 4 or more directions
-	if (bunker->directions() == 2)
-		texturePath = gvt::staticsGet(BUNKER2D_GRAPHICS);
-	else
-		texturePath = gvt::staticsGet(BUNKER3D_GRAPHICS);
-
-	if (!mTexture.loadFromFile(texturePath))
-		throw std::runtime_error("Could not load Bunker texture from disk");
-
-	mSprite.setTexture(mTexture);
-}
-

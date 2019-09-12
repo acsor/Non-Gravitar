@@ -22,6 +22,7 @@
 #include "ShapeViewFactory.hpp"
 #include "PolylineView.hpp"
 #include "PlanetView.hpp"
+#include "RoundMissileView.hpp"
 
 
 namespace gvt {
@@ -34,6 +35,8 @@ namespace gvt {
 			return new PlanetView(pl);
 		} else if (auto p = std::dynamic_pointer_cast<Polyline>(shape)) {
 			return new PolylineView(p);
+		} else if (auto m = std::dynamic_pointer_cast<RoundMissile>(shape)) {
+			return new RoundMissileView(m);
 		} else {
 			throw std::domain_error("Unrecognized type of shape");
 		}
