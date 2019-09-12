@@ -104,7 +104,6 @@ namespace gvt {
 			inline double rotation() const;
 			/**
 			 * @param r The rotation angle to set for this object, in radians
-			 * @todo Test the implementation
 			 */
 			void rotation(double r);
 			/**

@@ -37,22 +37,37 @@ TEST_CASE("Bunker::shoot() missiles have to be cyclic", "[Bunker]") {
 }
 
 TEST_CASE(
-	"Bunker::shoot() missiles have to be oriented within 90 deg. of the "
-	"shooting Bunker", "[Bunker]"
+	"Bunker::shoot() missiles velocity must have norm equal to 1", "[Bunker]"
 ) {
-	auto b = gvt::Bunker({0, 0}, 3);
-	size_t const samples = 300;
+	size_t const samples = 100;
 
 	for (size_t i = 0; i < samples; i++) {
+		auto b = gvt::Bunker({0, 0}, 3);
+
+		REQUIRE(b.shoot()->velocity().norm() == 1.0);
+	}
+}
+
+TEST_CASE(
+	"Bunker::shoot() missiles have to be oriented within 180 and 360 deg. of "
+	"the shooting Bunker", "[Bunker]"
+) {
+	size_t samples = 300;
+
+	while (samples-- > 0) {
+		auto b = gvt::Bunker({0, 0}, 3);
 		auto m = b.shoot();
+
+		// If we fix the rotation at 0, we need only test that the velocity
+		// angle is comprised in the [180, 360) range
+		b.rotation(0);
 
 		INFO(
 			"m.velocity() = " << "{" << m->velocity().x << ", " <<
 			m->velocity().y << "}"
 		);
 		INFO("angle = " << m->velocity().angle());
-		REQUIRE(fabs(b.rotation() - m->velocity().angle()) <= M_PI);
-
-		b = gvt::Bunker({0, 0}, 3);
+		REQUIRE(M_PI <= m->velocity().angle());
+		REQUIRE(m->velocity().angle() < 2 * M_PI);
 	}
 }
