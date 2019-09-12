@@ -77,6 +77,16 @@ namespace gvt {
 		 */
 		double projectAlong(Vector const &axis) const;
 
+		/**
+		 * Checks that the current vector coordinates fit within a rectangle
+		 * identified by @c topLeft and @c bottomRight. <b>Note</b>: the axis
+		 * system is as in game development, with the y-axis turned upside-down.
+		 *
+		 * @return @c true if this vector is contained within @c topLeft and
+		 * @c bottomRight, @c false otherwise.
+		 */
+		bool within(Vector topLeft, Vector bottomRight) const;
+
 		Vector operator+ (Vector const &o) const;
 		Vector operator- (Vector const &o) const;
 		Vector operator* (double f) const;

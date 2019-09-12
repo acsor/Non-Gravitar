@@ -102,6 +102,12 @@ namespace gvt {
 	}
 
 	template<typename T>
+	bool Vector<T>::within(Vector<T> topLeft, Vector<T> bottomRight) const {
+		return topLeft.x < x && x < bottomRight.x && topLeft.y < y &&
+				y < bottomRight.y;
+	}
+
+	template<typename T>
 	Vector<T> Vector<T>::operator+ (Vector<T> const &o) const {
 		return {x + o.x, y + o.y};
 	}

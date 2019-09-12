@@ -66,7 +66,8 @@ namespace gvt {
 			sf::Clock mClock;
 			shared_ptr<EventDispatcher<sf::Event>> mViewEvents;
 
-			void toggleDebug (std::shared_ptr<sf::Event> const &e);
+			void onShipMoved(shared_ptr<gvt::Event> e);
+			void toggleDebug (shared_ptr<sf::Event> const &e);
 
 			Game();
 		public:
@@ -101,7 +102,7 @@ namespace gvt {
 			/**
 			 * @return Thew @c Scene that should be currently displayed.
 			 */
-			shared_ptr<Scene> currentScene();
+			inline shared_ptr<Scene> currentScene();
 
 			shared_ptr<EventDispatcher<sf::Event>> viewEventsDispatcher() const;
 
@@ -163,6 +164,11 @@ namespace gvt {
 
 
 namespace gvt {
+	shared_ptr<Scene> Game::currentScene() {
+		return mCurrScene;
+	}
+
+
 	sf::View& SceneFrame::sceneView() {
 		return mView;
 	}

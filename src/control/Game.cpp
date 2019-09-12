@@ -34,8 +34,31 @@ namespace gvt {
 	): oldScene{std::move(old)}, newScene{std::move(_new)} {
 	}
 
+
 	// Game class section
 	Game* Game::sInstance = nullptr;
+
+	void Game::onShipMoved(shared_ptr<gvt::Event> e) {
+		auto shapeEvent = std::dynamic_pointer_cast<ShapeEvent>(e);
+
+		if (shapeEvent && shapeEvent->type == ShapeEvent::Type::moved) {
+			auto pos = mShip->position();
+			auto sceneSize = mCurrScene->size() - Vectord{
+				mShip->width(), mShip->height()
+			};
+
+			if (!pos.within({0, 0}, sceneSize)) {
+				pos.x = std::max(pos.x, 0.0);
+				pos.x = std::min(pos.x, sceneSize.x);
+				pos.y = std::max(pos.y, 0.0);
+				pos.y = std::min(pos.y, sceneSize.y);
+
+				mShip->position(pos);
+				mShip->velocity({0, 0});
+				mShip->acceleration({0, 0});
+			}
+		}
+	}
 
 	void Game::toggleDebug (std::shared_ptr<sf::Event> const &e) {
 		if (
@@ -55,10 +78,9 @@ namespace gvt {
 		mViewEvents.reset(new EventDispatcher<sf::Event>());
 		mSceneFrame.reset(new SceneFrame(this, mShip));
 
+		mShip->addCallback(std::bind(&Game::onShipMoved, this, _1));
 		mViewEvents->addCallback(MoveShipCallback(mShip, 150.0, deg2rad(10)));
 		mViewEvents->addCallback(std::bind(&Game::toggleDebug, this, _1));
-
-		mShip->position({960, 540});
 	}
 
 	Game::~Game () {
@@ -114,10 +136,6 @@ namespace gvt {
 			notify(e);
 		}
 
-		return mCurrScene;
-	}
-
-	shared_ptr<Scene> Game::currentScene() {
 		return mCurrScene;
 	}
 
