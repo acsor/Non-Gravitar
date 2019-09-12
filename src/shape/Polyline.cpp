@@ -65,7 +65,7 @@ namespace gvt {
 
 		for (size_t i = 0; i < mVertices.size() - 1; i++) {
 			auto line = BoundingPolygon({mVertices[i], mVertices[i + 1]});
-			line.shift(mPosition);
+			line.position(mPosition);
 
 			if (line.intersects(polygon))
 				return true;
@@ -77,14 +77,16 @@ namespace gvt {
 	bool Polyline::clashes (Polyline const &other) const {
 		// TODO Test
 		for (size_t i = 0; i < mVertices.size() - 1; i++) {
-			auto const firstLine = BoundingPolygon(
-					{mVertices[i], mVertices[i + 1]}
-			);
+			auto firstLine = BoundingPolygon({mVertices[i], mVertices[i + 1]});
+			
+			firstLine.position(mPosition);
 
 			for (size_t j = 0; i < other.size() - 1; j++) {
-				auto const secondLine = BoundingPolygon(
+				auto secondLine = BoundingPolygon(
 						{other.mVertices[j], other.mVertices[j + 1]}
 				);
+
+				secondLine.position(mPosition);
 
 				if (firstLine.intersects(secondLine))
 					return true;
@@ -104,5 +106,13 @@ namespace gvt {
 				"Unrecognized type of shape to detect collisions with"
 			);
 		}
+	}
+
+	Polyline::Polyline (std::initializer_list<Vectord> vertices):
+		mVertices{vertices} {
+	}
+
+	Polyline::Polyline (unsigned vertices) {
+		mVertices.resize(vertices);
 	}
 }

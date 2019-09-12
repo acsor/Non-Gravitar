@@ -19,57 +19,46 @@
 // LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
-#include "ShapeView.hpp"
-
-using namespace std::placeholders;
+#include "Game.hpp"
+#include "SolarSystemScene.hpp"
+#include "PlanetSurfaceScene.hpp"
 
 
 namespace gvt {
-	void ShapeView::shapeChangeCallback (shared_ptr<Event> e) {
-		auto event = std::dynamic_pointer_cast<ShapeEvent>(e);
+	void SolarSystemScene::onEnterPlanet (shared_ptr<gvt::Event> e) {
+		auto ce = std::dynamic_pointer_cast<CollisionEvent>(e);
 
-		if (event) {
-			switch (event->type) {
-				case (ShapeEvent::Type::moved):
-					onShapeMoved();
-					break;
-				case (ShapeEvent::Type::rotated):
-					onShapeRotated();
-					break;
-				case (ShapeEvent::Type::collided):
-					onShapeCollided();
-					break;
-				default:
-					break;
+		if (ce) {
+			auto ship = std::dynamic_pointer_cast<Spaceship>(ce->first);
+			auto planet = std::dynamic_pointer_cast<Planet>(ce->second);
+
+			if (!ship)
+				ship = std::dynamic_pointer_cast<Spaceship>(ce->second);
+			if (!planet)
+				planet = std::dynamic_pointer_cast<Planet>(ce->first);
+
+			if (ship && planet) {
+				auto *game = Game::getInstance();
+
+				planet->surface()->insert(game->acquireSpaceship());
+				game->pushScene(std::make_shared<PlanetSurfaceScene>(planet));
+
+				ship->acceleration({0, 0});
+				ship->position({planet->surface()->width() / 2.0, 0});
 			}
 		}
 	}
 
-	void ShapeView::updateTranslation() {
-		auto const pos = mShape->position();
+	SolarSystemScene::SolarSystemScene (shared_ptr<SolarSystem> const &system):
+			Scene({system->width(), system->height()}, system) {
+		auto _1 = std::placeholders::_1;
 
-		mTranslation = sf::Transform::Identity;
-		mTranslation.translate(pos.x, pos.y);
-	}
-
-	ShapeView::ShapeView(shared_ptr<Shape> const &shape): mShape(shape) {
-		mRotation = sf::Transform::Identity;
-
-		mCallback = shape->addCallback(
-			std::bind(&ShapeView::shapeChangeCallback, this, _1)
+		mPlanetHandle = mShapes->addCallback(
+			std::bind(&SolarSystemScene::onEnterPlanet, this, _1)
 		);
-		updateTranslation();
 	}
 
-	void ShapeView::onShapeMoved() {
-		updateTranslation();
-	}
-
-	void ShapeView::onShapeRotated() {
-		updateRotation();
-	}
-
-	ShapeView::~ShapeView() {
-		mShape->removeCallback(mCallback);
+	SolarSystemScene::~SolarSystemScene () {
+		mShapes->removeCallback(mPlanetHandle);
 	}
 }

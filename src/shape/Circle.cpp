@@ -20,47 +20,51 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 #include <cmath>
-#include "bounding-polygon/BoundingRectangle.hpp"
+#include "bounding-polygon/BoundingPolygon.hpp"
 #include "shape/Circle.hpp"
 #include "utils/Utils.hpp"
 #include "shape/ShapeVisitor.hpp"
 
 
-using Circle = gvt::Circle;
-using Shape = gvt::Shape;
-using Rectangle = gvt::Rectangle;
+namespace gvt {
+	Circle::Circle(Vectord position, double radius):
+			Shape2D{position}, mRadius{radius} {
+	}
 
+	bool Circle::clashes(Circle const &o) const {
+		// TODO Test
+		return (mPosition + Vectord{mRadius, mRadius}).distance(
+				o.mPosition + Vectord{o.mRadius, o.mRadius}
+		) <= mRadius + o.mRadius;
+	}
 
-Circle::Circle(Vectord position, double radius):
-		Shape2D{position}, mRadius{radius} {
-}
+	void Circle::accept (ShapeVisitor &visitor) {
+		visitor.visitCircle(*this);
+	}
 
-bool Circle::clashes(Circle const &o) const {
-	// TODO Test
-	return (mPosition + Vectord{mRadius, mRadius}).distance(
-			o.mPosition + Vectord{o.mRadius, o.mRadius}
-	) <= mRadius + o.mRadius;
-}
+	gvt::BoundingPolygon Circle::collisionPolygon() const {
+        std::vector<Vectord> vertices {COLLISION_PRECISION};
+        Vectord const center = Vectord{mRadius, mRadius};
+        double const step = 2.0 * M_PI / COLLISION_PRECISION;
 
-void Circle::accept (ShapeVisitor &visitor) {
-	visitor.visitCircle(*this);
-}
+        for (unsigned i = 0; i < COLLISION_PRECISION; i++) {
+        	vertices[i] = center + mRadius * Vectord(
+				cos(mRotation + i * step), sin(mRotation + i * step)
+			);
+        }
 
-gvt::BoundingPolygon Circle::collisionPolygon() const {
-	BoundingPolygon r = BoundingRectangle{
-		mPosition, mPosition + 2 * Vectord{mRadius, mRadius}
-	};
+        auto p = BoundingPolygon(vertices.begin(), vertices.end());
+        p.position(mPosition);
 
-	r.rotate(mRotation);
+        return p;
+	}
 
-	return r;
-}
+	bool Circle::operator== (Shape const &o) const {
+		auto *other = dynamic_cast<Circle const *>(&o);
 
-bool Circle::operator== (Shape const &o) const {
-	auto *other = dynamic_cast<Circle const *>(&o);
+		if (other)
+			return Shape::operator==(*other) && mRadius == other->mRadius;
 
-	if (other)
-		return Shape::operator==(*other) && mRadius == other->mRadius;
-
-	return false;
+		return false;
+	}
 }

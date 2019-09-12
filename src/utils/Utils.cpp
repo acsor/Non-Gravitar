@@ -19,44 +19,36 @@
 // LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
-#include <cmath>
 #include <stdexcept>
 #include "Utils.hpp"
 
 using string = std::string;
 
 
-string gvt::collapsePath(string const &path) {
-	throw std::runtime_error("Not implemented");
-}
-
-string gvt::dirpath(string const &path, bool collapse) {
-	int length = path.size();
-	auto i = path.crbegin();
-
-	while (i != path.crend() && *i != '/') {
-		i++;
-		length--;
+namespace gvt {
+	string collapsePath(string const &path) {
+		throw std::runtime_error("Not implemented");
 	}
 
-	if (length > 0) {
-		return path.substr(0, length);
-	} else {
-		throw std::domain_error{
-			"String " + path + " does not contain any valid path value"
-		};
+	string dirpath(string const &path, bool collapse) {
+		int length = path.size();
+		auto i = path.crbegin();
+
+		while (i != path.crend() && *i != '/') {
+			i++;
+			length--;
+		}
+
+		if (length > 0) {
+			return path.substr(0, length);
+		} else {
+			throw std::domain_error{
+					"String " + path + " does not contain any valid path value"
+			};
+		}
 	}
-}
 
-string gvt::staticsGet(string const &localPath) {
-	return GVT_STATICS_DIR + localPath;
-}
-
-
-double gvt::rad2deg(double r) {
-	return r * 180 / M_PI;
-}
-
-double deg2rad(double deg) {
-	return deg * M_PI / 180.0;
+	string staticsGet(string const &localPath) {
+		return GVT_STATICS_DIR + localPath;
+	}
 }

@@ -38,9 +38,9 @@ namespace gvt {
 		 */
 		Vector(T x, T y);
 		/**
-		 * @brief Instantiates a normalized @c Vector<T> object from the angle
+		 * @brief Instantiates a normalized @c Vector<T> object from an angle
 		 * value
-		 * @param degrees Value (specified in radians) in [0, 2π). Any outside
+		 * @param r Value (specified in radians) in [0, 2π). Any outside
 		 * value will be reduced to this range
 		 **/
 		explicit Vector(T r);
@@ -51,7 +51,8 @@ namespace gvt {
 		void normalize();
 		void rotate(double rad);
 		/**
-		 * Rotate the vector by @c rad radiants around 2D point @c center.
+		 * Rotate the vector by an additional @c rad radians around 2D point @c
+		 * center.
 		 */
 		void rotate(double rad, Vector center);
 		/**
@@ -75,6 +76,16 @@ namespace gvt {
 		 * @return The projection of this vector along the axis vector @c axis
 		 */
 		double projectAlong(Vector const &axis) const;
+
+		/**
+		 * Checks that the current vector coordinates fit within a rectangle
+		 * identified by @c topLeft and @c bottomRight. <b>Note</b>: the axis
+		 * system is as in game development, with the y-axis turned upside-down.
+		 *
+		 * @return @c true if this vector is contained within @c topLeft and
+		 * @c bottomRight, @c false otherwise.
+		 */
+		bool within(Vector topLeft, Vector bottomRight) const;
 
 		Vector operator+ (Vector const &o) const;
 		Vector operator- (Vector const &o) const;

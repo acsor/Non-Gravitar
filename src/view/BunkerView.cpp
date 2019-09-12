@@ -19,7 +19,6 @@
 // LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
-#include <typeinfo>
 #include "shape/Shape.hpp"
 #include "utils/Utils.hpp"
 #include "BunkerView.hpp"
@@ -31,29 +30,20 @@ const std::string BunkerView::BUNKER2D_GRAPHICS = "graphics/bunker-2.png";
 const std::string BunkerView::BUNKER3D_GRAPHICS = "graphics/bunker-3.png";
 
 
-void BunkerView::onDraw(shared_ptr<Shape> shape, RenderTarget &target,
-						RenderStates state) const {
-	Shape2DView::onDraw(shape, target, state);
+void BunkerView::draw(RenderTarget &target, RenderStates state) const {
+	Shape2DView::draw(target, state);
 
 	target.draw(mSprite, mTranslation * mRotation);
 }
 
-void BunkerView::onDestroyed () {
-	Shape2DView::onDestroyed();
-	mSprite = sf::Sprite();
-}
-
-BunkerView::BunkerView(const shared_ptr<Bunker>& bunker):
-	Shape2DView(bunker) {
+BunkerView::BunkerView(const shared_ptr<Bunker>& bunker): Shape2DView(bunker) {
 	std::string texturePath;
 
-	// TODO Replace Bunker subclasses with the identifying integer parameter n
-	if (typeid(*bunker) == typeid(gvt::Bunker2D))
+	// TODO Add a further texture for bunkers having 4 or more directions
+	if (bunker->directions() == 2)
 		texturePath = gvt::staticsGet(BUNKER2D_GRAPHICS);
-	else if (typeid(*bunker) == typeid(gvt::Bunker3D))
-		texturePath = gvt::staticsGet(BUNKER3D_GRAPHICS);
 	else
-		throw std::domain_error("Unrecognized type of Bunker received");
+		texturePath = gvt::staticsGet(BUNKER3D_GRAPHICS);
 
 	if (!mTexture.loadFromFile(texturePath))
 		throw std::runtime_error("Could not load Bunker texture from disk");

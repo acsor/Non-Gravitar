@@ -41,7 +41,7 @@ namespace gvt {
 			void shapeChangeCallback (shared_ptr<Event> e);
 		protected:
 			sf::Transform mTranslation, mRotation;
-			weak_ptr<Shape> mShape;
+			shared_ptr<Shape> mShape;
 
 			explicit ShapeView(shared_ptr<Shape> const &shape);
 
@@ -56,30 +56,13 @@ namespace gvt {
 			 */
 			virtual void updateTranslation();
 
-			/**
-			 * Called during the drawing phase, only when the shape referenced
-			 * to by this @c ShapeView can be accessed, in which case it is
-			 * passed as a parameter.
-			 *
-			 * @param shape @c Shape to draw
-			 */
-			virtual void onDraw(
-				shared_ptr<Shape> shape, RenderTarget &t, RenderStates s
-			) const = 0;
-			virtual void onMoved();
-			virtual void onRotated();
-			virtual void onDestroyed() {};
+			virtual void onShapeMoved();
+			virtual void onShapeRotated();
+			virtual void onShapeCollided() {};
 		public:
+			friend class ShapeGroupView;
+
 			~ShapeView() override;
-
-			void draw(RenderTarget &target, RenderStates states) const override;
-
-			/**
-			 * @return @c true if the shape visualized by this @c ShapeView
-			 * terminated its lifetime, @c false otherwise. If this view
-			 * expired, references to it may be freed up.
-			 */
-			bool expired() const;
 	};
 }
 

@@ -46,22 +46,20 @@ namespace gvt {
 			 * Monitors rendered shapes, taking actions when their states
 			 * changes.
 			 */
-			void shapesCallback (shared_ptr<Event> e);
+			void onShapeChanged (shared_ptr<Event> e);
 		protected:
-			weak_ptr<ShapeGroup> mGroup;
+			shared_ptr<ShapeGroup> mGroup;
 			mutable std::unordered_map<shared_ptr<Shape>, shared_ptr<ShapeView>> mViews;
 
-			void updateDebugView () override;
+			void onCreateDebugView() override;
+			void onUpdateDebugColor () override;
+
+			void draw(RenderTarget &target, RenderStates state) const override;
 		public:
-			explicit ShapeGroupView(shared_ptr<ShapeGroup> group);
+			explicit ShapeGroupView(const shared_ptr<ShapeGroup>& group);
 			~ShapeGroupView() override;
 
 			void setDebug(bool debug) override;
-			void debugColor(sf::Color color) override;
-
-			void draw(
-				sf::RenderTarget &target, sf::RenderStates state
-			) const override;
 
 			shared_ptr<ShapeView> viewFor (shared_ptr<Shape> shape) {
 				return mViews[shape];

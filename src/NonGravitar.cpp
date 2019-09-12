@@ -19,91 +19,48 @@
 // LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
-#include <iostream>
 #include <functional>
-#include <cmath>
 #include <memory>
-#include <utility>
 #include <SFML/Graphics.hpp>
 #include <SFML/Window.hpp>
-#include "shape/Spaceship.hpp"
-#include "shape/MountainChain.hpp"
-#include "shape-group/ShapeGroup.hpp"
-#include "shape-group/CollisionGroup.hpp"
-#include "shape/Bunker.hpp"
-#include "utils/Vector.hpp"
-#include "view/BunkerView.hpp"
-#include "view/ShapeGroupView.hpp"
-#include "view/SpaceshipView.hpp"
-#include "control/CollisionController.hpp"
+#include "control/Game.hpp"
+#include "control/SolarSystemScene.hpp"
+#include "shape-group/SolarSystem.hpp"
+#include "shape-group/PlanetSurface.hpp"
 
-// While I know using-declarations are considered bad practice, setting up
-// aliases was generating too much code
-using namespace gvt;
-using namespace sf;
-using namespace std::placeholders;
-
-using sf_callback = callback<sf::Event>;
-using gvt_callback = callback<gvt::Event>;
+using sf_callback = gvt::callback<sf::Event>;
 
 
-#define STEP_SIZE 10.0
-#define ANGLE_SIZE (10 * M_PI / 180.0)
-
-
-void closeWindowCallback (RenderWindow &w, shared_ptr<sf::Event> e);
-void moveShipCallback (shared_ptr<Spaceship> ship, shared_ptr<sf::Event> e);
-/**
- * Toggles @c rootView debug state depending on the event @c e.
- */
-void toggleDebugCallback (
-		shared_ptr<ShapeGroupView> rootView, shared_ptr<sf::Event> e
-);
+void closeWindow (sf::RenderWindow &w, shared_ptr<sf::Event> e);
 
 
 int main () {
-	VideoMode const mode = VideoMode::getDesktopMode();
-	RenderWindow w{mode, "Non-Gravitar"};
-
-	shared_ptr<ShapeGroup> group{new CollisionGroup()};
-	shared_ptr<Spaceship> ship{new Spaceship({600, 500}, 1000)};
-	shared_ptr<Bunker> bunker1{new Bunker2D({0, 0})};
-	shared_ptr<Bunker> bunker2{new Bunker2D({0, 0})};
-	shared_ptr<Bunker> bunker3{new Bunker3D({0, 0})};
-	shared_ptr<Polyline> mountains{
-		MountainChain::randomChain({0, 350}, 9)
-	};
-	shared_ptr<ShapeGroupView> rootView {new ShapeGroupView(group)};
-
-	CollisionController c{group, rootView};
-
-	EventDispatcher<sf::Event> loopDispatcher;
+	sf::VideoMode const mode = sf::VideoMode::getDesktopMode();
+	sf::RenderWindow w{mode, "Non-Gravitar"};
 	sf::Event e;
 
-	w.setFramerateLimit(45);
-
-	group->insert(ship);
-	group->insert(bunker1);
-	group->insert(bunker2);
-	group->insert(bunker3);
-	group->insert(mountains);
-
-	loopDispatcher.addCallback(
-		[&] (shared_ptr<sf::Event> e) -> void { closeWindowCallback(w, e); }
+	gvt::Game *game = gvt::Game::getInstance();
+	auto solarSystem = gvt::SolarSystem::makeRandom(
+			8, 30, 50, {0, 0}, {3000, 2000}
 	);
-	loopDispatcher.addCallback(std::bind(moveShipCallback, ship, _1));
-	loopDispatcher.addCallback(std::bind(toggleDebugCallback, rootView, _1));
+	auto rootScene = std::make_shared<gvt::SolarSystemScene>(solarSystem);
 
-    mountains->align(1, *bunker1);
-	mountains->align(mountains->size() / 2, *bunker2);
-	mountains->align(mountains->size() - 3, *bunker3);
+	w.setFramerateLimit(60);
+
+	solarSystem->insert(game->acquireSpaceship());
+	game->pushScene(rootScene);
+	game->viewEventsDispatcher()->addCallback(
+			[&w] (shared_ptr<sf::Event> const &e) -> void { closeWindow(w, e); }
+	);
 
 	while (w.isOpen()) {
 		while (w.pollEvent(e))
-			loopDispatcher.notify(std::make_shared<sf::Event>(e));
+			game->viewEventsDispatcher()->notify(std::make_shared<sf::Event>(e));
+
+		game->updateGameLoop();
 
 		w.clear();
-		w.draw(*rootView);
+		w.draw(*game);
 		w.display();
 	}
 
@@ -111,43 +68,7 @@ int main () {
 }
 
 
-void closeWindowCallback (RenderWindow &w, shared_ptr<sf::Event> e) {
+void closeWindow (sf::RenderWindow &w, shared_ptr<sf::Event> e) {
 	if (e->type == sf::Event::Closed)
 		w.close();
-}
-
-void moveShipCallback (shared_ptr<Spaceship> ship, shared_ptr<sf::Event> e) {
-	auto movement = STEP_SIZE * Vectord(ship->rotation());
-	movement.rotate(M_PI / -2.0);
-
-	switch (e->type) {
-		case (sf::Event::KeyPressed):
-			switch (e->key.code) {
-				case (Keyboard::Key::A):
-					ship->rotate(-ANGLE_SIZE);
-					break;
-				case (Keyboard::Key::W):
-					ship->move(movement);
-					break;
-				case (Keyboard::Key::D):
-					ship->rotate(ANGLE_SIZE);
-					break;
-				case (Keyboard::Key::S):
-					// Should activate the shields in a future version
-					// of the program
-					break;
-				default:
-					break;
-			}
-		default:
-			break;
-	}
-}
-
-void toggleDebugCallback(
-		shared_ptr<ShapeGroupView> rootView, shared_ptr<sf::Event> e
-) {
-	if (e->type == sf::Event::KeyPressed && e->key.code == Keyboard::Key::B && e->key.control) {
-		rootView->setDebug(!rootView->isDebug());
-	}
 }

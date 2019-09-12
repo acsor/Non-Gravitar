@@ -20,7 +20,7 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 #include <cmath>
-#include "bounding-polygon/BoundingRectangle.hpp"
+#include "bounding-polygon/BoundingPolygon.hpp"
 #include "Rectangle.hpp"
 #include "utils/Utils.hpp"
 
@@ -54,9 +54,10 @@ void Rectangle::accept (ShapeVisitor &visitor) {
 }
 
 gvt::BoundingPolygon Rectangle::collisionPolygon() const {
-    BoundingRectangle r {mPosition, mPosition + Vectord{width(), height()}};
+	auto r = BoundingPolygon::rectangle({0, 0}, {width(), height()});
 
-    r.rotate(mRotation);
+	r.position(mPosition);
+	r.rotate(mRotation, rotationCenter());
 
     return r;
 }

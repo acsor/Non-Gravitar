@@ -32,16 +32,17 @@ namespace gvt {
 			// Debugs bounds used for the 'debug view'
 			sf::VertexArray mBounds;
 
-			void updateDebugView () override;
+			void onCreateDebugView() override;
+			void onUpdateDebugColor() override;
 		protected:
+			shared_ptr<Shape2D> mShape2D;
+
 			explicit Shape2DView(std::shared_ptr<Shape2D> const &shape);
 
+			void onShapeCollided() override;
 			void updateRotation() override;
 
-			void onDraw(
-				shared_ptr<Shape> shape, RenderTarget &t, RenderStates s
-			) const override;
-			void onDestroyed() override;
+			void draw(RenderTarget &t, RenderStates s) const override;
 	};
 }
 

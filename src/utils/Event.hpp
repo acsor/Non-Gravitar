@@ -68,7 +68,11 @@ namespace gvt {
 			 * usually returned by @c addCallback().
 			 * @param c Callback to remove from this dispatcher.
 			 */
-			void removeCallback(shared_ptr<callback<E>> c);
+			void removeCallback(shared_ptr<callback<E>> &c);
+			/**
+			 * Clears out all callbacks presently stored.
+			 */
+			void clearCallbacks();
 			/**
 			 * Notify registered callbacks the rising of @c event.
 			 */

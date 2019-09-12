@@ -19,46 +19,39 @@
 // LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
+#include <algorithm>
 #include "ShapeGroup.hpp"
 
 
 namespace gvt {
 	ShapeGroup::~ShapeGroup() {
-		auto *e = new ShapeGroupEvent{
-			ShapeGroupEvent::Type::destroyed, this, nullptr
-		};
-
-		notify(std::shared_ptr<ShapeGroupEvent>(e));
+		notify(std::make_shared<ShapeGroupEvent>(
+				ShapeGroupEvent::Type::destroyed, this, nullptr
+		));
 	}
 
 	void ShapeGroup::insert(shared_ptr<Shape> shape) {
-		auto *e = new ShapeGroupEvent{
-				ShapeGroupEvent::Type::attached, this, shape
-		};
-
 		// Not checking for null-pointer arguments is intended behavior, as code
 		// feeding in null-pointer values should not exist in the first place: a
 		// segmentation fault acts as a proper signaling mechanism
-		onInsertShape(shape);
 		mShapes.push_front(shape);
+		onInsertShape(shape);
 
-		notify(std::shared_ptr<ShapeGroupEvent>(e));
+		notify(std::make_shared<ShapeGroupEvent>(
+			ShapeGroupEvent::Type::attached, this, shape
+		));
 	}
 
 	void ShapeGroup::remove(shared_ptr<Shape> shape) {
-		ShapeGroupEvent *e;
+		auto toRemove = std::find(mShapes.begin(), mShapes.end(), shape);
 
-        for (auto i = mShapes.begin(); i != mShapes.end(); i++) {
-        	if (**i == *shape) {
-				e = new ShapeGroupEvent{
-					ShapeGroupEvent::Type::detached, this, shape
-				};
+		if (toRemove != mShapes.end()) {
+			onRemoveShape(*toRemove);
+			mShapes.erase(toRemove);
 
-				onRemoveShape(shape);
-				mShapes.erase(i);
-
-				notify(std::shared_ptr<ShapeGroupEvent>(e));
-			}
-        }
+			notify(std::make_shared<ShapeGroupEvent>(
+					ShapeGroupEvent::Type::detached, this, *toRemove
+			));
+		}
 	}
 }

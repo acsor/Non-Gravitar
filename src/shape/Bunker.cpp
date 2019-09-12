@@ -23,11 +23,9 @@
 #include <cmath>
 #include <ctime>
 #include "Bunker.hpp"
-#include "bounding-polygon/BoundingRectangle.hpp"
+#include "bounding-polygon/BoundingPolygon.hpp"
 
 using Bunker = gvt::Bunker;
-using Bunker2D = gvt::Bunker2D;
-using Bunker3D = gvt::Bunker3D;
 using Rectangle = gvt::Rectangle;
 using RoundMissile = gvt::RoundMissile;
 using Shape = gvt::Shape;
@@ -35,9 +33,8 @@ using Shape = gvt::Shape;
 
 Bunker::Bunker(Vectord position, size_t directions):
 		Shape2D(position), mPaths{directions} {
-	std::uniform_real_distribution<double> angles{
-		mRotation - M_PI / 2.0,
-		mRotation + M_PI / 2.0
+	std::uniform_real_distribution<double> angles {
+		mRotation + M_PI, mRotation + 2 * M_PI
 	};
 	std::default_random_engine e(time(NULL));
 
@@ -48,16 +45,12 @@ Bunker::Bunker(Vectord position, size_t directions):
 	}
 }
 
-RoundMissile Bunker::shoot() {
-	// Bear in mind that by default, on the graphics layer the Bunker is
-	// rotated by default by 90. deg (the normal out of its ceiling has
-	// direction (1, 0))
-	RoundMissile m{
-		mPosition + Vectord{height(), width() / 2.0}
-	};
+shared_ptr<RoundMissile> Bunker::shoot() {
+	auto m = std::make_shared<RoundMissile>(
+			mPosition + Vectord{width() / 2.0, 0}
+	);
 
-	m.rotation(mRotation);
-	m.velocity(mPaths[mCurr]);
+	m->velocity(mPaths[mCurr]);
 	mCurr = (mCurr + 1) % mPaths.size();
 
 	return m;
@@ -68,9 +61,9 @@ void Bunker::accept (ShapeVisitor &visitor) {
 }
 
 gvt::BoundingPolygon Bunker::collisionPolygon() const {
-    BoundingRectangle r = {
-		mPosition, mPosition + Vectord{WIDTH, HEIGHT}
-    };
+    auto r = BoundingPolygon::rectangle({0, 0}, {WIDTH, HEIGHT});
+
+    r.position(mPosition);
     r.rotate(mRotation, r.center());
 
     return r;
@@ -81,32 +74,6 @@ bool Bunker::operator== (Shape const &o) const {
 
 	if (other)
 		return mPaths == other->mPaths && Shape::operator==(o);
-
-	return false;
-}
-
-
-Bunker2D::Bunker2D(Vectord position): Bunker(position, 2) {
-}
-
-bool Bunker2D::operator== (Shape const &o) const {
-	auto other = dynamic_cast<Bunker2D const *>(&o);
-
-	if (other)
-		return Bunker::operator==(o);
-
-	return false;
-}
-
-
-Bunker3D::Bunker3D(Vectord position): Bunker(position, 3) {
-}
-
-bool Bunker3D::operator== (Shape const &o) const {
-	auto other = dynamic_cast<Bunker3D const *>(&o);
-
-	if (other)
-		return Bunker::operator==(o);
 
 	return false;
 }

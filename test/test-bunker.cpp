@@ -28,32 +28,46 @@ using RoundMissile = gvt::RoundMissile;
 
 
 TEST_CASE("Bunker::shoot() missiles have to be cyclic", "[Bunker]") {
-	Bunker b = gvt::Bunker3D({0, 0});
-	RoundMissile m1 = b.shoot(), m2 = b.shoot(), m3 = b.shoot();
+	auto b = gvt::Bunker({0, 0}, 3);
+	auto m1 = b.shoot(), m2 = b.shoot(), m3 = b.shoot();
 
-	REQUIRE(m1 == b.shoot());
-	REQUIRE(m2 == b.shoot());
-	REQUIRE(m3 == b.shoot());
+	REQUIRE(*m1 == *b.shoot());
+	REQUIRE(*m2 == *b.shoot());
+	REQUIRE(*m3 == *b.shoot());
 }
 
 TEST_CASE(
-	"Bunker::shoot() missiles have to be oriented within 90 deg. of the "
-	"shooting Bunker", "[Bunker]"
+	"Bunker::shoot() missiles velocity must have norm equal to 1", "[Bunker]"
 ) {
-	Bunker b = gvt::Bunker3D({0, 0});
-	size_t const samples = 300;
-	RoundMissile m{{0, 0}};
+	size_t const samples = 100;
 
 	for (size_t i = 0; i < samples; i++) {
-		m = b.shoot();
+		auto b = gvt::Bunker({0, 0}, 3);
+
+		REQUIRE(b.shoot()->velocity().norm() == 1.0);
+	}
+}
+
+TEST_CASE(
+	"Bunker::shoot() missiles have to be oriented within 180 and 360 deg. of "
+	"the shooting Bunker", "[Bunker]"
+) {
+	size_t samples = 300;
+
+	while (samples-- > 0) {
+		auto b = gvt::Bunker({0, 0}, 3);
+		auto m = b.shoot();
+
+		// If we fix the rotation at 0, we need only test that the velocity
+		// angle is comprised in the [180, 360) range
+		b.rotation(0);
 
 		INFO(
-			"m.velocity() = " << "{" << m.velocity().x << ", " <<
-			m.velocity().y << "}"
+			"m.velocity() = " << "{" << m->velocity().x << ", " <<
+			m->velocity().y << "}"
 		);
-		INFO("angle = " << m.velocity().angle());
-		REQUIRE(abs(b.rotation() - m.velocity().angle()) <= M_PI);
-
-		b = gvt::Bunker3D({0, 0});
+		INFO("angle = " << m->velocity().angle());
+		REQUIRE(M_PI <= m->velocity().angle());
+		REQUIRE(m->velocity().angle() < 2 * M_PI);
 	}
 }

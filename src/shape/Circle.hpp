@@ -27,6 +27,8 @@
 
 namespace gvt {
 	class Circle: public Shape2D {
+		private:
+			static unsigned const constexpr COLLISION_PRECISION = 8;
 		protected:
 			double mRadius;
 		public:
@@ -35,6 +37,8 @@ namespace gvt {
 			inline double width() const override;
 			inline double height() const override;
 
+			inline void radius(double r);
+			inline double radius() const;
 			inline double area() const;
 			bool clashes(Circle const &o) const;
 
@@ -46,16 +50,24 @@ namespace gvt {
 
 
 namespace gvt {
+	void Circle::radius(double r) {
+		mRadius = r;
+	}
+
+	double Circle::radius() const {
+		return mRadius;
+	}
+
+	double Circle::area() const {
+		return M_PI * pow(mRadius, 2);
+	}
+
 	double Circle::width() const {
         return 2 * mRadius;
 	}
 
 	double Circle::height() const {
 		return 2 * mRadius;
-	}
-
-	double Circle::area() const {
-		return M_PI * pow(mRadius, 2);
 	}
 }
 

@@ -19,57 +19,54 @@
 // LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
-#include "ShapeView.hpp"
+#ifndef NON_GRAVITAR_SCENE_HPP
+#define NON_GRAVITAR_SCENE_HPP
 
-using namespace std::placeholders;
+#include <SFML/Graphics.hpp>
+#include <memory>
+#include "shape-group/ShapeGroup.hpp"
+#include "utils/Event.hpp"
+#include "view/ShapeGroupView.hpp"
 
 
 namespace gvt {
-	void ShapeView::shapeChangeCallback (shared_ptr<Event> e) {
-		auto event = std::dynamic_pointer_cast<ShapeEvent>(e);
+	/**
+	 * A @c Scene represents the notion of contextual shapes to be rendered on
+	 * screen. It encapsulates shape groups and manages their lifetimes,
+	 * adding semantic and event-handling operations.
+	 */
+	class Scene: public sf::Drawable {
+		protected:
+			Vectord mSize;
+			shared_ptr<ShapeGroup> mShapes;
+			shared_ptr<ShapeGroupView> mShapesView;
 
-		if (event) {
-			switch (event->type) {
-				case (ShapeEvent::Type::moved):
-					onShapeMoved();
-					break;
-				case (ShapeEvent::Type::rotated):
-					onShapeRotated();
-					break;
-				case (ShapeEvent::Type::collided):
-					onShapeCollided();
-					break;
-				default:
-					break;
-			}
-		}
+			Scene(Vectord size, shared_ptr<ShapeGroup> shapes);
+			void moveShapes (double seconds);
+		public:
+			friend class Game;
+			
+			/**
+			 * @param seconds Seconds elapsed since the last scene computation
+			 */
+			virtual void onUpdateGame (double seconds);
+			void draw (sf::RenderTarget &t, sf::RenderStates s) const override;
+
+			inline shared_ptr<ShapeGroup> shapes();
+			inline Vectord size() const;
+	};
+}
+
+
+namespace gvt {
+	shared_ptr<ShapeGroup> Scene::shapes() {
+		return mShapes;
 	}
 
-	void ShapeView::updateTranslation() {
-		auto const pos = mShape->position();
-
-		mTranslation = sf::Transform::Identity;
-		mTranslation.translate(pos.x, pos.y);
-	}
-
-	ShapeView::ShapeView(shared_ptr<Shape> const &shape): mShape(shape) {
-		mRotation = sf::Transform::Identity;
-
-		mCallback = shape->addCallback(
-			std::bind(&ShapeView::shapeChangeCallback, this, _1)
-		);
-		updateTranslation();
-	}
-
-	void ShapeView::onShapeMoved() {
-		updateTranslation();
-	}
-
-	void ShapeView::onShapeRotated() {
-		updateRotation();
-	}
-
-	ShapeView::~ShapeView() {
-		mShape->removeCallback(mCallback);
+	Vectord Scene::size() const {
+		return mSize;
 	}
 }
+
+
+#endif

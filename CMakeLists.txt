@@ -25,6 +25,7 @@ set(VERSION_PATCH 0)
 include_directories("${DIR_SRC}")
 
 
+# Utils section
 add_library(Observer "${DIR_UTILS}/Observer.cpp")
 add_library(Utils "${DIR_UTILS}/Utils.cpp")
 add_library(Random "${DIR_UTILS}/Random.cpp")
@@ -32,12 +33,6 @@ add_library(Random "${DIR_UTILS}/Random.cpp")
 
 # Bounding polygon section
 add_library(BoundingPolygon "${DIR_BOUND}/BoundingPolygon.cpp")
-
-add_library(BoundingTriangle "${DIR_BOUND}/BoundingTriangle.cpp")
-target_link_libraries(BoundingTriangle BoundingPolygon)
-
-add_library(BoundingRectangle "${DIR_BOUND}/BoundingRectangle.cpp")
-target_link_libraries(BoundingRectangle BoundingPolygon)
 
 
 # Shapes section
@@ -49,29 +44,40 @@ target_link_libraries(Polyline Shape)
 add_library(MountainChain "${DIR_SHAPE}/MountainChain.cpp")
 target_link_libraries(MountainChain Polyline Random)
 
-add_library(ShapeGroup "${DIR_SHAPE_GROUP}/ShapeGroup.cpp")
-target_link_libraries(ShapeGroup Shape)
-
-add_library(CollisionGroup "${DIR_SHAPE_GROUP}/CollisionGroup.cpp")
-target_link_libraries(CollisionGroup ShapeGroup)
-
 add_library(Circle "${DIR_SHAPE}/Circle.cpp")
 target_link_libraries(Circle Shape Rectangle)
 
+add_library(Planet "${DIR_SHAPE}/Planet.cpp")
+target_link_libraries(Planet Circle)
+
 add_library(Rectangle "${DIR_SHAPE}/Rectangle.cpp")
-target_link_libraries(Rectangle Shape BoundingRectangle)
+target_link_libraries(Rectangle Shape BoundingPolygon)
 
 add_library(Spaceship "${DIR_SHAPE}/Spaceship.cpp")
-target_link_libraries(Spaceship Fuel BoundingTriangle)
+target_link_libraries(Spaceship Fuel BoundingPolygon)
 
 add_library(Fuel "${DIR_SHAPE}/Fuel.cpp")
-target_link_libraries(Fuel Spaceship BoundingRectangle)
+target_link_libraries(Fuel Spaceship BoundingPolygon)
 
 add_library(RoundMissile "${DIR_SHAPE}/RoundMissile.cpp")
 target_link_libraries(RoundMissile Circle)
 
 add_library(Bunker "${DIR_SHAPE}/Bunker.cpp")
 target_link_libraries(Bunker RoundMissile)
+
+
+# Shape group section
+add_library(ShapeGroup "${DIR_SHAPE_GROUP}/ShapeGroup.cpp")
+target_link_libraries(ShapeGroup Shape)
+
+add_library(CollisionGroup "${DIR_SHAPE_GROUP}/CollisionGroup.cpp")
+target_link_libraries(CollisionGroup ShapeGroup)
+
+add_library(SolarSystem "${DIR_SHAPE_GROUP}/SolarSystem.cpp")
+target_link_libraries(SolarSystem PlanetSurface)
+
+add_library(PlanetSurface "${DIR_SHAPE_GROUP}/PlanetSurface.cpp")
+target_link_libraries(PlanetSurface Planet CollisionGroup)
 
 
 # Shape views section
@@ -83,8 +89,14 @@ target_link_libraries(ShapeView Shape DebuggableView)
 add_library(Shape2DView "${DIR_VIEWS}/Shape2DView.cpp")
 target_link_libraries(Shape2DView ShapeView)
 
+add_library(PlanetView "${DIR_VIEWS}/PlanetView.cpp")
+target_link_libraries(PlanetView Planet Shape2DView)
+
 add_library(PolylineView "${DIR_VIEWS}/PolylineView.cpp")
 target_link_libraries(PolylineView Polyline ShapeView)
+
+add_library(RoundMissileView "${DIR_VIEWS}/RoundMissileView.cpp")
+target_link_libraries(RoundMissileView RoundMissile Shape2DView)
 
 add_library(BunkerView "${DIR_VIEWS}/BunkerView.cpp")
 target_link_libraries(BunkerView Bunker Shape2DView Utils)
@@ -93,15 +105,27 @@ add_library(ShapeGroupView "${DIR_VIEWS}/ShapeGroupView.cpp")
 target_link_libraries(ShapeGroupView ShapeGroup ShapeViewFactory)
 
 add_library(ShapeViewFactory "${DIR_VIEWS}/ShapeViewFactory.cpp")
-target_link_libraries(ShapeViewFactory SpaceshipView BunkerView PolylineView)
+target_link_libraries(
+		ShapeViewFactory SpaceshipView BunkerView PolylineView PlanetView
+		RoundMissileView
+)
 
 add_library(SpaceshipView "${DIR_VIEWS}/SpaceshipView.cpp")
 target_link_libraries(SpaceshipView Spaceship Shape2DView Utils)
 
 
-# Controller section
-add_library(CollisionController "${DIR_CONTROL}/CollisionController.cpp")
-target_link_libraries(CollisionController ShapeGroup ShapeGroupView)
+# Game and scenes section
+add_library(Game "${DIR_CONTROL}/Game.cpp")
+target_link_libraries(Game Spaceship SolarSystemScene)
+
+add_library(Scene "${DIR_CONTROL}/Scene.cpp")
+target_link_libraries(Scene ShapeGroup ShapeGroupView)
+
+add_library(SolarSystemScene "${DIR_CONTROL}/SolarSystemScene.cpp")
+target_link_libraries(SolarSystemScene SolarSystem PlanetSurfaceScene)
+
+add_library(PlanetSurfaceScene "${DIR_CONTROL}/PlanetSurfaceScene.cpp")
+target_link_libraries(PlanetSurfaceScene Scene PlanetSurface MountainChain)
 
 
 # Samples section
@@ -117,9 +141,7 @@ add_executable(NonGravitar "${DIR_SRC}/NonGravitar.cpp")
 target_link_libraries(
 	NonGravitar
 	sfml-window sfml-graphics sfml-system
-	CollisionGroup MountainChain
-    ShapeGroupView
-    CollisionController
+	Game
 )
 
 

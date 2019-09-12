@@ -19,57 +19,44 @@
 // LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
-#include "ShapeView.hpp"
+#ifndef NON_GRAVITAR_SOLAR_SYSTEM_HPP
+#define NON_GRAVITAR_SOLAR_SYSTEM_HPP
 
-using namespace std::placeholders;
+#include <memory>
+#include "shape/Planet.hpp"
+#include "CollisionGroup.hpp"
 
 
 namespace gvt {
-	void ShapeView::shapeChangeCallback (shared_ptr<Event> e) {
-		auto event = std::dynamic_pointer_cast<ShapeEvent>(e);
+	class SolarSystem: public CollisionGroup {
+		private:
+			double mWidth, mHeight;
 
-		if (event) {
-			switch (event->type) {
-				case (ShapeEvent::Type::moved):
-					onShapeMoved();
-					break;
-				case (ShapeEvent::Type::rotated):
-					onShapeRotated();
-					break;
-				case (ShapeEvent::Type::collided):
-					onShapeCollided();
-					break;
-				default:
-					break;
-			}
-		}
+			/**
+			 * Updates height and width values upon insertion of a new @c Shape.
+			 */
+			void onInsertShape (shared_ptr<Shape> shape) override;
+		public:
+			static std::shared_ptr<SolarSystem> makeRandom (
+				unsigned planets, double minRadius, double maxRadius,
+				Vectord minPos, Vectord maxPos
+			);
+
+			inline double height() const;
+			inline double width() const;
+	};
+}
+
+
+namespace gvt {
+	double SolarSystem::height() const {
+		return mHeight;
 	}
 
-	void ShapeView::updateTranslation() {
-		auto const pos = mShape->position();
-
-		mTranslation = sf::Transform::Identity;
-		mTranslation.translate(pos.x, pos.y);
-	}
-
-	ShapeView::ShapeView(shared_ptr<Shape> const &shape): mShape(shape) {
-		mRotation = sf::Transform::Identity;
-
-		mCallback = shape->addCallback(
-			std::bind(&ShapeView::shapeChangeCallback, this, _1)
-		);
-		updateTranslation();
-	}
-
-	void ShapeView::onShapeMoved() {
-		updateTranslation();
-	}
-
-	void ShapeView::onShapeRotated() {
-		updateRotation();
-	}
-
-	ShapeView::~ShapeView() {
-		mShape->removeCallback(mCallback);
+	double SolarSystem::width() const {
+		return mWidth;
 	}
 }
+
+
+#endif

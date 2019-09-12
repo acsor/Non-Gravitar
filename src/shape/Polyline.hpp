@@ -56,16 +56,22 @@ namespace gvt {
 			// compared to std::list
 			std::vector<Vectord> mVertices;
 
+			bool clashes (Shape2D const &other) const;
+			bool clashes (Polyline const &other) const;
+		public:
 			/**
 			 * @param vertices Vertices to initialize this polyline with. @c
 			 * vertices will be emptied after this call.
 			 */
 			template<typename iterator>
 			Polyline (Vectord position, iterator begin, iterator end);
+			Polyline (std::initializer_list<Vectord> vertices);
+			/**
+			 * Constructs a @c Polyline with the given number of
+			 * default-constructed vertices.
+			 */
+			Polyline (unsigned vertices);
 
-			bool clashes (Shape2D const &other) const;
-			bool clashes (Polyline const &other) const;
-		public:
 			inline size_t size() const;
 
 			inline Vectord& operator[] (size_t index);
@@ -80,12 +86,16 @@ namespace gvt {
 			 * with. Note that if this polyline possesses n vertices, then it
 			 * has n - 1 segments.
 			 * @param shape Shape to align
-			 * @param offset Where to align @c shape within the available
+			 * @param offset Where to align @c shape within the leftover
 			 * segment space (assumes values in [0, 1]). A value of @c 0 sets it
 			 * at the beginning, @c 0 .5 at the middle and @c 1 at the very end
 			 * of the segment. Defaults to @c 0.5.
 			 */
 			void align (unsigned line, Shape2D &shape, double offset = 0.5);
+			inline void align (
+				unsigned line, std::shared_ptr<Shape2D> const &shape,
+				double offset = 0.5
+			);
 			inline iterator begin();
 			inline iterator end();
 
@@ -126,6 +136,12 @@ namespace gvt {
 
 	Polyline::iterator  Polyline::end() {
 		return mVertices.end();
+	}
+
+	void Polyline::align (
+			unsigned line, shared_ptr<Shape2D> const &shape, double offset
+	) {
+		align(line, *shape, offset);
 	}
 }
 

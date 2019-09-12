@@ -19,22 +19,42 @@
 // LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
-#ifndef NON_GRAVITAR_BOUNDING_TRIANGLE_HPP
-#define NON_GRAVITAR_BOUNDING_TRIANGLE_HPP
-
-#include "BoundingPolygon.hpp"
+#include <stdexcept>
+#include <utils/Random.hpp>
+#include "PlanetSurface.hpp"
 
 
 namespace gvt {
-	class BoundingTriangle: public BoundingPolygon {
-		public:
-			using Vertex = BoundingPolygon::Vertex;
+	void PlanetSurface::mountains(shared_ptr<MountainChain> mountains) {
+		if (mMountains)
+			remove(mMountains);
 
-			BoundingTriangle(Vertex v1, Vertex v2, Vertex v3);
+		mMountains = std::move(mountains);
+		insert(mMountains);
+	}
 
-			bool operator== (BoundingPolygon const &o) const override;
-	};
+	void PlanetSurface::randomBunkers(unsigned bunkers) {
+		UniRandInt bunkerType{2, 3};
+
+		for (auto &b: mBunkers)
+			remove(b);
+
+		if (mMountains) {
+			mBunkers.clear();
+			mBunkers.reserve(bunkers);
+
+			while (bunkers > 0) {
+				auto b = std::make_shared<Bunker>(Vectord{0, 0}, bunkerType());
+
+				mBunkers.push_back(b);
+				insert(b);
+
+				bunkers--;
+			}
+
+			mMountains->alignRandomly(mBunkers.begin(), mBunkers.end());
+		} else {
+			throw std::logic_error("Mountain chains not set");
+		}
+	}
 }
-
-
-#endif

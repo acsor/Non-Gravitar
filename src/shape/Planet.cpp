@@ -19,37 +19,34 @@
 // LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
-#include "shape-group/CollisionGroup.hpp"
-#include "CollisionController.hpp"
+#include "Planet.hpp"
 
-using namespace std::placeholders;
+#include <utility>
 
 
 namespace gvt {
-	void CollisionController::onCollisionDetected (std::shared_ptr<Event> e) {
-		auto collision = std::dynamic_pointer_cast<CollisionEvent>(e);
-		auto sharedView = mView.lock();
-
-		if (collision && sharedView) {
-			sharedView->viewFor(collision->first)->debugColor(
-					DebuggableView::COLLISION_DEBUG_COLOR
-			);
-			sharedView->viewFor(collision->second)->debugColor(
-					DebuggableView::COLLISION_DEBUG_COLOR
-			);
-		}
+	Planet::Planet (Vectord position, double radius): Circle(position, radius) {
 	}
 
-	CollisionController::CollisionController (
-			shared_ptr<ShapeGroup> group, shared_ptr<ShapeGroupView> view
-	): mGroup{group}, mView{view} {
-		mCallback = group->addCallback(std::bind(
-				&CollisionController::onCollisionDetected, this, _1
-		));
+	void Planet::surface(shared_ptr<PlanetSurface> s) {
+		mSurface = std::move(s);
 	}
 
-	CollisionController::~CollisionController () {
-        if (auto group = mGroup.lock())
-			group->removeCallback(mCallback);
+	shared_ptr<PlanetSurface> Planet::surface() {
+		return mSurface;
+	}
+
+	void Planet::accept (ShapeVisitor &visitor) {
+		visitor.visitPlanet(*this);
+	}
+
+	bool Planet::operator== (Shape const &o) const {
+        auto other = dynamic_cast<Planet const *>(&o);
+
+        if (other)
+        	return Circle::operator==(o);
+
+        return false;
 	}
 }
+

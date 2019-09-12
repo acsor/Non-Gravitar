@@ -29,17 +29,18 @@
 namespace gvt {
 	class PolylineView: public ShapeView {
 		protected:
-			static sf::Color const DEFAULT_COLOR;
-
+			shared_ptr<Polyline> mPolyline;
 			sf::Color mColor {DEFAULT_COLOR};
 			sf::VertexArray mVertices;
 
-			void updateView ();
-			void updateDebugView() override;
+			static sf::Color const DEFAULT_COLOR;
+
+			void onCreateDebugView() override {};
+			void onUpdateDebugColor () override {};
+
+			void onCreateView();
 			void updateRotation() override;
-			void onDraw(
-				shared_ptr<Shape> shape, RenderTarget &t, RenderStates s
-			) const override;
+			void draw(RenderTarget &t, RenderStates s) const override;
 		public:
 			explicit PolylineView(shared_ptr<Polyline> shape);
 

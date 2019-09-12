@@ -19,28 +19,24 @@
 // LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
-#ifndef NON_GRAVITAR_COLLISION_CONTROLLER_HPP
-#define NON_GRAVITAR_COLLISION_CONTROLLER_HPP
+#ifndef NON_GRAVITAR_PLANET_VIEW_HPP
+#define NON_GRAVITAR_PLANET_VIEW_HPP
 
-#include <memory>
-#include "shape-group/ShapeGroup.hpp"
-#include "view/ShapeGroupView.hpp"
+#include "shape/Planet.hpp"
+#include "Shape2DView.hpp"
 
 
 namespace gvt {
-	class CollisionController {
+	class PlanetView: public Shape2DView {
 		private:
-			weak_ptr<ShapeGroup> mGroup;
-			weak_ptr<ShapeGroupView> mView;
-			shared_ptr<gvt_callback> mCallback;
+			sf::CircleShape mCircle;
 
-			void onCollisionDetected (std::shared_ptr<Event> e);
+			static const sf::Color DEFAULT_OUTLINE_COLOR;
 		public:
-			explicit CollisionController (
-				shared_ptr<ShapeGroup> group, shared_ptr<ShapeGroupView> view
-			);
-			~CollisionController ();
+			explicit PlanetView (shared_ptr<Planet> const &planet);
+			void draw(RenderTarget &t, RenderStates s) const override;
 	};
 }
+
 
 #endif

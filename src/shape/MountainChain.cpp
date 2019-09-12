@@ -21,6 +21,7 @@
 // SOFTWARE.
 #include <algorithm>
 #include <list>
+#include <vector>
 #include <memory>
 #include "MountainChain.hpp"
 #include "utils/Random.hpp"
@@ -29,29 +30,34 @@
 namespace gvt {
 	ShapeGenerator const MountainChain::sMountainGen = []() {
 		return std::vector<Vectord>{
-				{0, MAX_HEIGHT}, {MAX_WIDTH / 2.0, MAX_HEIGHT * 0.2},
-				{MAX_WIDTH, MAX_HEIGHT}
+				{0, MAX_MOUNTAIN_HEIGHT},
+				{MAX_MOUNTAIN_WIDTH / 2.0, MAX_MOUNTAIN_HEIGHT * 0.2},
+				{MAX_MOUNTAIN_WIDTH, MAX_MOUNTAIN_HEIGHT}
 		};
 	};
 	ShapeGenerator const MountainChain::sHillGen = []() {
 		return std::vector<Vectord>{
-				{0, MAX_HEIGHT}, {MAX_WIDTH * 0.2, MAX_HEIGHT * 0.4},
-				{MAX_WIDTH * 0.8, MAX_HEIGHT * 0.4}, {MAX_WIDTH, MAX_HEIGHT}
+				{0, MAX_MOUNTAIN_HEIGHT},
+				{MAX_MOUNTAIN_WIDTH * 0.2, MAX_MOUNTAIN_HEIGHT * 0.4},
+				{MAX_MOUNTAIN_WIDTH * 0.8, MAX_MOUNTAIN_HEIGHT * 0.4},
+				{MAX_MOUNTAIN_WIDTH, MAX_MOUNTAIN_HEIGHT}
 		};
 	};
 	ShapeGenerator const MountainChain::sPlainGen = []() {
-		return std::vector<Vectord>{{0, MAX_HEIGHT}, {MAX_WIDTH, MAX_HEIGHT}};
+		return std::vector<Vectord>{
+			{0, MAX_MOUNTAIN_HEIGHT}, {MAX_MOUNTAIN_WIDTH, MAX_MOUNTAIN_HEIGHT}
+		};
 	};
 
 	shared_ptr<MountainChain> MountainChain::randomChain (
 			Vectord position, size_t pieces
 	) {
 		std::list<Vectord> vertices;
-		vector<Vectord> generated;
-        vector<ShapeGenerator> generators = {
+		std::vector<Vectord> generated;
+        std::vector<ShapeGenerator> generators = {
         		sMountainGen, sHillGen, sPlainGen
         };
-		IteratorRandomizer<vector<ShapeGenerator>::iterator> randGen {
+		IteratorRandomizer<std::vector<ShapeGenerator>::iterator> randGen {
 				generators.begin(), generators.end()
 		};
         Vectord offset{0, 0};

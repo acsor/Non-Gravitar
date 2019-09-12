@@ -19,20 +19,37 @@
 // LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
-#include "BoundingRectangle.hpp"
+#include <utility>
+#include "Scene.hpp"
 
 
 namespace gvt {
-	BoundingRectangle::BoundingRectangle(Vertex top, Vertex bottom):
-		BoundingPolygon{top, {bottom.x, top.y}, bottom, {top.x, bottom.y}} {
+	Scene::Scene(Vectord size, shared_ptr<ShapeGroup> shapes):
+			mSize{size}, mShapes{std::move(shapes)} {
+		mShapesView.reset(new ShapeGroupView(mShapes));
 	}
 
-	bool BoundingRectangle::operator== (BoundingPolygon const &o) const {
-		auto other = dynamic_cast<BoundingRectangle const *>(&o);
+	void Scene::moveShapes (double seconds) {
+		// TODO Pick a better copy data structure
+		auto shapesCopy = std::vector<shared_ptr<Shape>>(
+				mShapes->begin(), mShapes->end()
+		);
 
-		if (other)
-			return mVertices == other->mVertices;
+		for (auto &shape: shapesCopy) {
+			shape->velocity(
+					shape->velocity() + seconds * shape->acceleration()
+			);
+			shape->position(
+					shape->position() + seconds * shape->velocity()
+			);
+		}
+	}
 
-		return false;
+	void Scene::onUpdateGame (double seconds) {
+		moveShapes(seconds);
+	}
+
+	void Scene::draw (sf::RenderTarget &t, sf::RenderStates s) const {
+		t.draw(*mShapesView);
 	}
 }

@@ -19,57 +19,34 @@
 // LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
-#include "ShapeView.hpp"
+#ifndef NON_GRAVITAR_PLANET_HPP
+#define NON_GRAVITAR_PLANET_HPP
 
-using namespace std::placeholders;
+#include "Circle.hpp"
+#include "utils/Vector.hpp"
 
 
 namespace gvt {
-	void ShapeView::shapeChangeCallback (shared_ptr<Event> e) {
-		auto event = std::dynamic_pointer_cast<ShapeEvent>(e);
+	class PlanetSurface;
 
-		if (event) {
-			switch (event->type) {
-				case (ShapeEvent::Type::moved):
-					onShapeMoved();
-					break;
-				case (ShapeEvent::Type::rotated):
-					onShapeRotated();
-					break;
-				case (ShapeEvent::Type::collided):
-					onShapeCollided();
-					break;
-				default:
-					break;
-			}
-		}
-	}
+	class Planet: public Circle {
+		protected:
+			shared_ptr<PlanetSurface> mSurface;
+		public:
+			Planet (Vectord position, double radius);
 
-	void ShapeView::updateTranslation() {
-		auto const pos = mShape->position();
+			void surface(shared_ptr<PlanetSurface> s);
+			/**
+			 * @return The @c PlanetSurface of this @c Planet, comprising an
+			 * area where various mountains, bunkers and other game objects
+			 * are placed.
+			 */
+			shared_ptr<PlanetSurface> surface();
 
-		mTranslation = sf::Transform::Identity;
-		mTranslation.translate(pos.x, pos.y);
-	}
-
-	ShapeView::ShapeView(shared_ptr<Shape> const &shape): mShape(shape) {
-		mRotation = sf::Transform::Identity;
-
-		mCallback = shape->addCallback(
-			std::bind(&ShapeView::shapeChangeCallback, this, _1)
-		);
-		updateTranslation();
-	}
-
-	void ShapeView::onShapeMoved() {
-		updateTranslation();
-	}
-
-	void ShapeView::onShapeRotated() {
-		updateRotation();
-	}
-
-	ShapeView::~ShapeView() {
-		mShape->removeCallback(mCallback);
-	}
+			void accept (ShapeVisitor &visitor) override;
+			bool operator== (Shape const &o) const override;
+	};
 }
+
+
+#endif

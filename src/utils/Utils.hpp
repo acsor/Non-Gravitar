@@ -23,6 +23,7 @@
 #define NON_GRAVITAR_UTILS_HPP
 
 #include <string>
+#include <math.h>
 
 
 #define IN_CLOSED_INTERVAL(x, a, b)	((a) <= (x) && (x) <= (b))
@@ -63,8 +64,19 @@ namespace gvt {
 	 */
 	string staticsGet(string const &localPath);
 
-	double rad2deg(double r);
-	double deg2rad(double deg);
+	double constexpr rad2deg(double r);
+	double constexpr deg2rad(double deg);
+}
+
+
+namespace gvt {
+	double constexpr rad2deg(double r) {
+		return r * 180 / M_PI;
+	}
+
+	double constexpr deg2rad(double deg) {
+		return deg * M_PI / 180.0;
+	}
 }
 
 

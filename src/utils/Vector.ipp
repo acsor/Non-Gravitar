@@ -47,8 +47,8 @@ namespace gvt {
 	}
 
 	template<typename T> void Vector<T>::rotate(double rad) {
-		auto n = norm();
-		auto theta = angle();
+		auto const n = norm();
+		auto const theta = angle();
 
 		x = n * cos(theta + rad);
 		y = n * sin(theta + rad);
@@ -99,6 +99,12 @@ namespace gvt {
 				"Can not project along a vector of length 0"
 			);
 		}
+	}
+
+	template<typename T>
+	bool Vector<T>::within(Vector<T> topLeft, Vector<T> bottomRight) const {
+		return topLeft.x < x && x < bottomRight.x && topLeft.y < y &&
+				y < bottomRight.y;
 	}
 
 	template<typename T>

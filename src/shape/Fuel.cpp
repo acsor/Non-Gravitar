@@ -21,7 +21,7 @@
 // SOFTWARE.
 #include "Fuel.hpp"
 #include "Rectangle.hpp"
-#include "bounding-polygon/BoundingRectangle.hpp"
+#include "bounding-polygon/BoundingPolygon.hpp"
 
 using namespace gvt;
 
@@ -51,9 +51,9 @@ double Fuel::height() const {
 }
 
 BoundingPolygon Fuel::collisionPolygon() const {
-	BoundingRectangle r = {
-		mPosition, mPosition + Vectord{WIDTH, HEIGHT}
-	};
+	auto r = BoundingPolygon::rectangle({0, 0}, {WIDTH, HEIGHT});
+
+	r.position(mPosition);
 	r.rotate(mRotation);
 
 	return r;

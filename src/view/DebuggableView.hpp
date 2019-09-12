@@ -27,12 +27,16 @@
 
 namespace gvt {
 	class DebuggableView {
+		friend class ShapeGroupView;
+
 		protected:
 			bool mDebug {false};
 			sf::Color mDebugColor {DEFAULT_DEBUG_COLOR};
 
+			virtual void onCreateDebugView () = 0;
+			virtual void onUpdateDebugColor () = 0;
+
 			DebuggableView() = default;
-			virtual void updateDebugView() = 0;
 		public:
 			static sf::Color const DEFAULT_DEBUG_COLOR;
 			static sf::Color const COLLISION_DEBUG_COLOR;
@@ -40,8 +44,7 @@ namespace gvt {
 			inline bool isDebug() const;
 			inline virtual void setDebug(bool debug);
 
-			inline sf::Color debugColor () const;
-			inline virtual void debugColor (sf::Color color);
+			inline void debugColor (sf::Color color);
 	};
 }
 
@@ -55,13 +58,10 @@ namespace gvt {
 		mDebug = debug;
 	}
 
-	sf::Color DebuggableView::debugColor () const {
-        return mDebugColor;
-	}
-
 	void DebuggableView::debugColor (sf::Color color) {
 		mDebugColor = color;
-		updateDebugView();
+
+        onUpdateDebugColor();
 	}
 }
 

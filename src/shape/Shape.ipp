@@ -60,11 +60,7 @@ namespace gvt {
 		rotation(mRotation + r);
 	}
 
-	bool Shape::destroyed() const {
-		return mDestroyed;
-	}
-
-	void Shape::destroyed(bool state) {
-		mDestroyed = state;
+	bool Shape::collided() const {
+		return mCollided;
 	}
 }

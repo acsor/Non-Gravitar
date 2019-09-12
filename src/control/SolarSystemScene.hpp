@@ -19,22 +19,28 @@
 // LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
-#ifndef NON_GRAVITAR_BOUNDING_RECTANGLE_HPP
-#define NON_GRAVITAR_BOUNDING_RECTANGLE_HPP
+#ifndef NON_GRAVITAR_SOLAR_SYSTEM_SCENE_HPP
+#define NON_GRAVITAR_SOLAR_SYSTEM_SCENE_HPP
 
-#include "BoundingPolygon.hpp"
+#include <typeindex>
+#include "shape-group/SolarSystem.hpp"
+#include "Scene.hpp"
 
 
 namespace gvt {
-	class BoundingRectangle: public BoundingPolygon {
+	/**
+	 * A @c SolarSystemScene features a solar system, giving the possibility
+	 * to enter planets which the spaceship runs into.
+	 */
+	class SolarSystemScene: public Scene {
+		private:
+			shared_ptr<gvt_callback> mPlanetHandle;
+
+			void onEnterPlanet (shared_ptr<gvt::Event> e);
 		public:
-			using Vertex = BoundingPolygon::Vertex;
-
-			BoundingRectangle(Vertex topLeft, Vertex topRight);
-
-			bool operator== (BoundingPolygon const &o) const override;
+			explicit SolarSystemScene (shared_ptr<SolarSystem> const &system);
+			~SolarSystemScene () override;
 	};
 }
-
 
 #endif

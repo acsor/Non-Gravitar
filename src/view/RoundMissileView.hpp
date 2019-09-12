@@ -19,20 +19,27 @@
 // LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
-#include "BoundingTriangle.hpp"
+#ifndef NON_GRAVITAR_MISSILE_VIEW_HPP
+#define NON_GRAVITAR_MISSILE_VIEW_HPP
+
+#include "Shape2DView.hpp"
+#include "shape/RoundMissile.hpp"
 
 
 namespace gvt {
-	BoundingTriangle::BoundingTriangle(Vertex v1, Vertex v2, Vertex v3):
-		BoundingPolygon{v1, v2, v3} {
-	}
+	class RoundMissileView: public Shape2DView {
+		private:
+			sf::CircleShape mCircle;
 
-	bool BoundingTriangle::operator== (BoundingPolygon const &o) const {
-		auto other = dynamic_cast<BoundingTriangle const *>(&o);
+			static sf::Color const DEFAULT_MISSILE_COLOR;
+		protected:
+			shared_ptr<RoundMissile> mMissile;
 
-		if (other)
-			return mVertices == other->mVertices;
-
-		return false;
-	}
+			void draw(RenderTarget &t, RenderStates s) const override;
+		public:
+			explicit RoundMissileView (shared_ptr<RoundMissile> missile);
+	};
 }
+
+
+#endif

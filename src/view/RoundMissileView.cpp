@@ -19,57 +19,24 @@
 // LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
-#include "ShapeView.hpp"
-
-using namespace std::placeholders;
+#include "RoundMissileView.hpp"
 
 
 namespace gvt {
-	void ShapeView::shapeChangeCallback (shared_ptr<Event> e) {
-		auto event = std::dynamic_pointer_cast<ShapeEvent>(e);
+	sf::Color const RoundMissileView::DEFAULT_MISSILE_COLOR = sf::Color(
+			255, 245, 0
+	);
 
-		if (event) {
-			switch (event->type) {
-				case (ShapeEvent::Type::moved):
-					onShapeMoved();
-					break;
-				case (ShapeEvent::Type::rotated):
-					onShapeRotated();
-					break;
-				case (ShapeEvent::Type::collided):
-					onShapeCollided();
-					break;
-				default:
-					break;
-			}
-		}
+	RoundMissileView::RoundMissileView (shared_ptr<RoundMissile> missile):
+		Shape2DView(missile), mMissile(std::move(missile)) {
+		mCircle = sf::CircleShape(mMissile->radius());
+		mCircle.setFillColor(DEFAULT_MISSILE_COLOR);
 	}
 
-	void ShapeView::updateTranslation() {
-		auto const pos = mShape->position();
 
-		mTranslation = sf::Transform::Identity;
-		mTranslation.translate(pos.x, pos.y);
-	}
+	void RoundMissileView::draw(RenderTarget &t, RenderStates s) const {
+		Shape2DView::draw(t, s);
 
-	ShapeView::ShapeView(shared_ptr<Shape> const &shape): mShape(shape) {
-		mRotation = sf::Transform::Identity;
-
-		mCallback = shape->addCallback(
-			std::bind(&ShapeView::shapeChangeCallback, this, _1)
-		);
-		updateTranslation();
-	}
-
-	void ShapeView::onShapeMoved() {
-		updateTranslation();
-	}
-
-	void ShapeView::onShapeRotated() {
-		updateRotation();
-	}
-
-	ShapeView::~ShapeView() {
-		mShape->removeCallback(mCallback);
+		t.draw(mCircle, mTranslation * mRotation);
 	}
 }

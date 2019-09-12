@@ -19,57 +19,25 @@
 // LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
-#include "ShapeView.hpp"
 
-using namespace std::placeholders;
+#include "PlanetView.hpp"
 
 
 namespace gvt {
-	void ShapeView::shapeChangeCallback (shared_ptr<Event> e) {
-		auto event = std::dynamic_pointer_cast<ShapeEvent>(e);
+	const sf::Color PlanetView::DEFAULT_OUTLINE_COLOR = sf::Color(0, 138, 0);
 
-		if (event) {
-			switch (event->type) {
-				case (ShapeEvent::Type::moved):
-					onShapeMoved();
-					break;
-				case (ShapeEvent::Type::rotated):
-					onShapeRotated();
-					break;
-				case (ShapeEvent::Type::collided):
-					onShapeCollided();
-					break;
-				default:
-					break;
-			}
-		}
+	PlanetView::PlanetView (shared_ptr<Planet> const &planet):
+			Shape2DView{planet} {
+		mCircle = sf::CircleShape(planet->radius());
+
+		mCircle.setFillColor(sf::Color::Transparent);
+		mCircle.setOutlineColor(DEFAULT_OUTLINE_COLOR);
+		mCircle.setOutlineThickness(2);
 	}
 
-	void ShapeView::updateTranslation() {
-		auto const pos = mShape->position();
+	void PlanetView::draw(RenderTarget &t, RenderStates s) const {
+		Shape2DView::draw(t, s);
 
-		mTranslation = sf::Transform::Identity;
-		mTranslation.translate(pos.x, pos.y);
-	}
-
-	ShapeView::ShapeView(shared_ptr<Shape> const &shape): mShape(shape) {
-		mRotation = sf::Transform::Identity;
-
-		mCallback = shape->addCallback(
-			std::bind(&ShapeView::shapeChangeCallback, this, _1)
-		);
-		updateTranslation();
-	}
-
-	void ShapeView::onShapeMoved() {
-		updateTranslation();
-	}
-
-	void ShapeView::onShapeRotated() {
-		updateRotation();
-	}
-
-	ShapeView::~ShapeView() {
-		mShape->removeCallback(mCallback);
+		t.draw(mCircle, mTranslation * mRotation);
 	}
 }

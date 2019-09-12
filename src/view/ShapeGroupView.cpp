@@ -20,16 +20,14 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 #include <functional>
-#include <stdexcept>
 #include "ShapeGroupView.hpp"
 #include "view/SpaceshipView.hpp"
-#include "view/BunkerView.hpp"
 
 using namespace std::placeholders;
 
 
 namespace gvt {
-	void ShapeGroupView::shapesCallback (shared_ptr<Event> e) {
+	void ShapeGroupView::onShapeChanged (shared_ptr<Event> e) {
 		auto event = std::dynamic_pointer_cast<ShapeGroupEvent>(e);
 
 		if (event) {
@@ -46,42 +44,39 @@ namespace gvt {
 		}
 	}
 
-	void ShapeGroupView::updateDebugView () {
+	void ShapeGroupView::onCreateDebugView() {
 	}
 
-	ShapeGroupView::ShapeGroupView(shared_ptr<ShapeGroup> group): mGroup{group} {
+	void ShapeGroupView::onUpdateDebugColor () {
+        for (auto &mView: mViews)
+        	mView.second->onUpdateDebugColor();
+	}
+
+	ShapeGroupView::ShapeGroupView(const shared_ptr<ShapeGroup> &group):
+			mGroup{group} {
+		for (auto const &shape: *group)
+			mViews[shape] = shared_ptr<ShapeView>(mFactory.makeView(shape));
+
 		mCallback = group->addCallback(
-				std::bind(&ShapeGroupView::shapesCallback, this, _1)
+			std::bind(&ShapeGroupView::onShapeChanged, this, _1)
 		);
 	}
 
 	ShapeGroupView::~ShapeGroupView() {
-		if (auto p = mGroup.lock())
-			p->removeCallback(mCallback);
+		mGroup->removeCallback(mCallback);
 	}
 
 	void ShapeGroupView::setDebug(bool state) {
 		DebuggableView::setDebug(state);
 
-		for (auto &mView : mViews)
+		for (auto &mView: mViews)
 			mView.second->setDebug(state);
-	}
-
-	void ShapeGroupView::debugColor (sf::Color color) {
-		DebuggableView::debugColor(color);
-
-		for (auto &mView : mViews)
-			mView.second->debugColor(color);
 	}
 
 	void ShapeGroupView::draw(
 			sf::RenderTarget &target, sf::RenderStates state
 	) const {
-		for (auto &view: mViews) {
-			if (view.second->expired())
-				mViews.erase(view.first);
-			else
-				view.second->draw(target, state);
-		}
+		for (auto &view: mViews)
+			view.second->draw(target, state);
 	}
 }
