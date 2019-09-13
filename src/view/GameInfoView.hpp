@@ -35,6 +35,8 @@ namespace gvt {
 			static constexpr const unsigned SHIP_MARGIN = 10;
 
 			shared_ptr<GameInfo> mInfo;
+			shared_ptr<Spaceship> mShip;
+			shared_ptr<gvt_callback> mShipCallback;
 
 			sf::Font mFont;
 			sf::Texture mShipTexture;
@@ -46,10 +48,15 @@ namespace gvt {
 
 			void updateText();
 			void updateShips();
+
+			void onFuelChanged (shared_ptr<Event> const &e);
 		protected:
 			void draw (sf::RenderTarget &t, sf::RenderStates s) const override;
 		public:
-			explicit GameInfoView (shared_ptr<GameInfo> gameInfo);
+			GameInfoView (
+					shared_ptr<GameInfo> gameInfo, shared_ptr<Spaceship> ship
+			);
+			~GameInfoView () override;
 	};
 }
 

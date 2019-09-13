@@ -19,6 +19,7 @@
 // LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
+#include "control/Game.hpp"
 #include "GameInfoView.hpp"
 #include "SpaceshipView.hpp"
 #include "utils/Utils.hpp"
@@ -32,7 +33,7 @@ namespace gvt {
 	void GameInfoView::updateText() {
 		mText.setString(
 			"SCORE\t" + std::to_string(mInfo->score()) +
-			"\nFUEL ?"
+			"\nFUEL " + std::to_string(mShip->fuel())
 		);
 		auto const bounds = mText.getLocalBounds();
 
@@ -71,6 +72,14 @@ namespace gvt {
 		}
 	}
 
+	void GameInfoView::onFuelChanged (shared_ptr<Event> const &e) {
+		auto fuelEvent = std::dynamic_pointer_cast<FuelChangedEvent>(e);
+
+		if (fuelEvent) {
+			updateText();
+		}
+	}
+
 	void GameInfoView::draw (sf::RenderTarget &t, sf::RenderStates s) const {
 		auto const size = t.getSize();
 
@@ -82,13 +91,19 @@ namespace gvt {
 		t.draw(mText, s);
 	}
 
-	GameInfoView::GameInfoView (shared_ptr<GameInfo> gameInfo):
-			mInfo{std::move(gameInfo)} {
+	GameInfoView::GameInfoView (
+		shared_ptr<GameInfo> gameInfo, shared_ptr<Spaceship> ship
+	): mInfo{std::move(gameInfo)}, mShip{std::move(ship)} {
+		auto _1 = std::placeholders::_1;
 		auto shipTexturePath = gvt::staticsGet(SpaceshipView::SPACESHIP_TEXTURE);
+
+		mShipCallback = mShip->addCallback(
+			std::bind(&GameInfoView::onFuelChanged, this, _1)
+		);
 
 		if (!mShipTexture.loadFromFile(shipTexturePath))
 			throw std::runtime_error {
-					"Could not load spaceship textures from disk"
+					"Could not load spaceship texture from disk"
 			};
 		if (!mFont.loadFromFile(DEFAULT_FONT))
 			throw std::runtime_error ("Could not load font from disk");
@@ -101,5 +116,9 @@ namespace gvt {
 
 		updateShips();
 		updateText();
+	}
+
+	GameInfoView::~GameInfoView () {
+		mShip->removeCallback(mShipCallback);
 	}
 }

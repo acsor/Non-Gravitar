@@ -34,7 +34,7 @@ namespace gvt {
 		private:
 			// Represents the current fuel amount in the ship
 			unsigned mFuel;
-		public:
+
 			/** Width and height properties of any given spaceship. Note that
 			 * these measures depend on the texture data found in
 			 * @c static/graphics/ and when the files herein found are changed
@@ -49,24 +49,21 @@ namespace gvt {
 			// polygon (which needs not necessarily be a rectangle).
 			static unsigned const constexpr BOUNDING_WIDTH = 46;
 			static unsigned const constexpr BOUNDING_HEIGHT = 42;
-
+		public:
 			Spaceship(Vectord position, unsigned fuel);
+
 			unsigned fuel() const;
 			/**
 			 * @brief Recharges the current @c Spaceship instance by the fuel
 			 * amount found in @c fuel.
 			 * @param fuel @c Fuel object.
 			 */
-			void recharge(Fuel &fuel);
+			void rechargeFuel(Fuel &fuel);
 			/**
-			 * @brief Discharges the current <tt>Spaceship</tt>'s fuel by @c
-			 * amount, defaulted to @c 1.
-			 *
-			 * @todo Verify that we can specify a default argument value, and
-			 * that Spaceship::discharge() can be specified even with no
-			 * arguments.
+			 * @brief Discharges the current <tt>Spaceship</tt> fuel by @c
+			 * amount.
 			 */
-			void discharge(unsigned amount = 1);
+			void dischargeFuel(unsigned amount);
 			/**
 			 * @return @c true if the current @c Spaceship instance has still
 			 * fuel in it, @c false otherwise.
@@ -80,6 +77,12 @@ namespace gvt {
 
 			BoundingPolygon collisionPolygon() const override;
 			bool operator== (Shape const &o) const override;
+	};
+
+	struct FuelChangedEvent: public gvt::Event {
+		unsigned oldAmount, newAmount;
+
+		FuelChangedEvent(unsigned old, unsigned _new);
 	};
 }
 

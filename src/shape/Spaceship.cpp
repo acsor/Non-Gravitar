@@ -46,13 +46,28 @@ namespace gvt {
 		return mFuel;
 	}
 
-	void Spaceship::recharge(Fuel &fuel) {
+	void Spaceship::rechargeFuel(Fuel &fuel) {
+		auto e = std::make_shared<FuelChangedEvent>(mFuel, 0);
+
 		mFuel += fuel.fuel();
+		e->newAmount = mFuel;
+
 		fuel.empty();
+
+		notify(e);
 	}
 
-	void Spaceship::discharge(unsigned amount) {
-		mFuel -= amount;
+	void Spaceship::dischargeFuel(unsigned amount) {
+		auto e = std::make_shared<FuelChangedEvent>(mFuel, 0);
+
+		if (amount > mFuel)
+			mFuel = 0;
+		else
+			mFuel -= amount;
+
+		e->newAmount = mFuel;
+
+		notify(e);
 	}
 
 	bool Spaceship::charged() const {
@@ -70,5 +85,11 @@ namespace gvt {
 			return Shape::operator==(*other) && mFuel == other->mFuel;
 
 		return false;
+	}
+
+
+	FuelChangedEvent::FuelChangedEvent(unsigned old, unsigned _new) {
+		oldAmount = old;
+		newAmount = _new;
 	}
 }

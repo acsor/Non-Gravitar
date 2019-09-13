@@ -74,12 +74,12 @@ namespace gvt {
 	Game::Game () {
 		auto _1 = std::placeholders::_1;
 
-		mInfo.reset(new GameInfo(0, 3));
-		mInfoView.reset(new GameInfoView(mInfo));
-
 		mShip.reset(new Spaceship(Vectord{0, 0}, 1000));
 		mViewEvents.reset(new EventDispatcher<sf::Event>());
 		mSceneFrame.reset(new SceneFrame(this, mShip));
+
+		mInfo.reset(new GameInfo(0, 3));
+		mInfoView.reset(new GameInfoView(mInfo, mShip));
 
 		mShip->addCallback(std::bind(&Game::onShipMoved, this, _1));
 		mViewEvents->addCallback(MoveShipCallback(mShip, 150.0, deg2rad(10)));
@@ -238,6 +238,7 @@ namespace gvt {
 					break;
 				case (sf::Keyboard::Key::W):
 					mShip->acceleration(accelIncrement);
+					mShip->dischargeFuel(1);
 					break;
 				case (sf::Keyboard::Key::D):
 					mShip->rotate(mAngleStep);
