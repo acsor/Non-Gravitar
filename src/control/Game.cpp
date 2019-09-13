@@ -74,6 +74,9 @@ namespace gvt {
 	Game::Game () {
 		auto _1 = std::placeholders::_1;
 
+		mInfo.reset(new GameInfo(0, 3));
+		mInfoView.reset(new GameInfoView(mInfo));
+
 		mShip.reset(new Spaceship(Vectord{0, 0}, 1000));
 		mViewEvents.reset(new EventDispatcher<sf::Event>());
 		mSceneFrame.reset(new SceneFrame(this, mShip));
@@ -144,15 +147,24 @@ namespace gvt {
 	}
 
 	void Game::draw(sf::RenderTarget &target, sf::RenderStates states) const {
+		auto targetSize = target.getSize();
+		sf::View infoFrame;
+
+		infoFrame.setSize(targetSize.x, .2f * targetSize.y);
+		infoFrame.setCenter(.5f * targetSize.x, .1f * targetSize.y);
+		infoFrame.setViewport({0, 0, 1, .2});
+		target.setView(infoFrame);
+		target.draw(*mInfoView, states);
+
 		target.setView(mSceneFrame->sceneView());
-		target.draw(*mCurrScene);
+		target.draw(*mCurrScene, states);
 	}
 
 
 	// SceneFrame class section
 	void SceneFrame::onWindowResized(shared_ptr<sf::Event> const &e) {
 		if (e->type == sf::Event::Resized) {
-			auto windowSize = Vectord(e->size.width, e->size.height);
+			auto windowSize = Vectord(e->size.width, 0.8 * e->size.height);
 
 			mView.setSize(windowSize.x, windowSize.y);
 
@@ -188,6 +200,7 @@ namespace gvt {
 			mGame{game}, mShip{std::move(ship)} {
 		auto _1 = std::placeholders::_1;
 
+		mView.setViewport({0.0, 0.2, 1, 0.8});
 		mResizeHandle = mGame->viewEventsDispatcher()->addCallback(
 			std::bind(&SceneFrame::onWindowResized, this, _1)
 		);

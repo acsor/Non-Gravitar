@@ -27,6 +27,8 @@
 #include <stack>
 #include <typeinfo>
 #include <SFML/Graphics.hpp>
+#include "GameInfo.hpp"
+#include "view/GameInfoView.hpp"
 #include "Scene.hpp"
 #include "shape-group/ShapeGroup.hpp"
 #include "shape/Spaceship.hpp"
@@ -56,9 +58,13 @@ namespace gvt {
 		private:
 			static Game* sInstance;
 
+			shared_ptr<GameInfo> mInfo;
+			shared_ptr<GameInfoView> mInfoView;
+
 			// By virtue of the fact that Game is a singleton instance, mShip
 			// is too
 			shared_ptr<Spaceship> mShip;
+
 			shared_ptr<Scene> mCurrScene;
 			std::stack<shared_ptr<Scene>> mSceneStack;
 			shared_ptr<SceneFrame> mSceneFrame;
@@ -72,10 +78,13 @@ namespace gvt {
 			Game();
 		public:
 			~Game() override;
+
 			/**
 			 * @return The singleton @c Game instance.
 			 */
 			static Game* getInstance();
+			inline shared_ptr<GameInfo> gameInfo();
+
 			/**
 			 * @return The unique @c Spaceship instance, detaching it from
 			 * the current scene and making it eventually available for
@@ -164,6 +173,10 @@ namespace gvt {
 
 
 namespace gvt {
+	shared_ptr<GameInfo> Game::gameInfo() {
+		return mInfo;
+	}
+
 	shared_ptr<Scene> Game::currentScene() {
 		return mCurrScene;
 	}

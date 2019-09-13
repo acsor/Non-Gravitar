@@ -113,10 +113,16 @@ target_link_libraries(
 add_library(SpaceshipView "${DIR_VIEWS}/SpaceshipView.cpp")
 target_link_libraries(SpaceshipView Spaceship Shape2DView Utils)
 
+add_library(GameInfoView "${DIR_VIEWS}/GameInfoView.cpp")
+target_link_libraries(GameInfoView GameInfo SpaceshipView)
+
 
 # Game and scenes section
 add_library(Game "${DIR_CONTROL}/Game.cpp")
-target_link_libraries(Game Spaceship SolarSystemScene)
+target_link_libraries(Game Spaceship GameInfoView SolarSystemScene)
+
+add_library(GameInfo "${DIR_CONTROL}/GameInfo.cpp")
+target_link_libraries(GameInfo SpaceshipView)
 
 add_library(Scene "${DIR_CONTROL}/Scene.cpp")
 target_link_libraries(Scene ShapeGroup ShapeGroupView)
