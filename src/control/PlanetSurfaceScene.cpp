@@ -71,14 +71,11 @@ namespace gvt {
 		// Shoot missiles
 		for (auto const &bunker: mPlanet->surface()->bunkers()) {
 			if (bunker->missileDelay() <= 0) {
-				auto missile = bunker->shoot();
-
-				missile->radius(MISSILE_RADIUS);
-				missile->lifespan(MISSILE_LIFESPAN);
-				missile->velocity(MISSILE_SPEED * missile->velocity());
+				auto missile = bunker->shoot(
+						MISSILE_SPEED, MISSILE_LIFESPAN, MISSILE_RADIUS
+				);
 
 				mPlanet->surface()->insert(missile);
-
 				bunker->missileDelay(MISSILE_DELAY);
 			}
 		}
