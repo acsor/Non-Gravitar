@@ -87,7 +87,9 @@ namespace gvt {
 
 		localPos.rotate(rotation(), rotationCenter());
 		missile->position(position() + localPos);
-		missile->velocity(speed * Vectord(rotation() - M_PI / 2.0));
+		missile->velocity(
+			(speed + this->speed()) * Vectord(rotation() - M_PI / 2.0)
+		);
 
 		return missile;
 	}
