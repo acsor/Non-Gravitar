@@ -42,7 +42,6 @@ namespace gvt {
 			shared_ptr<ShapeGroupView> mShapesView;
 
 			Scene(Vectord size, shared_ptr<ShapeGroup> shapes);
-			void moveShapes (double seconds);
 		public:
 			friend class Game;
 			

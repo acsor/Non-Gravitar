@@ -20,6 +20,7 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 #include <algorithm>
+#include <utility>
 #include "ShapeGroup.hpp"
 
 
@@ -54,4 +55,21 @@ namespace gvt {
 			));
 		}
 	}
+
+	 void ShapeGroup::removeIf(
+	 	std::function<bool (shared_ptr<Shape>)> predicate
+	 ) {
+	 	for (auto i = mShapes.begin(); i != mShapes.end(); i++) {
+	 		if (predicate(*i)) {
+	 			auto e = std::make_shared<ShapeGroupEvent>(
+						ShapeGroupEvent::Type::detached, this, *i
+				);
+
+	 			onRemoveShape(*i);
+	 			i = mShapes.erase(i);
+
+	 			notify(e);
+	 		}
+	 	}
+	 }
 }

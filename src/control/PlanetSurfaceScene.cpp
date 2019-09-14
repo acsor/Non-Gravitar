@@ -68,25 +68,15 @@ namespace gvt {
 		for (auto const &bunker: mPlanet->surface()->bunkers())
 			bunker->missileDelay(bunker->missileDelay() - seconds);
 
-		// Update missiles' lifetime
-		for (auto const &mMissile : mMissiles)
-			mMissile->lifetime(mMissile->lifetime() - seconds);
-
-		while (!mMissiles.empty() && mMissiles.front()->lifetime() <= 0) {
-			mPlanet->surface()->remove(mMissiles.front());
-			mMissiles.pop_front();
-		}
-
 		// Shoot missiles
 		for (auto const &bunker: mPlanet->surface()->bunkers()) {
 			if (bunker->missileDelay() <= 0) {
 				auto missile = bunker->shoot();
 
 				missile->radius(MISSILE_RADIUS);
-				missile->lifetime(MISSILE_LIFETIME);
+				missile->lifespan(MISSILE_LIFESPAN);
 				missile->velocity(MISSILE_SPEED * missile->velocity());
 
-				mMissiles.push_back(missile);
 				mPlanet->surface()->insert(missile);
 
 				bunker->missileDelay(MISSILE_DELAY);

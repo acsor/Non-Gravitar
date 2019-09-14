@@ -53,6 +53,7 @@ namespace gvt {
 			~ShapeGroup() override;
 			void insert(shared_ptr<Shape> shape);
 			void remove(shared_ptr<Shape> shape);
+			void removeIf(std::function<bool (shared_ptr<Shape>)> predicate);
 			inline size_t size () const;
 
 			inline iterator begin();

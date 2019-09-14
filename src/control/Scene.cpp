@@ -29,12 +29,17 @@ namespace gvt {
 		mShapesView.reset(new ShapeGroupView(mShapes));
 	}
 
-	void Scene::moveShapes (double seconds) {
-		// TODO Pick a better copy data structure
+	void Scene::onUpdateGame (double seconds) {
+		// Remove outlived shapes
+		mShapes->removeIf(
+				[] (shared_ptr<Shape> const &s) -> bool { return s->destroyed (); }
+		);
 		auto shapesCopy = std::vector<shared_ptr<Shape>>(
 				mShapes->begin(), mShapes->end()
 		);
 
+		// TODO Is there another more performing way of safely iterating
+		//  through the list without making a copy of it?
 		for (auto &shape: shapesCopy) {
 			shape->velocity(
 					shape->velocity() + seconds * shape->acceleration()
@@ -45,11 +50,7 @@ namespace gvt {
 		}
 	}
 
-	void Scene::onUpdateGame (double seconds) {
-		moveShapes(seconds);
-	}
-
 	void Scene::draw (sf::RenderTarget &t, sf::RenderStates s) const {
-		t.draw(*mShapesView);
+		t.draw(*mShapesView, s);
 	}
 }
