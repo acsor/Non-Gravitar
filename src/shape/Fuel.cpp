@@ -21,7 +21,7 @@
 // SOFTWARE.
 #include "Fuel.hpp"
 #include "Rectangle.hpp"
-#include "bounding-polygon/BoundingPolygon.hpp"
+#include "utils/BoundingPolygon.hpp"
 
 using namespace gvt;
 

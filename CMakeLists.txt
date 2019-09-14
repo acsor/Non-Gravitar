@@ -11,7 +11,6 @@ set(DIR_SHAPE_GROUP "${DIR_SRC}/shape-group")
 set(DIR_VIEWS "${DIR_SRC}/view")
 set(DIR_CONTROL "${DIR_SRC}/control")
 set(DIR_UTILS "${DIR_SRC}/utils")
-set(DIR_BOUND "${DIR_SRC}/bounding-polygon")
 set(DIR_SAMPLES "samples/")
 
 # The project versionig scheme is Semver: https://semver.org/
@@ -32,7 +31,7 @@ add_library(Random "${DIR_UTILS}/Random.cpp")
 
 
 # Bounding polygon section
-add_library(BoundingPolygon "${DIR_BOUND}/BoundingPolygon.cpp")
+add_library(BoundingPolygon "${DIR_UTILS}/BoundingPolygon.cpp")
 
 
 # Shapes section

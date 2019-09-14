@@ -19,7 +19,7 @@
 // LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
-#include "bounding-polygon/BoundingPolygon.hpp"
+#include "utils/BoundingPolygon.hpp"
 #include "Spaceship.hpp"
 #include "RoundMissile.hpp"
 

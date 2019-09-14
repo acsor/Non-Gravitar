@@ -26,7 +26,7 @@
 #include "Shape2D.hpp"
 #include "Rectangle.hpp"
 #include "ShapeVisitor.hpp"
-#include "bounding-polygon/BoundingPolygon.hpp"
+#include "utils/BoundingPolygon.hpp"
 
 
 namespace gvt {

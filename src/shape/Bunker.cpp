@@ -23,7 +23,7 @@
 #include <cmath>
 #include <ctime>
 #include "Bunker.hpp"
-#include "bounding-polygon/BoundingPolygon.hpp"
+#include "utils/BoundingPolygon.hpp"
 
 using Bunker = gvt::Bunker;
 using Rectangle = gvt::Rectangle;
