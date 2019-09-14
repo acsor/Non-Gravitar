@@ -47,10 +47,12 @@ Bunker::Bunker(Vectord position, size_t directions):
 
 shared_ptr<RoundMissile>
 Bunker::shoot(double speed, long lifespan, double radius) {
-	auto m = std::make_shared<RoundMissile>(
-			mPosition + Vectord{width() / 2.0, 0}, lifespan, radius
-	);
+	auto m = std::make_shared<RoundMissile>(Vectord{0, 0}, lifespan, radius);
+	auto initPos = Vectord{width() / 2.0, -20.0};
 
+	initPos.rotate(rotation(), rotationCenter());
+
+	m->position(mPosition + initPos);
 	m->velocity(speed * mPaths[mCurr]);
 	mCurr = (mCurr + 1) % mPaths.size();
 
