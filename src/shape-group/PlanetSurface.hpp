@@ -22,7 +22,7 @@
 #ifndef NON_GRAVITAR_PLANET_SURFACE_HPP
 #define NON_GRAVITAR_PLANET_SURFACE_HPP
 
-#include <vector>
+#include <forward_list>
 #include "shape/MountainChain.hpp"
 #include "shape/Bunker.hpp"
 #include "shape-group/CollisionGroup.hpp"
@@ -37,7 +37,9 @@ namespace gvt {
 	class PlanetSurface: public CollisionGroup {
 		private:
 			shared_ptr<MountainChain> mMountains;
-			std::vector<shared_ptr<Bunker>> mBunkers;
+			std::forward_list<shared_ptr<Bunker>> mBunkers;
+
+			void onRemoveShape (shared_ptr<Shape> s) override;
 		public:
 			inline double height() const;
 			inline double width() const;
@@ -46,7 +48,7 @@ namespace gvt {
 			inline shared_ptr<MountainChain> mountains() const;
 
 			template<typename iter> void bunkers(iter begin, iter end);
-			inline std::vector<shared_ptr<Bunker>> bunkers() const;
+			inline std::forward_list<shared_ptr<Bunker>> bunkers() const;
 
 			/**
 			 * Allocates the given number of bunkers, aligning them randomly
@@ -77,7 +79,7 @@ namespace gvt {
 		mBunkers = std::vector<shared_ptr<Bunker>>(begin, end);
 	}
 
-	std::vector<shared_ptr<Bunker>> PlanetSurface::bunkers() const {
+	std::forward_list<shared_ptr<Bunker>> PlanetSurface::bunkers() const {
 		return mBunkers;
 	}
 }

@@ -25,6 +25,13 @@
 
 
 namespace gvt {
+	void PlanetSurface::onRemoveShape (shared_ptr<Shape> s) {
+		CollisionGroup::onRemoveShape(s);
+
+		if (auto bunker = std::dynamic_pointer_cast<Bunker>(s))
+			mBunkers.remove(bunker);
+	}
+
 	void PlanetSurface::mountains(shared_ptr<MountainChain> mountains) {
 		if (mMountains)
 			remove(mMountains);
@@ -41,12 +48,11 @@ namespace gvt {
 
 		if (mMountains) {
 			mBunkers.clear();
-			mBunkers.reserve(bunkers);
 
 			while (bunkers > 0) {
 				auto b = std::make_shared<Bunker>(Vectord{0, 0}, bunkerType());
 
-				mBunkers.push_back(b);
+				mBunkers.push_front(b);
 				insert(b);
 
 				bunkers--;
