@@ -21,6 +21,7 @@
 // SOFTWARE.
 #include "bounding-polygon/BoundingPolygon.hpp"
 #include "Spaceship.hpp"
+#include "RoundMissile.hpp"
 
 
 namespace gvt {
@@ -72,6 +73,23 @@ namespace gvt {
 
 	bool Spaceship::charged() const {
 		return mFuel > 0;
+	}
+
+	shared_ptr<RoundMissile>
+	Spaceship::shoot(double radius, double speed, long lifespan) const {
+		// TODO Improve the initial missile position
+		auto missile = std::make_shared<RoundMissile> (
+			Vectord{0, 0}, lifespan, radius
+		);
+		auto localPos = Vectord{width() / 2.0, -10.0} - Vectord{
+			missile->radius() / 2.0, missile->radius() / 2.0
+		};
+
+		localPos.rotate(rotation(), rotationCenter());
+		missile->position(position() + localPos);
+		missile->velocity(speed * Vectord(rotation() - M_PI / 2.0));
+
+		return missile;
 	}
 
 	void gvt::Spaceship::accept(gvt::ShapeVisitor &visitor) {

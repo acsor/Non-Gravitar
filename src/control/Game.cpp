@@ -82,7 +82,9 @@ namespace gvt {
 		mInfoView.reset(new GameInfoView(mInfo, mShip));
 
 		mShip->addCallback(std::bind(&Game::onShipMoved, this, _1));
-		mViewEvents->addCallback(MoveShipCallback(mShip, 150.0, deg2rad(10)));
+		mViewEvents->addCallback(
+				MoveShipCallback(this, mShip, 150.0, deg2rad(10))
+		);
 		mViewEvents->addCallback(std::bind(&Game::toggleDebug, this, _1));
 	}
 
@@ -221,8 +223,8 @@ namespace gvt {
 
 	// MoveShipCallback class section
 	MoveShipCallback::MoveShipCallback (
-			shared_ptr<Spaceship> ship, double accel, double angle
-	): mShip(std::move(ship)) {
+			Game *game, shared_ptr<Spaceship> ship, double accel, double angle
+	): mGame{game}, mShip(std::move(ship)) {
 		mAccelStep = accel;
 		mAngleStep = angle;
 	}
@@ -246,6 +248,11 @@ namespace gvt {
 				case (sf::Keyboard::Key::S):
 					// Should activate the shields in a future version
 					// of the program
+					break;
+				case (sf::Keyboard::Key::Space):
+					mGame->currentScene()->shapes()->insert(
+							mShip->shoot(6, 700, 2000)
+					);
 					break;
 				default:
 					break;

@@ -160,11 +160,14 @@ namespace gvt {
 	 */
 	class MoveShipCallback {
 		private:
-			double mAngleStep, mAccelStep;
+			Game *mGame;
 			shared_ptr<Spaceship> mShip;
+
+			double mAngleStep, mAccelStep;
 		public:
 			MoveShipCallback (
-				shared_ptr<Spaceship> ship, double accel, double angle
+				Game *game, shared_ptr<Spaceship> ship, double accel,
+				double angle
 			);
 
 			void operator() (shared_ptr<sf::Event> e);
