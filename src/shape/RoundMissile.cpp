@@ -24,12 +24,18 @@
 
 
 namespace gvt {
-	RoundMissile::RoundMissile(Vectord position):
-			RoundMissile(position, RoundMissile::DEFAULT_RADIUS) {
+	RoundMissile::RoundMissile(Vectord position, long lifespan):
+			RoundMissile(position, lifespan, RoundMissile::DEFAULT_RADIUS) {
 	}
 
-	RoundMissile::RoundMissile(Vectord position, double radius):
-			Circle(position, radius) {
+	RoundMissile::RoundMissile(
+			Vectord position, long lifespan, double radius
+	): Circle(position, radius), mLifespan{lifespan} {
+		mBirth = steady_clock::now();
+	}
+
+	bool RoundMissile::destroyed() const {
+		return Shape::destroyed() || (steady_clock::now() - mBirth) > mLifespan;
 	}
 
 	void gvt::RoundMissile::accept(ShapeVisitor &visitor) {
@@ -37,7 +43,7 @@ namespace gvt {
 	}
 
 	bool RoundMissile::operator== (Shape const &o) const {
-		auto *other = dynamic_cast<RoundMissile const *>(&o);
+		auto other = dynamic_cast<RoundMissile const *>(&o);
 
 		if (other)
 			return Circle::operator==(o);

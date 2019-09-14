@@ -63,4 +63,8 @@ namespace gvt {
 	bool Shape::collided() const {
 		return mCollided;
 	}
+
+	bool Shape::destroyed() const {
+		return mDestroyed;
+	}
 }

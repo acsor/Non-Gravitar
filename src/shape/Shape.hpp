@@ -44,7 +44,7 @@ namespace gvt {
             Vectord mPosition, mVelocity, mAccel;
 			double mRotation{0};
 
-			bool mCollided{false};
+			bool mDestroyed{false}, mCollided{false};
 
 			Shape() = default;
 			explicit Shape(Vectord position);
@@ -96,6 +96,12 @@ namespace gvt {
 			 * collided or not.
 			 */
 			void collided(bool collided);
+			/**
+			 * @return @c true if this @c Shape is to be considered
+			 * destroyed, @c false otherwise.
+			 */
+			virtual inline bool destroyed() const;
+			void destroyed (bool destroyed);
 
 			/**
 			 * @return The angle with respect to the object origin of the

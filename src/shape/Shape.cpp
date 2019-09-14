@@ -73,6 +73,10 @@ void Shape::collided(bool collided) {
 	}
 }
 
+void Shape::destroyed(bool destroyed) {
+	mDestroyed = destroyed;
+}
+
 
 bool Shape::operator== (Shape const &o) const {
 	return mPosition == o.mPosition && mVelocity == mVelocity &&
