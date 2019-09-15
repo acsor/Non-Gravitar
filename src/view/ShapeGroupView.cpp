@@ -26,7 +26,7 @@
 
 namespace gvt {
 	void ShapeGroupView::onShapeInserted (shared_ptr<ShapeInsertionEvent> e) {
-		mViews[e->shape] = shared_ptr<ShapeView>(mFactory.makeView(e->shape));
+		mViews[e->shape] = shared_ptr<ShapeView>(mFactory(e->shape));
 	}
 
 	void ShapeGroupView::onShapeRemoved (shared_ptr<ShapeRemovalEvent> e) {
@@ -63,7 +63,7 @@ namespace gvt {
 		);
 
 		for (auto const &shape: *group)
-			mViews[shape] = shared_ptr<ShapeView>(mFactory.makeView(shape));
+			mViews[shape] = shared_ptr<ShapeView>(mFactory(shape));
 	}
 
 	ShapeGroupView::~ShapeGroupView() {
