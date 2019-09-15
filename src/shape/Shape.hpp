@@ -28,8 +28,33 @@
 
 
 namespace gvt {
+	class Shape;
 	class Rectangle;
 	class ShapeVisitor;
+
+
+	struct ShapeEvent: public Event {
+			Shape *source{nullptr};
+
+			explicit ShapeEvent (Shape *_source): source{_source} {};
+	};
+
+	struct PositionEvent: ShapeEvent {
+			explicit PositionEvent (Shape *source): ShapeEvent(source) {};
+	};
+
+	struct RotationEvent: public ShapeEvent {
+			explicit RotationEvent (Shape *source): ShapeEvent(source) {};
+	};
+
+	struct CollisionEvent: ShapeEvent {
+			explicit CollisionEvent (Shape *source): ShapeEvent(source) {};
+	};
+
+	struct DestructionEvent: ShapeEvent {
+			explicit DestructionEvent (Shape *source): ShapeEvent(source) {};
+	};
+
 
 	/**
 	 * @brief An abstract base class for subsequent shape objects. Note that
@@ -37,14 +62,18 @@ namespace gvt {
 	 * not an arbitrary center (which may vary from shape to shape).
 	 * @see gvt::Plane
 	 */
-	class Shape: public GVTEventDispatcher {
+	class Shape {
 		protected:
 			// mPosition encodes coordinates of the top-left corner, not of an
 			// arbitrary center
             Vectord mPosition, mVelocity, mAccel;
 			double mRotation{0};
-
 			bool mDestroyed{false}, mCollided{false};
+
+			EventDispatcher<PositionEvent> mPosDisp;
+			EventDispatcher<RotationEvent> mRotDisp;
+			EventDispatcher<CollisionEvent> mColDisp;
+			EventDispatcher<DestructionEvent> mDestrDisp;
 
 			Shape() = default;
 			explicit Shape(Vectord position);
@@ -102,7 +131,6 @@ namespace gvt {
 			 */
 			virtual inline bool destroyed() const;
 			void destroyed (bool destroyed);
-
 			/**
 			 * @return The angle with respect to the object origin of the
 			 * current @c Shape instance, given in radians.
@@ -131,6 +159,11 @@ namespace gvt {
 			 */
 			void move(Vectord const &t);
 
+			EventDispatcher<PositionEvent>& positionDispatcher();
+			EventDispatcher<RotationEvent>& rotationDispatcher();
+			EventDispatcher<CollisionEvent>& collisionDispatcher();
+			EventDispatcher<DestructionEvent>& destructionDispatcher();
+
 			/**
 			 * Lets a @c ShapeVisitor perform its operation on the 
 			 * implementing subclass.
@@ -147,18 +180,6 @@ namespace gvt {
 
 			virtual bool operator== (Shape const &o) const;
 			virtual bool operator!= (Shape const &o) const;
-	};
-
-	struct ShapeEvent: public Event {
-		enum class Type {
-			unspecified = 0, moved, rotated, collided
-		};
-
-		ShapeEvent::Type type{ShapeEvent::Type::unspecified};
-		Shape *shape{nullptr};
-
-		inline ShapeEvent();
-		inline ShapeEvent(ShapeEvent::Type type, Shape *shape);
 	};
 }
 

@@ -39,8 +39,8 @@ namespace gvt {
 
 			explicit Shape2DView(std::shared_ptr<Shape2D> const &shape);
 
-			void onShapeCollided() override;
-			void updateRotation() override;
+			void onShapeCollided(shared_ptr<CollisionEvent> e) override;
+			void updateRotationTransform() override;
 
 			void draw(RenderTarget &t, RenderStates s) const override;
 	};

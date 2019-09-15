@@ -26,7 +26,7 @@
 using SpaceshipView = gvt::SpaceshipView;
 
 
-const std::string SpaceshipView::SPACESHIP_TEXTURE = "graphics/spaceship.png";
+const std::string SpaceshipView::SHIP_TEXTURE = "graphics/spaceship.png";
 const std::string SpaceshipView::ACCEL_SPACESHIP_TEXTURE =
 	"graphics/spaceship-accelerating.png";
 
@@ -34,7 +34,7 @@ const std::string SpaceshipView::ACCEL_SPACESHIP_TEXTURE =
 SpaceshipView::SpaceshipView(shared_ptr<Spaceship> const &spaceship):
 		Shape2DView(spaceship), mShip{spaceship} {
 	if (
-			!mTexture.loadFromFile(gvt::staticsGet(SPACESHIP_TEXTURE)) ||
+			!mTexture.loadFromFile(gvt::staticsGet(SHIP_TEXTURE)) ||
 			!mAccelTexture.loadFromFile(
 				gvt::staticsGet(ACCEL_SPACESHIP_TEXTURE)
 			)
@@ -61,8 +61,8 @@ void SpaceshipView::draw(RenderTarget &target, RenderStates s) const {
 	}
 }
 
-void SpaceshipView::onShapeMoved() {
-	Shape2DView::onShapeMoved();
+void SpaceshipView::onShapeMoved(shared_ptr<PositionEvent> e) {
+	Shape2DView::onShapeMoved(e);
 
 	mAccel = mShip->acceleration().norm() != 0;
 }

@@ -23,25 +23,21 @@
 #include "ShapeGroupView.hpp"
 #include "view/SpaceshipView.hpp"
 
-using namespace std::placeholders;
-
 
 namespace gvt {
-	void ShapeGroupView::onShapeChanged (shared_ptr<Event> e) {
-		auto event = std::dynamic_pointer_cast<ShapeGroupEvent>(e);
+	void ShapeGroupView::onShapeInserted (shared_ptr<ShapeInsertionEvent> e) {
+		mViews[e->shape] = shared_ptr<ShapeView>(mFactory.makeView(e->shape));
+	}
 
-		if (event) {
-			if (event->type == ShapeGroupEvent::Type::attached) {
-				mViews[event->shape] = shared_ptr<ShapeView>(
-						mFactory.makeView(event->shape)
-				);
-			} else if (event->type == ShapeGroupEvent::Type::detached) {
-				mViews.erase(event->shape);
-			} else if (event->type == ShapeGroupEvent::Type::destroyed) {
-				mViews.clear();
-				mGroup.reset();
-			}
-		}
+	void ShapeGroupView::onShapeRemoved (shared_ptr<ShapeRemovalEvent> e) {
+		mViews.erase(e->shape);
+	}
+
+	void ShapeGroupView::onShapeGroupDestroyed (
+			shared_ptr<ShapeGroupDestructionEvent> e
+	) {
+		mViews.clear();
+		mGroup.reset();
 	}
 
 	void ShapeGroupView::onCreateDebugView() {
@@ -54,16 +50,26 @@ namespace gvt {
 
 	ShapeGroupView::ShapeGroupView(const shared_ptr<ShapeGroup> &group):
 			mGroup{group} {
+		auto _1 = std::placeholders::_1;
+
+		mAttachCbk = group->insertionDispatcher().addCallback(
+				std::bind(&ShapeGroupView::onShapeInserted, this, _1)
+		);
+		mRemovalCbk = group->removalDispatcher().addCallback(
+				std::bind(&ShapeGroupView::onShapeRemoved, this, _1)
+		);
+		mDestrCbk = group->destructionDispatcher().addCallback(
+			std::bind(&ShapeGroupView::onShapeGroupDestroyed, this, _1)
+		);
+
 		for (auto const &shape: *group)
 			mViews[shape] = shared_ptr<ShapeView>(mFactory.makeView(shape));
-
-		mCallback = group->addCallback(
-			std::bind(&ShapeGroupView::onShapeChanged, this, _1)
-		);
 	}
 
 	ShapeGroupView::~ShapeGroupView() {
-		mGroup->removeCallback(mCallback);
+		mGroup->insertionDispatcher().removeCallback(mAttachCbk);
+		mGroup->removalDispatcher().removeCallback(mRemovalCbk);
+		mGroup->destructionDispatcher().removeCallback(mDestrCbk);
 	}
 
 	void ShapeGroupView::setDebug(bool state) {

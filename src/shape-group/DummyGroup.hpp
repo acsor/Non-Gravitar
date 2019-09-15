@@ -23,7 +23,6 @@
 #define NON_GRAVITAR_DUMMY_GROUP_HPP
 
 #include "ShapeGroup.hpp"
-#include "utils/Event.hpp"
 
 
 namespace gvt {

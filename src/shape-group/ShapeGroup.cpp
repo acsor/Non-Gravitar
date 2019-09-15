@@ -20,15 +20,14 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 #include <algorithm>
-#include <utility>
 #include "ShapeGroup.hpp"
 
 
 namespace gvt {
 	ShapeGroup::~ShapeGroup() {
-		notify(std::make_shared<ShapeGroupEvent>(
-				ShapeGroupEvent::Type::destroyed, this, nullptr
-		));
+		mDestrDisp.raiseEvent(
+				std::make_shared<ShapeGroupDestructionEvent>(this)
+		);
 	}
 
 	void ShapeGroup::insert(shared_ptr<Shape> shape) {
@@ -38,9 +37,9 @@ namespace gvt {
 		mShapes.push_front(shape);
 		onInsertShape(shape);
 
-		notify(std::make_shared<ShapeGroupEvent>(
-			ShapeGroupEvent::Type::attached, this, shape
-		));
+		mInsertionDisp.raiseEvent(
+				std::make_shared<ShapeInsertionEvent>(this, shape)
+		);
 	}
 
 	void ShapeGroup::remove(shared_ptr<Shape> shape) {
@@ -50,26 +49,37 @@ namespace gvt {
 			onRemoveShape(*toRemove);
 			mShapes.erase(toRemove);
 
-			notify(std::make_shared<ShapeGroupEvent>(
-					ShapeGroupEvent::Type::detached, this, *toRemove
-			));
+			mRemovalDisp.raiseEvent(
+					std::make_shared<ShapeRemovalEvent> (this, *toRemove)
+			);
 		}
 	}
 
-	 void ShapeGroup::removeIf(
-	 	std::function<bool (shared_ptr<Shape>)> predicate
-	 ) {
-	 	for (auto i = mShapes.begin(); i != mShapes.end(); i++) {
-	 		if (predicate(*i)) {
-	 			auto e = std::make_shared<ShapeGroupEvent>(
-						ShapeGroupEvent::Type::detached, this, *i
-				);
+	void ShapeGroup::removeIf(
+			std::function<bool (shared_ptr<Shape>)> predicate
+	) {
+		for (auto i = mShapes.begin(); i != mShapes.end(); i++) {
+			if (predicate(*i)) {
+				auto e = std::make_shared<ShapeRemovalEvent>(this, *i);
 
-	 			onRemoveShape(*i);
-	 			i = mShapes.erase(i);
+				onRemoveShape(*i);
+				i = mShapes.erase(i);
 
-	 			notify(e);
-	 		}
-	 	}
-	 }
+				mRemovalDisp.raiseEvent(e);
+			}
+		}
+	}
+
+	EventDispatcher<ShapeInsertionEvent>& ShapeGroup::insertionDispatcher() {
+		return mInsertionDisp;
+	}
+
+	EventDispatcher<ShapeRemovalEvent>& ShapeGroup::removalDispatcher() {
+		return mRemovalDisp;
+	}
+
+	EventDispatcher<ShapeGroupDestructionEvent>&
+	ShapeGroup::destructionDispatcher() {
+		return mDestrDisp;
+	}
 }

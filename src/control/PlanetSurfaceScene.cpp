@@ -35,13 +35,9 @@ namespace gvt {
 		solarSystem->shapes()->insert(ship);
 	}
 
-	void PlanetSurfaceScene::onShipMoved (shared_ptr<Event> e) {
-		auto shapeEvent = std::dynamic_pointer_cast<ShapeEvent>(e);
-
-		if (shapeEvent && shapeEvent->type == ShapeEvent::Type::moved) {
-			if (mShip->position().y < 0)
-				exitPlanet();
-		}
+	void PlanetSurfaceScene::onShipMoved (shared_ptr<PositionEvent> e) {
+		if (mShip->position().y < 0)
+			exitPlanet();
 	}
 
 	PlanetSurfaceScene::PlanetSurfaceScene (shared_ptr<Planet> const &planet):
@@ -52,13 +48,13 @@ namespace gvt {
 
 		mPlanet = planet;
 		mShip = Game::getInstance()->spaceship();
-		mShipCallback = mShip->addCallback(
+		mShipCbk = mShip->positionDispatcher().addCallback(
 				std::bind(&PlanetSurfaceScene::onShipMoved, this, _1)
 		);
 	}
 
 	PlanetSurfaceScene::~PlanetSurfaceScene () {
-		mShip->removeCallback(mShipCallback);
+		mShip->positionDispatcher().removeCallback(mShipCbk);
 	}
 
 	void PlanetSurfaceScene::onUpdateGame (double seconds) {

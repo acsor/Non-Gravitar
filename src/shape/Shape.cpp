@@ -22,67 +22,87 @@
 #include "Shape.hpp"
 #include "Rectangle.hpp"
 
-using Shape = gvt::Shape;
-using ShapeEvent = gvt::ShapeEvent;
 
-
-Shape::Shape(Vectord position) : mPosition{position} {
-}
-
-void Shape::position(Vectord position) {
-	if (position != mPosition) {
-		mPosition = position;
-
-		notify(std::make_shared<ShapeEvent>(ShapeEvent::Type::moved, this));
+namespace gvt {
+	Shape::Shape(Vectord position) : mPosition{position} {
 	}
-}
 
-void Shape::move(const Vectord &t) {
-	mPosition += Vectord(t.x, t.y);
+	void Shape::position(Vectord position) {
+		if (position != mPosition) {
+			mPosition = position;
 
-	notify(std::make_shared<ShapeEvent>(ShapeEvent::Type::moved, this));
-}
-
-void Shape::animate(float time) {
-	if (mAccel.norm() != 0) {
-		mVelocity += mAccel * time;
-		move(mVelocity * time);
+			mPosDisp.raiseEvent(std::make_shared<PositionEvent>(this));
+		}
 	}
-}
 
-void Shape::rotation(double r) {
-	// TODO Shorten, if at all possible, this code that I have produced,
-	//  which at first sight looks orribly bigger than it ought to be
-	if (r >= 0)
-		mRotation = r - (2.0 * M_PI) * floor(r / (2.0 * M_PI));
-	else
-		mRotation = r - (2.0 * M_PI) * ceil(r / (2.0 * M_PI));
+	void Shape::move(const Vectord &t) {
+		mPosition += Vectord(t.x, t.y);
 
-	notify(std::make_shared<ShapeEvent>(ShapeEvent::Type::rotated, this));
-}
-
-void Shape::velocity(const Vectord &t) {
-	mVelocity = t;
-}
-
-void Shape::collided(bool collided) {
-	if (collided != mCollided) {
-		mCollided = collided;
-
-		notify(std::make_shared<ShapeEvent>(ShapeEvent::Type::collided, this));
+		mPosDisp.raiseEvent(std::make_shared<PositionEvent>(this));
 	}
-}
 
-void Shape::destroyed(bool destroyed) {
-	mDestroyed = destroyed;
-}
+	void Shape::animate(float time) {
+		if (mAccel.norm() != 0) {
+			mVelocity += mAccel * time;
+			move(mVelocity * time);
+		}
+	}
+
+	void Shape::rotation(double r) {
+		// TODO Shorten, if at all possible, this code that I have produced,
+		//  which at first sight looks orribly bigger than it ought to be
+		if (r >= 0)
+			mRotation = r - (2.0 * M_PI) * floor(r / (2.0 * M_PI));
+		else
+			mRotation = r - (2.0 * M_PI) * ceil(r / (2.0 * M_PI));
+
+		mRotDisp.raiseEvent(std::make_shared<RotationEvent>(this));
+	}
+
+	void Shape::velocity(const Vectord &t) {
+		mVelocity = t;
+	}
+
+	void Shape::collided(bool collided) {
+		if (collided != mCollided) {
+			mCollided = collided;
+
+			mColDisp.raiseEvent(std::make_shared<CollisionEvent>(this));
+		}
+	}
+
+	void Shape::destroyed(bool destroyed) {
+		if (destroyed != mDestroyed) {
+			mDestroyed = destroyed;
+
+			mDestrDisp.raiseEvent(std::make_shared<DestructionEvent>(this));
+		}
+	}
 
 
-bool Shape::operator== (Shape const &o) const {
-	return mPosition == o.mPosition && mVelocity == mVelocity &&
-			mAccel == o .mAccel && mRotation == o.mRotation;
-}
+	EventDispatcher<PositionEvent>& Shape::positionDispatcher() {
+		return mPosDisp;
+	}
 
-bool Shape::operator!= (Shape const &o) const {
-	return !operator==(o);
+	EventDispatcher<RotationEvent>& Shape::rotationDispatcher() {
+		return mRotDisp;
+	}
+
+	EventDispatcher<CollisionEvent>& Shape::collisionDispatcher() {
+		return mColDisp;
+	}
+
+	EventDispatcher<DestructionEvent>& Shape::destructionDispatcher() {
+		return mDestrDisp;
+	}
+
+
+	bool Shape::operator== (Shape const &o) const {
+		return mPosition == o.mPosition && mVelocity == mVelocity &&
+			   mAccel == o .mAccel && mRotation == o.mRotation;
+	}
+
+	bool Shape::operator!= (Shape const &o) const {
+		return !operator==(o);
+	}
 }

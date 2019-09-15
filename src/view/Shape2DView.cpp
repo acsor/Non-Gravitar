@@ -44,13 +44,15 @@ namespace gvt {
 
 	Shape2DView::Shape2DView(shared_ptr<Shape2D> const &shape):
 			ShapeView{shape}, mShape2D{shape} {
-		updateRotation();
+		updateRotationTransform();
 
 		onCreateDebugView();
-		onShapeCollided();
+		debugColor(
+			mShape->collided() ? COLLISION_DEBUG_COLOR: DEFAULT_DEBUG_COLOR
+		);
 	}
 
-	void Shape2DView::updateRotation() {
+	void Shape2DView::updateRotationTransform() {
 		auto center = mShape2D->rotationCenter();
 
 		mRotation = sf::Transform::Identity;
@@ -59,8 +61,8 @@ namespace gvt {
 		);
 	}
 
-	void Shape2DView::onShapeCollided() {
-		ShapeView::onShapeCollided();
+	void Shape2DView::onShapeCollided(shared_ptr<CollisionEvent> e) {
+		ShapeView::onShapeCollided(e);
 
 		debugColor(
 			mShape->collided() ? COLLISION_DEBUG_COLOR: DEFAULT_DEBUG_COLOR

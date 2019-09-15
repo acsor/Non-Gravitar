@@ -25,7 +25,6 @@
 #include "catch.hpp"
 
 using Event = gvt::Event;
-using GVTEventDispatcher = gvt::GVTEventDispatcher;
 
 
 namespace gvt {
@@ -62,7 +61,7 @@ namespace gvt {
 }
 
 
-TEST_CASE("EventHandler::handle(), EventDispatcher::notify()", "[Event]") {
+TEST_CASE("EventHandler::handle(), EventDispatcher::raiseEvent()", "[Event]") {
 	using SE = gvt::SimpleEvent;
 
 	gvt::EventDispatcher<gvt::SimpleEvent> s;
@@ -73,18 +72,18 @@ TEST_CASE("EventHandler::handle(), EventDispatcher::notify()", "[Event]") {
 		std::bind(&gvt::SimpleCallback::operator(), &l, std::placeholders::_1)
 	);
 
-	REQUIRE(s.callbacks() == 1);
+	REQUIRE(s.callbacksCount() == 1);
 
 	for (unsigned i = 0; i < repeatA; i++)
-		s.notify(std::make_shared<SE>(SE::Type::a));
+		s.raiseEvent(std::make_shared<SE>(SE::Type::a));
 
 	for (unsigned i = 0; i < repeatB; i++)
-		s.notify(std::make_shared<SE>(SE::Type::b));
+		s.raiseEvent(std::make_shared<SE>(SE::Type::b));
 
 	REQUIRE(l.eventA == repeatA);
 	REQUIRE(l.eventB == repeatB);
 
-	REQUIRE(s.callbacks() == 1);
+	REQUIRE(s.callbacksCount() == 1);
 	s.removeCallback(callback);
-	REQUIRE(s.callbacks() == 0);
+	REQUIRE(s.callbacksCount() == 0);
 }

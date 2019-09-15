@@ -36,29 +36,29 @@ using RenderTarget = sf::RenderTarget;
 namespace gvt {
 	class ShapeView: public sf::Drawable, public DebuggableView {
 		private:
-			shared_ptr<gvt_callback> mCallback;
-
-			void shapeChangeCallback (shared_ptr<Event> e);
+			shared_ptr<Callback<PositionEvent>> mPosCbk;
+			shared_ptr<Callback<RotationEvent>> mRotCbk;
+			shared_ptr<Callback<CollisionEvent>> mColCbk;
 		protected:
 			sf::Transform mTranslation, mRotation;
 			shared_ptr<Shape> mShape;
 
-			explicit ShapeView(shared_ptr<Shape> const &shape);
+			explicit ShapeView(shared_ptr<Shape> shape);
 
 			/**
 			 * Updates the rotation sf::Transform, to be efficiently
 			 * exploited by subclasses when rotating the drawn object.
 			 */
-			virtual void updateRotation() = 0;
+			virtual void updateRotationTransform() = 0;
 			/**
 			 * Updates the translation sf::Transform, to be efficiently
 			 * exploited by subclasses when moving the drawn object.
 			 */
-			virtual void updateTranslation();
+			virtual void updateTranslationTransform();
 
-			virtual void onShapeMoved();
-			virtual void onShapeRotated();
-			virtual void onShapeCollided() {};
+			virtual void onShapeMoved(shared_ptr<PositionEvent> e);
+			virtual void onShapeRotated(shared_ptr<RotationEvent> e);
+			virtual void onShapeCollided(shared_ptr<CollisionEvent> e) {};
 		public:
 			friend class ShapeGroupView;
 

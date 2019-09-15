@@ -37,8 +37,7 @@ namespace gvt {
 			virtual ~Event() = default;
     };
 
-	template<typename E> using callback = std::function<void (shared_ptr<E>)>;
-	using gvt_callback = callback<Event>;
+	template<typename E> using Callback = std::function<void (shared_ptr<E>)>;
 
 	/**
 	 * Class transmitting events to registered objects. Such events will be 
@@ -54,7 +53,7 @@ namespace gvt {
 		public:
 			virtual ~EventDispatcher();
 
-			void addCallback(shared_ptr<callback<E>> c);
+			void addCallback(shared_ptr<Callback<E>> c);
 			/**
 			 * Stores @c c as a callback to be invoked during a call to @c
 			 * notify().
@@ -62,13 +61,13 @@ namespace gvt {
 			 * @return A pointer to the stored data so that the
 			 * callback can be removed at a later time.
 			 */
-			shared_ptr<callback<E>> addCallback(callback<E> c);
+			shared_ptr<Callback<E>> addCallback(Callback<E> c);
 			/**
 			 * Removes a callback, wrapped by a @c shared_ptr<callback<E>>
 			 * usually returned by @c addCallback().
 			 * @param c Callback to remove from this dispatcher.
 			 */
-			void removeCallback(shared_ptr<callback<E>> &c);
+			void removeCallback(shared_ptr<Callback<E>> &c);
 			/**
 			 * Clears out all callbacks presently stored.
 			 */
@@ -76,15 +75,12 @@ namespace gvt {
 			/**
 			 * Notify registered callbacks the rising of @c event.
 			 */
-			void notify(shared_ptr<E> event);
+			void raiseEvent(shared_ptr<E> event);
 
-			size_t callbacks() const;
+			size_t callbacksCount() const;
 		private:
-			std::list<shared_ptr<callback<E>>> mCallbacks;
+			std::list<shared_ptr<Callback<E>>> mCallbacks;
 	};
-
-	using gvt_callback = callback<gvt::Event>;
-	using GVTEventDispatcher = EventDispatcher<gvt::Event>;
 }
 
 

@@ -35,7 +35,7 @@ namespace gvt {
 			shared_ptr<Planet> mPlanet;
 			shared_ptr<Spaceship> mShip;
 
-			shared_ptr<gvt_callback> mShipCallback;
+			shared_ptr<Callback<PositionEvent>> mShipCbk;
 
 			// New missiles' lifetime, given in seconds
 			static long const constexpr MISSILE_LIFESPAN = 1000;
@@ -49,7 +49,7 @@ namespace gvt {
 			 * PlanetSurfaceScene and returning back to the previous game scene.
 			 */
 			void exitPlanet();
-			void onShipMoved (shared_ptr<Event> e);
+			void onShipMoved (shared_ptr<PositionEvent> e);
 		public:
 			explicit PlanetSurfaceScene(shared_ptr<Planet> const &planet);
 			~PlanetSurfaceScene() override;

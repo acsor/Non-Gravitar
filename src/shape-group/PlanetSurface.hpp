@@ -76,7 +76,7 @@ namespace gvt {
 	}
 
 	template<typename iter> void PlanetSurface::bunkers(iter begin, iter end) {
-		mBunkers = std::vector<shared_ptr<Bunker>>(begin, end);
+		mBunkers = std::forward_list<shared_ptr<Bunker>>(begin, end);
 	}
 
 	std::forward_list<shared_ptr<Bunker>> PlanetSurface::bunkers() const {

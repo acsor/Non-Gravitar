@@ -24,6 +24,7 @@
 
 #include <list>
 #include <memory>
+#include <utility>
 #include "shape/Shape.hpp"
 #include "utils/Event.hpp"
 
@@ -32,7 +33,33 @@ template<typename T> using weak_ptr = std::weak_ptr<T>;
 
 
 namespace gvt {
-	class ShapeGroup: public GVTEventDispatcher {
+	class ShapeGroup;
+
+	struct ShapeGroupEvent: public Event {
+			ShapeGroup *group{nullptr};
+			shared_ptr<Shape> shape;
+
+			inline ShapeGroupEvent(ShapeGroup *g, shared_ptr<Shape> s);
+	};
+
+	struct ShapeInsertionEvent: ShapeGroupEvent {
+			inline ShapeInsertionEvent(ShapeGroup *g, shared_ptr<Shape> s);
+	};
+
+	struct ShapeRemovalEvent: ShapeGroupEvent {
+			inline ShapeRemovalEvent(ShapeGroup *g, shared_ptr<Shape> s);
+	};
+
+	struct ShapeGroupDestructionEvent: ShapeGroupEvent {
+			inline explicit ShapeGroupDestructionEvent(ShapeGroup *g);
+	};
+
+
+	class ShapeGroup {
+		private:
+			EventDispatcher<ShapeInsertionEvent> mInsertionDisp;
+			EventDispatcher<ShapeRemovalEvent> mRemovalDisp;
+			EventDispatcher<ShapeGroupDestructionEvent> mDestrDisp;
         protected:
             std::list<shared_ptr<Shape>> mShapes;
 
@@ -50,28 +77,19 @@ namespace gvt {
 		public:
 			using iterator = std::list<shared_ptr<Shape>>::iterator;
 
-			~ShapeGroup() override;
+			virtual ~ShapeGroup();
 			void insert(shared_ptr<Shape> shape);
 			void remove(shared_ptr<Shape> shape);
 			void removeIf(std::function<bool (shared_ptr<Shape>)> predicate);
 			inline size_t size () const;
 
+			EventDispatcher<ShapeInsertionEvent>& insertionDispatcher();
+			EventDispatcher<ShapeRemovalEvent>& removalDispatcher();
+			EventDispatcher<ShapeGroupDestructionEvent>& destructionDispatcher();
+
 			inline iterator begin();
 			inline iterator end();
 	};
-
-    struct ShapeGroupEvent: public Event {
-        enum class Type {
-            unspecified = 0, attached, detached, destroyed
-        };
-
-        Type type{Type::unspecified};
-        ShapeGroup *group{nullptr};
-        shared_ptr<Shape> shape;
-
-        ShapeGroupEvent() = default;
-        inline ShapeGroupEvent(Type t, ShapeGroup *g, shared_ptr<Shape> s);
-    };
 }
 
 
@@ -89,9 +107,22 @@ namespace gvt {
 		return mShapes.end();
 	}
 
-	ShapeGroupEvent::ShapeGroupEvent(
-		ShapeGroupEvent::Type t, ShapeGroup *g, shared_ptr<Shape> s
-	): type{t}, group{g}, shape{s} {
+
+	ShapeGroupEvent::ShapeGroupEvent(ShapeGroup *g, shared_ptr<Shape> s):
+			group{g}, shape{std::move(s)} {
+	}
+
+	ShapeInsertionEvent::ShapeInsertionEvent(ShapeGroup *g, shared_ptr<Shape> s):
+			ShapeGroupEvent(g, std::move(s)) {
+	}
+
+	ShapeRemovalEvent::ShapeRemovalEvent(ShapeGroup *g, shared_ptr<Shape> s):
+			ShapeGroupEvent(g, std::move(s)) {
+	}
+
+	ShapeGroupDestructionEvent::ShapeGroupDestructionEvent(ShapeGroup *g):
+		ShapeGroupEvent(g, nullptr) {
+
 	}
 }
 

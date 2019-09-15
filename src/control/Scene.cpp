@@ -40,7 +40,7 @@ namespace gvt {
 	}
 
 
-	Scene::Scene(Vectord size, shared_ptr<ShapeGroup> shapes):
+	Scene::Scene(Vectord size, shared_ptr<CollisionGroup> shapes):
 			mSize{size}, mShapes{std::move(shapes)} {
 		mGame = Game::getInstance();
 		mShapesView.reset(new ShapeGroupView(mShapes));
@@ -48,17 +48,17 @@ namespace gvt {
 
 		initializeDestroyGraph();
 
-		mCollisionCallback = mShapes->addCallback(
-			std::bind(&Scene::onCollisionOccurred, this, _1)
+		mCollisionCbk = mShapes->collisionDispatcher().addCallback(
+			std::bind(&Scene::onCollision, this, _1)
 		);
-		mDestroyCallback = mShapes->addCallback(
-			std::bind(&Scene::onShapeDestroyed, this, _1)
+		mDestroyCbk = mShapes->removalDispatcher().addCallback(
+			std::bind(&Scene::onShapeRemoved, this, _1)
 		);
 	}
 
 	Scene::~Scene() {
-		mShapes->removeCallback(mDestroyCallback);
-		mShapes->removeCallback(mCollisionCallback);
+		mShapes->removalDispatcher().removeCallback(mDestroyCbk);
+		mShapes->collisionDispatcher().removeCallback(mCollisionCbk);
 	}
 
 	void Scene::initializeDestroyGraph() {
@@ -89,32 +89,24 @@ namespace gvt {
 		}
 	}
 
-	void Scene::onCollisionOccurred (shared_ptr<gvt::Event> const &e) {
-		auto collision = std::dynamic_pointer_cast<CollisionEvent>(e);
+	void Scene::onCollision (shared_ptr<PairCollisionEvent> e) {
+		auto first = TypeVertex(typeid(*e->first));
+		auto second = TypeVertex(typeid(*e->second));
 
-		if (collision) {
-			auto first = TypeVertex(typeid(*collision->first));
-			auto second = TypeVertex(typeid(*collision->second));
-
-			if (mDestroyGraph.containsEdge(first, second))
-				collision->second->destroyed(true);
-			if (mDestroyGraph.containsEdge(second, first))
-				collision->first->destroyed(true);
-		}
+		if (mDestroyGraph.containsEdge(first, second))
+			e->second->destroyed(true);
+		if (mDestroyGraph.containsEdge(second, first))
+			e->first->destroyed(true);
 	}
 
-	void Scene::onShapeDestroyed (shared_ptr<gvt::Event> const &e) {
-		auto destruction = std::dynamic_pointer_cast<ShapeGroupEvent>(e);
-
-		if (destruction && destruction->type == ShapeGroupEvent::Type::detached) {
-			if (std::dynamic_pointer_cast<Bunker>(destruction->shape)) {
-				mGame->gameInfo()->upgradeScore(BUNKER_SCORE);
+	void Scene::onShapeRemoved (shared_ptr<ShapeRemovalEvent> e) {
+		if (std::dynamic_pointer_cast<Bunker>(e->shape)) {
+			mGame->gameInfo()->upgradeScore(BUNKER_SCORE);
 			// TODO Using this logic, the spaceship is recognized destroyed
 			//  even when it is simply being inserted from one scene into
 			//  another. Fix this.
-			} else if (std::dynamic_pointer_cast<Spaceship>(destruction->shape)) {
-				mGame->gameInfo()->decrementSpaceships();
-			}
+		} else if (std::dynamic_pointer_cast<Spaceship>(e->shape)) {
+			mGame->gameInfo()->decrementSpaceships();
 		}
 	}
 

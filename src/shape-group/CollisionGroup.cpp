@@ -27,27 +27,23 @@
 
 namespace gvt {
 	void CollisionGroup::onInsertShape (shared_ptr<Shape> shape) {
-        shape->addCallback(mCallback);
-        updateCollisions();
+		shape->positionDispatcher().addCallback(mPosCallback);
+		shape->rotationDispatcher().addCallback(mRotCallback);
+
+		updateCollisions();
 	}
 
 	void CollisionGroup::onRemoveShape (shared_ptr<Shape> shape) {
-        shape->removeCallback(mCallback);
+		shape->positionDispatcher().removeCallback(mPosCallback);
+		shape->rotationDispatcher().removeCallback(mRotCallback);
 	}
 
-	void CollisionGroup::shapeChangeCallback (shared_ptr<Event> e) {
-		auto shapeEvent = std::dynamic_pointer_cast<ShapeEvent>(e);
+	void CollisionGroup::onShapeMoved (shared_ptr<ShapeEvent> e) {
+		updateCollisions();
+	}
 
-		if (shapeEvent) {
-			switch (shapeEvent->type) {
-				case ShapeEvent::Type::moved:
-				case ShapeEvent::Type::rotated:
-					updateCollisions();
-					break;
-				default:
-					break;
-			}
-		}
+	void CollisionGroup::onShapeRotated (shared_ptr<RotationEvent> e) {
+		updateCollisions();
 	}
 
 	void CollisionGroup::updateCollisions() {
@@ -74,7 +70,9 @@ namespace gvt {
 					first->get()->collided(true);
 					second->get()->collided(true);
 
-					notify(std::make_shared<CollisionEvent>(*first, *second));
+					mCollisionDisp.raiseEvent(
+						std::make_shared<PairCollisionEvent>(*first, *second)
+					);
 				}
 
 				second++;
@@ -88,15 +86,21 @@ namespace gvt {
 	}
 
 	CollisionGroup::CollisionGroup() {
-		using namespace std::placeholders;
+		auto _1 = std::placeholders::_1;
 
-		mCallback = std::make_shared<gvt_callback>(
-			std::bind(&CollisionGroup::shapeChangeCallback, this, _1)
+		mPosCallback = std::make_shared<Callback<PositionEvent>>(
+			std::bind(&CollisionGroup::onShapeMoved, this, _1)
+		);
+		mRotCallback = std::make_shared<Callback<RotationEvent>>(
+			std::bind(&CollisionGroup::onShapeRotated, this, _1)
 		);
 	}
 
+	EventDispatcher<PairCollisionEvent>& CollisionGroup::collisionDispatcher() {
+		return mCollisionDisp;
+	}
 
-	CollisionEvent::CollisionEvent(
+	PairCollisionEvent::PairCollisionEvent(
 			shared_ptr<Shape> _first, shared_ptr<Shape> _second
 	): first{std::move(_first)}, second{std::move(_second)} {
 	}

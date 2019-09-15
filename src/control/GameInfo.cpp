@@ -24,6 +24,16 @@
 
 
 namespace gvt {
+	SpaceshipCountEvent::SpaceshipCountEvent(unsigned old, unsigned _new):
+		oldValue{old}, newValue{_new} {
+
+	}
+
+	ScoreEvent::ScoreEvent(unsigned old, unsigned _new):
+			oldValue{old}, newValue{_new} {
+	}
+
+
 	GameInfo::GameInfo (unsigned score, unsigned spaceships) {
 		mScore = score;
 		mSpaceships = spaceships;
@@ -36,16 +46,25 @@ namespace gvt {
 			);
 		mSpaceships--;
 
-		notify(std::make_shared<GameInfoChangeEvent>(
-				GameInfoChangeEvent::spaceships, mSpaceships
+		mShipDisp.raiseEvent(std::make_shared<SpaceshipCountEvent>(
+				mSpaceships + 1, mSpaceships
 		));
 	}
 
 	void GameInfo::upgradeScore (unsigned deltaScore) {
 		mScore += deltaScore;
 
-		notify(std::make_shared<GameInfoChangeEvent>(
-				GameInfoChangeEvent::score, mScore
+		mScoreDisp.raiseEvent(std::make_shared<ScoreEvent>(
+				mScore - deltaScore, mScore
 		));
+	}
+
+
+	EventDispatcher<SpaceshipCountEvent>& GameInfo::shipCountDispatcher() {
+		return mShipDisp;
+	}
+
+	EventDispatcher<ScoreEvent>& GameInfo::scoreDispatcher() {
+		return mScoreDisp;
 	}
 }

@@ -25,27 +25,25 @@
 
 
 namespace gvt {
-	void SolarSystemScene::onEnterPlanet (shared_ptr<gvt::Event> e) {
-		auto ce = std::dynamic_pointer_cast<CollisionEvent>(e);
+	void SolarSystemScene::onCollision (shared_ptr<PairCollisionEvent> e) {
+		Scene::onCollision(e);
 
-		if (ce) {
-			auto ship = std::dynamic_pointer_cast<Spaceship>(ce->first);
-			auto planet = std::dynamic_pointer_cast<Planet>(ce->second);
+		auto ship = std::dynamic_pointer_cast<Spaceship>(e->first);
+		auto planet = std::dynamic_pointer_cast<Planet>(e->second);
 
-			if (!ship)
-				ship = std::dynamic_pointer_cast<Spaceship>(ce->second);
-			if (!planet)
-				planet = std::dynamic_pointer_cast<Planet>(ce->first);
+		if (!ship)
+			ship = std::dynamic_pointer_cast<Spaceship>(e->second);
+		if (!planet)
+			planet = std::dynamic_pointer_cast<Planet>(e->first);
 
-			if (ship && planet) {
-				auto *game = Game::getInstance();
+		if (ship && planet) {
+			auto *game = Game::getInstance();
 
-				planet->surface()->insert(game->acquireSpaceship());
-				game->pushScene(std::make_shared<PlanetSurfaceScene>(planet));
+			planet->surface()->insert(game->acquireSpaceship());
+			game->pushScene(std::make_shared<PlanetSurfaceScene>(planet));
 
-				ship->acceleration({0, 0});
-				ship->position({planet->surface()->width() / 2.0, 0});
-			}
+			ship->acceleration({0, 0});
+			ship->position({planet->surface()->width() / 2.0, 0});
 		}
 	}
 
@@ -53,12 +51,12 @@ namespace gvt {
 			Scene({system->width(), system->height()}, system) {
 		auto _1 = std::placeholders::_1;
 
-		mPlanetHandle = mShapes->addCallback(
-			std::bind(&SolarSystemScene::onEnterPlanet, this, _1)
+		mPlanetHandle = mShapes->collisionDispatcher().addCallback(
+			std::bind(&SolarSystemScene::onCollision, this, _1)
 		);
 	}
 
 	SolarSystemScene::~SolarSystemScene () {
-		mShapes->removeCallback(mPlanetHandle);
+		mShapes->collisionDispatcher().removeCallback(mPlanetHandle);
 	}
 }

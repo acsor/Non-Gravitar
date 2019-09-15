@@ -39,14 +39,15 @@ template<typename T> using unique_ptr = std::unique_ptr<T>;
 namespace gvt {
 	class ShapeGroupView: public sf::Drawable, public DebuggableView {
 		private:
-			shared_ptr<gvt_callback> mCallback;
 			ShapeViewFactory mFactory;
 
-			/**
-			 * Monitors rendered shapes, taking actions when their states
-			 * changes.
-			 */
-			void onShapeChanged (shared_ptr<Event> e);
+			shared_ptr<Callback<ShapeInsertionEvent>> mAttachCbk;
+			shared_ptr<Callback<ShapeRemovalEvent>> mRemovalCbk;
+			shared_ptr<Callback<ShapeGroupDestructionEvent>> mDestrCbk;
+
+			void onShapeInserted (shared_ptr<ShapeInsertionEvent> e);
+			void onShapeRemoved (shared_ptr<ShapeRemovalEvent> e);
+			void onShapeGroupDestroyed (shared_ptr<ShapeGroupDestructionEvent> e);
 		protected:
 			shared_ptr<ShapeGroup> mGroup;
 			mutable std::unordered_map<shared_ptr<Shape>, shared_ptr<ShapeView>> mViews;

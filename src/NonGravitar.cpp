@@ -28,7 +28,7 @@
 #include "shape-group/SolarSystem.hpp"
 #include "shape-group/PlanetSurface.hpp"
 
-using sf_callback = gvt::callback<sf::Event>;
+using sf_callback = gvt::Callback<sf::Event>;
 
 
 void closeWindow (sf::RenderWindow &w, shared_ptr<sf::Event> e);
@@ -49,13 +49,14 @@ int main () {
 
 	solarSystem->insert(game->acquireSpaceship());
 	game->pushScene(rootScene);
-	game->viewEventsDispatcher()->addCallback(
+	game->viewEventsDispatcher().addCallback(
 			[&w] (shared_ptr<sf::Event> const &e) -> void { closeWindow(w, e); }
 	);
 
 	while (w.isOpen()) {
 		while (w.pollEvent(e))
-			game->viewEventsDispatcher()->notify(std::make_shared<sf::Event>(e));
+			game->viewEventsDispatcher().raiseEvent(
+					std::make_shared<sf::Event>(e));
 
 		game->updateGameLoop();
 

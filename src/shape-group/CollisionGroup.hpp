@@ -30,26 +30,33 @@
 namespace gvt {
 	class CollisionGroup;
 
+	struct PairCollisionEvent: public Event {
+		shared_ptr<Shape> first, second;
+
+		PairCollisionEvent(shared_ptr<Shape> _first, shared_ptr<Shape> _second);
+	};
+
 	/**
 	 * A subclass of @c ShapeGroup handling collision between objects.
 	 */
 	class CollisionGroup: public ShapeGroup {
         private:
-			shared_ptr<gvt_callback> mCallback;
+			EventDispatcher<PairCollisionEvent> mCollisionDisp;
 
-			void shapeChangeCallback (shared_ptr<Event> e);
+			shared_ptr<Callback<PositionEvent>> mPosCallback;
+			shared_ptr<Callback<RotationEvent>> mRotCallback;
+
+			void onShapeMoved (shared_ptr<ShapeEvent> e);
+			void onShapeRotated (shared_ptr<RotationEvent> e);
+
 			void updateCollisions();
 		protected:
 			void onInsertShape (shared_ptr<Shape> shape) override;
 			void onRemoveShape (shared_ptr<Shape> shape) override;
 		public:
 			CollisionGroup();
-	};
 
-	struct CollisionEvent: public Event {
-		shared_ptr<Shape> first, second;
-
-		CollisionEvent(shared_ptr<Shape> _first, shared_ptr<Shape> _second);
+			EventDispatcher<PairCollisionEvent>& collisionDispatcher();
 	};
 }
 

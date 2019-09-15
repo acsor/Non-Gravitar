@@ -30,10 +30,17 @@
 
 
 namespace gvt {
+	struct FuelEvent: public gvt::Event {
+			unsigned oldAmount, newAmount;
+
+			FuelEvent(unsigned old, unsigned _new);
+	};
+
 	class Spaceship: public Shape2D {
 		private:
 			// Represents the current fuel amount in the ship
 			unsigned mFuel;
+			EventDispatcher<FuelEvent> mFuelDisp;
 
 			/** Width and height properties of any given spaceship. Note that
 			 * these measures depend on the texture data found in
@@ -69,23 +76,16 @@ namespace gvt {
 			 * fuel in it, @c false otherwise.
 			 */
 			bool charged() const;
-
-			shared_ptr<RoundMissile>
-			shoot(double radius, double speed, long lifespan) const;
-
-			void accept(ShapeVisitor &visitor) override;
-
+			shared_ptr<RoundMissile> shoot(
+					double radius, double speed, long lifespan
+			) const;
 			inline double width() const override;
 			inline double height() const override;
 
+			void accept(ShapeVisitor &visitor) override;
 			BoundingPolygon collisionPolygon() const override;
+			EventDispatcher<FuelEvent>& fuelDispatcher();
 			bool operator== (Shape const &o) const override;
-	};
-
-	struct FuelChangedEvent: public gvt::Event {
-		unsigned oldAmount, newAmount;
-
-		FuelChangedEvent(unsigned old, unsigned _new);
 	};
 }
 

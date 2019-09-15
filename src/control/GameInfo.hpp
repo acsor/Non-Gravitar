@@ -26,10 +26,25 @@
 
 
 namespace gvt {
-	class GameInfo: public GVTEventDispatcher {
+	struct SpaceshipCountEvent: public gvt::Event {
+			unsigned oldValue, newValue;
+
+			SpaceshipCountEvent(unsigned old, unsigned _new);
+	};
+
+	struct ScoreEvent: public gvt::Event {
+			unsigned oldValue, newValue;
+
+			ScoreEvent(unsigned old, unsigned _new);
+	};
+
+	class GameInfo {
 		private:
 			unsigned mSpaceships;
 			unsigned mScore;
+
+			EventDispatcher<SpaceshipCountEvent> mShipDisp;
+			EventDispatcher<ScoreEvent> mScoreDisp;
 		public:
 			GameInfo (unsigned score, unsigned spaceships);
 
@@ -38,17 +53,9 @@ namespace gvt {
 
 			void upgradeScore (unsigned deltaScore);
 			inline unsigned score() const;
-	};
 
-	struct GameInfoChangeEvent: public gvt::Event {
-		enum Type {
-				spaceships, score, fuel
-		};
-
-		inline GameInfoChangeEvent (Type _type, unsigned _value);
-
-		Type type;
-		unsigned value;
+			EventDispatcher<SpaceshipCountEvent>& shipCountDispatcher();
+			EventDispatcher<ScoreEvent>& scoreDispatcher();
 	};
 }
 
@@ -60,10 +67,6 @@ namespace gvt {
 
 	inline unsigned GameInfo::score() const {
 		return mScore;
-	}
-
-	GameInfoChangeEvent::GameInfoChangeEvent (Type _type, unsigned _value):
-		type{_type}, value{_value} {
 	}
 }
 

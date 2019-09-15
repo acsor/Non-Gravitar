@@ -36,7 +36,10 @@ namespace gvt {
 
 			shared_ptr<GameInfo> mInfo;
 			shared_ptr<Spaceship> mShip;
-			shared_ptr<gvt_callback> mFuelCallback, mScoreCallback, mShipCallback;
+			
+			shared_ptr<Callback<FuelEvent>> mFuelCbk;
+			shared_ptr<Callback<SpaceshipCountEvent>> mShipCbk;
+			shared_ptr<Callback<ScoreEvent>> mScoreCbk;
 
 			sf::Font mFont;
 			sf::Texture mShipTexture;

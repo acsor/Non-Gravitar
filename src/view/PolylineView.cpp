@@ -36,7 +36,7 @@ namespace gvt {
 		}
 	}
 
-	void PolylineView::updateRotation() {
+	void PolylineView::updateRotationTransform() {
 		// TODO Implement, if necessary
 	}
 

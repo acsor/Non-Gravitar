@@ -25,6 +25,12 @@
 
 
 namespace gvt {
+	FuelEvent::FuelEvent(unsigned old, unsigned _new) {
+		oldAmount = old;
+		newAmount = _new;
+	}
+
+
 	Spaceship::Spaceship(Vectord position, unsigned fuel):
 			Shape2D::Shape2D(position) {
 		mFuel = fuel;
@@ -48,18 +54,18 @@ namespace gvt {
 	}
 
 	void Spaceship::rechargeFuel(Fuel &fuel) {
-		auto e = std::make_shared<FuelChangedEvent>(mFuel, 0);
+		auto e = std::make_shared<FuelEvent>(mFuel, 0);
 
 		mFuel += fuel.fuel();
 		e->newAmount = mFuel;
 
 		fuel.empty();
 
-		notify(e);
+		mFuelDisp.raiseEvent(e);
 	}
 
 	void Spaceship::dischargeFuel(unsigned amount) {
-		auto e = std::make_shared<FuelChangedEvent>(mFuel, 0);
+		auto e = std::make_shared<FuelEvent>(mFuel, 0);
 
 		if (amount > mFuel)
 			mFuel = 0;
@@ -68,7 +74,7 @@ namespace gvt {
 
 		e->newAmount = mFuel;
 
-		notify(e);
+		mFuelDisp.raiseEvent(e);
 	}
 
 	bool Spaceship::charged() const {
@@ -98,6 +104,10 @@ namespace gvt {
 		visitor.visitSpaceship(*this);
 	}
 
+	EventDispatcher<FuelEvent>& Spaceship::fuelDispatcher() {
+		return mFuelDisp;
+	}
+
 	bool Spaceship::operator==(Shape const &o) const {
 		auto *other = dynamic_cast<Spaceship const *>(&o);
 
@@ -105,11 +115,5 @@ namespace gvt {
 			return Shape::operator==(*other) && mFuel == other->mFuel;
 
 		return false;
-	}
-
-
-	FuelChangedEvent::FuelChangedEvent(unsigned old, unsigned _new) {
-		oldAmount = old;
-		newAmount = _new;
 	}
 }

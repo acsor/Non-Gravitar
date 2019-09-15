@@ -26,6 +26,7 @@
 #include <typeindex>
 #include <SFML/Graphics.hpp>
 #include "shape-group/ShapeGroup.hpp"
+#include "shape-group/CollisionGroup.hpp"
 #include "view/ShapeGroupView.hpp"
 #include "utils/Event.hpp"
 #include "utils/ALGraph.hpp"
@@ -55,13 +56,14 @@ namespace gvt {
 			Game *mGame;
 
 			Vectord mSize;
-			shared_ptr<ShapeGroup> mShapes;
+			shared_ptr<CollisionGroup> mShapes;
 			shared_ptr<ShapeGroupView> mShapesView;
 
-			gvt::ALGraph<std::type_index> mDestroyGraph;
-			std::shared_ptr<gvt_callback> mDestroyCallback, mCollisionCallback;
+			ALGraph<std::type_index> mDestroyGraph;
+			shared_ptr<Callback<ShapeRemovalEvent>> mDestroyCbk;
+			shared_ptr<Callback<PairCollisionEvent>> mCollisionCbk;
 
-			Scene(Vectord size, shared_ptr<ShapeGroup> shapes);
+			Scene(Vectord size, shared_ptr<CollisionGroup> shapes);
 			~Scene() override;
 
 			/**
@@ -71,8 +73,8 @@ namespace gvt {
 			 * clashing with an object of type v destroys the latter.
 			 */
 			void initializeDestroyGraph();
-			void onCollisionOccurred (shared_ptr<gvt::Event> const &e);
-			void onShapeDestroyed (shared_ptr<gvt::Event> const &e);
+			virtual void onCollision (shared_ptr<PairCollisionEvent> e);
+			void onShapeRemoved (shared_ptr<ShapeRemovalEvent> e);
 		public:
 			friend class Game;
 			

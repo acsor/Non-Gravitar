@@ -73,27 +73,18 @@ namespace gvt {
 	}
 
 	void GameInfoView::onFuelChanged (shared_ptr<gvt::Event> const &e) {
-		auto fuelEvent = std::dynamic_pointer_cast<FuelChangedEvent>(e);
+		auto fuelEvent = std::dynamic_pointer_cast<FuelEvent>(e);
 
-		if (fuelEvent) {
+		if (fuelEvent)
 			updateText();
-		}
 	}
 
 	void GameInfoView::onScoreChanged (shared_ptr<gvt::Event> const &e) {
-		auto scoreEvent = std::dynamic_pointer_cast<GameInfoChangeEvent>(e);
-
-		if (scoreEvent && scoreEvent->type == GameInfoChangeEvent::score) {
-			updateText();
-		}
+		updateText();
 	}
 
 	void GameInfoView::onShipsChanged (shared_ptr<gvt::Event> const &e) {
-		auto shipEvent = std::dynamic_pointer_cast<GameInfoChangeEvent>(e);
-
-		if (shipEvent && shipEvent->type == GameInfoChangeEvent::spaceships) {
-			updateShips();
-		}
+		updateShips();
 	}
 
 	void GameInfoView::draw (sf::RenderTarget &t, sf::RenderStates s) const {
@@ -111,15 +102,15 @@ namespace gvt {
 		shared_ptr<GameInfo> gameInfo, shared_ptr<Spaceship> ship
 	): mInfo{std::move(gameInfo)}, mShip{std::move(ship)} {
 		auto _1 = std::placeholders::_1;
-		auto shipTexturePath = gvt::staticsGet(SpaceshipView::SPACESHIP_TEXTURE);
+		auto shipTexturePath = gvt::staticsGet(SpaceshipView::SHIP_TEXTURE);
 
-		mFuelCallback = mShip->addCallback(
+		mFuelCbk = mShip->fuelDispatcher().addCallback(
 			std::bind(&GameInfoView::onFuelChanged, this, _1)
 		);
-		mScoreCallback = mInfo->addCallback(
+		mScoreCbk = mInfo->scoreDispatcher().addCallback(
 			std::bind(&GameInfoView::onScoreChanged, this, _1)
 		);
-		mShipCallback = mInfo->addCallback(
+		mShipCbk = mInfo->shipCountDispatcher().addCallback(
 			std::bind(&GameInfoView::onShipsChanged, this, _1)
 		);
 
@@ -141,8 +132,8 @@ namespace gvt {
 	}
 
 	GameInfoView::~GameInfoView () {
-		mInfo->removeCallback(mShipCallback);
-		mInfo->removeCallback(mScoreCallback);
-		mShip->removeCallback(mFuelCallback);
+		mInfo->shipCountDispatcher().removeCallback(mShipCbk);
+		mInfo->scoreDispatcher().removeCallback(mScoreCbk);
+		mShip->fuelDispatcher().removeCallback(mFuelCbk);
 	}
 }
