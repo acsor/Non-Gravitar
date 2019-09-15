@@ -21,6 +21,7 @@
 // SOFTWARE.
 #include <utility>
 #include "Scene.hpp"
+#include "Game.hpp"
 #include "shape-group/CollisionGroup.hpp"
 #include "shape/MountainChain.hpp"
 #include "shape/Planet.hpp"
@@ -41,17 +42,23 @@ namespace gvt {
 
 	Scene::Scene(Vectord size, shared_ptr<ShapeGroup> shapes):
 			mSize{size}, mShapes{std::move(shapes)} {
+		mGame = Game::getInstance();
 		mShapesView.reset(new ShapeGroupView(mShapes));
 		auto _1 = std::placeholders::_1;
 
 		initializeDestroyGraph();
-		mDestroyCallback = mShapes->addCallback(
+
+		mCollisionCallback = mShapes->addCallback(
 			std::bind(&Scene::onCollisionOccurred, this, _1)
+		);
+		mDestroyCallback = mShapes->addCallback(
+			std::bind(&Scene::onShapeDestroyed, this, _1)
 		);
 	}
 
 	Scene::~Scene() {
 		mShapes->removeCallback(mDestroyCallback);
+		mShapes->removeCallback(mCollisionCallback);
 	}
 
 	void Scene::initializeDestroyGraph() {
@@ -96,10 +103,25 @@ namespace gvt {
 		}
 	}
 
+	void Scene::onShapeDestroyed (shared_ptr<gvt::Event> const &e) {
+		auto destruction = std::dynamic_pointer_cast<ShapeGroupEvent>(e);
+
+		if (destruction && destruction->type == ShapeGroupEvent::Type::detached) {
+			if (std::dynamic_pointer_cast<Bunker>(destruction->shape)) {
+				mGame->gameInfo()->upgradeScore(BUNKER_SCORE);
+			// TODO Using this logic, the spaceship is recognized destroyed
+			//  even when it is simply being inserted from one scene into
+			//  another. Fix this.
+			} else if (std::dynamic_pointer_cast<Spaceship>(destruction->shape)) {
+				mGame->gameInfo()->decrementSpaceships();
+			}
+		}
+	}
+
 	void Scene::onUpdateGame (double seconds) {
 		// Remove outlived shapes
 		mShapes->removeIf(
-			[] (shared_ptr<Shape> const &s) -> bool { return s->destroyed (); }
+				[] (shared_ptr<Shape> const &s) -> bool { return s->destroyed (); }
 		);
 		auto shapesCopy = std::vector<shared_ptr<Shape>>(
 				mShapes->begin(), mShapes->end()

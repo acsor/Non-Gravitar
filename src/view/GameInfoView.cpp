@@ -72,11 +72,27 @@ namespace gvt {
 		}
 	}
 
-	void GameInfoView::onFuelChanged (shared_ptr<Event> const &e) {
+	void GameInfoView::onFuelChanged (shared_ptr<gvt::Event> const &e) {
 		auto fuelEvent = std::dynamic_pointer_cast<FuelChangedEvent>(e);
 
 		if (fuelEvent) {
 			updateText();
+		}
+	}
+
+	void GameInfoView::onScoreChanged (shared_ptr<gvt::Event> const &e) {
+		auto scoreEvent = std::dynamic_pointer_cast<GameInfoChangeEvent>(e);
+
+		if (scoreEvent && scoreEvent->type == GameInfoChangeEvent::score) {
+			updateText();
+		}
+	}
+
+	void GameInfoView::onShipsChanged (shared_ptr<gvt::Event> const &e) {
+		auto shipEvent = std::dynamic_pointer_cast<GameInfoChangeEvent>(e);
+
+		if (shipEvent && shipEvent->type == GameInfoChangeEvent::spaceships) {
+			updateShips();
 		}
 	}
 
@@ -97,8 +113,14 @@ namespace gvt {
 		auto _1 = std::placeholders::_1;
 		auto shipTexturePath = gvt::staticsGet(SpaceshipView::SPACESHIP_TEXTURE);
 
-		mShipCallback = mShip->addCallback(
+		mFuelCallback = mShip->addCallback(
 			std::bind(&GameInfoView::onFuelChanged, this, _1)
+		);
+		mScoreCallback = mInfo->addCallback(
+			std::bind(&GameInfoView::onScoreChanged, this, _1)
+		);
+		mShipCallback = mInfo->addCallback(
+			std::bind(&GameInfoView::onShipsChanged, this, _1)
 		);
 
 		if (!mShipTexture.loadFromFile(shipTexturePath))
@@ -119,6 +141,8 @@ namespace gvt {
 	}
 
 	GameInfoView::~GameInfoView () {
-		mShip->removeCallback(mShipCallback);
+		mInfo->removeCallback(mShipCallback);
+		mInfo->removeCallback(mScoreCallback);
+		mShip->removeCallback(mFuelCallback);
 	}
 }

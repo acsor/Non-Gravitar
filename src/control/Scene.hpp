@@ -32,6 +32,10 @@
 
 
 namespace gvt {
+	class Game;
+
+	// TODO Try to see whether template specialization can yield cleaner code
+	//  than subclassing
 	class TypeVertex: public Vertex<std::type_index> {
 		public:
 			TypeVertex (std::type_index type);
@@ -46,12 +50,16 @@ namespace gvt {
 	 */
 	class Scene: public sf::Drawable {
 		protected:
+			static const constexpr double BUNKER_SCORE = 50;
+
+			Game *mGame;
+
 			Vectord mSize;
 			shared_ptr<ShapeGroup> mShapes;
 			shared_ptr<ShapeGroupView> mShapesView;
 
 			gvt::ALGraph<std::type_index> mDestroyGraph;
-			std::shared_ptr<gvt_callback> mDestroyCallback;
+			std::shared_ptr<gvt_callback> mDestroyCallback, mCollisionCallback;
 
 			Scene(Vectord size, shared_ptr<ShapeGroup> shapes);
 			~Scene() override;
@@ -64,6 +72,7 @@ namespace gvt {
 			 */
 			void initializeDestroyGraph();
 			void onCollisionOccurred (shared_ptr<gvt::Event> const &e);
+			void onShapeDestroyed (shared_ptr<gvt::Event> const &e);
 		public:
 			friend class Game;
 			

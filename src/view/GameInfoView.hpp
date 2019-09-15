@@ -36,7 +36,7 @@ namespace gvt {
 
 			shared_ptr<GameInfo> mInfo;
 			shared_ptr<Spaceship> mShip;
-			shared_ptr<gvt_callback> mShipCallback;
+			shared_ptr<gvt_callback> mFuelCallback, mScoreCallback, mShipCallback;
 
 			sf::Font mFont;
 			sf::Texture mShipTexture;
@@ -49,7 +49,9 @@ namespace gvt {
 			void updateText();
 			void updateShips();
 
-			void onFuelChanged (shared_ptr<Event> const &e);
+			void onFuelChanged (shared_ptr<gvt::Event> const &e);
+			void onScoreChanged (shared_ptr<gvt::Event> const &e);
+			void onShipsChanged (shared_ptr<gvt::Event> const &e);
 		protected:
 			void draw (sf::RenderTarget &t, sf::RenderStates s) const override;
 		public:
