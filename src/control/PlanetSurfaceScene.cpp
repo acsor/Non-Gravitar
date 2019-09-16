@@ -21,40 +21,37 @@
 // SOFTWARE.
 #include "PlanetSurfaceScene.hpp"
 #include "Game.hpp"
+#include "SolarSystemScene.hpp"
 
 
 namespace gvt {
 	void PlanetSurfaceScene::exitPlanet() {
 		auto game = Game::getInstance();
 		auto ship = game->acquireSpaceship();
-		auto solarSystem = game->popScene();
 
-		ship->acceleration({0, 0});
-		ship->position(mPlanet->position() - Vectord{0, 100});
+		game->popScene();
+		ship->position(
+			mPlanet->position() + mPlanet->rotationCenter() - Vectord{0, 100}
+		);
 
-		solarSystem->shapes()->insert(ship);
+		// game->currentScene() will be a SolarSystemScene
+		game->currentScene()->shapes()->insert(ship);
 	}
 
-	void PlanetSurfaceScene::onShipMoved (shared_ptr<PositionEvent> e) {
-		if (mShip->position().y < 0)
+	void PlanetSurfaceScene::onExitBoundaries(shared_ptr<Spaceship> ship) {
+		if (ship->position().y <= 0)
 			exitPlanet();
+		else
+			Scene::onExitBoundaries(ship);
+	}
+
+	PlanetSurfaceScene::PlanetSurfaceScene(shared_ptr<PlanetSurface> const &s):
+			Scene({s->width(), s->height()}, s) {
 	}
 
 	PlanetSurfaceScene::PlanetSurfaceScene (shared_ptr<Planet> const &planet):
-			Scene({planet->surface()->width(), planet->surface()->height()}, planet->surface())
-	{
-		auto _1 = std::placeholders::_1;
-		auto surface = planet->surface();
-
+			PlanetSurfaceScene(planet->surface()) {
 		mPlanet = planet;
-		mShip = Game::getInstance()->spaceship();
-		mShipCbk = mShip->positionDispatcher().addCallback(
-				std::bind(&PlanetSurfaceScene::onShipMoved, this, _1)
-		);
-	}
-
-	PlanetSurfaceScene::~PlanetSurfaceScene () {
-		mShip->positionDispatcher().removeCallback(mShipCbk);
 	}
 
 	void PlanetSurfaceScene::onUpdateGame (double seconds) {

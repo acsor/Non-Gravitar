@@ -20,12 +20,9 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 #include <SFML/Graphics.hpp>
-
-#include "shape/Planet.hpp"
-#include "shape-group/CollisionGroup.hpp"
-#include "shape-group/PlanetSurface.hpp"
 #include "utils/Utils.hpp"
 #include "Game.hpp"
+#include "SolarSystemScene.hpp"
 
 
 namespace gvt {
@@ -39,21 +36,12 @@ namespace gvt {
 	Game* Game::sInstance = nullptr;
 
 	void Game::onShipMoved(shared_ptr<PositionEvent> e) {
-		auto pos = mShip->position();
 		auto sceneSize = mCurrScene->size() - Vectord{
 				mShip->width(), mShip->height()
 		};
 
-		if (!pos.within({0, 0}, sceneSize)) {
-			pos.x = std::max(pos.x, 0.0);
-			pos.x = std::min(pos.x, sceneSize.x);
-			pos.y = std::max(pos.y, 0.0);
-			pos.y = std::min(pos.y, sceneSize.y);
-
-			mShip->position(pos);
-			mShip->velocity({0, 0});
-			mShip->acceleration({0, 0});
-		}
+		if (!mShip->position().within({0, 0}, sceneSize))
+			mCurrScene->onExitBoundaries(mShip);
 	}
 
 	void Game::toggleDebug (std::shared_ptr<sf::Event> const &e) {
@@ -111,8 +99,13 @@ namespace gvt {
 
 	void Game::updateGameLoop () {
 		auto elapsed = mClock.restart().asSeconds();
+		// If the current scene is not hold as a separate variable, some
+		// code might pop it out and remove the only references to it (both
+		// on stack and on mCurrScene). At that point, that scene object
+		// would be destroyed by std::shared_ptr, causing segfaults.
+		auto currScene = mCurrScene;
 
-		mCurrScene->onUpdateGame(elapsed);
+		currScene->onUpdateGame(elapsed);
 	}
 
 	void Game::pushScene (shared_ptr<Scene> scene) {
@@ -128,13 +121,12 @@ namespace gvt {
 		if (mSceneStack.empty()) {
 			throw std::logic_error("No scene to pop out from the stack");
 		} else {
-			auto e = std::make_shared<SceneChangedEvent>(
-					mCurrScene, mSceneStack.top()
-			);
+			auto e = std::make_shared<SceneChangedEvent>(mCurrScene, nullptr);
 
 			mSceneStack.pop();
 			mCurrScene = mSceneStack.top();
 
+			e->newScene = mCurrScene;
 			raiseEvent(e);
 		}
 

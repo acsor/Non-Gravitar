@@ -37,13 +37,13 @@ namespace gvt {
 			planet = std::dynamic_pointer_cast<Planet>(e->first);
 
 		if (ship && planet) {
-			auto *game = Game::getInstance();
+			auto game = Game::getInstance();
 
 			planet->surface()->insert(game->acquireSpaceship());
 			game->pushScene(std::make_shared<PlanetSurfaceScene>(planet));
 
 			ship->acceleration({0, 0});
-			ship->position({planet->surface()->width() / 2.0, 0});
+			ship->position({planet->surface()->width() / 2.0, 1});
 		}
 	}
 

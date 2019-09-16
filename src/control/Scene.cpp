@@ -111,7 +111,7 @@ namespace gvt {
 	void Scene::onUpdateGame (double seconds) {
 		// Remove outlived shapes
 		mShapes->removeIf(
-				[] (shared_ptr<Shape> const &s) -> bool { return s->destroyed (); }
+			[] (shared_ptr<Shape> const &s) -> bool { return s->destroyed (); }
 		);
 		auto shapesCopy = std::vector<shared_ptr<Shape>>(
 				mShapes->begin(), mShapes->end()
@@ -123,6 +123,20 @@ namespace gvt {
 			s->velocity(s->velocity() + seconds * s->acceleration());
 			s->position(s->position() + seconds * s->velocity());
 		}
+	}
+
+	void Scene::onExitBoundaries(shared_ptr<Spaceship> ship) {
+		// TODO Have the spaceship bounce against the boundaries
+		auto pos = ship->position();
+
+		pos.x = std::max(pos.x, 0.0);
+		pos.x = std::min(pos.x, mSize.x);
+		pos.y = std::max(pos.y, 0.0);
+		pos.y = std::min(pos.y, mSize.y);
+
+		ship->position(pos);
+		ship->velocity({0, 0});
+		ship->acceleration({0, 0});
 	}
 
 	void Scene::draw (sf::RenderTarget &t, sf::RenderStates s) const {
