@@ -49,14 +49,5 @@ namespace gvt {
 
 	SolarSystemScene::SolarSystemScene (shared_ptr<SolarSystem> const &system):
 			Scene({system->width(), system->height()}, system) {
-		auto _1 = std::placeholders::_1;
-
-		mPlanetHandle = mShapes->collisionDispatcher().addCallback(
-			std::bind(&SolarSystemScene::onCollision, this, _1)
-		);
-	}
-
-	SolarSystemScene::~SolarSystemScene () {
-		mShapes->collisionDispatcher().removeCallback(mPlanetHandle);
 	}
 }

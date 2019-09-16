@@ -102,11 +102,9 @@ namespace gvt {
 	void Scene::onShapeRemoved (shared_ptr<ShapeRemovalEvent> e) {
 		if (std::dynamic_pointer_cast<Bunker>(e->shape)) {
 			mGame->gameInfo()->upgradeScore(BUNKER_SCORE);
-			// TODO Using this logic, the spaceship is recognized destroyed
-			//  even when it is simply being inserted from one scene into
-			//  another. Fix this.
-		} else if (std::dynamic_pointer_cast<Spaceship>(e->shape)) {
-			mGame->gameInfo()->decrementSpaceships();
+		} else if (auto s = std::dynamic_pointer_cast<Spaceship>(e->shape)) {
+			if (s->destroyed())
+				mGame->gameInfo()->decrementSpaceships();
 		}
 	}
 
