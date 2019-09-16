@@ -46,7 +46,9 @@ namespace gvt {
 			 * PlanetSurfaceScene and returning back to the previous game scene.
 			 */
 			void exitPlanet();
+
 			void onExitBoundaries(shared_ptr<Spaceship> ship) override;
+			void onSpaceshipDestroyed (shared_ptr<Spaceship> ship) override;
 
 			explicit PlanetSurfaceScene(shared_ptr<PlanetSurface> const &s);
 		public:

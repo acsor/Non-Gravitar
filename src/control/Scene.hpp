@@ -74,7 +74,9 @@ namespace gvt {
 			 */
 			void initializeDestroyGraph();
 			virtual void onCollision (shared_ptr<PairCollisionEvent> e);
+
 			void onShapeRemoved (shared_ptr<ShapeRemovalEvent> e);
+			virtual void onSpaceshipDestroyed (shared_ptr<Spaceship> ship);
 			/**
 			 * Called when the game spaceship exits the active scene boundaries.
 			 */

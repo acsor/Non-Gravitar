@@ -70,6 +70,7 @@ namespace gvt {
 			{typeid(RoundMissile), typeid(Spaceship)},
 			{typeid(MountainChain), typeid(Spaceship)},
 
+			{typeid(Spaceship), typeid(Bunker)},
 			{typeid(RoundMissile), typeid(Bunker)},
 
 			{typeid(Spaceship), typeid(RoundMissile)},
@@ -100,12 +101,17 @@ namespace gvt {
 	}
 
 	void Scene::onShapeRemoved (shared_ptr<ShapeRemovalEvent> e) {
-		if (std::dynamic_pointer_cast<Bunker>(e->shape)) {
-			mGame->gameInfo()->upgradeScore(BUNKER_SCORE);
-		} else if (auto s = std::dynamic_pointer_cast<Spaceship>(e->shape)) {
-			if (s->destroyed())
-				mGame->gameInfo()->decrementSpaceships();
+		if (e->shape->destroyed()) {
+			if (std::dynamic_pointer_cast<Bunker>(e->shape)) {
+				mGame->gameInfo()->upgradeScore(BUNKER_SCORE);
+			} else if (auto s = std::dynamic_pointer_cast<Spaceship>(e->shape)) {
+				onSpaceshipDestroyed(s);
+			}
 		}
+	}
+
+	void Scene::onSpaceshipDestroyed (shared_ptr<Spaceship> ship) {
+		mGame->gameInfo()->decrementSpaceships();
 	}
 
 	void Scene::onUpdateGame (double seconds) {

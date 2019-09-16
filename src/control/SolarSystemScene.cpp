@@ -47,6 +47,19 @@ namespace gvt {
 		}
 	}
 
+	void SolarSystemScene::onSpaceshipDestroyed (shared_ptr<Spaceship> ship) {
+		Scene::onSpaceshipDestroyed(ship);
+
+		if (mGame->gameInfo()->spaceships() > 0) {
+			ship->position({0, 0});
+			ship->velocity({0, 0});
+			ship->rotation(M_PI / 2.0);
+			ship->destroyed(false);
+
+			mShapes->insert(ship);
+		}
+	}
+
 	SolarSystemScene::SolarSystemScene (shared_ptr<SolarSystem> const &system):
 			Scene({system->width(), system->height()}, system) {
 	}

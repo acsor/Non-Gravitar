@@ -45,6 +45,19 @@ namespace gvt {
 			Scene::onExitBoundaries(ship);
 	}
 
+	void PlanetSurfaceScene::onSpaceshipDestroyed (shared_ptr<Spaceship> ship) {
+		Scene::onSpaceshipDestroyed(ship);
+
+		if (mGame->gameInfo()->spaceships() > 0) {
+			ship->position({mSize.x / 2.0, 1});
+			ship->velocity({0, 0});
+			ship->rotation(M_PI);
+			ship->destroyed(false);
+
+			mShapes->insert(ship);
+		}
+	}
+
 	PlanetSurfaceScene::PlanetSurfaceScene(shared_ptr<PlanetSurface> const &s):
 			Scene({s->width(), s->height()}, s) {
 	}
