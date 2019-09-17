@@ -108,10 +108,13 @@ target_link_libraries(BunkerView Bunker Shape2DView Utils)
 add_library(ShapeGroupView "${DIR_VIEWS}/ShapeGroupView.cpp")
 target_link_libraries(ShapeGroupView ShapeGroup ShapeViewFactory)
 
+add_library(TractorBeamView "${DIR_VIEWS}/TractorBeamView.cpp")
+target_link_libraries(TractorBeamView TractorBeam Shape2DView)
+
 add_library(ShapeViewFactory "${DIR_VIEWS}/ShapeViewFactory.cpp")
 target_link_libraries(
-		ShapeViewFactory SpaceshipView BunkerView FuelView PolylineView
-		PlanetView RoundMissileView
+		ShapeViewFactory BunkerView FuelView PolylineView
+		PlanetView RoundMissileView SpaceshipView TractorBeamView
 )
 
 add_library(SpaceshipView "${DIR_VIEWS}/SpaceshipView.cpp")

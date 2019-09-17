@@ -1,17 +1,17 @@
 // MIT License
-// 
+//
 // Copyright (c) 2018 Oscar B. et al.
-// 
+//
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
 // in the Software without restriction, including without limitation the rights
 // to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
 // copies of the Software, and to permit persons to whom the Software is
 // furnished to do so, subject to the following conditions:
-// 
+//
 // The above copyright notice and this permission notice shall be included in all
 // copies or substantial portions of the Software.
-// 
+//
 // THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
 // IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
 // FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
@@ -19,31 +19,29 @@
 // LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
-#ifndef NON_GRAVITAR_SHAPE_VIEW
-#define NON_GRAVITAR_SHAPE_VIEW
-
-#include "view/ShapeView.hpp"
-#include "shape/Shape2D.hpp"
+#include "TractorBeamView.hpp"
+#include "utils/Utils.hpp"
 
 
 namespace gvt {
-	class Shape2DView: public ShapeView {
-		private:
-			// Debugs bounds used for the 'debug view'
-			sf::VertexArray mBounds;
-		protected:
-			shared_ptr<Shape2D> mShape2D;
+	const sf::Color TractorBeamView::BEAM_COLOR = sf::Color::Magenta;
 
-			explicit Shape2DView(std::shared_ptr<Shape2D> const &shape);
+	void TractorBeamView::draw (sf::RenderTarget &t, sf::RenderStates s) const {
+		Shape2DView::draw(t, s);
 
-			void updateRotationTransform() override;
-			void onCreateDebugView() override;
-			void onUpdateDebugColor() override;
-			void onShapeCollided(shared_ptr<CollisionEvent> e) override;
+		t.draw(mTriangle, mTranslation * mRotation);
+	}
 
-			void draw(RenderTarget &t, RenderStates s) const override;
-	};
+	TractorBeamView::TractorBeamView (shared_ptr<TractorBeam> const &beam):
+			Shape2DView(beam) {
+		mTriangle = sf::VertexArray(sf::LineStrip, 4);
+
+		for (size_t i = 0; i < mTriangle.getVertexCount(); i++)
+			mTriangle[i].color = BEAM_COLOR;
+
+		mTriangle[0].position = {0, (float) beam->height()};
+		mTriangle[1].position = {(float) (beam->width() / 2.0), 0};
+		mTriangle[2].position = {(float) beam->width(), (float) beam->height()};
+		mTriangle[3].position = {0, (float) beam->height()};
+	}
 }
-
-
-#endif
