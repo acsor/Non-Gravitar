@@ -60,7 +60,7 @@ int main () {
 
 		game->updateGameLoop();
 
-		w.clear();
+		w.clear(sf::Color(10, 10, 10));
 		w.draw(*game);
 		w.display();
 	}

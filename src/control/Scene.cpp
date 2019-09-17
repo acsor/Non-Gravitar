@@ -132,17 +132,15 @@ namespace gvt {
 	}
 
 	void Scene::onExitBoundaries(shared_ptr<Spaceship> ship) {
-		// TODO Have the spaceship bounce against the boundaries
-		auto pos = ship->position();
+		auto const angle = ship->velocity().angle();
+		auto const speed = ship->speed();
+		auto const pos = ship->position();
 
-		pos.x = std::max(pos.x, 0.0);
-		pos.x = std::min(pos.x, mSize.x);
-		pos.y = std::max(pos.y, 0.0);
-		pos.y = std::min(pos.y, mSize.y);
-
-		ship->position(pos);
-		ship->velocity({0, 0});
-		ship->acceleration({0, 0});
+		if (pos.x < 0 || pos.x > mSize.x - ship->width()) {
+			ship->velocity(speed * Vectord(M_PI - angle));
+		} else if (pos.y < 0 || pos.y > mSize.y - ship->height()) {
+			ship->velocity(speed * Vectord(-angle));
+		}
 	}
 
 	void Scene::draw (sf::RenderTarget &t, sf::RenderStates s) const {
