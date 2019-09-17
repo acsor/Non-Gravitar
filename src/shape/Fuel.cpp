@@ -25,8 +25,8 @@
 
 
 namespace gvt {
-	Fuel::Fuel(Vectord position, unsigned fuel): Shape2D(position) {
-		mFuel = fuel;
+	Fuel::Fuel(Vectord position, unsigned initialCapacity): Shape2D(position) {
+		mFuel = initialCapacity;
 	}
 
 	unsigned Fuel::fuel() const {

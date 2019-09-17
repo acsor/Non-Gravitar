@@ -22,6 +22,7 @@
 #include <stdexcept>
 #include <utils/Random.hpp>
 #include "PlanetSurface.hpp"
+#include "shape/Fuel.hpp"
 
 
 namespace gvt {
@@ -61,6 +62,20 @@ namespace gvt {
 			mMountains->alignRandomly(mBunkers.begin(), mBunkers.end());
 		} else {
 			throw std::logic_error("Mountain chains not set");
+		}
+	}
+
+	void PlanetSurface::randomFuel(unsigned fuels, Vector<unsigned> capRange) {
+		UniRandom<unsigned> fuel{capRange.x, capRange.y};
+		UniRandom<int> segment{0, static_cast<int>(mMountains->size() - 2)};
+
+		while (fuels > 0) {
+			auto f = std::make_shared<Fuel>(Vectord{0, 0}, fuel());
+
+			insert(f);
+			mMountains->align(segment(), f);
+
+			fuels--;
 		}
 	}
 }

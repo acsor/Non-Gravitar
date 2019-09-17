@@ -49,7 +49,6 @@ namespace gvt {
 
 			template<typename iter> void bunkers(iter begin, iter end);
 			inline std::forward_list<shared_ptr<Bunker>> bunkers() const;
-
 			/**
 			 * Allocates the given number of bunkers, aligning them randomly
 			 * along the already set mountain chain instance.
@@ -58,6 +57,15 @@ namespace gvt {
 			 * @throws std::logic_error if no mountain chains are set
 			 */
 			void randomBunkers(unsigned bunkers);
+
+			/**
+			 * Adds a specified number of @c Fuel objects to this planet
+			 * surface, with a random capacity and position.
+			 *
+			 * @param fuels Number of fuels to add
+			 * @param capRange Capacity range in these random fuels
+			 */
+			void randomFuel(unsigned fuels, Vector<unsigned> capRange);
 	};
 }
 
