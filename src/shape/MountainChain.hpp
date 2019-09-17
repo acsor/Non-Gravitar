@@ -80,7 +80,7 @@ namespace gvt {
 	void MountainChain::alignRandomly(iter shapesBegin, iter shapesEnd) {
 		unsigned const toInsert = std::distance(shapesBegin, shapesEnd);
 		std::set<unsigned> positions;
-		UniRandInt randomPos{0, static_cast<int>(size() - 2)};
+		UniRandom<int> randomPos{0, static_cast<int>(size() - 2)};
 
 		while (positions.size() < toInsert)
 			positions.insert(randomPos());

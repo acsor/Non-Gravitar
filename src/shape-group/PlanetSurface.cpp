@@ -41,7 +41,7 @@ namespace gvt {
 	}
 
 	void PlanetSurface::randomBunkers(unsigned bunkers) {
-		UniRandInt bunkerType{2, 3};
+		UniRandom<unsigned> bunkerType{2, 3};
 
 		for (auto &b: mBunkers)
 			remove(b);

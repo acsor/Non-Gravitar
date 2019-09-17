@@ -27,7 +27,6 @@ include_directories("${DIR_SRC}")
 # Utils section
 add_library(Observer "${DIR_UTILS}/Observer.cpp")
 add_library(Utils "${DIR_UTILS}/Utils.cpp")
-add_library(Random "${DIR_UTILS}/Random.cpp")
 
 
 # Bounding polygon section
@@ -41,7 +40,7 @@ add_library(Polyline "${DIR_SHAPE}/Polyline.cpp")
 target_link_libraries(Polyline Shape)
 
 add_library(MountainChain "${DIR_SHAPE}/MountainChain.cpp")
-target_link_libraries(MountainChain Polyline Random)
+target_link_libraries(MountainChain Polyline)
 
 add_library(Circle "${DIR_SHAPE}/Circle.cpp")
 target_link_libraries(Circle Shape Rectangle)
