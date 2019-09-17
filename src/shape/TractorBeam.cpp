@@ -19,50 +19,38 @@
 // LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
-#include "Fuel.hpp"
-#include "Rectangle.hpp"
-#include "utils/BoundingPolygon.hpp"
+#include "TractorBeam.hpp"
 
 
 namespace gvt {
-	Fuel::Fuel(Vectord position, unsigned initialCapacity): Shape2D(position) {
-		mFuel = initialCapacity;
+	TractorBeam::TractorBeam (Vectord position, Spaceship &spaceship):
+			Shape2D(position), mSpaceship(spaceship) {
 	}
 
-	unsigned Fuel::fuel() const {
-		return mFuel;
+	Vectord TractorBeam::rotationCenter() const {
+		return Vectord{0, -mSpaceship.height()} + mSpaceship.rotationCenter();
 	}
 
-	void Fuel::empty() {
-		mFuel = 0;
+	BoundingPolygon TractorBeam::collisionPolygon() const {
+		auto t = BoundingPolygon::triangle(
+				{0, HEIGHT}, {WIDTH / 2.0, 0}, {WIDTH, HEIGHT}
+		);
+
+		t.position(mPosition);
+		t.rotate(mRotation, rotationCenter());
+
+		return t;
 	}
 
-	void Fuel::accept(ShapeVisitor &visitor) {
-		visitor.visitFuel(*this);
+	void TractorBeam::accept(ShapeVisitor &visitor) {
+		visitor.visitTractorBeam(*this);
 	}
 
-	double Fuel::width() const {
-		return Fuel::WIDTH;
-	}
+	bool TractorBeam::operator== (Shape const &o) const {
+		auto b = dynamic_cast<TractorBeam const *>(&o);
 
-	double Fuel::height() const {
-		return Fuel::HEIGHT;
-	}
-
-	BoundingPolygon Fuel::collisionPolygon() const {
-		auto r = BoundingPolygon::rectangle({0, 0}, {WIDTH, HEIGHT});
-
-		r.position(mPosition);
-		r.rotate(mRotation, rotationCenter());
-
-		return r;
-	}
-
-	bool Fuel::operator== (Shape const &o) const {
-		auto *other = dynamic_cast<Fuel const *>(&o);
-
-		if (other)
-			return Shape::operator==(*other) && mFuel == other->mFuel;
+		if (b)
+			return Shape2D::operator==(o);
 
 		return false;
 	}

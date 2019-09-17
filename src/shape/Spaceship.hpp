@@ -76,6 +76,7 @@ namespace gvt {
 			 * fuel in it, @c false otherwise.
 			 */
 			bool charged() const;
+			
 			shared_ptr<RoundMissile> shoot(
 					double radius, double speed, long lifespan
 			) const;

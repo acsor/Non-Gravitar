@@ -19,51 +19,53 @@
 // LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
-#include "Fuel.hpp"
-#include "Rectangle.hpp"
-#include "utils/BoundingPolygon.hpp"
+#ifndef NON_GRAVITAR_TRACTOR_BEAM_HPP
+#define NON_GRAVITAR_TRACTOR_BEAM_HPP
+
+#include "Shape2D.hpp"
+#include "Spaceship.hpp"
 
 
 namespace gvt {
-	Fuel::Fuel(Vectord position, unsigned initialCapacity): Shape2D(position) {
-		mFuel = initialCapacity;
+	/**
+	 * A tractor beam is associated to a @c Spaceship, having the ability to
+	 * lead fuel from land areas to it.
+	 */
+	class TractorBeam: public Shape2D {
+		private:
+			static const constexpr unsigned WIDTH = 40;
+			static const constexpr unsigned HEIGHT = 50;
+
+			Spaceship &mSpaceship;
+		public:
+			TractorBeam(Vectord position, Spaceship &spaceship);
+
+			inline Spaceship& spaceship() const;
+
+			Vectord rotationCenter() const override;
+			inline double width() const override;
+			inline double height() const override;
+
+			void accept(ShapeVisitor &visitor) override;
+			BoundingPolygon collisionPolygon() const override;
+			bool operator== (Shape const &o) const override;
+	};
+}
+
+
+namespace gvt {
+	Spaceship& TractorBeam::spaceship() const {
+		return mSpaceship;
 	}
 
-	unsigned Fuel::fuel() const {
-		return mFuel;
+	double TractorBeam::width() const {
+		return WIDTH;
 	}
 
-	void Fuel::empty() {
-		mFuel = 0;
-	}
-
-	void Fuel::accept(ShapeVisitor &visitor) {
-		visitor.visitFuel(*this);
-	}
-
-	double Fuel::width() const {
-		return Fuel::WIDTH;
-	}
-
-	double Fuel::height() const {
-		return Fuel::HEIGHT;
-	}
-
-	BoundingPolygon Fuel::collisionPolygon() const {
-		auto r = BoundingPolygon::rectangle({0, 0}, {WIDTH, HEIGHT});
-
-		r.position(mPosition);
-		r.rotate(mRotation, rotationCenter());
-
-		return r;
-	}
-
-	bool Fuel::operator== (Shape const &o) const {
-		auto *other = dynamic_cast<Fuel const *>(&o);
-
-		if (other)
-			return Shape::operator==(*other) && mFuel == other->mFuel;
-
-		return false;
+	double TractorBeam::height() const {
+		return HEIGHT;
 	}
 }
+
+
+#endif

@@ -63,6 +63,9 @@ target_link_libraries(RoundMissile Circle)
 add_library(Bunker "${DIR_SHAPE}/Bunker.cpp")
 target_link_libraries(Bunker RoundMissile)
 
+add_library(TractorBeam "${DIR_SHAPE}/TractorBeam.cpp")
+target_link_libraries(TractorBeam Spaceship)
+
 
 # Shape group section
 add_library(ShapeGroup "${DIR_SHAPE_GROUP}/ShapeGroup.cpp")
