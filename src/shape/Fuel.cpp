@@ -23,49 +23,47 @@
 #include "Rectangle.hpp"
 #include "utils/BoundingPolygon.hpp"
 
-using namespace gvt;
 
+namespace gvt {
+	Fuel::Fuel(Vectord position, unsigned fuel): Shape2D(position) {
+		mFuel = fuel;
+	}
 
-Fuel::Fuel(Vectord position, unsigned fuel): Shape2D(position) {
-	mFuel = fuel;
+	unsigned Fuel::fuel() const {
+		return mFuel;
+	}
+
+	void Fuel::empty() {
+		mFuel = 0;
+	}
+
+	void Fuel::accept(ShapeVisitor &visitor) {
+		visitor.visitFuel(*this);
+	}
+
+	double Fuel::width() const {
+		return Fuel::WIDTH;
+	}
+
+	double Fuel::height() const {
+		return Fuel::HEIGHT;
+	}
+
+	BoundingPolygon Fuel::collisionPolygon() const {
+		auto r = BoundingPolygon::rectangle({0, 0}, {WIDTH, HEIGHT});
+
+		r.position(mPosition);
+		r.rotate(mRotation);
+
+		return r;
+	}
+
+	bool Fuel::operator== (Shape const &o) const {
+		auto *other = dynamic_cast<Fuel const *>(&o);
+
+		if (other)
+			return Shape::operator==(*other) && mFuel == other->mFuel;
+
+		return false;
+	}
 }
-
-unsigned Fuel::fuel() const {
-	return mFuel;
-}
-
-void Fuel::empty() {
-	mFuel = 0;
-}
-
-void Fuel::accept(ShapeVisitor &visitor) {
-	visitor.visitFuel(*this);
-}
-
-double Fuel::width() const {
-	return Fuel::WIDTH;
-}
-
-double Fuel::height() const {
-	return Fuel::HEIGHT;
-}
-
-BoundingPolygon Fuel::collisionPolygon() const {
-	auto r = BoundingPolygon::rectangle({0, 0}, {WIDTH, HEIGHT});
-
-	r.position(mPosition);
-	r.rotate(mRotation);
-
-	return r;
-}
-
-bool Fuel::operator== (Shape const &o) const {
-	auto *other = dynamic_cast<Fuel const *>(&o);
-
-	if (other)
-		return Shape::operator==(*other) && mFuel == other->mFuel;
-
-	return false;
-}
-
-

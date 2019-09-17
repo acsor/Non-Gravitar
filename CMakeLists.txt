@@ -97,6 +97,9 @@ target_link_libraries(PolylineView Polyline ShapeView)
 add_library(RoundMissileView "${DIR_VIEWS}/RoundMissileView.cpp")
 target_link_libraries(RoundMissileView RoundMissile Shape2DView)
 
+add_library(FuelView "${DIR_VIEWS}/FuelView.cpp")
+target_link_libraries(FuelView Fuel Shape2DView)
+
 add_library(BunkerView "${DIR_VIEWS}/BunkerView.cpp")
 target_link_libraries(BunkerView Bunker Shape2DView Utils)
 
@@ -105,8 +108,8 @@ target_link_libraries(ShapeGroupView ShapeGroup ShapeViewFactory)
 
 add_library(ShapeViewFactory "${DIR_VIEWS}/ShapeViewFactory.cpp")
 target_link_libraries(
-		ShapeViewFactory SpaceshipView BunkerView PolylineView PlanetView
-		RoundMissileView
+		ShapeViewFactory SpaceshipView BunkerView FuelView PolylineView
+		PlanetView RoundMissileView
 )
 
 add_library(SpaceshipView "${DIR_VIEWS}/SpaceshipView.cpp")

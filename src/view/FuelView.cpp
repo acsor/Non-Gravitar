@@ -19,30 +19,23 @@
 // LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
-#include "ShapeViewFactory.hpp"
 #include "FuelView.hpp"
-#include "PolylineView.hpp"
-#include "PlanetView.hpp"
-#include "RoundMissileView.hpp"
+#include "utils/Utils.hpp"
 
 
 namespace gvt {
-	ShapeView* ShapeViewFactory::operator()(shared_ptr<Shape> shape) const {
-		if (auto ship = std::dynamic_pointer_cast<Spaceship>(shape)) {
-			return new SpaceshipView(ship);
-		} else if (auto b = std::dynamic_pointer_cast<Bunker>(shape)) {
-			return new BunkerView(b);
-		} else if (auto f = std::dynamic_pointer_cast<Fuel>(shape)) {
-			return new FuelView(f);
-		} else if (auto pl = std::dynamic_pointer_cast<Planet>(shape)) {
-			return new PlanetView(pl);
-		} else if (auto p = std::dynamic_pointer_cast<Polyline>(shape)) {
-			return new PolylineView(p);
-		} else if (auto m = std::dynamic_pointer_cast<RoundMissile>(shape)) {
-			return new RoundMissileView(m);
-		} else {
-			throw std::domain_error("Unrecognized type of shape");
-		}
+	const std::string FuelView::TEXTURE_PATH = "graphics/fuel.png";
+
+	void FuelView::draw (sf::RenderTarget &t, sf::RenderStates s) const {
+		Shape2DView::draw(t, s);
+
+		t.draw(mSprite, mTranslation * mRotation);
+	}
+
+	FuelView::FuelView (shared_ptr<Fuel> const &fuel): Shape2DView(fuel) {
+		if (!mTexture.loadFromFile(staticsGet(TEXTURE_PATH)))
+			throw std::runtime_error("Could not load fuel texture from disk");
+
+		mSprite.setTexture(mTexture);
 	}
 }
-
