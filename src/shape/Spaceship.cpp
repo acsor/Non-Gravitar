@@ -32,11 +32,42 @@ namespace gvt {
 
 
 	Spaceship::Spaceship(Vectord position, unsigned fuel):
-			Shape2D::Shape2D(position) {
-		mFuel = fuel;
+			Shape2D::Shape2D(position), mFuel{fuel} {
+		mBeam.reset(new TractorBeam(Vectord{0, height()}, *this));
 	}
 
-	gvt::BoundingPolygon Spaceship::collisionPolygon() const {
+	void Spaceship::position(Vectord position) {
+		Shape2D::position(position);
+		auto widthDiff = width() - mBeam->width();
+
+		mBeam->position(position + Vectord{widthDiff / 2.0, height()});
+	}
+
+	Vectord Spaceship::position() const {
+		return Shape2D::position();
+	}
+
+	void Spaceship::rotation(double r) {
+		Shape2D::rotation(r);
+
+		mBeam->rotation(r);
+	}
+
+	double Spaceship::rotation() const {
+		return Shape2D::rotation();
+	}
+
+	void Spaceship::destroyed(bool destroyed) {
+		Shape2D::destroyed(destroyed);
+
+		mBeam->destroyed(destroyed);
+	}
+
+	bool Spaceship::destroyed() const {
+		return Shape2D::destroyed();
+	}
+
+	BoundingPolygon Spaceship::collisionPolygon() const {
 		auto t = BoundingPolygon::triangle(
 			Vectord{0, BOUNDING_HEIGHT},
 			Vectord{BOUNDING_WIDTH / 2.0, 0},
@@ -91,16 +122,16 @@ namespace gvt {
 			missile->radius() / 2.0, missile->radius() / 2.0
 		};
 
-		localPos.rotate(rotation(), rotationCenter());
-		missile->position(position() + localPos);
+		localPos.rotate(Shape::rotation(), rotationCenter());
+		missile->position(Shape::position() + localPos);
 		missile->velocity(
-			(speed + this->speed()) * Vectord(rotation() - M_PI / 2.0)
+			(speed + this->speed()) * Vectord(Shape::rotation() - M_PI / 2.0)
 		);
 
 		return missile;
 	}
 
-	void gvt::Spaceship::accept(gvt::ShapeVisitor &visitor) {
+	void Spaceship::accept(ShapeVisitor &visitor) {
 		visitor.visitSpaceship(*this);
 	}
 

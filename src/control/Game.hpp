@@ -163,6 +163,11 @@ namespace gvt {
 		private:
 			Game *mGame;
 			shared_ptr<Spaceship> mShip;
+			/**
+			 * @c true if the spaceship is currently emitting its tractor
+			 * beam, @c false otherwise.
+			 */
+			bool mBeamOn{false};
 
 			double mAngleStep, mAccelStep;
 		public:

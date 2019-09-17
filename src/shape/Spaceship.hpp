@@ -23,6 +23,7 @@
 #define NON_GRAVITAR_SPACESHIP_HPP
 
 #include "Fuel.hpp"
+#include "TractorBeam.hpp"
 #include "Shape2D.hpp"
 #include "Rectangle.hpp"
 #include "ShapeVisitor.hpp"
@@ -40,6 +41,8 @@ namespace gvt {
 		private:
 			// Represents the current fuel amount in the ship
 			unsigned mFuel;
+			shared_ptr<TractorBeam> mBeam;
+
 			EventDispatcher<FuelEvent> mFuelDisp;
 
 			/** Width and height properties of any given spaceship. Note that
@@ -76,22 +79,36 @@ namespace gvt {
 			 * fuel in it, @c false otherwise.
 			 */
 			bool charged() const;
-			
+
 			shared_ptr<RoundMissile> shoot(
 					double radius, double speed, long lifespan
 			) const;
+			inline shared_ptr<TractorBeam> tractorBeam();
+
+			void position(Vectord position) override;
+			Vectord position() const;
+			void rotation(double r) override;
+			double rotation() const;
+			void destroyed(bool destroyed) override;
+			bool destroyed() const;
+
 			inline double width() const override;
 			inline double height() const override;
+			BoundingPolygon collisionPolygon() const override;
+
+			EventDispatcher<FuelEvent>& fuelDispatcher();
 
 			void accept(ShapeVisitor &visitor) override;
-			BoundingPolygon collisionPolygon() const override;
-			EventDispatcher<FuelEvent>& fuelDispatcher();
 			bool operator== (Shape const &o) const override;
 	};
 }
 
 
 namespace gvt {
+	shared_ptr<TractorBeam> Spaceship::tractorBeam() {
+		return mBeam;
+	}
+
 	double Spaceship::width() const {
 		return WIDTH;
 	}

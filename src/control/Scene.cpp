@@ -70,6 +70,9 @@ namespace gvt {
 			{typeid(RoundMissile), typeid(Spaceship)},
 			{typeid(MountainChain), typeid(Spaceship)},
 
+			{typeid(TractorBeam), typeid(RoundMissile)},
+			{typeid(TractorBeam), typeid(Fuel)},
+
 			{typeid(Spaceship), typeid(Bunker)},
 			{typeid(RoundMissile), typeid(Bunker)},
 
@@ -79,15 +82,18 @@ namespace gvt {
 			{typeid(Planet), typeid(RoundMissile)},
 		};
 
-		for (auto const &pair: destroyPair) {
-			// Insert vertices, irrespective of whether they are present or not
-			mDestroyGraph.insertVertex(TypeVertex(pair.first));
-			mDestroyGraph.insertVertex(TypeVertex(pair.second));
+		mDestroyGraph.insertVertex(TypeVertex(typeid(Bunker)));
+		mDestroyGraph.insertVertex(TypeVertex(typeid(Fuel)));
+		mDestroyGraph.insertVertex(TypeVertex(typeid(MountainChain)));
+		mDestroyGraph.insertVertex(TypeVertex(typeid(Planet)));
+		mDestroyGraph.insertVertex(TypeVertex(typeid(RoundMissile)));
+		mDestroyGraph.insertVertex(TypeVertex(typeid(Spaceship)));
+		mDestroyGraph.insertVertex(TypeVertex(typeid(TractorBeam)));
 
+		for (auto const &pair: destroyPair)
 			mDestroyGraph.insertEdge(
 					TypeVertex(pair.first), TypeVertex(pair.second)
 			);
-		}
 	}
 
 	void Scene::onCollision (shared_ptr<PairCollisionEvent> e) {

@@ -226,9 +226,19 @@ namespace gvt {
 				case (sf::Keyboard::Key::D):
 					mShip->rotate(mAngleStep);
 					break;
-				case (sf::Keyboard::Key::S):
-					// Should activate the shields in a future version
-					// of the program
+				case (sf::Keyboard::Key::K):
+					mBeamOn = !mBeamOn;
+
+					if (mBeamOn) {
+						mGame->currentScene()->shapes()->insert(
+								mShip->tractorBeam()
+						);
+					} else {
+						mGame->currentScene()->shapes()->remove(
+								mShip->tractorBeam()
+						);
+					}
+
 					break;
 				case (sf::Keyboard::Key::Space):
 					mGame->currentScene()->shapes()->insert(

@@ -38,7 +38,6 @@ namespace gvt {
 
 			explicit ShapeEvent (Shape *_source): source{_source} {};
 	};
-
 	struct PositionEvent: ShapeEvent {
 			explicit PositionEvent (Shape *source): ShapeEvent(source) {};
 	};
@@ -87,7 +86,7 @@ namespace gvt {
 			/**
 			 * @param position Position vector to set for this @c Shape.
 			 */
-			void position(Vectord position);
+			virtual void position(Vectord position);
 			/**
 			 * Sets the velocity of this @c Shape. Note that the unit measure
 			 * utilized is point/sec.
@@ -130,7 +129,7 @@ namespace gvt {
 			 * destroyed, @c false otherwise.
 			 */
 			virtual inline bool destroyed() const;
-			void destroyed (bool destroyed);
+			virtual void destroyed (bool destroyed);
 			/**
 			 * @return The angle with respect to the object origin of the
 			 * current @c Shape instance, given in radians.
@@ -139,7 +138,7 @@ namespace gvt {
 			/**
 			 * @param r The rotation angle to set for this object, in radians
 			 */
-			void rotation(double r);
+			virtual void rotation(double r);
 			/**
 			 * @param r Amount of radians to add to the current rotation value
 			 */
@@ -171,12 +170,6 @@ namespace gvt {
 			 * @see ShapeVisitor
 			 */
 			virtual void accept(ShapeVisitor &visitor) = 0;
-			/**
-			 * @return @c true if the object at the current position meets the
-			 * other @c Shape given as argument by following the trajectory @c
-			 * t
-			 */
-			bool meets(Shape const &o, Vectorf const &t) const;
 
 			virtual bool operator== (Shape const &o) const;
 			virtual bool operator!= (Shape const &o) const;
