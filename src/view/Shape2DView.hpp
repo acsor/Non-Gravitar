@@ -39,9 +39,9 @@ namespace gvt {
 			void updateRotationTransform() override;
 			void onCreateDebugView() override;
 			void onUpdateDebugColor() override;
-			void onShapeCollided(shared_ptr<CollisionEvent> e) override;
+			void onShapeCollided(CollisionEvent e) override;
 
-			void draw(RenderTarget &t, RenderStates s) const override;
+			void draw(sf::RenderTarget &t, sf::RenderStates s) const override;
 	};
 }
 

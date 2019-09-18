@@ -72,8 +72,8 @@ namespace gvt {
 			sf::Clock mClock;
 			EventDispatcher<sf::Event> mViewEvents;
 
-			void onShipMoved(shared_ptr<PositionEvent> e);
-			void toggleDebug (shared_ptr<sf::Event> const &e);
+			void onShipMoved(PositionEvent e);
+			void toggleDebug(sf::Event e);
 
 			Game();
 		public:
@@ -137,13 +137,13 @@ namespace gvt {
 			Vectord mMin, mMax;
 			shared_ptr<Spaceship> mShip;
 
-			shared_ptr<Callback<sf::Event>> mResizeHandle;
-			shared_ptr<Callback<SceneChangeEvent>> mSceneHandle;
-			shared_ptr<Callback<PositionEvent>> mShipHandle;
+			shared_ptr<Callback<sf::Event>> mResizeCbk;
+			shared_ptr<Callback<SceneChangeEvent>> mSceneCbk;
+			shared_ptr<Callback<PositionEvent>> mShipCbk;
 
-			void onWindowResized(shared_ptr<sf::Event> const &e);
-			void onSceneChanged(shared_ptr<SceneChangeEvent> e);
-			void onShipMoved (shared_ptr<PositionEvent> e);
+			void onWindowResized(sf::Event e);
+			void onSceneChanged(SceneChangeEvent e);
+			void onShipMoved (PositionEvent e);
 		public:
 			SceneFrame(Game *game, shared_ptr<Spaceship> ship);
 			~SceneFrame ();
@@ -176,7 +176,7 @@ namespace gvt {
 				double angle
 			);
 
-			void operator() (shared_ptr<sf::Event> e);
+			void operator() (sf::Event e);
 	};
 }
 

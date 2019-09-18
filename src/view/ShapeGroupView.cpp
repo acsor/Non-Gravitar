@@ -24,16 +24,16 @@
 
 
 namespace gvt {
-	void ShapeGroupView::onShapeInserted (shared_ptr<ShapeInsertionEvent> e) {
-		mViews[e->shape] = shared_ptr<ShapeView>(mFactory(e->shape));
+	void ShapeGroupView::onShapeInserted (ShapeInsertionEvent e) {
+		mViews[e.shape] = shared_ptr<ShapeView>(mFactory(e.shape));
 	}
 
-	void ShapeGroupView::onShapeRemoved (shared_ptr<ShapeRemovalEvent> e) {
-		mViews.erase(e->shape);
+	void ShapeGroupView::onShapeRemoved (ShapeRemovalEvent e) {
+		mViews.erase(e.shape);
 	}
 
 	void ShapeGroupView::onShapeGroupDestroyed (
-			shared_ptr<ShapeGroupDestructionEvent> e
+			ShapeGroupDestructionEvent e
 	) {
 		mViews.clear();
 		mGroup.reset();
@@ -50,13 +50,13 @@ namespace gvt {
 	ShapeGroupView::ShapeGroupView(const shared_ptr<ShapeGroup> &group):
 			mGroup{group} {
 		mAttachCbk = group->insertionDispatcher().addCallback(
-			[this] (shared_ptr<ShapeInsertionEvent> e) -> void { onShapeInserted (e); }
+			[this] (ShapeInsertionEvent e) -> void { onShapeInserted (e); }
 		);
 		mRemovalCbk = group->removalDispatcher().addCallback(
-			[this] (shared_ptr<ShapeRemovalEvent> e) -> void { onShapeRemoved(e); }
+			[this] (ShapeRemovalEvent e) -> void { onShapeRemoved(e); }
 		);
 		mDestrCbk = group->destructionDispatcher().addCallback(
-			[this] (shared_ptr<ShapeGroupDestructionEvent> e) -> void { onShapeGroupDestroyed (e); }
+			[this] (ShapeGroupDestructionEvent e) -> void { onShapeGroupDestroyed (e); }
 		);
 
 		for (auto const &shape: *group)
@@ -76,10 +76,14 @@ namespace gvt {
 			mView.second->setDebug(state);
 	}
 
+	shared_ptr<ShapeView> ShapeGroupView::viewFor (shared_ptr<Shape> shape) {
+		return mViews[shape];
+	}
+
 	void ShapeGroupView::draw(
-			sf::RenderTarget &target, sf::RenderStates state
+			sf::RenderTarget &t, sf::RenderStates s
 	) const {
 		for (auto &view: mViews)
-			view.second->draw(target, state);
+			view.second->draw(t, s);
 	}
 }

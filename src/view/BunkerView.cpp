@@ -25,10 +25,10 @@
 using BunkerView = gvt::BunkerView;
 
 
-void BunkerView::draw(RenderTarget &target, RenderStates state) const {
-	Shape2DView::draw(target, state);
+void BunkerView::draw(sf::RenderTarget &t, sf::RenderStates s) const {
+	Shape2DView::draw(t, s);
 
-	target.draw(mSprite, mTranslation * mRotation);
+	t.draw(mSprite, mTranslation * mRotation);
 }
 
 BunkerView::BunkerView(const shared_ptr<Bunker>& bunker): Shape2DView(bunker) {

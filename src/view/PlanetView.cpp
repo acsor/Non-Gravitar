@@ -36,7 +36,7 @@ namespace gvt {
 		mCircle.setOutlineThickness(2);
 	}
 
-	void PlanetView::draw(RenderTarget &t, RenderStates s) const {
+	void PlanetView::draw(sf::RenderTarget &t, sf::RenderStates s) const {
 		Shape2DView::draw(t, s);
 
 		t.draw(mCircle, mTranslation * mRotation);

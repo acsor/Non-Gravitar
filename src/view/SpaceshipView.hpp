@@ -30,9 +30,6 @@
 #include "Shape2DView.hpp"
 #include "GraphicAssets.hpp"
 
-template<typename T> using weak_ptr = std::weak_ptr<T>;
-template<typename T> using shared_ptr = std::shared_ptr<T>;
-
 
 namespace gvt {
 	class SpaceshipView: public Shape2DView {
@@ -49,7 +46,7 @@ namespace gvt {
 			sf::Texture mTexture;
 		protected:
 			void draw(sf::RenderTarget &t, sf::RenderStates s) const override;
-			void onShapeMoved(shared_ptr<PositionEvent> e) override;
+			void onShapeMoved(PositionEvent e) override;
 		public:
 			explicit SpaceshipView(const shared_ptr<Spaceship>& spaceship);
 	};

@@ -47,10 +47,10 @@ namespace gvt {
 		initializeDestroyGraph();
 
 		mCollisionCbk = mShapes->collisionDispatcher().addCallback(
-			[this] (shared_ptr<PairCollisionEvent> e) -> void { onCollision(e); }
+			[this] (PairCollisionEvent e) -> void { onCollision(e); }
 		);
 		mDestroyCbk = mShapes->removalDispatcher().addCallback(
-			[this] (shared_ptr<ShapeRemovalEvent> e) -> void { onShapeRemoved(e); }
+			[this] (ShapeRemovalEvent e) -> void { onShapeRemoved(e); }
 		);
 	}
 
@@ -94,23 +94,23 @@ namespace gvt {
 			);
 	}
 
-	void Scene::onCollision (shared_ptr<PairCollisionEvent> e) {
-		auto first = TypeVertex(typeid(*e->first));
-		auto second = TypeVertex(typeid(*e->second));
+	void Scene::onCollision (PairCollisionEvent e) {
+		auto first = TypeVertex(typeid(*e.first));
+		auto second = TypeVertex(typeid(*e.second));
 
 		if (mDestroyGraph.containsEdge(first, second))
-			e->second->destroyed(true);
+			e.second->destroyed(true);
 		if (mDestroyGraph.containsEdge(second, first))
-			e->first->destroyed(true);
+			e.first->destroyed(true);
 	}
 
-	void Scene::onShapeRemoved (shared_ptr<ShapeRemovalEvent> e) {
-		if (e->shape->destroyed()) {
-			if (std::dynamic_pointer_cast<Bunker>(e->shape)) {
+	void Scene::onShapeRemoved (ShapeRemovalEvent e) {
+		if (e.shape->destroyed()) {
+			if (std::dynamic_pointer_cast<Bunker>(e.shape)) {
 				mGame->gameInfo()->upgradeScore(BUNKER_SCORE);
-			} else if (auto s = std::dynamic_pointer_cast<Spaceship>(e->shape)) {
+			} else if (auto s = std::dynamic_pointer_cast<Spaceship>(e.shape)) {
 				onSpaceshipDestroyed(s);
-			} else if (auto f = std::dynamic_pointer_cast<Fuel>(e->shape)) {
+			} else if (auto f = std::dynamic_pointer_cast<Fuel>(e.shape)) {
 				mGame->spaceship()->rechargeFuel(*f);
 			}
 		}

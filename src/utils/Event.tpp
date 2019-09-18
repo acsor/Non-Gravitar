@@ -28,7 +28,7 @@ namespace gvt {
 	}
 
 	template<typename E>
-	void EventDispatcher<E>::raiseEvent(shared_ptr<E> event) {
+	void EventDispatcher<E>::raiseEvent(E event) {
 		auto callbacksCopy = mCallbacks;
 
 		for (auto const &callback: callbacksCopy)

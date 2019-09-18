@@ -34,7 +34,7 @@ namespace gvt {
 	}
 
 
-	void RoundMissileView::draw(RenderTarget &t, RenderStates s) const {
+	void RoundMissileView::draw(sf::RenderTarget &t, sf::RenderStates s) const {
 		Shape2DView::draw(t, s);
 
 		t.draw(mCircle, mTranslation * mRotation);

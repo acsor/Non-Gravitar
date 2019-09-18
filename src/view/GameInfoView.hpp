@@ -51,9 +51,9 @@ namespace gvt {
 			void updateText();
 			void updateShips();
 
-			void onFuelChanged (shared_ptr<FuelEvent> const &e);
-			void onScoreChanged (shared_ptr<gvt::Event> const &e);
-			void onShipsChanged (shared_ptr<gvt::Event> const &e);
+			void onFuelChanged (FuelEvent e);
+			void onScoreChanged (ScoreEvent e);
+			void onShipsChanged (SpaceshipCountEvent e);
 		protected:
 			void draw (sf::RenderTarget &t, sf::RenderStates s) const override;
 		public:

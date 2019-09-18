@@ -38,11 +38,11 @@ namespace gvt {
 		shape->rotationDispatcher().removeCallback(mRotCallback);
 	}
 
-	void CollisionGroup::onShapeMoved (shared_ptr<ShapeEvent> e) {
+	void CollisionGroup::onShapeMoved (ShapeEvent e) {
 		updateCollisions();
 	}
 
-	void CollisionGroup::onShapeRotated (shared_ptr<RotationEvent> e) {
+	void CollisionGroup::onShapeRotated (RotationEvent e) {
 		updateCollisions();
 	}
 
@@ -70,9 +70,7 @@ namespace gvt {
 					first->get()->collided(true);
 					second->get()->collided(true);
 
-					mCollisionDisp.raiseEvent(
-						std::make_shared<PairCollisionEvent>(*first, *second)
-					);
+					mCollisionDisp.raiseEvent({*first, *second});
 				}
 
 				second++;
@@ -87,10 +85,10 @@ namespace gvt {
 
 	CollisionGroup::CollisionGroup() {
 		mPosCallback = std::make_shared<Callback<PositionEvent>>(
-			[this] (shared_ptr<PositionEvent> e) -> void { onShapeMoved(e); }
+			[this] (PositionEvent e) -> void { onShapeMoved(e); }
 		);
 		mRotCallback = std::make_shared<Callback<RotationEvent>>(
-			[this] (shared_ptr<RotationEvent> e) -> void { onShapeRotated(e); }
+			[this] (RotationEvent e) -> void { onShapeRotated(e); }
 		);
 	}
 

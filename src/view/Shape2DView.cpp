@@ -58,7 +58,7 @@ namespace gvt {
 		mRotation.rotate(rad2deg(mShape->rotation()), center.x, center.y);
 	}
 
-	void Shape2DView::onShapeCollided(shared_ptr<CollisionEvent> e) {
+	void Shape2DView::onShapeCollided(CollisionEvent e) {
 		ShapeView::onShapeCollided(e);
 
 		debugColor(
@@ -66,7 +66,7 @@ namespace gvt {
 		);
 	}
 
-	void Shape2DView::draw(RenderTarget &target, RenderStates s) const {
+	void Shape2DView::draw(sf::RenderTarget &target, sf::RenderStates s) const {
 		if (mDebug)
 			target.draw(mBounds, mTranslation * mRotation);
 	}

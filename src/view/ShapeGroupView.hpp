@@ -31,40 +31,39 @@
 #include "ShapeViewFactory.hpp"
 #include "DebuggableView.hpp"
 
-template<typename T> using weak_ptr = std::weak_ptr<T>;
-template<typename T> using shared_ptr = std::shared_ptr<T>;
-template<typename T> using unique_ptr = std::unique_ptr<T>;
-
 
 namespace gvt {
 	class ShapeGroupView: public sf::Drawable, public DebuggableView {
 		private:
+			template<typename T> using sp = std::shared_ptr<T>;
+
 			ShapeViewFactory mFactory;
 
 			shared_ptr<Callback<ShapeInsertionEvent>> mAttachCbk;
 			shared_ptr<Callback<ShapeRemovalEvent>> mRemovalCbk;
 			shared_ptr<Callback<ShapeGroupDestructionEvent>> mDestrCbk;
 
-			void onShapeInserted (shared_ptr<ShapeInsertionEvent> e);
-			void onShapeRemoved (shared_ptr<ShapeRemovalEvent> e);
-			void onShapeGroupDestroyed (shared_ptr<ShapeGroupDestructionEvent> e);
+			void onShapeInserted (ShapeInsertionEvent e);
+			void onShapeRemoved (ShapeRemovalEvent e);
+			void onShapeGroupDestroyed (ShapeGroupDestructionEvent e);
 		protected:
 			shared_ptr<ShapeGroup> mGroup;
-			mutable std::unordered_map<shared_ptr<Shape>, shared_ptr<ShapeView>> mViews;
+			mutable std::unordered_map<sp<Shape>, sp<ShapeView>> mViews;
 
 			void onCreateDebugView() override;
 			void onUpdateDebugColor () override;
 
-			void draw(RenderTarget &target, RenderStates state) const override;
+			void draw(sf::RenderTarget &t, sf::RenderStates s) const override;
 		public:
-			explicit ShapeGroupView(const shared_ptr<ShapeGroup>& group);
+			explicit ShapeGroupView(sp<ShapeGroup> const &group);
 			~ShapeGroupView() override;
 
 			void setDebug(bool debug) override;
-
-			shared_ptr<ShapeView> viewFor (shared_ptr<Shape> shape) {
-				return mViews[shape];
-			}
+			/**
+			 * @return The view object associated to the given @c Shape
+			 * instance.
+			 */
+			shared_ptr<ShapeView> viewFor (shared_ptr<Shape> shape);
 	};
 }
 

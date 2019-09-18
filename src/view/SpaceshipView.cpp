@@ -43,7 +43,7 @@ void SpaceshipView::draw(sf::RenderTarget &target, sf::RenderStates s) const {
 	}
 }
 
-void SpaceshipView::onShapeMoved(shared_ptr<PositionEvent> e) {
+void SpaceshipView::onShapeMoved(PositionEvent e) {
 	Shape2DView::onShapeMoved(e);
 
 	mAccel = mShip->acceleration().norm() != 0;

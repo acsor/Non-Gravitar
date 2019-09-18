@@ -40,7 +40,7 @@ namespace gvt {
 		// TODO Implement, if necessary
 	}
 
-	void PolylineView::draw(RenderTarget &t, RenderStates s) const {
+	void PolylineView::draw(sf::RenderTarget &t, sf::RenderStates s) const {
 		t.draw(mVertices, mTranslation * mRotation);
 	}
 

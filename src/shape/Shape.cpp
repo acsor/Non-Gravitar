@@ -31,14 +31,14 @@ namespace gvt {
 		if (position != mPosition) {
 			mPosition = position;
 
-			mPosDisp.raiseEvent(std::make_shared<PositionEvent>(this));
+			mPosDisp.raiseEvent(PositionEvent(this));
 		}
 	}
 
 	void Shape::move(const Vectord &t) {
 		mPosition += Vectord(t.x, t.y);
 
-		mPosDisp.raiseEvent(std::make_shared<PositionEvent>(this));
+		mPosDisp.raiseEvent(PositionEvent(this));
 	}
 
 	void Shape::animate(float time) {
@@ -56,7 +56,7 @@ namespace gvt {
 		else
 			mRotation = r - (2.0 * M_PI) * ceil(r / (2.0 * M_PI));
 
-		mRotDisp.raiseEvent(std::make_shared<RotationEvent>(this));
+		mRotDisp.raiseEvent(RotationEvent(this));
 	}
 
 	void Shape::velocity(const Vectord &t) {
@@ -67,7 +67,7 @@ namespace gvt {
 		if (collided != mCollided) {
 			mCollided = collided;
 
-			mColDisp.raiseEvent(std::make_shared<CollisionEvent>(this));
+			mColDisp.raiseEvent(CollisionEvent(this));
 		}
 	}
 
@@ -75,7 +75,7 @@ namespace gvt {
 		if (destroyed != mDestroyed) {
 			mDestroyed = destroyed;
 
-			mDestrDisp.raiseEvent(std::make_shared<DestructionEvent>(this));
+			mDestrDisp.raiseEvent(DestructionEvent(this));
 		}
 	}
 

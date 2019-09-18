@@ -27,11 +27,6 @@
 #include "shape/Shape.hpp"
 #include "DebuggableView.hpp"
 
-template<typename T> using weak_ptr = std::weak_ptr<T>;
-template<typename T> using shared_ptr = std::shared_ptr<T>;
-using RenderStates = sf::RenderStates;
-using RenderTarget = sf::RenderTarget;
-
 
 namespace gvt {
 	class ShapeView: public sf::Drawable, public DebuggableView {
@@ -56,9 +51,9 @@ namespace gvt {
 			 */
 			virtual void updateTranslationTransform();
 
-			virtual void onShapeMoved(shared_ptr<PositionEvent> e);
-			virtual void onShapeRotated(shared_ptr<RotationEvent> e);
-			virtual void onShapeCollided(shared_ptr<CollisionEvent> e) {};
+			virtual void onShapeMoved(PositionEvent e);
+			virtual void onShapeRotated(RotationEvent e);
+			virtual void onShapeCollided(CollisionEvent e) {};
 		public:
 			friend class ShapeGroupView;
 

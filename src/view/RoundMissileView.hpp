@@ -35,7 +35,7 @@ namespace gvt {
 		protected:
 			shared_ptr<RoundMissile> mMissile;
 
-			void draw(RenderTarget &t, RenderStates s) const override;
+			void draw(sf::RenderTarget &t, sf::RenderStates s) const override;
 		public:
 			explicit RoundMissileView (shared_ptr<RoundMissile> missile);
 	};

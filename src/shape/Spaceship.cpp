@@ -89,10 +89,10 @@ namespace gvt {
 	}
 
 	void Spaceship::rechargeFuel(Fuel &fuel) {
-		auto e = std::make_shared<FuelEvent>(mFuel, 0);
+		auto e = FuelEvent(mFuel, 0);
 
 		mFuel += fuel.fuel();
-		e->newAmount = mFuel;
+		e.newAmount = mFuel;
 
 		fuel.empty();
 
@@ -100,14 +100,14 @@ namespace gvt {
 	}
 
 	void Spaceship::dischargeFuel(unsigned amount) {
-		auto e = std::make_shared<FuelEvent>(mFuel, 0);
+		auto e = FuelEvent(mFuel, 0);
 
 		if (amount > mFuel)
 			mFuel = 0;
 		else
 			mFuel -= amount;
 
-		e->newAmount = mFuel;
+		e.newAmount = mFuel;
 
 		mFuelDisp.raiseEvent(e);
 	}

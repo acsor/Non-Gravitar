@@ -69,15 +69,15 @@ namespace gvt {
 		}
 	}
 
-	void GameInfoView::onFuelChanged (shared_ptr<FuelEvent> const &e) {
+	void GameInfoView::onFuelChanged (FuelEvent e) {
 		updateText();
 	}
 
-	void GameInfoView::onScoreChanged (shared_ptr<gvt::Event> const &e) {
+	void GameInfoView::onScoreChanged (ScoreEvent e) {
 		updateText();
 	}
 
-	void GameInfoView::onShipsChanged (shared_ptr<gvt::Event> const &e) {
+	void GameInfoView::onShipsChanged (SpaceshipCountEvent e) {
 		updateShips();
 	}
 
@@ -98,13 +98,13 @@ namespace gvt {
 		mAssets = GraphicAssets::getInstance();
 
 		mFuelCbk = mShip->fuelDispatcher().addCallback(
-			[this] (shared_ptr<FuelEvent> e) -> void { onFuelChanged(e); }
+			[this] (FuelEvent e) -> void { onFuelChanged(e); }
 		);
 		mScoreCbk = mInfo->scoreDispatcher().addCallback(
-			[this] (shared_ptr<ScoreEvent> e) -> void { onScoreChanged(e); }
+			[this] (ScoreEvent e) -> void { onScoreChanged(e); }
 		);
 		mShipCbk = mInfo->shipCountDispatcher().addCallback(
-			[this] (shared_ptr<SpaceshipCountEvent> e) -> void { onShipsChanged (e); }
+			[this] (SpaceshipCountEvent e) -> void { onShipsChanged (e); }
 		);
 
 		mText = sf::Text("", mAssets->defaultFont);

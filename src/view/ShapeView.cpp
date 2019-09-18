@@ -34,23 +34,23 @@ namespace gvt {
 		mRotation = sf::Transform::Identity;
 
 		mPosCbk = mShape->positionDispatcher().addCallback(
-			[this] (shared_ptr<PositionEvent> e) -> void { onShapeMoved(e); }
+			[this] (PositionEvent e) -> void { onShapeMoved(e); }
 		);
 		mRotCbk = mShape->rotationDispatcher().addCallback(
-			[this] (shared_ptr<RotationEvent> e) -> void { onShapeRotated(e); }
+			[this] (RotationEvent e) -> void { onShapeRotated(e); }
 		);
 		mColCbk = mShape->collisionDispatcher().addCallback(
-			[this] (shared_ptr<CollisionEvent> e) -> void { onShapeCollided(e); }
+			[this] (CollisionEvent e) -> void { onShapeCollided(e); }
 		);
 
 		updateTranslationTransform();
 	}
 
-	void ShapeView::onShapeMoved(shared_ptr<PositionEvent> e) {
+	void ShapeView::onShapeMoved(PositionEvent e) {
 		updateTranslationTransform();
 	}
 
-	void ShapeView::onShapeRotated(shared_ptr<RotationEvent> e) {
+	void ShapeView::onShapeRotated(RotationEvent e) {
 		updateRotationTransform();
 	}
 
