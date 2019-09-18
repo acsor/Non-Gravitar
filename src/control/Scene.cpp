@@ -112,6 +112,8 @@ namespace gvt {
 				mGame->gameInfo()->upgradeScore(BUNKER_SCORE);
 			} else if (auto s = std::dynamic_pointer_cast<Spaceship>(e->shape)) {
 				onSpaceshipDestroyed(s);
+			} else if (auto f = std::dynamic_pointer_cast<Fuel>(e->shape)) {
+				mGame->spaceship()->rechargeFuel(*f);
 			}
 		}
 	}
