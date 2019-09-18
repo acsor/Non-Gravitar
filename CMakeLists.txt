@@ -82,10 +82,13 @@ target_link_libraries(PlanetSurface Planet CollisionGroup)
 
 
 # Shape views section
+add_library(GraphicAssets "${DIR_VIEWS}/GraphicAssets.cpp")
+target_link_libraries(GraphicAssets Utils)
+
 add_library(DebuggableView "${DIR_VIEWS}/DebuggableView.cpp")
 
 add_library(ShapeView "${DIR_VIEWS}/ShapeView.cpp")
-target_link_libraries(ShapeView Shape DebuggableView)
+target_link_libraries(ShapeView Shape DebuggableView GraphicAssets)
 
 add_library(Shape2DView "${DIR_VIEWS}/Shape2DView.cpp")
 target_link_libraries(Shape2DView ShapeView)
