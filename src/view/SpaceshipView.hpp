@@ -25,37 +25,32 @@
 #include <string>
 #include <memory>
 #include <SFML/Graphics.hpp>
-#include "Shape2DView.hpp"
 #include "shape/Spaceship.hpp"
 #include "utils/Event.hpp"
+#include "Shape2DView.hpp"
+#include "GraphicAssets.hpp"
 
 template<typename T> using weak_ptr = std::weak_ptr<T>;
 template<typename T> using shared_ptr = std::shared_ptr<T>;
-using RenderStates = sf::RenderStates;
-using RenderTarget = sf::RenderTarget;
-using Texture = sf::Texture;
 
 
 namespace gvt {
 	class SpaceshipView: public Shape2DView {
 		private:
 			shared_ptr<Spaceship> mShip;
+			sf::Sprite mutable mSprite;
+			GraphicAssets *mAssets;
+
 			bool mAccel{false};
 
-			sf::Sprite mutable mSprite;
-			/**
-			 * Three @c Texture attributes that correspond to, respectively, an
-			 * unalterated @c Spaceship, an accelerating @c Spaceship and a @c
-			 * Spaceship whose shield is momentarily activated.
-			 */
-			Texture mTexture, mAccelTexture, mShieldTexture;
+			// TODO Amongst the most absurd bugs I ever had! If I remove this
+			//  field (completely invisible, completely unused), I get a
+			//  segfault at a certain execution point of the program.
+			sf::Texture mTexture;
 		protected:
-			void draw(RenderTarget &t, RenderStates s) const override;
+			void draw(sf::RenderTarget &t, sf::RenderStates s) const override;
 			void onShapeMoved(shared_ptr<PositionEvent> e) override;
 		public:
-			static const std::string SHIP_TEXTURE;
-			static const std::string ACCEL_SPACESHIP_TEXTURE;
-
 			explicit SpaceshipView(const shared_ptr<Spaceship>& spaceship);
 	};
 }

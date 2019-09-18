@@ -21,6 +21,7 @@
 // SOFTWARE.
 
 #include "PlanetView.hpp"
+#include "GraphicAssets.hpp"
 
 
 namespace gvt {

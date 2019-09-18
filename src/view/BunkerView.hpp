@@ -32,20 +32,15 @@ template<typename T> using weak_ptr = std::weak_ptr<T>;
 template<typename T> using shared_ptr = std::shared_ptr<T>;
 using RenderStates = sf::RenderStates;
 using RenderTarget = sf::RenderTarget;
-using Texture = sf::Texture;
 
 
 namespace gvt {
 	class BunkerView: public Shape2DView {
 		private:
 			sf::Sprite mSprite;
-			Texture mTexture;
 		protected:
 			void draw(RenderTarget &target, RenderStates state) const override;
 		public:
-			static const std::string BUNKER2D_GRAPHICS;
-			static const std::string BUNKER3D_GRAPHICS;
-
 			explicit BunkerView(const shared_ptr<Bunker> &bunker);
 	};
 }

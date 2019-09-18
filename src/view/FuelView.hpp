@@ -30,11 +30,7 @@ namespace gvt {
 	class FuelView: public Shape2DView {
 		private:
 			sf::Sprite mSprite;
-			sf::Texture mTexture;
-			sf::Font mFont;
 			sf::Text mText;
-
-			static const std::string TEXTURE_PATH;
 		protected:
 			void draw (sf::RenderTarget &t, sf::RenderStates s) const override;
 		public:

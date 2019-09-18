@@ -60,8 +60,6 @@ namespace gvt {
 			virtual void onShapeRotated(shared_ptr<RotationEvent> e);
 			virtual void onShapeCollided(shared_ptr<CollisionEvent> e) {};
 		public:
-			static const std::string DEFAULT_FONT;
-
 			friend class ShapeGroupView;
 
 			~ShapeView() override;

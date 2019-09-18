@@ -32,9 +32,10 @@ namespace gvt {
 			sf::CircleShape mCircle;
 
 			static const sf::Color DEFAULT_OUTLINE_COLOR;
+
+			void draw(RenderTarget &t, RenderStates s) const override;
 		public:
 			explicit PlanetView (shared_ptr<Planet> const &planet);
-			void draw(RenderTarget &t, RenderStates s) const override;
 	};
 }
 

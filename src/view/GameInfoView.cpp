@@ -21,7 +21,6 @@
 // SOFTWARE.
 #include "control/Game.hpp"
 #include "GameInfoView.hpp"
-#include "SpaceshipView.hpp"
 #include "utils/Utils.hpp"
 
 
@@ -46,7 +45,7 @@ namespace gvt {
 		// We need to add spaceships, not remove them
 		if (toDelete < 0) {
 			while (toDelete < 0) {
-				auto ship = sf::Sprite(mShipTexture);
+				auto ship = sf::Sprite(mAssets->spaceshipTexture);
 
 				if (mShipSprites.empty()) {
 					ship.setPosition(0, 0);
@@ -70,11 +69,8 @@ namespace gvt {
 		}
 	}
 
-	void GameInfoView::onFuelChanged (shared_ptr<gvt::Event> const &e) {
-		auto fuelEvent = std::dynamic_pointer_cast<FuelEvent>(e);
-
-		if (fuelEvent)
-			updateText();
+	void GameInfoView::onFuelChanged (shared_ptr<FuelEvent> const &e) {
+		updateText();
 	}
 
 	void GameInfoView::onScoreChanged (shared_ptr<gvt::Event> const &e) {
@@ -100,7 +96,8 @@ namespace gvt {
 		shared_ptr<GameInfo> gameInfo, shared_ptr<Spaceship> ship
 	): mInfo{std::move(gameInfo)}, mShip{std::move(ship)} {
 		auto _1 = std::placeholders::_1;
-		auto shipTexturePath = staticsGet(SpaceshipView::SHIP_TEXTURE);
+
+		mAssets = GraphicAssets::getInstance();
 
 		mFuelCbk = mShip->fuelDispatcher().addCallback(
 			std::bind(&GameInfoView::onFuelChanged, this, _1)
@@ -112,16 +109,7 @@ namespace gvt {
 			std::bind(&GameInfoView::onShipsChanged, this, _1)
 		);
 
-		if (!mShipTexture.loadFromFile(shipTexturePath))
-			throw std::runtime_error {
-					"Could not load spaceship texture from disk"
-			};
-		if (!mFont.loadFromFile(ShapeView::DEFAULT_FONT))
-			throw std::runtime_error ("Could not load font from disk");
-
-		mShipTexture.setSmooth(true);
-
-		mText = sf::Text("", mFont);
+		mText = sf::Text("", mAssets->defaultFont);
 		mText.setFillColor(TEXT_COLOR);
 		mText.setPosition(0, 0);
 

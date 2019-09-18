@@ -19,43 +19,25 @@
 // LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
-#include <stdexcept>
 #include "SpaceshipView.hpp"
-#include "utils/Utils.hpp"
 
 using SpaceshipView = gvt::SpaceshipView;
 
 
-const std::string SpaceshipView::SHIP_TEXTURE = "graphics/spaceship.png";
-const std::string SpaceshipView::ACCEL_SPACESHIP_TEXTURE =
-	"graphics/spaceship-accelerating.png";
-
-
 SpaceshipView::SpaceshipView(shared_ptr<Spaceship> const &spaceship):
 		Shape2DView(spaceship), mShip{spaceship} {
-	if (
-			!mTexture.loadFromFile(gvt::staticsGet(SHIP_TEXTURE)) ||
-			!mAccelTexture.loadFromFile(
-				gvt::staticsGet(ACCEL_SPACESHIP_TEXTURE)
-			)
-	   ) {
-		throw std::runtime_error{
-			"Could not load spaceship textures from disk"
-		};
-	}
+	mAssets = GraphicAssets::getInstance();
 
-	mTexture.setSmooth(true);
-	mAccelTexture.setSmooth(true);
-	mSprite.setTexture(mTexture);
+	mSprite.setTexture(mAssets->spaceshipTexture);
 }
 
-void SpaceshipView::draw(RenderTarget &target, RenderStates s) const {
+void SpaceshipView::draw(sf::RenderTarget &target, sf::RenderStates s) const {
 	Shape2DView::draw(target, s);
 
 	if (mAccel) {
-		mSprite.setTexture(mAccelTexture);
+		mSprite.setTexture(mAssets->spaceshipTextureAccel);
 		target.draw(mSprite, mTranslation * mRotation);
-		mSprite.setTexture(mTexture);
+		mSprite.setTexture(mAssets->spaceshipTexture);
 	} else {
 		target.draw(mSprite, mTranslation * mRotation);
 	}

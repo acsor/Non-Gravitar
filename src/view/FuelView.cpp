@@ -21,11 +21,10 @@
 // SOFTWARE.
 #include "FuelView.hpp"
 #include "utils/Utils.hpp"
+#include "GraphicAssets.hpp"
 
 
 namespace gvt {
-	const std::string FuelView::TEXTURE_PATH = "graphics/fuel.png";
-
 	void FuelView::draw (sf::RenderTarget &t, sf::RenderStates s) const {
 		Shape2DView::draw(t, s);
 
@@ -34,14 +33,10 @@ namespace gvt {
 	}
 
 	FuelView::FuelView (shared_ptr<Fuel> const &fuel): Shape2DView(fuel) {
-		if (!mTexture.loadFromFile(staticsGet(TEXTURE_PATH)))
-			throw std::runtime_error("Could not load fuel texture from disk");
-		if (!mFont.loadFromFile(ShapeView::DEFAULT_FONT))
-			throw std::runtime_error ("Could not load font from disk");
+		auto a = GraphicAssets::getInstance();
+		mSprite.setTexture(a->fuelTexture);
 
-		mSprite.setTexture(mTexture);
-
-		mText = sf::Text(std::to_string(fuel->fuel()), mFont, 20);
+		mText = sf::Text(std::to_string(fuel->fuel()), a->defaultFont, 20);
 		mText.setPosition(0, fuel->height() / 2.0);
 		mText.setFillColor(sf::Color::White);
 	}

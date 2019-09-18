@@ -19,14 +19,11 @@
 // LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
-#include <utility>
 #include "ShapeView.hpp"
-#include "utils/Utils.hpp"
+#include <utility>
 
 
 namespace gvt {
-	const std::string ShapeView::DEFAULT_FONT = staticsGet("fonts/ERGOB.TTF");
-
 	void ShapeView::updateTranslationTransform() {
 		auto const pos = mShape->position();
 
@@ -42,7 +39,7 @@ namespace gvt {
 			std::bind(&ShapeView::onShapeMoved, this, _1)
 		);
 		mRotCbk = mShape->rotationDispatcher().addCallback(
-				std::bind(&ShapeView::onShapeRotated, this, _1)
+			std::bind(&ShapeView::onShapeRotated, this, _1)
 		);
 		mColCbk = mShape->collisionDispatcher().addCallback(
 			std::bind(&ShapeView::onShapeCollided, this, _1)

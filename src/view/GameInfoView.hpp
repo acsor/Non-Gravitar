@@ -25,6 +25,7 @@
 #include <SFML/Graphics.hpp>
 #include "control/GameInfo.hpp"
 #include "shape/Spaceship.hpp"
+#include "GraphicAssets.hpp"
 
 
 namespace gvt {
@@ -36,13 +37,12 @@ namespace gvt {
 
 			shared_ptr<GameInfo> mInfo;
 			shared_ptr<Spaceship> mShip;
+			GraphicAssets *mAssets;
 			
 			shared_ptr<Callback<FuelEvent>> mFuelCbk;
 			shared_ptr<Callback<SpaceshipCountEvent>> mShipCbk;
 			shared_ptr<Callback<ScoreEvent>> mScoreCbk;
 
-			sf::Font mFont;
-			sf::Texture mShipTexture;
 			std::list<sf::Sprite> mShipSprites;
 			mutable sf::Text mText;
 
@@ -51,7 +51,7 @@ namespace gvt {
 			void updateText();
 			void updateShips();
 
-			void onFuelChanged (shared_ptr<gvt::Event> const &e);
+			void onFuelChanged (shared_ptr<FuelEvent> const &e);
 			void onScoreChanged (shared_ptr<gvt::Event> const &e);
 			void onShipsChanged (shared_ptr<gvt::Event> const &e);
 		protected:
