@@ -47,7 +47,6 @@ namespace gvt {
 			mutable sf::Text mText;
 
 			static const sf::Color TEXT_COLOR;
-			static const std::string DEFAULT_FONT;
 
 			void updateText();
 			void updateShips();

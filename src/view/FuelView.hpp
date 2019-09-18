@@ -31,6 +31,8 @@ namespace gvt {
 		private:
 			sf::Sprite mSprite;
 			sf::Texture mTexture;
+			sf::Font mFont;
+			sf::Text mText;
 
 			static const std::string TEXTURE_PATH;
 		protected:

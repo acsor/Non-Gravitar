@@ -27,8 +27,6 @@
 
 namespace gvt {
 	const sf::Color GameInfoView::TEXT_COLOR = sf::Color(0, 111, 109);
-	const std::string GameInfoView::DEFAULT_FONT = gvt::staticsGet("fonts/ERGOB.TTF");
-
 
 	void GameInfoView::updateText() {
 		mText.setString(
@@ -102,7 +100,7 @@ namespace gvt {
 		shared_ptr<GameInfo> gameInfo, shared_ptr<Spaceship> ship
 	): mInfo{std::move(gameInfo)}, mShip{std::move(ship)} {
 		auto _1 = std::placeholders::_1;
-		auto shipTexturePath = gvt::staticsGet(SpaceshipView::SHIP_TEXTURE);
+		auto shipTexturePath = staticsGet(SpaceshipView::SHIP_TEXTURE);
 
 		mFuelCbk = mShip->fuelDispatcher().addCallback(
 			std::bind(&GameInfoView::onFuelChanged, this, _1)
@@ -118,7 +116,7 @@ namespace gvt {
 			throw std::runtime_error {
 					"Could not load spaceship texture from disk"
 			};
-		if (!mFont.loadFromFile(DEFAULT_FONT))
+		if (!mFont.loadFromFile(ShapeView::DEFAULT_FONT))
 			throw std::runtime_error ("Could not load font from disk");
 
 		mShipTexture.setSmooth(true);

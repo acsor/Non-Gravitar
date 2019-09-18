@@ -30,12 +30,19 @@ namespace gvt {
 		Shape2DView::draw(t, s);
 
 		t.draw(mSprite, mTranslation * mRotation);
+		t.draw(mText, mTranslation * mRotation);
 	}
 
 	FuelView::FuelView (shared_ptr<Fuel> const &fuel): Shape2DView(fuel) {
 		if (!mTexture.loadFromFile(staticsGet(TEXTURE_PATH)))
 			throw std::runtime_error("Could not load fuel texture from disk");
+		if (!mFont.loadFromFile(ShapeView::DEFAULT_FONT))
+			throw std::runtime_error ("Could not load font from disk");
 
 		mSprite.setTexture(mTexture);
+
+		mText = sf::Text(std::to_string(fuel->fuel()), mFont, 20);
+		mText.setPosition(0, fuel->height() / 2.0);
+		mText.setFillColor(sf::Color::White);
 	}
 }
