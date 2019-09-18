@@ -4,13 +4,13 @@ namespace gvt {
 	}
 
 	template<typename E>
-	void EventDispatcher<E>::addCallback(shared_ptr<callback<E>> c) {
+	void EventDispatcher<E>::addCallback(shared_ptr<Callback < E>> c) {
         mCallbacks.push_back(c);
 	}
 
 	template<typename E>
-	shared_ptr<callback<E>> EventDispatcher<E>::addCallback(callback<E> c) {
-		auto sharedCallback = std::make_shared<callback<E>>(std::move(c));
+	shared_ptr<Callback < E>> EventDispatcher<E>::addCallback(Callback<E> c) {
+		auto sharedCallback = std::make_shared<Callback < E>>(std::move(c));
 
 		mCallbacks.push_back(sharedCallback);
 
@@ -18,7 +18,7 @@ namespace gvt {
 	}
 
 	template<typename E>
-	void EventDispatcher<E>::removeCallback(shared_ptr<callback<E>> &c) {
+	void EventDispatcher<E>::removeCallback(shared_ptr<Callback < E>> &c) {
 		mCallbacks.remove(c);
 	}
 
@@ -28,14 +28,14 @@ namespace gvt {
 	}
 
 	template<typename E>
-	void EventDispatcher<E>::notify(shared_ptr<E> event) {
+	void EventDispatcher<E>::raiseEvent(shared_ptr<E> event) {
 		auto callbacksCopy = mCallbacks;
 
-		for (shared_ptr<callback<E>> &callback: callbacksCopy)
+		for (auto const &callback: callbacksCopy)
 			callback->operator()(event);
 	}
 
-	template<typename E> size_t EventDispatcher<E>::callbacks() const {
+	template<typename E> size_t EventDispatcher<E>::callbacksCount() const {
 		return mCallbacks.size();
 	}
 }

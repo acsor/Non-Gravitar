@@ -28,8 +28,32 @@
 
 
 namespace gvt {
+	class Shape;
 	class Rectangle;
 	class ShapeVisitor;
+
+
+	struct ShapeEvent: public Event {
+			Shape *source{nullptr};
+
+			explicit ShapeEvent (Shape *_source): source{_source} {};
+	};
+	struct PositionEvent: ShapeEvent {
+			explicit PositionEvent (Shape *source): ShapeEvent(source) {};
+	};
+
+	struct RotationEvent: public ShapeEvent {
+			explicit RotationEvent (Shape *source): ShapeEvent(source) {};
+	};
+
+	struct CollisionEvent: ShapeEvent {
+			explicit CollisionEvent (Shape *source): ShapeEvent(source) {};
+	};
+
+	struct DestructionEvent: ShapeEvent {
+			explicit DestructionEvent (Shape *source): ShapeEvent(source) {};
+	};
+
 
 	/**
 	 * @brief An abstract base class for subsequent shape objects. Note that
@@ -37,14 +61,18 @@ namespace gvt {
 	 * not an arbitrary center (which may vary from shape to shape).
 	 * @see gvt::Plane
 	 */
-	class Shape: public GVTEventDispatcher {
+	class Shape {
 		protected:
 			// mPosition encodes coordinates of the top-left corner, not of an
 			// arbitrary center
             Vectord mPosition, mVelocity, mAccel;
 			double mRotation{0};
+			bool mDestroyed{false}, mCollided{false};
 
-			bool mCollided{false};
+			EventDispatcher<PositionEvent> mPosDisp;
+			EventDispatcher<RotationEvent> mRotDisp;
+			EventDispatcher<CollisionEvent> mColDisp;
+			EventDispatcher<DestructionEvent> mDestrDisp;
 
 			Shape() = default;
 			explicit Shape(Vectord position);
@@ -58,7 +86,7 @@ namespace gvt {
 			/**
 			 * @param position Position vector to set for this @c Shape.
 			 */
-			void position(Vectord position);
+			virtual void position(Vectord position);
 			/**
 			 * Sets the velocity of this @c Shape. Note that the unit measure
 			 * utilized is point/sec.
@@ -96,7 +124,12 @@ namespace gvt {
 			 * collided or not.
 			 */
 			void collided(bool collided);
-
+			/**
+			 * @return @c true if this @c Shape is to be considered
+			 * destroyed, @c false otherwise.
+			 */
+			virtual inline bool destroyed() const;
+			virtual void destroyed (bool destroyed);
 			/**
 			 * @return The angle with respect to the object origin of the
 			 * current @c Shape instance, given in radians.
@@ -105,7 +138,7 @@ namespace gvt {
 			/**
 			 * @param r The rotation angle to set for this object, in radians
 			 */
-			void rotation(double r);
+			virtual void rotation(double r);
 			/**
 			 * @param r Amount of radians to add to the current rotation value
 			 */
@@ -125,6 +158,11 @@ namespace gvt {
 			 */
 			void move(Vectord const &t);
 
+			EventDispatcher<PositionEvent>& positionDispatcher();
+			EventDispatcher<RotationEvent>& rotationDispatcher();
+			EventDispatcher<CollisionEvent>& collisionDispatcher();
+			EventDispatcher<DestructionEvent>& destructionDispatcher();
+
 			/**
 			 * Lets a @c ShapeVisitor perform its operation on the 
 			 * implementing subclass.
@@ -132,27 +170,9 @@ namespace gvt {
 			 * @see ShapeVisitor
 			 */
 			virtual void accept(ShapeVisitor &visitor) = 0;
-			/**
-			 * @return @c true if the object at the current position meets the
-			 * other @c Shape given as argument by following the trajectory @c
-			 * t
-			 */
-			bool meets(Shape const &o, Vectorf const &t) const;
 
 			virtual bool operator== (Shape const &o) const;
 			virtual bool operator!= (Shape const &o) const;
-	};
-
-	struct ShapeEvent: public Event {
-		enum class Type {
-			unspecified = 0, moved, rotated, collided
-		};
-
-		ShapeEvent::Type type{ShapeEvent::Type::unspecified};
-		Shape *shape{nullptr};
-
-		inline ShapeEvent();
-		inline ShapeEvent(ShapeEvent::Type type, Shape *shape);
 	};
 }
 

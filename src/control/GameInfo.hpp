@@ -19,26 +19,56 @@
 // LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
-#ifndef NON_GRAVITAR_SOLAR_SYSTEM_SCENE_HPP
-#define NON_GRAVITAR_SOLAR_SYSTEM_SCENE_HPP
+#ifndef NON_GRAVITAR_GAME_INFO_HPP
+#define NON_GRAVITAR_GAME_INFO_HPP
 
-#include <typeindex>
-#include "shape-group/SolarSystem.hpp"
-#include "Scene.hpp"
+#include "utils/Event.hpp"
 
 
 namespace gvt {
-	/**
-	 * A @c SolarSystemScene features a solar system, giving the possibility
-	 * to enter planets which the spaceship runs into.
-	 */
-	class SolarSystemScene: public Scene {
+	struct SpaceshipCountEvent: public gvt::Event {
+			unsigned oldValue, newValue;
+
+			SpaceshipCountEvent(unsigned old, unsigned _new);
+	};
+
+	struct ScoreEvent: public gvt::Event {
+			unsigned oldValue, newValue;
+
+			ScoreEvent(unsigned old, unsigned _new);
+	};
+
+	class GameInfo {
 		private:
-			void onCollision (shared_ptr<PairCollisionEvent> e) override;
-			void onSpaceshipDestroyed (shared_ptr<Spaceship> ship) override;
+			unsigned mSpaceships;
+			unsigned mScore;
+
+			EventDispatcher<SpaceshipCountEvent> mShipDisp;
+			EventDispatcher<ScoreEvent> mScoreDisp;
 		public:
-			explicit SolarSystemScene (shared_ptr<SolarSystem> const &system);
+			GameInfo (unsigned score, unsigned spaceships);
+
+			void decrementSpaceships();
+			inline unsigned spaceships() const;
+
+			void upgradeScore (unsigned deltaScore);
+			inline unsigned score() const;
+
+			EventDispatcher<SpaceshipCountEvent>& shipCountDispatcher();
+			EventDispatcher<ScoreEvent>& scoreDispatcher();
 	};
 }
+
+
+namespace gvt {
+	unsigned GameInfo::spaceships() const {
+		return mSpaceships;
+	}
+
+	inline unsigned GameInfo::score() const {
+		return mScore;
+	}
+}
+
 
 #endif

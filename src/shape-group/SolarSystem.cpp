@@ -61,6 +61,7 @@ namespace gvt {
 
 			surface->mountains(MountainChain::randomChain({0, 600}, 20));
 			surface->randomBunkers(5);
+			surface->randomFuel(2, Vector<unsigned>{100, 500});
 			p->surface(surface);
 
 			system->insert(p);

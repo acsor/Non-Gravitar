@@ -27,6 +27,8 @@
 #include <stack>
 #include <typeinfo>
 #include <SFML/Graphics.hpp>
+#include "GameInfo.hpp"
+#include "view/GameInfoView.hpp"
 #include "Scene.hpp"
 #include "shape-group/ShapeGroup.hpp"
 #include "shape/Spaceship.hpp"
@@ -52,30 +54,37 @@ namespace gvt {
 	 * instance will manage an unique instance of @c Spaceship, making it
 	 * available for subsequent scenes via appropriate accessor functions.
 	 */
-	class Game: public sf::Drawable, public GVTEventDispatcher {
+	class Game: public sf::Drawable, public EventDispatcher<SceneChangedEvent> {
 		private:
 			static Game* sInstance;
+
+			shared_ptr<GameInfo> mInfo;
+			shared_ptr<GameInfoView> mInfoView;
 
 			// By virtue of the fact that Game is a singleton instance, mShip
 			// is too
 			shared_ptr<Spaceship> mShip;
+
 			shared_ptr<Scene> mCurrScene;
 			std::stack<shared_ptr<Scene>> mSceneStack;
 			shared_ptr<SceneFrame> mSceneFrame;
 
 			sf::Clock mClock;
-			shared_ptr<EventDispatcher<sf::Event>> mViewEvents;
+			EventDispatcher<sf::Event> mViewEvents;
 
-			void onShipMoved(shared_ptr<gvt::Event> e);
+			void onShipMoved(shared_ptr<PositionEvent> e);
 			void toggleDebug (shared_ptr<sf::Event> const &e);
 
 			Game();
 		public:
 			~Game() override;
+
 			/**
 			 * @return The singleton @c Game instance.
 			 */
 			static Game* getInstance();
+			inline shared_ptr<GameInfo> gameInfo();
+
 			/**
 			 * @return The unique @c Spaceship instance, detaching it from
 			 * the current scene and making it eventually available for
@@ -104,7 +113,7 @@ namespace gvt {
 			 */
 			inline shared_ptr<Scene> currentScene();
 
-			shared_ptr<EventDispatcher<sf::Event>> viewEventsDispatcher() const;
+			EventDispatcher<sf::Event>& viewEventsDispatcher();
 
 			/**
 			 * Renders the scene at the top of the stack.
@@ -128,12 +137,13 @@ namespace gvt {
 			Vectord mMin, mMax;
 			shared_ptr<Spaceship> mShip;
 
-			shared_ptr<callback<sf::Event>> mResizeHandle;
-			shared_ptr<gvt_callback> mSceneHandle, mShipHandle;
+			shared_ptr<Callback<sf::Event>> mResizeHandle;
+			shared_ptr<Callback<SceneChangedEvent>> mSceneHandle;
+			shared_ptr<Callback<PositionEvent>> mShipHandle;
 
 			void onWindowResized(shared_ptr<sf::Event> const &e);
-			void onSceneChanged(shared_ptr<gvt::Event> const &e);
-			void onShipMoved (shared_ptr<gvt::Event> const &e);
+			void onSceneChanged(shared_ptr<SceneChangedEvent> e);
+			void onShipMoved (shared_ptr<PositionEvent> e);
 		public:
 			SceneFrame(Game *game, shared_ptr<Spaceship> ship);
 			~SceneFrame ();
@@ -151,11 +161,19 @@ namespace gvt {
 	 */
 	class MoveShipCallback {
 		private:
-			double mAngleStep, mAccelStep;
+			Game *mGame;
 			shared_ptr<Spaceship> mShip;
+			/**
+			 * @c true if the spaceship is currently emitting its tractor
+			 * beam, @c false otherwise.
+			 */
+			bool mBeamOn{false};
+
+			double mAngleStep, mAccelStep;
 		public:
 			MoveShipCallback (
-				shared_ptr<Spaceship> ship, double accel, double angle
+				Game *game, shared_ptr<Spaceship> ship, double accel,
+				double angle
 			);
 
 			void operator() (shared_ptr<sf::Event> e);
@@ -164,6 +182,10 @@ namespace gvt {
 
 
 namespace gvt {
+	shared_ptr<GameInfo> Game::gameInfo() {
+		return mInfo;
+	}
+
 	shared_ptr<Scene> Game::currentScene() {
 		return mCurrScene;
 	}

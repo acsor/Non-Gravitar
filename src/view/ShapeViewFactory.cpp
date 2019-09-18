@@ -20,23 +20,30 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 #include "ShapeViewFactory.hpp"
+#include "FuelView.hpp"
 #include "PolylineView.hpp"
 #include "PlanetView.hpp"
 #include "RoundMissileView.hpp"
+#include "SpaceshipView.hpp"
+#include "TractorBeamView.hpp"
 
 
 namespace gvt {
-	ShapeView* ShapeViewFactory::makeView (shared_ptr<Shape> shape) const {
-		if (auto ship = std::dynamic_pointer_cast<Spaceship>(shape)) {
-			return new SpaceshipView(ship);
-		} else if (auto b = std::dynamic_pointer_cast<Bunker>(shape)) {
+	ShapeView* ShapeViewFactory::operator()(shared_ptr<Shape> shape) const {
+		if (auto b = std::dynamic_pointer_cast<Bunker>(shape)) {
 			return new BunkerView(b);
+		} else if (auto f = std::dynamic_pointer_cast<Fuel>(shape)) {
+			return new FuelView(f);
 		} else if (auto pl = std::dynamic_pointer_cast<Planet>(shape)) {
 			return new PlanetView(pl);
 		} else if (auto p = std::dynamic_pointer_cast<Polyline>(shape)) {
 			return new PolylineView(p);
 		} else if (auto m = std::dynamic_pointer_cast<RoundMissile>(shape)) {
 			return new RoundMissileView(m);
+		} else if (auto ship = std::dynamic_pointer_cast<Spaceship>(shape)) {
+			return new SpaceshipView(ship);
+		} else if (auto t = std::dynamic_pointer_cast<TractorBeam>(shape)) {
+			return new TractorBeamView(t);
 		} else {
 			throw std::domain_error("Unrecognized type of shape");
 		}

@@ -12,6 +12,7 @@ namespace gvt {
 	class RoundMissile;
 	class Shape2D;
 	class Spaceship;
+	class TractorBeam;
 
 	/**
 	 * An implementation of the design pattern Visitor as described in the
@@ -32,6 +33,7 @@ namespace gvt {
 			virtual void visitRoundMissile(RoundMissile &missile) {};
 			virtual void visitShape2D(Shape2D &shape) {};
 			virtual void visitSpaceship(Spaceship &spaceship) {};
+			virtual void visitTractorBeam(TractorBeam &beam) {};
 	};
 }
 

@@ -29,11 +29,11 @@ using RoundMissile = gvt::RoundMissile;
 
 TEST_CASE("Bunker::shoot() missiles have to be cyclic", "[Bunker]") {
 	auto b = gvt::Bunker({0, 0}, 3);
-	auto m1 = b.shoot(), m2 = b.shoot(), m3 = b.shoot();
+	auto m1 = b.shoot(0, 0, 0), m2 = b.shoot(0, 0, 0), m3 = b.shoot(0, 0, 0);
 
-	REQUIRE(*m1 == *b.shoot());
-	REQUIRE(*m2 == *b.shoot());
-	REQUIRE(*m3 == *b.shoot());
+	REQUIRE(*m1 == *b.shoot(0, 0, 0));
+	REQUIRE(*m2 == *b.shoot(0, 0, 0));
+	REQUIRE(*m3 == *b.shoot(0, 0, 0));
 }
 
 TEST_CASE(
@@ -44,7 +44,7 @@ TEST_CASE(
 	for (size_t i = 0; i < samples; i++) {
 		auto b = gvt::Bunker({0, 0}, 3);
 
-		REQUIRE(b.shoot()->velocity().norm() == 1.0);
+		REQUIRE(b.shoot(0, 0, 0)->velocity().norm() == 1.0);
 	}
 }
 
@@ -56,7 +56,7 @@ TEST_CASE(
 
 	while (samples-- > 0) {
 		auto b = gvt::Bunker({0, 0}, 3);
-		auto m = b.shoot();
+		auto m = b.shoot(0, 0, 0);
 
 		// If we fix the rotation at 0, we need only test that the velocity
 		// angle is comprised in the [180, 360) range

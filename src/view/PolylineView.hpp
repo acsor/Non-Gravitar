@@ -39,7 +39,7 @@ namespace gvt {
 			void onUpdateDebugColor () override {};
 
 			void onCreateView();
-			void updateRotation() override;
+			void updateRotationTransform() override;
 			void draw(RenderTarget &t, RenderStates s) const override;
 		public:
 			explicit PolylineView(shared_ptr<Polyline> shape);

@@ -33,7 +33,7 @@ namespace gvt {
 	 * @tparam T
 	 */
 	template<typename T> class Vertex {
-		private:
+		protected:
 			unsigned long mId;
 			std::shared_ptr<T> mValue;
 		public:

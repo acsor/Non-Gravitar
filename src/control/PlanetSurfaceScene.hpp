@@ -33,15 +33,11 @@ namespace gvt {
 	class PlanetSurfaceScene: public Scene {
 		private:
 			shared_ptr<Planet> mPlanet;
-			shared_ptr<Spaceship> mShip;
-			std::list<shared_ptr<RoundMissile>> mMissiles;
-
-			shared_ptr<gvt_callback> mShipCallback;
 
 			// New missiles' lifetime, given in seconds
-			static double const constexpr MISSILE_LIFETIME = 3.0;
-			static double const constexpr MISSILE_SPEED = 250.0;
-			static double const constexpr MISSILE_RADIUS = 8.0;
+			static long const constexpr MISSILE_LIFESPAN = 1000;
+			static double const constexpr MISSILE_SPEED = 600.0;
+			static double const constexpr MISSILE_RADIUS = 6.0;
 			// Time to wait before a new missile is shot, in seconds
 			static double const constexpr MISSILE_DELAY = 4.0;
 
@@ -50,10 +46,13 @@ namespace gvt {
 			 * PlanetSurfaceScene and returning back to the previous game scene.
 			 */
 			void exitPlanet();
-			void onShipMoved (shared_ptr<Event> e);
+
+			void onExitBoundaries(shared_ptr<Spaceship> ship) override;
+			void onSpaceshipDestroyed (shared_ptr<Spaceship> ship) override;
+
+			explicit PlanetSurfaceScene(shared_ptr<PlanetSurface> const &s);
 		public:
 			explicit PlanetSurfaceScene(shared_ptr<Planet> const &planet);
-			~PlanetSurfaceScene() override;
 
 			void onUpdateGame (double seconds) override;
 	};

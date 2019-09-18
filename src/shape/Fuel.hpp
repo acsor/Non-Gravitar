@@ -40,7 +40,7 @@ namespace gvt {
 			static unsigned const constexpr WIDTH = 41;
 			static unsigned const constexpr HEIGHT = 43;
 
-			Fuel(Vectord position, unsigned fuel);
+			Fuel(Vectord position, unsigned initialCapacity);
 			/**
 			 * @return The current fuel amount.
 			 */

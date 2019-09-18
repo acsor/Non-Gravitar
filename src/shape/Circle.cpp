@@ -20,7 +20,7 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 #include <cmath>
-#include "bounding-polygon/BoundingPolygon.hpp"
+#include "utils/BoundingPolygon.hpp"
 #include "shape/Circle.hpp"
 #include "utils/Utils.hpp"
 #include "shape/ShapeVisitor.hpp"

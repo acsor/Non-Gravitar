@@ -19,25 +19,23 @@
 // LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
-#ifndef NON_GRAVITAR_SOLAR_SYSTEM_SCENE_HPP
-#define NON_GRAVITAR_SOLAR_SYSTEM_SCENE_HPP
+#ifndef NON_GRAVITAR_TRACTOR_BEAM_VIEW_HPP
+#define NON_GRAVITAR_TRACTOR_BEAM_VIEW_HPP
 
-#include <typeindex>
-#include "shape-group/SolarSystem.hpp"
-#include "Scene.hpp"
+#include "Shape2DView.hpp"
+#include "shape/TractorBeam.hpp"
 
 
 namespace gvt {
-	/**
-	 * A @c SolarSystemScene features a solar system, giving the possibility
-	 * to enter planets which the spaceship runs into.
-	 */
-	class SolarSystemScene: public Scene {
+	class TractorBeamView: public Shape2DView {
 		private:
-			void onCollision (shared_ptr<PairCollisionEvent> e) override;
-			void onSpaceshipDestroyed (shared_ptr<Spaceship> ship) override;
+			sf::VertexArray mTriangle;
+
+			static const sf::Color BEAM_COLOR;
+		protected:
+			void draw (sf::RenderTarget &t, sf::RenderStates s) const override;
 		public:
-			explicit SolarSystemScene (shared_ptr<SolarSystem> const &system);
+			explicit TractorBeamView (shared_ptr<TractorBeam> const &beam);
 	};
 }
 

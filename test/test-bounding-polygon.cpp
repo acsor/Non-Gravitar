@@ -23,7 +23,7 @@
 #include <utility>
 
 #include "catch.hpp"
-#include "bounding-polygon/BoundingPolygon.hpp"
+#include "utils/BoundingPolygon.hpp"
 
 auto Triangle = &gvt::BoundingPolygon::triangle;
 auto Rect = &gvt::BoundingPolygon::rectangle;

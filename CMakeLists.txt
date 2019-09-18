@@ -11,7 +11,6 @@ set(DIR_SHAPE_GROUP "${DIR_SRC}/shape-group")
 set(DIR_VIEWS "${DIR_SRC}/view")
 set(DIR_CONTROL "${DIR_SRC}/control")
 set(DIR_UTILS "${DIR_SRC}/utils")
-set(DIR_BOUND "${DIR_SRC}/bounding-polygon")
 set(DIR_SAMPLES "samples/")
 
 # The project versionig scheme is Semver: https://semver.org/
@@ -28,11 +27,10 @@ include_directories("${DIR_SRC}")
 # Utils section
 add_library(Observer "${DIR_UTILS}/Observer.cpp")
 add_library(Utils "${DIR_UTILS}/Utils.cpp")
-add_library(Random "${DIR_UTILS}/Random.cpp")
 
 
 # Bounding polygon section
-add_library(BoundingPolygon "${DIR_BOUND}/BoundingPolygon.cpp")
+add_library(BoundingPolygon "${DIR_UTILS}/BoundingPolygon.cpp")
 
 
 # Shapes section
@@ -42,7 +40,7 @@ add_library(Polyline "${DIR_SHAPE}/Polyline.cpp")
 target_link_libraries(Polyline Shape)
 
 add_library(MountainChain "${DIR_SHAPE}/MountainChain.cpp")
-target_link_libraries(MountainChain Polyline Random)
+target_link_libraries(MountainChain Polyline)
 
 add_library(Circle "${DIR_SHAPE}/Circle.cpp")
 target_link_libraries(Circle Shape Rectangle)
@@ -64,6 +62,9 @@ target_link_libraries(RoundMissile Circle)
 
 add_library(Bunker "${DIR_SHAPE}/Bunker.cpp")
 target_link_libraries(Bunker RoundMissile)
+
+add_library(TractorBeam "${DIR_SHAPE}/TractorBeam.cpp")
+target_link_libraries(TractorBeam Spaceship)
 
 
 # Shape group section
@@ -98,25 +99,37 @@ target_link_libraries(PolylineView Polyline ShapeView)
 add_library(RoundMissileView "${DIR_VIEWS}/RoundMissileView.cpp")
 target_link_libraries(RoundMissileView RoundMissile Shape2DView)
 
+add_library(FuelView "${DIR_VIEWS}/FuelView.cpp")
+target_link_libraries(FuelView Fuel Shape2DView)
+
 add_library(BunkerView "${DIR_VIEWS}/BunkerView.cpp")
 target_link_libraries(BunkerView Bunker Shape2DView Utils)
 
 add_library(ShapeGroupView "${DIR_VIEWS}/ShapeGroupView.cpp")
 target_link_libraries(ShapeGroupView ShapeGroup ShapeViewFactory)
 
+add_library(TractorBeamView "${DIR_VIEWS}/TractorBeamView.cpp")
+target_link_libraries(TractorBeamView TractorBeam Shape2DView)
+
 add_library(ShapeViewFactory "${DIR_VIEWS}/ShapeViewFactory.cpp")
 target_link_libraries(
-		ShapeViewFactory SpaceshipView BunkerView PolylineView PlanetView
-		RoundMissileView
+		ShapeViewFactory BunkerView FuelView PolylineView
+		PlanetView RoundMissileView SpaceshipView TractorBeamView
 )
 
 add_library(SpaceshipView "${DIR_VIEWS}/SpaceshipView.cpp")
 target_link_libraries(SpaceshipView Spaceship Shape2DView Utils)
 
+add_library(GameInfoView "${DIR_VIEWS}/GameInfoView.cpp")
+target_link_libraries(GameInfoView GameInfo SpaceshipView)
+
 
 # Game and scenes section
 add_library(Game "${DIR_CONTROL}/Game.cpp")
-target_link_libraries(Game Spaceship SolarSystemScene)
+target_link_libraries(Game Spaceship GameInfoView SolarSystemScene)
+
+add_library(GameInfo "${DIR_CONTROL}/GameInfo.cpp")
+target_link_libraries(GameInfo SpaceshipView)
 
 add_library(Scene "${DIR_CONTROL}/Scene.cpp")
 target_link_libraries(Scene ShapeGroup ShapeGroupView)

@@ -22,21 +22,39 @@
 #ifndef NON_GRAVITAR_ROUND_MISSILE_HPP
 #define NON_GRAVITAR_ROUND_MISSILE_HPP
 
+#include <chrono>
 #include "Circle.hpp"
+
+using steady_clock = std::chrono::steady_clock;
 
 
 namespace gvt {
 	class RoundMissile: public Circle {
 		private:
-			double mLifetime;
+			steady_clock::time_point mBirth;
+			std::chrono::duration<long, std::milli> mLifespan;
 		public:
 			static constexpr unsigned DEFAULT_RADIUS = 2;
 
-			explicit RoundMissile(Vectord position);
-			explicit RoundMissile(Vectord position, double radius);
+			/**
+			 * @param lifespan Missile duration, in milliseconds
+			 */
+			explicit RoundMissile(Vectord position, long lifespan=1000);
+			/**
+			 * @param lifespan Missile duration, in milliseconds
+			 */
+			RoundMissile(Vectord position, long lifespan, double radius);
 
-			inline void lifetime (double time);
-			inline double lifetime () const;
+			/**
+			 * @return @c true if this missile lifetime expired, or if it is
+			 * arbitrarily marked destroyed by a call to @c destroyed(bool).
+			 */
+			bool destroyed() const override;
+			/**
+			 * @return This @c RoundMissile lifespan, in milliseconds.
+			 */
+			inline long lifespan () const;
+			inline void lifespan (long millis);
 
 			void accept (ShapeVisitor &visitor) override;
 			bool operator== (Shape const &o) const override;
@@ -46,12 +64,12 @@ namespace gvt {
 
 // Implementation of inline functions
 namespace gvt {
-	void RoundMissile::lifetime (double time) {
-		mLifetime = time;
+	long RoundMissile::lifespan () const {
+		return mLifespan.count();
 	}
 
-	double RoundMissile::lifetime () const {
-		return mLifetime;
+	void RoundMissile::lifespan (long millis) {
+		mLifespan = std::chrono::duration<long, std::milli>(millis);
 	}
 }
 

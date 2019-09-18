@@ -19,17 +19,55 @@
 // LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
-#include "bounding-polygon/BoundingPolygon.hpp"
+#include "utils/BoundingPolygon.hpp"
 #include "Spaceship.hpp"
+#include "RoundMissile.hpp"
 
 
 namespace gvt {
-	Spaceship::Spaceship(Vectord position, unsigned fuel):
-			Shape2D::Shape2D(position) {
-		mFuel = fuel;
+	FuelEvent::FuelEvent(unsigned old, unsigned _new) {
+		oldAmount = old;
+		newAmount = _new;
 	}
 
-	gvt::BoundingPolygon Spaceship::collisionPolygon() const {
+
+	Spaceship::Spaceship(Vectord position, unsigned fuel):
+			Shape2D::Shape2D(position), mFuel{fuel} {
+		mBeam.reset(new TractorBeam(Vectord{0, height()}, *this));
+	}
+
+	void Spaceship::position(Vectord position) {
+		Shape2D::position(position);
+		auto widthDiff = width() - mBeam->width();
+
+		mBeam->position(position + Vectord{widthDiff / 2.0, height()});
+	}
+
+	Vectord Spaceship::position() const {
+		return Shape2D::position();
+	}
+
+	void Spaceship::rotation(double r) {
+		Shape2D::rotation(r);
+
+		mBeam->rotation(r);
+	}
+
+	double Spaceship::rotation() const {
+		return Shape2D::rotation();
+	}
+
+	void Spaceship::destroyed(bool destroyed) {
+		Shape2D::destroyed(destroyed);
+
+		mBeam->destroyed(destroyed);
+	}
+
+	bool Spaceship::destroyed() const {
+		return Shape2D::destroyed();
+	}
+
+	BoundingPolygon Spaceship::collisionPolygon() const {
 		auto t = BoundingPolygon::triangle(
 			Vectord{0, BOUNDING_HEIGHT},
 			Vectord{BOUNDING_WIDTH / 2.0, 0},
@@ -46,21 +84,59 @@ namespace gvt {
 		return mFuel;
 	}
 
-	void Spaceship::recharge(Fuel &fuel) {
+	void Spaceship::rechargeFuel(Fuel &fuel) {
+		auto e = std::make_shared<FuelEvent>(mFuel, 0);
+
 		mFuel += fuel.fuel();
+		e->newAmount = mFuel;
+
 		fuel.empty();
+
+		mFuelDisp.raiseEvent(e);
 	}
 
-	void Spaceship::discharge(unsigned amount) {
-		mFuel -= amount;
+	void Spaceship::dischargeFuel(unsigned amount) {
+		auto e = std::make_shared<FuelEvent>(mFuel, 0);
+
+		if (amount > mFuel)
+			mFuel = 0;
+		else
+			mFuel -= amount;
+
+		e->newAmount = mFuel;
+
+		mFuelDisp.raiseEvent(e);
 	}
 
 	bool Spaceship::charged() const {
 		return mFuel > 0;
 	}
 
-	void gvt::Spaceship::accept(gvt::ShapeVisitor &visitor) {
+	shared_ptr<RoundMissile>
+	Spaceship::shoot(double radius, double speed, long lifespan) const {
+		// TODO Improve the initial missile position
+		auto missile = std::make_shared<RoundMissile> (
+			Vectord{0, 0}, lifespan, radius
+		);
+		auto localPos = Vectord{width() / 2.0, -10.0} - Vectord{
+			missile->radius() / 2.0, missile->radius() / 2.0
+		};
+
+		localPos.rotate(Shape::rotation(), rotationCenter());
+		missile->position(Shape::position() + localPos);
+		missile->velocity(
+			(speed + this->speed()) * Vectord(Shape::rotation() - M_PI / 2.0)
+		);
+
+		return missile;
+	}
+
+	void Spaceship::accept(ShapeVisitor &visitor) {
 		visitor.visitSpaceship(*this);
+	}
+
+	EventDispatcher<FuelEvent>& Spaceship::fuelDispatcher() {
+		return mFuelDisp;
 	}
 
 	bool Spaceship::operator==(Shape const &o) const {

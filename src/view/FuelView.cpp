@@ -19,15 +19,30 @@
 // LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
-#include "Random.hpp"
+#include "FuelView.hpp"
+#include "utils/Utils.hpp"
 
 
 namespace gvt {
-	UniRandInt::UniRandInt(int low, int high): mDist{low, high} {
-		mEngine.seed(time(nullptr));
+	const std::string FuelView::TEXTURE_PATH = "graphics/fuel.png";
+
+	void FuelView::draw (sf::RenderTarget &t, sf::RenderStates s) const {
+		Shape2DView::draw(t, s);
+
+		t.draw(mSprite, mTranslation * mRotation);
+		t.draw(mText, mTranslation * mRotation);
 	}
 
-	int UniRandInt::operator() () {
-        return mDist(mEngine);
+	FuelView::FuelView (shared_ptr<Fuel> const &fuel): Shape2DView(fuel) {
+		if (!mTexture.loadFromFile(staticsGet(TEXTURE_PATH)))
+			throw std::runtime_error("Could not load fuel texture from disk");
+		if (!mFont.loadFromFile(ShapeView::DEFAULT_FONT))
+			throw std::runtime_error ("Could not load font from disk");
+
+		mSprite.setTexture(mTexture);
+
+		mText = sf::Text(std::to_string(fuel->fuel()), mFont, 20);
+		mText.setPosition(0, fuel->height() / 2.0);
+		mText.setFillColor(sf::Color::White);
 	}
 }

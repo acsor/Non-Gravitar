@@ -23,15 +23,6 @@
 
 
 namespace gvt {
-	ShapeEvent::ShapeEvent():
-			ShapeEvent::ShapeEvent(ShapeEvent::Type::unspecified, nullptr) {
-	}
-
-	ShapeEvent::ShapeEvent(ShapeEvent::Type type, Shape *shape) {
-		this->type = type;
-		this->shape = shape;
-	}
-
 	Vectord Shape::position() const {
 		return mPosition;
 	}
@@ -62,5 +53,9 @@ namespace gvt {
 
 	bool Shape::collided() const {
 		return mCollided;
+	}
+
+	bool Shape::destroyed() const {
+		return mDestroyed;
 	}
 }

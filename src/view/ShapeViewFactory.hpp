@@ -35,8 +35,8 @@ namespace gvt {
 	 */
     class ShapeViewFactory {
     	public:
-            ShapeView* makeView (shared_ptr<Shape> shape) const;
-    };
+			ShapeView* operator()(shared_ptr<Shape> shape) const;
+	};
 }
 
 

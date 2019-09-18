@@ -19,57 +19,49 @@
 // LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
+#include <utility>
 #include "ShapeView.hpp"
-
-using namespace std::placeholders;
+#include "utils/Utils.hpp"
 
 
 namespace gvt {
-	void ShapeView::shapeChangeCallback (shared_ptr<Event> e) {
-		auto event = std::dynamic_pointer_cast<ShapeEvent>(e);
+	const std::string ShapeView::DEFAULT_FONT = staticsGet("fonts/ERGOB.TTF");
 
-		if (event) {
-			switch (event->type) {
-				case (ShapeEvent::Type::moved):
-					onShapeMoved();
-					break;
-				case (ShapeEvent::Type::rotated):
-					onShapeRotated();
-					break;
-				case (ShapeEvent::Type::collided):
-					onShapeCollided();
-					break;
-				default:
-					break;
-			}
-		}
-	}
-
-	void ShapeView::updateTranslation() {
+	void ShapeView::updateTranslationTransform() {
 		auto const pos = mShape->position();
 
 		mTranslation = sf::Transform::Identity;
 		mTranslation.translate(pos.x, pos.y);
 	}
 
-	ShapeView::ShapeView(shared_ptr<Shape> const &shape): mShape(shape) {
+	ShapeView::ShapeView(shared_ptr<Shape> shape): mShape(std::move(shape)) {
+		auto _1 = std::placeholders::_1;
 		mRotation = sf::Transform::Identity;
 
-		mCallback = shape->addCallback(
-			std::bind(&ShapeView::shapeChangeCallback, this, _1)
+		mPosCbk = mShape->positionDispatcher().addCallback(
+			std::bind(&ShapeView::onShapeMoved, this, _1)
 		);
-		updateTranslation();
+		mRotCbk = mShape->rotationDispatcher().addCallback(
+				std::bind(&ShapeView::onShapeRotated, this, _1)
+		);
+		mColCbk = mShape->collisionDispatcher().addCallback(
+			std::bind(&ShapeView::onShapeCollided, this, _1)
+		);
+
+		updateTranslationTransform();
 	}
 
-	void ShapeView::onShapeMoved() {
-		updateTranslation();
+	void ShapeView::onShapeMoved(shared_ptr<PositionEvent> e) {
+		updateTranslationTransform();
 	}
 
-	void ShapeView::onShapeRotated() {
-		updateRotation();
+	void ShapeView::onShapeRotated(shared_ptr<RotationEvent> e) {
+		updateRotationTransform();
 	}
 
 	ShapeView::~ShapeView() {
-		mShape->removeCallback(mCallback);
+		mShape->positionDispatcher().removeCallback(mPosCbk);
+		mShape->rotationDispatcher().removeCallback(mRotCbk);
+		mShape->collisionDispatcher().removeCallback(mColCbk);
 	}
 }

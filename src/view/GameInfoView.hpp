@@ -19,26 +19,50 @@
 // LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
-#ifndef NON_GRAVITAR_SOLAR_SYSTEM_SCENE_HPP
-#define NON_GRAVITAR_SOLAR_SYSTEM_SCENE_HPP
+#ifndef NON_GRAVITAR_GAME_INFO_VIEW_HPP
+#define NON_GRAVITAR_GAME_INFO_VIEW_HPP
 
-#include <typeindex>
-#include "shape-group/SolarSystem.hpp"
-#include "Scene.hpp"
+#include <SFML/Graphics.hpp>
+#include "control/GameInfo.hpp"
+#include "shape/Spaceship.hpp"
 
 
 namespace gvt {
-	/**
-	 * A @c SolarSystemScene features a solar system, giving the possibility
-	 * to enter planets which the spaceship runs into.
-	 */
-	class SolarSystemScene: public Scene {
+	class Game;
+
+	class GameInfoView: public sf::Drawable {
 		private:
-			void onCollision (shared_ptr<PairCollisionEvent> e) override;
-			void onSpaceshipDestroyed (shared_ptr<Spaceship> ship) override;
+			static constexpr const unsigned SHIP_MARGIN = 10;
+
+			shared_ptr<GameInfo> mInfo;
+			shared_ptr<Spaceship> mShip;
+			
+			shared_ptr<Callback<FuelEvent>> mFuelCbk;
+			shared_ptr<Callback<SpaceshipCountEvent>> mShipCbk;
+			shared_ptr<Callback<ScoreEvent>> mScoreCbk;
+
+			sf::Font mFont;
+			sf::Texture mShipTexture;
+			std::list<sf::Sprite> mShipSprites;
+			mutable sf::Text mText;
+
+			static const sf::Color TEXT_COLOR;
+
+			void updateText();
+			void updateShips();
+
+			void onFuelChanged (shared_ptr<gvt::Event> const &e);
+			void onScoreChanged (shared_ptr<gvt::Event> const &e);
+			void onShipsChanged (shared_ptr<gvt::Event> const &e);
+		protected:
+			void draw (sf::RenderTarget &t, sf::RenderStates s) const override;
 		public:
-			explicit SolarSystemScene (shared_ptr<SolarSystem> const &system);
+			GameInfoView (
+					shared_ptr<GameInfo> gameInfo, shared_ptr<Spaceship> ship
+			);
+			~GameInfoView () override;
 	};
 }
+
 
 #endif

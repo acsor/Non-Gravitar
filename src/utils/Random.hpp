@@ -27,38 +27,39 @@
 
 
 namespace gvt {
-	class UniRandInt {
+	template<typename N>
+	class UniRandom {
 		private:
-            std::uniform_int_distribution<int> mDist;
+            std::uniform_int_distribution<N> mDist;
 			std::default_random_engine mEngine;
 		public:
-			UniRandInt(int low, int high);
-			int operator()();
+			inline UniRandom(N low, N high);
+			inline N operator()();
 	};
+
+	template<>
+	class UniRandom<double> {
+		private:
+            std::uniform_real_distribution<double> mDist;
+			std::default_random_engine mEngine;
+		public:
+			inline UniRandom(double low, double high);
+			inline double operator()();
+	};
+
 
 	template<typename I> class IteratorRandomizer {
 		private:
 			I mBegin;
-			UniRandInt mRandInt;
+			UniRandom<int> mChoice;
 		public:
-			IteratorRandomizer (I begin, I end);
-			I operator() ();
+			inline IteratorRandomizer (I begin, I end);
+			inline I operator() ();
 	};
 }
 
 
-namespace gvt {
-	template<typename I> IteratorRandomizer<I>::IteratorRandomizer (I begin, I end):
-			mBegin{begin}, mRandInt(0, std::distance(begin, end) - 1) {
-	}
-
-	template<typename I> I IteratorRandomizer<I>::operator() () {
-        auto copy = mBegin;
-        std::advance(copy, mRandInt.operator()());
-
-        return copy;
-	}
-}
+#include "Random.tpp"
 
 
 #endif

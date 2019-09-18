@@ -21,35 +21,137 @@
 // SOFTWARE.
 #include <utility>
 #include "Scene.hpp"
+#include "Game.hpp"
+#include "shape-group/CollisionGroup.hpp"
+#include "shape/MountainChain.hpp"
+#include "shape/Planet.hpp"
+
+using type_index = std::type_index;
 
 
 namespace gvt {
-	Scene::Scene(Vectord size, shared_ptr<ShapeGroup> shapes):
-			mSize{size}, mShapes{std::move(shapes)} {
-		mShapesView.reset(new ShapeGroupView(mShapes));
+	TypeVertex::TypeVertex (std::type_index type):
+			Vertex(type.hash_code(), std::make_shared<type_index>(type)) {
 	}
 
-	void Scene::moveShapes (double seconds) {
-		// TODO Pick a better copy data structure
+	bool TypeVertex::operator== (TypeVertex const &other) const {
+		return  mId == other.mId &&
+				mValue->hash_code() == other.mValue->hash_code();
+	}
+
+
+	Scene::Scene(Vectord size, shared_ptr<CollisionGroup> shapes):
+			mSize{size}, mShapes{std::move(shapes)} {
+		mGame = Game::getInstance();
+		mShapesView.reset(new ShapeGroupView(mShapes));
+		auto _1 = std::placeholders::_1;
+
+		initializeDestroyGraph();
+
+		mCollisionCbk = mShapes->collisionDispatcher().addCallback(
+			std::bind(&Scene::onCollision, this, _1)
+		);
+		mDestroyCbk = mShapes->removalDispatcher().addCallback(
+			std::bind(&Scene::onShapeRemoved, this, _1)
+		);
+	}
+
+	Scene::~Scene() {
+		mShapes->removalDispatcher().removeCallback(mDestroyCbk);
+		mShapes->collisionDispatcher().removeCallback(mCollisionCbk);
+	}
+
+	void Scene::initializeDestroyGraph() {
+		// Edges to ba later added to the graph. Each (u, v) edge says that,
+		// if a shape of type u clashes with a shape of type v, then this last
+		// one is destroyed.
+		std::vector<std::pair<type_index, type_index>> destroyPair = {
+			{typeid(Bunker), typeid(Spaceship)},
+			{typeid(RoundMissile), typeid(Spaceship)},
+			{typeid(MountainChain), typeid(Spaceship)},
+
+			{typeid(TractorBeam), typeid(RoundMissile)},
+			{typeid(TractorBeam), typeid(Fuel)},
+
+			{typeid(Spaceship), typeid(Bunker)},
+			{typeid(RoundMissile), typeid(Bunker)},
+
+			{typeid(Spaceship), typeid(RoundMissile)},
+			{typeid(Bunker), typeid(RoundMissile)},
+			{typeid(MountainChain), typeid(RoundMissile)},
+			{typeid(Planet), typeid(RoundMissile)},
+		};
+
+		mDestroyGraph.insertVertex(TypeVertex(typeid(Bunker)));
+		mDestroyGraph.insertVertex(TypeVertex(typeid(Fuel)));
+		mDestroyGraph.insertVertex(TypeVertex(typeid(MountainChain)));
+		mDestroyGraph.insertVertex(TypeVertex(typeid(Planet)));
+		mDestroyGraph.insertVertex(TypeVertex(typeid(RoundMissile)));
+		mDestroyGraph.insertVertex(TypeVertex(typeid(Spaceship)));
+		mDestroyGraph.insertVertex(TypeVertex(typeid(TractorBeam)));
+
+		for (auto const &pair: destroyPair)
+			mDestroyGraph.insertEdge(
+					TypeVertex(pair.first), TypeVertex(pair.second)
+			);
+	}
+
+	void Scene::onCollision (shared_ptr<PairCollisionEvent> e) {
+		auto first = TypeVertex(typeid(*e->first));
+		auto second = TypeVertex(typeid(*e->second));
+
+		if (mDestroyGraph.containsEdge(first, second))
+			e->second->destroyed(true);
+		if (mDestroyGraph.containsEdge(second, first))
+			e->first->destroyed(true);
+	}
+
+	void Scene::onShapeRemoved (shared_ptr<ShapeRemovalEvent> e) {
+		if (e->shape->destroyed()) {
+			if (std::dynamic_pointer_cast<Bunker>(e->shape)) {
+				mGame->gameInfo()->upgradeScore(BUNKER_SCORE);
+			} else if (auto s = std::dynamic_pointer_cast<Spaceship>(e->shape)) {
+				onSpaceshipDestroyed(s);
+			} else if (auto f = std::dynamic_pointer_cast<Fuel>(e->shape)) {
+				mGame->spaceship()->rechargeFuel(*f);
+			}
+		}
+	}
+
+	void Scene::onSpaceshipDestroyed (shared_ptr<Spaceship> ship) {
+		mGame->gameInfo()->decrementSpaceships();
+	}
+
+	void Scene::onUpdateGame (double seconds) {
+		// Remove outlived shapes
+		mShapes->removeIf(
+			[] (shared_ptr<Shape> const &s) -> bool { return s->destroyed (); }
+		);
 		auto shapesCopy = std::vector<shared_ptr<Shape>>(
 				mShapes->begin(), mShapes->end()
 		);
 
-		for (auto &shape: shapesCopy) {
-			shape->velocity(
-					shape->velocity() + seconds * shape->acceleration()
-			);
-			shape->position(
-					shape->position() + seconds * shape->velocity()
-			);
+		// TODO Is there another more performing way of safely iterating
+		//  through the list without making a copy of it?
+		for (auto &s: shapesCopy) {
+			s->velocity(s->velocity() + seconds * s->acceleration());
+			s->position(s->position() + seconds * s->velocity());
 		}
 	}
 
-	void Scene::onUpdateGame (double seconds) {
-		moveShapes(seconds);
+	void Scene::onExitBoundaries(shared_ptr<Spaceship> ship) {
+		auto const angle = ship->velocity().angle();
+		auto const speed = ship->speed();
+		auto const pos = ship->position();
+
+		if (pos.x < 0 || pos.x > mSize.x - ship->width()) {
+			ship->velocity(speed * Vectord(M_PI - angle));
+		} else if (pos.y < 0 || pos.y > mSize.y - ship->height()) {
+			ship->velocity(speed * Vectord(-angle));
+		}
 	}
 
 	void Scene::draw (sf::RenderTarget &t, sf::RenderStates s) const {
-		t.draw(*mShapesView);
+		t.draw(*mShapesView, s);
 	}
 }

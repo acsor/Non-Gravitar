@@ -19,26 +19,53 @@
 // LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
-#ifndef NON_GRAVITAR_SOLAR_SYSTEM_SCENE_HPP
-#define NON_GRAVITAR_SOLAR_SYSTEM_SCENE_HPP
+#ifndef NON_GRAVITAR_TRACTOR_BEAM_HPP
+#define NON_GRAVITAR_TRACTOR_BEAM_HPP
 
-#include <typeindex>
-#include "shape-group/SolarSystem.hpp"
-#include "Scene.hpp"
+#include "Shape2D.hpp"
+#include "Spaceship.hpp"
 
 
 namespace gvt {
 	/**
-	 * A @c SolarSystemScene features a solar system, giving the possibility
-	 * to enter planets which the spaceship runs into.
+	 * A tractor beam is associated to a @c Spaceship, having the ability to
+	 * lead fuel from land areas to it.
 	 */
-	class SolarSystemScene: public Scene {
+	class TractorBeam: public Shape2D {
 		private:
-			void onCollision (shared_ptr<PairCollisionEvent> e) override;
-			void onSpaceshipDestroyed (shared_ptr<Spaceship> ship) override;
+			static const constexpr unsigned WIDTH = 40;
+			static const constexpr unsigned HEIGHT = 50;
+
+			Spaceship &mSpaceship;
 		public:
-			explicit SolarSystemScene (shared_ptr<SolarSystem> const &system);
+			TractorBeam(Vectord position, Spaceship &spaceship);
+
+			inline Spaceship& spaceship() const;
+
+			Vectord rotationCenter() const override;
+			inline double width() const override;
+			inline double height() const override;
+
+			void accept(ShapeVisitor &visitor) override;
+			BoundingPolygon collisionPolygon() const override;
+			bool operator== (Shape const &o) const override;
 	};
 }
+
+
+namespace gvt {
+	Spaceship& TractorBeam::spaceship() const {
+		return mSpaceship;
+	}
+
+	double TractorBeam::width() const {
+		return WIDTH;
+	}
+
+	double TractorBeam::height() const {
+		return HEIGHT;
+	}
+}
+
 
 #endif

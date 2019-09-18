@@ -21,44 +21,50 @@
 // SOFTWARE.
 #include "PlanetSurfaceScene.hpp"
 #include "Game.hpp"
+#include "SolarSystemScene.hpp"
 
 
 namespace gvt {
 	void PlanetSurfaceScene::exitPlanet() {
 		auto game = Game::getInstance();
 		auto ship = game->acquireSpaceship();
-		auto solarSystem = game->popScene();
 
-		ship->acceleration({0, 0});
-		ship->position(mPlanet->position() - Vectord{0, 100});
+		game->popScene();
+		ship->position(
+			mPlanet->position() + mPlanet->rotationCenter() - Vectord{0, 100}
+		);
 
-		solarSystem->shapes()->insert(ship);
+		// game->currentScene() will be a SolarSystemScene
+		game->currentScene()->shapes()->insert(ship);
 	}
 
-	void PlanetSurfaceScene::onShipMoved (shared_ptr<Event> e) {
-		auto shapeEvent = std::dynamic_pointer_cast<ShapeEvent>(e);
+	void PlanetSurfaceScene::onExitBoundaries(shared_ptr<Spaceship> ship) {
+		if (ship->position().y <= 0)
+			exitPlanet();
+		else
+			Scene::onExitBoundaries(ship);
+	}
 
-		if (shapeEvent && shapeEvent->type == ShapeEvent::Type::moved) {
-			if (mShip->position().y < 0)
-				exitPlanet();
+	void PlanetSurfaceScene::onSpaceshipDestroyed (shared_ptr<Spaceship> ship) {
+		Scene::onSpaceshipDestroyed(ship);
+
+		if (mGame->gameInfo()->spaceships() > 0) {
+			ship->position({mSize.x / 2.0, 1});
+			ship->velocity({0, 0});
+			ship->rotation(M_PI);
+			ship->destroyed(false);
+
+			mShapes->insert(ship);
 		}
 	}
 
-	PlanetSurfaceScene::PlanetSurfaceScene (shared_ptr<Planet> const &planet):
-			Scene({planet->surface()->width(), planet->surface()->height()}, planet->surface())
-	{
-		auto _1 = std::placeholders::_1;
-		auto surface = planet->surface();
-
-		mPlanet = planet;
-		mShip = Game::getInstance()->spaceship();
-		mShipCallback = mShip->addCallback(
-				std::bind(&PlanetSurfaceScene::onShipMoved, this, _1)
-		);
+	PlanetSurfaceScene::PlanetSurfaceScene(shared_ptr<PlanetSurface> const &s):
+			Scene({s->width(), s->height()}, s) {
 	}
 
-	PlanetSurfaceScene::~PlanetSurfaceScene () {
-		mShip->removeCallback(mShipCallback);
+	PlanetSurfaceScene::PlanetSurfaceScene (shared_ptr<Planet> const &planet):
+			PlanetSurfaceScene(planet->surface()) {
+		mPlanet = planet;
 	}
 
 	void PlanetSurfaceScene::onUpdateGame (double seconds) {
@@ -68,27 +74,14 @@ namespace gvt {
 		for (auto const &bunker: mPlanet->surface()->bunkers())
 			bunker->missileDelay(bunker->missileDelay() - seconds);
 
-		// Update missiles' lifetime
-		for (auto const &mMissile : mMissiles)
-			mMissile->lifetime(mMissile->lifetime() - seconds);
-
-		while (!mMissiles.empty() && mMissiles.front()->lifetime() <= 0) {
-			mPlanet->surface()->remove(mMissiles.front());
-			mMissiles.pop_front();
-		}
-
 		// Shoot missiles
 		for (auto const &bunker: mPlanet->surface()->bunkers()) {
 			if (bunker->missileDelay() <= 0) {
-				auto missile = bunker->shoot();
+				auto missile = bunker->shoot(
+						MISSILE_SPEED, MISSILE_LIFESPAN, MISSILE_RADIUS
+				);
 
-				missile->radius(MISSILE_RADIUS);
-				missile->lifetime(MISSILE_LIFETIME);
-				missile->velocity(MISSILE_SPEED * missile->velocity());
-
-				mMissiles.push_back(missile);
 				mPlanet->surface()->insert(missile);
-
 				bunker->missileDelay(MISSILE_DELAY);
 			}
 		}

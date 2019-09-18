@@ -60,7 +60,8 @@ namespace gvt {
 			 * @return a @c RoundMissile instance shot by the calling @c Bunker
 			 * object, with a random velocity vector of unitary norm.
 			 */
-			shared_ptr<RoundMissile> shoot();
+			shared_ptr<RoundMissile>
+			shoot(double speed, long lifespan, double radius);
 			inline unsigned directions() const;
 
 			void accept (ShapeVisitor &visitor) override;

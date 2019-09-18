@@ -22,7 +22,7 @@
 #ifndef NON_GRAVITAR_SHAPE2D_HPP
 #define NON_GRAVITAR_SHAPE2D_HPP
 
-#include "bounding-polygon/BoundingPolygon.hpp"
+#include "utils/BoundingPolygon.hpp"
 #include "Shape.hpp"
 #include "ShapeVisitor.hpp"
 

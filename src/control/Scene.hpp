@@ -22,27 +22,67 @@
 #ifndef NON_GRAVITAR_SCENE_HPP
 #define NON_GRAVITAR_SCENE_HPP
 
-#include <SFML/Graphics.hpp>
 #include <memory>
+#include <typeindex>
+#include <SFML/Graphics.hpp>
 #include "shape-group/ShapeGroup.hpp"
-#include "utils/Event.hpp"
+#include "shape-group/CollisionGroup.hpp"
 #include "view/ShapeGroupView.hpp"
+#include "utils/Event.hpp"
+#include "utils/ALGraph.hpp"
 
 
 namespace gvt {
+	class Game;
+
+	// TODO Try to see whether template specialization can yield cleaner code
+	//  than subclassing
+	class TypeVertex: public Vertex<std::type_index> {
+		public:
+			TypeVertex (std::type_index type);
+
+			bool operator== (TypeVertex const &other) const;
+	};
+
 	/**
 	 * A @c Scene represents the notion of contextual shapes to be rendered on
 	 * screen. It encapsulates shape groups and manages their lifetimes,
 	 * adding semantic and event-handling operations.
 	 */
 	class Scene: public sf::Drawable {
+		private:
+			ALGraph<std::type_index> mDestroyGraph;
+			shared_ptr<Callback<ShapeRemovalEvent>> mDestroyCbk;
+			shared_ptr<Callback<PairCollisionEvent>> mCollisionCbk;
 		protected:
+			static const constexpr double BUNKER_SCORE = 50;
+
+			Game *mGame;
+
 			Vectord mSize;
-			shared_ptr<ShapeGroup> mShapes;
+			shared_ptr<CollisionGroup> mShapes;
 			shared_ptr<ShapeGroupView> mShapesView;
 
-			Scene(Vectord size, shared_ptr<ShapeGroup> shapes);
-			void moveShapes (double seconds);
+			Scene(Vectord size, shared_ptr<CollisionGroup> shapes);
+			~Scene() override;
+
+			/**
+			 * Initializes the "destroy graph". This graph instance is a graph
+			 * containing type objects as its vertices, and edges such that,
+			 * if (u, v) is contained in it, then an object of type u
+			 * clashing with an object of type v destroys the latter.
+			 */
+			void initializeDestroyGraph();
+			virtual void onCollision (shared_ptr<PairCollisionEvent> e);
+
+			void onShapeRemoved (shared_ptr<ShapeRemovalEvent> e);
+			virtual void onSpaceshipDestroyed (shared_ptr<Spaceship> ship);
+			/**
+			 * Called when the game spaceship exits the active scene boundaries.
+			 */
+			virtual void onExitBoundaries(shared_ptr<Spaceship> ship);
+
+			void draw (sf::RenderTarget &t, sf::RenderStates s) const override;
 		public:
 			friend class Game;
 			
@@ -50,7 +90,6 @@ namespace gvt {
 			 * @param seconds Seconds elapsed since the last scene computation
 			 */
 			virtual void onUpdateGame (double seconds);
-			void draw (sf::RenderTarget &t, sf::RenderStates s) const override;
 
 			inline shared_ptr<ShapeGroup> shapes();
 			inline Vectord size() const;

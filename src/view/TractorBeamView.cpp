@@ -19,26 +19,29 @@
 // LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
-#ifndef NON_GRAVITAR_SOLAR_SYSTEM_SCENE_HPP
-#define NON_GRAVITAR_SOLAR_SYSTEM_SCENE_HPP
-
-#include <typeindex>
-#include "shape-group/SolarSystem.hpp"
-#include "Scene.hpp"
+#include "TractorBeamView.hpp"
+#include "utils/Utils.hpp"
 
 
 namespace gvt {
-	/**
-	 * A @c SolarSystemScene features a solar system, giving the possibility
-	 * to enter planets which the spaceship runs into.
-	 */
-	class SolarSystemScene: public Scene {
-		private:
-			void onCollision (shared_ptr<PairCollisionEvent> e) override;
-			void onSpaceshipDestroyed (shared_ptr<Spaceship> ship) override;
-		public:
-			explicit SolarSystemScene (shared_ptr<SolarSystem> const &system);
-	};
-}
+	const sf::Color TractorBeamView::BEAM_COLOR = sf::Color::Magenta;
 
-#endif
+	void TractorBeamView::draw (sf::RenderTarget &t, sf::RenderStates s) const {
+		Shape2DView::draw(t, s);
+
+		t.draw(mTriangle, mTranslation * mRotation);
+	}
+
+	TractorBeamView::TractorBeamView (shared_ptr<TractorBeam> const &beam):
+			Shape2DView(beam) {
+		mTriangle = sf::VertexArray(sf::LineStrip, 4);
+
+		for (size_t i = 0; i < mTriangle.getVertexCount(); i++)
+			mTriangle[i].color = BEAM_COLOR;
+
+		mTriangle[0].position = {0, (float) beam->height()};
+		mTriangle[1].position = {(float) (beam->width() / 2.0), 0};
+		mTriangle[2].position = {(float) beam->width(), (float) beam->height()};
+		mTriangle[3].position = {0, (float) beam->height()};
+	}
+}

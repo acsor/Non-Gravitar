@@ -23,7 +23,7 @@
 #include <cmath>
 #include <ctime>
 #include "Bunker.hpp"
-#include "bounding-polygon/BoundingPolygon.hpp"
+#include "utils/BoundingPolygon.hpp"
 
 using Bunker = gvt::Bunker;
 using Rectangle = gvt::Rectangle;
@@ -45,12 +45,15 @@ Bunker::Bunker(Vectord position, size_t directions):
 	}
 }
 
-shared_ptr<RoundMissile> Bunker::shoot() {
-	auto m = std::make_shared<RoundMissile>(
-			mPosition + Vectord{width() / 2.0, 0}
-	);
+shared_ptr<RoundMissile>
+Bunker::shoot(double speed, long lifespan, double radius) {
+	auto m = std::make_shared<RoundMissile>(Vectord{0, 0}, lifespan, radius);
+	auto initPos = Vectord{width() / 2.0, -20.0};
 
-	m->velocity(mPaths[mCurr]);
+	initPos.rotate(rotation(), rotationCenter());
+
+	m->position(mPosition + initPos);
+	m->velocity(speed * mPaths[mCurr]);
 	mCurr = (mCurr + 1) % mPaths.size();
 
 	return m;

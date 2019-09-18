@@ -23,18 +23,28 @@
 #define NON_GRAVITAR_SPACESHIP_HPP
 
 #include "Fuel.hpp"
+#include "TractorBeam.hpp"
 #include "Shape2D.hpp"
 #include "Rectangle.hpp"
 #include "ShapeVisitor.hpp"
-#include "bounding-polygon/BoundingPolygon.hpp"
+#include "utils/BoundingPolygon.hpp"
 
 
 namespace gvt {
+	struct FuelEvent: public gvt::Event {
+			unsigned oldAmount, newAmount;
+
+			FuelEvent(unsigned old, unsigned _new);
+	};
+
 	class Spaceship: public Shape2D {
 		private:
 			// Represents the current fuel amount in the ship
 			unsigned mFuel;
-		public:
+			shared_ptr<TractorBeam> mBeam;
+
+			EventDispatcher<FuelEvent> mFuelDisp;
+
 			/** Width and height properties of any given spaceship. Note that
 			 * these measures depend on the texture data found in
 			 * @c static/graphics/ and when the files herein found are changed
@@ -49,42 +59,56 @@ namespace gvt {
 			// polygon (which needs not necessarily be a rectangle).
 			static unsigned const constexpr BOUNDING_WIDTH = 46;
 			static unsigned const constexpr BOUNDING_HEIGHT = 42;
-
+		public:
 			Spaceship(Vectord position, unsigned fuel);
+
 			unsigned fuel() const;
 			/**
 			 * @brief Recharges the current @c Spaceship instance by the fuel
 			 * amount found in @c fuel.
 			 * @param fuel @c Fuel object.
 			 */
-			void recharge(Fuel &fuel);
+			void rechargeFuel(Fuel &fuel);
 			/**
-			 * @brief Discharges the current <tt>Spaceship</tt>'s fuel by @c
-			 * amount, defaulted to @c 1.
-			 *
-			 * @todo Verify that we can specify a default argument value, and
-			 * that Spaceship::discharge() can be specified even with no
-			 * arguments.
+			 * @brief Discharges the current <tt>Spaceship</tt> fuel by @c
+			 * amount.
 			 */
-			void discharge(unsigned amount = 1);
+			void dischargeFuel(unsigned amount);
 			/**
 			 * @return @c true if the current @c Spaceship instance has still
 			 * fuel in it, @c false otherwise.
 			 */
 			bool charged() const;
 
-			void accept(ShapeVisitor &visitor) override;
+			shared_ptr<RoundMissile> shoot(
+					double radius, double speed, long lifespan
+			) const;
+			inline shared_ptr<TractorBeam> tractorBeam();
+
+			void position(Vectord position) override;
+			Vectord position() const;
+			void rotation(double r) override;
+			double rotation() const;
+			void destroyed(bool destroyed) override;
+			bool destroyed() const;
 
 			inline double width() const override;
 			inline double height() const override;
-
 			BoundingPolygon collisionPolygon() const override;
+
+			EventDispatcher<FuelEvent>& fuelDispatcher();
+
+			void accept(ShapeVisitor &visitor) override;
 			bool operator== (Shape const &o) const override;
 	};
 }
 
 
 namespace gvt {
+	shared_ptr<TractorBeam> Spaceship::tractorBeam() {
+		return mBeam;
+	}
+
 	double Spaceship::width() const {
 		return WIDTH;
 	}

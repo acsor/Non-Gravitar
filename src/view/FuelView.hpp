@@ -19,26 +19,28 @@
 // LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
-#ifndef NON_GRAVITAR_SOLAR_SYSTEM_SCENE_HPP
-#define NON_GRAVITAR_SOLAR_SYSTEM_SCENE_HPP
+#ifndef NON_GRAVITAR_FUEL_VIEW_HPP
+#define NON_GRAVITAR_FUEL_VIEW_HPP
 
-#include <typeindex>
-#include "shape-group/SolarSystem.hpp"
-#include "Scene.hpp"
+#include "shape/Fuel.hpp"
+#include "Shape2DView.hpp"
 
 
 namespace gvt {
-	/**
-	 * A @c SolarSystemScene features a solar system, giving the possibility
-	 * to enter planets which the spaceship runs into.
-	 */
-	class SolarSystemScene: public Scene {
+	class FuelView: public Shape2DView {
 		private:
-			void onCollision (shared_ptr<PairCollisionEvent> e) override;
-			void onSpaceshipDestroyed (shared_ptr<Spaceship> ship) override;
+			sf::Sprite mSprite;
+			sf::Texture mTexture;
+			sf::Font mFont;
+			sf::Text mText;
+
+			static const std::string TEXTURE_PATH;
+		protected:
+			void draw (sf::RenderTarget &t, sf::RenderStates s) const override;
 		public:
-			explicit SolarSystemScene (shared_ptr<SolarSystem> const &system);
+			explicit FuelView (shared_ptr<Fuel> const &fuel);
 	};
 }
+
 
 #endif
