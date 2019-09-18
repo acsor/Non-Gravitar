@@ -63,6 +63,10 @@ namespace gvt {
 		mBeam->destroyed(destroyed);
 	}
 
+	Vectord Spaceship::rotationCenter() const {
+		return {BOUNDING_WIDTH / 2.0, BOUNDING_HEIGHT / 2.0};
+	}
+
 	bool Spaceship::destroyed() const {
 		return Shape2D::destroyed();
 	}

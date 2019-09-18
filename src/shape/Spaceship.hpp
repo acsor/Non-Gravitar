@@ -94,6 +94,8 @@ namespace gvt {
 
 			inline double width() const override;
 			inline double height() const override;
+			Vectord rotationCenter() const override;
+
 			BoundingPolygon collisionPolygon() const override;
 
 			EventDispatcher<FuelEvent>& fuelDispatcher();
