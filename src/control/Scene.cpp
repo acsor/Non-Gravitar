@@ -19,7 +19,6 @@
 // LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
-#include <utility>
 #include "Scene.hpp"
 #include "Game.hpp"
 #include "shape-group/CollisionGroup.hpp"
@@ -44,15 +43,14 @@ namespace gvt {
 			mSize{size}, mShapes{std::move(shapes)} {
 		mGame = Game::getInstance();
 		mShapesView.reset(new ShapeGroupView(mShapes));
-		auto _1 = std::placeholders::_1;
 
 		initializeDestroyGraph();
 
 		mCollisionCbk = mShapes->collisionDispatcher().addCallback(
-			std::bind(&Scene::onCollision, this, _1)
+			[this] (shared_ptr<PairCollisionEvent> e) -> void { onCollision(e); }
 		);
 		mDestroyCbk = mShapes->removalDispatcher().addCallback(
-			std::bind(&Scene::onShapeRemoved, this, _1)
+			[this] (shared_ptr<ShapeRemovalEvent> e) -> void { onShapeRemoved(e); }
 		);
 	}
 

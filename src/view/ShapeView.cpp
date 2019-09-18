@@ -20,7 +20,6 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 #include "ShapeView.hpp"
-#include <utility>
 
 
 namespace gvt {
@@ -32,17 +31,16 @@ namespace gvt {
 	}
 
 	ShapeView::ShapeView(shared_ptr<Shape> shape): mShape(std::move(shape)) {
-		auto _1 = std::placeholders::_1;
 		mRotation = sf::Transform::Identity;
 
 		mPosCbk = mShape->positionDispatcher().addCallback(
-			std::bind(&ShapeView::onShapeMoved, this, _1)
+			[this] (shared_ptr<PositionEvent> e) -> void { onShapeMoved(e); }
 		);
 		mRotCbk = mShape->rotationDispatcher().addCallback(
-			std::bind(&ShapeView::onShapeRotated, this, _1)
+			[this] (shared_ptr<RotationEvent> e) -> void { onShapeRotated(e); }
 		);
 		mColCbk = mShape->collisionDispatcher().addCallback(
-			std::bind(&ShapeView::onShapeCollided, this, _1)
+			[this] (shared_ptr<CollisionEvent> e) -> void { onShapeCollided(e); }
 		);
 
 		updateTranslationTransform();

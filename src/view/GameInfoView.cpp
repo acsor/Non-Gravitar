@@ -95,18 +95,16 @@ namespace gvt {
 	GameInfoView::GameInfoView (
 		shared_ptr<GameInfo> gameInfo, shared_ptr<Spaceship> ship
 	): mInfo{std::move(gameInfo)}, mShip{std::move(ship)} {
-		auto _1 = std::placeholders::_1;
-
 		mAssets = GraphicAssets::getInstance();
 
 		mFuelCbk = mShip->fuelDispatcher().addCallback(
-			std::bind(&GameInfoView::onFuelChanged, this, _1)
+			[this] (shared_ptr<FuelEvent> e) -> void { onFuelChanged(e); }
 		);
 		mScoreCbk = mInfo->scoreDispatcher().addCallback(
-			std::bind(&GameInfoView::onScoreChanged, this, _1)
+			[this] (shared_ptr<ScoreEvent> e) -> void { onScoreChanged(e); }
 		);
 		mShipCbk = mInfo->shipCountDispatcher().addCallback(
-			std::bind(&GameInfoView::onShipsChanged, this, _1)
+			[this] (shared_ptr<SpaceshipCountEvent> e) -> void { onShipsChanged (e); }
 		);
 
 		mText = sf::Text("", mAssets->defaultFont);

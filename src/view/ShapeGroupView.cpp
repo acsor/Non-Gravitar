@@ -19,7 +19,6 @@
 // LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
-#include <functional>
 #include "ShapeGroupView.hpp"
 #include "view/SpaceshipView.hpp"
 
@@ -50,16 +49,14 @@ namespace gvt {
 
 	ShapeGroupView::ShapeGroupView(const shared_ptr<ShapeGroup> &group):
 			mGroup{group} {
-		auto _1 = std::placeholders::_1;
-
 		mAttachCbk = group->insertionDispatcher().addCallback(
-				std::bind(&ShapeGroupView::onShapeInserted, this, _1)
+			[this] (shared_ptr<ShapeInsertionEvent> e) -> void { onShapeInserted (e); }
 		);
 		mRemovalCbk = group->removalDispatcher().addCallback(
-				std::bind(&ShapeGroupView::onShapeRemoved, this, _1)
+			[this] (shared_ptr<ShapeRemovalEvent> e) -> void { onShapeRemoved(e); }
 		);
 		mDestrCbk = group->destructionDispatcher().addCallback(
-			std::bind(&ShapeGroupView::onShapeGroupDestroyed, this, _1)
+			[this] (shared_ptr<ShapeGroupDestructionEvent> e) -> void { onShapeGroupDestroyed (e); }
 		);
 
 		for (auto const &shape: *group)

@@ -86,13 +86,11 @@ namespace gvt {
 	}
 
 	CollisionGroup::CollisionGroup() {
-		auto _1 = std::placeholders::_1;
-
 		mPosCallback = std::make_shared<Callback<PositionEvent>>(
-			std::bind(&CollisionGroup::onShapeMoved, this, _1)
+			[this] (shared_ptr<PositionEvent> e) -> void { onShapeMoved(e); }
 		);
 		mRotCallback = std::make_shared<Callback<RotationEvent>>(
-			std::bind(&CollisionGroup::onShapeRotated, this, _1)
+			[this] (shared_ptr<RotationEvent> e) -> void { onShapeRotated(e); }
 		);
 	}
 

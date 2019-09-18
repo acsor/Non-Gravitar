@@ -26,7 +26,7 @@
 
 
 namespace gvt {
-	SceneChangedEvent::SceneChangedEvent(
+	SceneChangeEvent::SceneChangeEvent(
 			shared_ptr<Scene> old, shared_ptr<Scene> _new
 	): oldScene{std::move(old)}, newScene{std::move(_new)} {
 	}
@@ -56,8 +56,6 @@ namespace gvt {
 	}
 
 	Game::Game () {
-		auto _1 = std::placeholders::_1;
-
 		mShip.reset(new Spaceship(Vectord{0, 0}, 1000));
 		mSceneFrame.reset(new SceneFrame(this, mShip));
 
@@ -65,12 +63,14 @@ namespace gvt {
 		mInfoView.reset(new GameInfoView(mInfo, mShip));
 
 		mShip->positionDispatcher().addCallback(
-				std::bind(&Game::onShipMoved, this, _1)
+			[this] (shared_ptr<PositionEvent> e) -> void { onShipMoved(e); }
 		);
 		mViewEvents.addCallback(
-				MoveShipCallback(this, mShip, 150.0, deg2rad(10))
+			MoveShipCallback(this, mShip, 150.0, deg2rad(10))
 		);
-		mViewEvents.addCallback(std::bind(&Game::toggleDebug, this, _1));
+		mViewEvents.addCallback(
+			[this] (shared_ptr<sf::Event> e) -> void { toggleDebug(e); }
+		);
 	}
 
 	Game::~Game () {
@@ -109,7 +109,7 @@ namespace gvt {
 	}
 
 	void Game::pushScene (shared_ptr<Scene> scene) {
-		auto e = std::make_shared<SceneChangedEvent>(mCurrScene, scene);
+		auto e = std::make_shared<SceneChangeEvent>(mCurrScene, scene);
 
 		mCurrScene = std::move(scene);
 		mSceneStack.push(mCurrScene);
@@ -121,7 +121,7 @@ namespace gvt {
 		if (mSceneStack.empty()) {
 			throw std::logic_error("No scene to pop out from the stack");
 		} else {
-			auto e = std::make_shared<SceneChangedEvent>(mCurrScene, nullptr);
+			auto e = std::make_shared<SceneChangeEvent>(mCurrScene, nullptr);
 
 			mSceneStack.pop();
 			mCurrScene = mSceneStack.top();
@@ -164,7 +164,7 @@ namespace gvt {
 		}
 	}
 
-	void SceneFrame::onSceneChanged(shared_ptr<SceneChangedEvent> e) {
+	void SceneFrame::onSceneChanged(shared_ptr<SceneChangeEvent> e) {
 		mMax = e->newScene->size() - mMin;
 	}
 
@@ -181,17 +181,16 @@ namespace gvt {
 
 	SceneFrame::SceneFrame(Game *game, shared_ptr<Spaceship> ship):
 			mGame{game}, mShip{std::move(ship)} {
-		auto _1 = std::placeholders::_1;
-
 		mView.setViewport({0.0, 0.2, 1, 0.8});
+
 		mResizeHandle = mGame->viewEventsDispatcher().addCallback(
-			std::bind(&SceneFrame::onWindowResized, this, _1)
+			[this] (shared_ptr<sf::Event> e) -> void { onWindowResized(e); }
 		);
 		mSceneHandle = mGame->addCallback(
-			std::bind(&SceneFrame::onSceneChanged, this, _1)
+			[this] (shared_ptr<SceneChangeEvent> e) -> void { onSceneChanged (e); }
 		);
 		mShipHandle = mShip->positionDispatcher().addCallback(
-			std::bind(&SceneFrame::onShipMoved, this, _1)
+			[this] (shared_ptr<PositionEvent> e) -> void { onShipMoved (e); }
 		);
 	}
 
