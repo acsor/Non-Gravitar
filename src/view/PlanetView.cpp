@@ -22,6 +22,7 @@
 
 #include "PlanetView.hpp"
 #include "GraphicAssets.hpp"
+#include "utils/Random.hpp"
 
 
 namespace gvt {
@@ -29,16 +30,29 @@ namespace gvt {
 
 	PlanetView::PlanetView (shared_ptr<Planet> const &planet):
 			Shape2DView{planet} {
+		auto a = GraphicAssets::getInstance();
+		auto randomPos = UniRandom<float>(0, 2 * M_PI)();
+		auto bonusRadius = (float) (planet->radius() + 10);
+
 		mCircle = sf::CircleShape(planet->radius());
+		mBonus = sf::Text(
+			std::to_string(planet->bonus()), a->defaultFont, BONUS_FONT_SIZE
+		);
 
 		mCircle.setFillColor(sf::Color::Transparent);
 		mCircle.setOutlineColor(DEFAULT_OUTLINE_COLOR);
 		mCircle.setOutlineThickness(2);
+
+		mBonus.setPosition(
+				bonusRadius * sf::Vector2f(cos(randomPos), sin (randomPos))
+		);
+		mBonus.setFillColor(sf::Color::Cyan);
 	}
 
 	void PlanetView::draw(sf::RenderTarget &t, sf::RenderStates s) const {
 		Shape2DView::draw(t, s);
 
 		t.draw(mCircle, mTranslation * mRotation);
+		t.draw(mBonus, mTranslation * mRotation);
 	}
 }

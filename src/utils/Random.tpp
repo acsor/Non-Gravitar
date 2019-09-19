@@ -9,6 +9,17 @@ namespace gvt {
 		return mDist(mEngine);
 	}
 
+
+	UniRandom<float>::UniRandom(float low, float high):
+			mDist{low, high} {
+		mEngine.seed(time(nullptr));
+	}
+
+	float UniRandom<float>::operator() () {
+		return mDist(mEngine);
+	}
+
+
 	UniRandom<double>::UniRandom(double low, double high):
 			mDist{low, high} {
 		mEngine.seed(time(nullptr));

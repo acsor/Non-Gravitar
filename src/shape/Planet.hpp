@@ -31,6 +31,7 @@ namespace gvt {
 
 	class Planet: public Circle {
 		protected:
+			unsigned mBonus;
 			shared_ptr<PlanetSurface> mSurface;
 		public:
 			Planet (Vectord position, double radius);
@@ -43,9 +44,30 @@ namespace gvt {
 			 */
 			shared_ptr<PlanetSurface> surface();
 
+			/**
+			 * Setter method of bonus().
+			 */
+			inline void bonus(unsigned bonus);
+			/**
+			 * @return Bonus points received upon the destruction of this
+			 * planet.
+			 */
+			inline unsigned bonus() const;
+
 			void accept (ShapeVisitor &visitor) override;
 			bool operator== (Shape const &o) const override;
 	};
+}
+
+
+namespace gvt {
+	void Planet::bonus(unsigned bonus) {
+		mBonus = bonus;
+	}
+
+	unsigned Planet::bonus() const {
+		return mBonus;
+	}
 }
 
 

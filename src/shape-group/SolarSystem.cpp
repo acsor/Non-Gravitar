@@ -46,16 +46,14 @@ namespace gvt {
 		Vectord maxPos
 	) {
         std::shared_ptr<SolarSystem> system {new SolarSystem()};
-        std::default_random_engine e;
-		std::uniform_real_distribution<double> radius{minRadius, maxRadius};
-        std::uniform_real_distribution<double>
-				xCoord{minPos.x, maxPos.x}, yCoord{minPos.y, maxPos.y};
-
-        e.seed(time(nullptr));
+		UniRandom<double> radius{minRadius, maxRadius};
+        UniRandom<double> xCoord{minPos.x, maxPos.x};
+		UniRandom<double> yCoord{minPos.y, maxPos.y};
+        UniRandom<unsigned> bonus{1, 8};
 
         while (planets > 0) {
 			auto p = std::make_shared<Planet>(
-				Vectord{xCoord(e), yCoord(e)}, radius(e)
+				Vectord{xCoord(), yCoord()}, radius()
 			);
 			auto surface = std::make_shared<PlanetSurface>();
 
@@ -63,6 +61,7 @@ namespace gvt {
 			surface->randomBunkers(5);
 			surface->randomFuel(2, Vector<unsigned>{100, 500});
 			p->surface(surface);
+			p->bonus(1000 * bonus());
 
 			system->insert(p);
 

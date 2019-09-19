@@ -30,6 +30,9 @@ namespace gvt {
 	class PlanetView: public Shape2DView {
 		private:
 			sf::CircleShape mCircle;
+			sf::Text mBonus;
+
+			static const constexpr unsigned BONUS_FONT_SIZE = 18;
 
 			static const sf::Color DEFAULT_OUTLINE_COLOR;
 
