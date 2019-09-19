@@ -30,7 +30,8 @@ namespace gvt {
 	}
 
 
-	template<typename I> IteratorRandomizer<I>::IteratorRandomizer (I begin, I end):
+	template<typename I>
+	IteratorRandomizer<I>::IteratorRandomizer (I begin, I end):
 			mBegin{begin}, mChoice(0, std::distance(begin, end) - 1) {
 	}
 

@@ -26,33 +26,46 @@
 
 
 namespace gvt {
-	const sf::Color PlanetView::DEFAULT_OUTLINE_COLOR = sf::Color(0, 138, 0);
+	const std::vector<sf::Color> PlanetView::OUTLINE_COLORS = {
+			sf::Color(207, 245, 0),	// Fluorescent yellow
+			sf::Color(197, 0, 0),	// Almost red
+	};
 
 	PlanetView::PlanetView (shared_ptr<Planet> const &planet):
 			Shape2DView{planet} {
 		auto a = GraphicAssets::getInstance();
-		auto randomPos = UniRandom<float>(0, 2 * M_PI)();
-		auto bonusRadius = (float) (planet->radius() + 10);
+		auto cPolygon = planet->collisionPolygon();
 
-		mCircle = sf::CircleShape(planet->radius());
-		mBonus = sf::Text(
-			std::to_string(planet->bonus()), a->defaultFont, BONUS_FONT_SIZE
-		);
+		auto bonusAngle = UniRandom<float>(0, 2 * M_PI)();
+		auto bonusRadius = (float) (planet->radius()) + 40;
+		auto bonusText = std::to_string(planet->bonus());
 
-		mCircle.setFillColor(sf::Color::Transparent);
-		mCircle.setOutlineColor(DEFAULT_OUTLINE_COLOR);
-		mCircle.setOutlineThickness(2);
+		auto randomColor = UniRandom<int>(0, OUTLINE_COLORS.size() - 1);
 
+		mBonus = sf::Text(bonusText, a->defaultFont, BONUS_FONT_SIZE);
 		mBonus.setPosition(
-				bonusRadius * sf::Vector2f(cos(randomPos), sin (randomPos))
+			bonusRadius * sf::Vector2f(cos(bonusAngle), sin(bonusAngle))
 		);
 		mBonus.setFillColor(sf::Color::Cyan);
+
+		mOutlineColor = OUTLINE_COLORS[randomColor()];
+		mPolygon = sf::VertexArray(sf::LineStrip, cPolygon.size() + 1);
+
+		for (size_t i = 0; i < mPolygon.getVertexCount(); i++) {
+			auto v = cPolygon.vertices()[i];
+
+			mPolygon[i].color = mOutlineColor;
+			mPolygon[i].position = {(float) v.x, (float) v.y};
+		}
+
+		mPolygon[8].color = mOutlineColor;
+		mPolygon[8].position = {(float) cPolygon[0].x, (float) cPolygon[0].y};
 	}
 
 	void PlanetView::draw(sf::RenderTarget &t, sf::RenderStates s) const {
 		Shape2DView::draw(t, s);
 
-		t.draw(mCircle, mTranslation * mRotation);
+		t.draw(mPolygon, mTranslation * mRotation);
 		t.draw(mBonus, mTranslation * mRotation);
 	}
 }

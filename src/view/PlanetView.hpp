@@ -22,6 +22,7 @@
 #ifndef NON_GRAVITAR_PLANET_VIEW_HPP
 #define NON_GRAVITAR_PLANET_VIEW_HPP
 
+#include <SFML/Graphics.hpp>
 #include "shape/Planet.hpp"
 #include "Shape2DView.hpp"
 
@@ -29,12 +30,12 @@
 namespace gvt {
 	class PlanetView: public Shape2DView {
 		private:
-			sf::CircleShape mCircle;
 			sf::Text mBonus;
+			sf::VertexArray mPolygon;
+			sf::Color mOutlineColor;
 
+			static const std::vector<sf::Color> OUTLINE_COLORS;
 			static const constexpr unsigned BONUS_FONT_SIZE = 18;
-
-			static const sf::Color DEFAULT_OUTLINE_COLOR;
 
 			void draw(sf::RenderTarget &t, sf::RenderStates s) const override;
 		public:
