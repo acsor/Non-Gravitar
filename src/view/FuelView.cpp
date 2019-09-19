@@ -36,8 +36,10 @@ namespace gvt {
 		auto a = GraphicAssets::getInstance();
 		mSprite.setTexture(a->fuelTexture);
 
-		mText = sf::Text(std::to_string(fuel->fuel()), a->defaultFont, 20);
+		mText = sf::Text(std::to_string(fuel->fuel()), a->defaultFont, 16);
 		mText.setPosition(0, fuel->height() / 2.0);
 		mText.setFillColor(sf::Color::White);
+		mText.setLetterSpacing(1.5);
+		mText.setStyle(sf::Text::Bold);
 	}
 }

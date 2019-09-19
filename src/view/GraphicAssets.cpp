@@ -29,8 +29,8 @@ namespace gvt {
 	GraphicAssets::GraphicAssets() {
 		auto s = gvt::staticsGet;
 
-		if (!defaultFont.loadFromFile(s("fonts/ERGOB.TTF")))
-			throw std::runtime_error("Could not load ERGOB.TTF");
+		if (!defaultFont.loadFromFile(s("fonts/Hyperspace.otf")))
+			throw std::runtime_error("Could not load Hyperspace.otf");
 
 		if (!spaceshipTexture.loadFromFile(s("graphics/spaceship.png")))
 			throw std::runtime_error("Could not load spaceship.png texture");

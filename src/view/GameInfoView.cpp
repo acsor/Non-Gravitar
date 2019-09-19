@@ -25,11 +25,11 @@
 
 
 namespace gvt {
-	const sf::Color GameInfoView::TEXT_COLOR = sf::Color(0, 111, 109);
+	const sf::Color GameInfoView::TEXT_COLOR = sf::Color::Cyan;
 
 	void GameInfoView::updateText() {
 		mText.setString(
-			"SCORE\t" + std::to_string(mInfo->score()) +
+			"SCORE " + std::to_string(mInfo->score()) +
 			"\nFUEL " + std::to_string(mShip->fuel())
 		);
 		auto const bounds = mText.getLocalBounds();
@@ -108,6 +108,7 @@ namespace gvt {
 		);
 
 		mText = sf::Text("", mAssets->defaultFont);
+		mText.setLetterSpacing(2.5);
 		mText.setFillColor(TEXT_COLOR);
 		mText.setPosition(0, 0);
 

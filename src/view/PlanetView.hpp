@@ -35,7 +35,7 @@ namespace gvt {
 			sf::Color mOutlineColor;
 
 			static const std::vector<sf::Color> OUTLINE_COLORS;
-			static const constexpr unsigned BONUS_FONT_SIZE = 18;
+			static const constexpr unsigned BONUS_FONT_SIZE = 20;
 
 			void draw(sf::RenderTarget &t, sf::RenderStates s) const override;
 		public:
