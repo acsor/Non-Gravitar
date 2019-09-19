@@ -70,7 +70,7 @@ namespace gvt {
 		UniRandom<int> segment{0, static_cast<int>(mMountains->size() - 2)};
 
 		while (fuels > 0) {
-			auto f = std::make_shared<Fuel>(Vectord{0, 0}, fuel());
+			auto f = std::make_shared<Fuel>(Vectord{0, 0}, 100 * fuel());
 
 			insert(f);
 			mMountains->align(segment(), f);
