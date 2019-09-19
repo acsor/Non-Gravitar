@@ -49,6 +49,9 @@ namespace gvt {
 		mCollisionCbk = mShapes->collisionDispatcher().addCallback(
 			[this] (PairCollisionEvent e) -> void { onCollision(e); }
 		);
+		mFuelCbk = mGame->spaceship()->fuelDispatcher().addCallback(
+			[this] (FuelEvent e) -> void { onFuelChanged(e); }
+		);
 		mDestroyCbk = mShapes->removalDispatcher().addCallback(
 			[this] (ShapeRemovalEvent e) -> void { onShapeRemoved(e); }
 		);
@@ -56,6 +59,7 @@ namespace gvt {
 
 	Scene::~Scene() {
 		mShapes->removalDispatcher().removeCallback(mDestroyCbk);
+		mGame->spaceship()->fuelDispatcher().removeCallback(mFuelCbk);
 		mShapes->collisionDispatcher().removeCallback(mCollisionCbk);
 	}
 
@@ -104,6 +108,13 @@ namespace gvt {
 			e.first->destroyed(true);
 	}
 
+	void Scene::onFuelChanged (FuelEvent e) {
+		if (e.newAmount <= 0) {
+			mGame->gameInfo()->resetSpaceships();
+			mGame->spaceship()->destroyed(true);
+		}
+	}
+
 	void Scene::onShapeRemoved (ShapeRemovalEvent e) {
 		if (e.shape->destroyed()) {
 			if (std::dynamic_pointer_cast<Bunker>(e.shape)) {
@@ -117,7 +128,10 @@ namespace gvt {
 	}
 
 	void Scene::onSpaceshipDestroyed (shared_ptr<Spaceship> ship) {
-		mGame->gameInfo()->decrementSpaceships();
+		auto info = mGame->gameInfo();
+
+		if (info->spaceships() > 0)
+			mGame->gameInfo()->decrementSpaceships();
 	}
 
 	void Scene::onUpdateGame (double seconds) {

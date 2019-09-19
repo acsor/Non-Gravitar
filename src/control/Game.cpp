@@ -56,7 +56,7 @@ namespace gvt {
 	}
 
 	Game::Game () {
-		mShip.reset(new Spaceship(Vectord{0, 0}, 1000));
+		mShip.reset(new Spaceship(Vectord{0, 0}, 50));
 		mSceneFrame.reset(new SceneFrame(this, mShip));
 
 		mInfo.reset(new GameInfo(0, 3));

@@ -49,6 +49,13 @@ namespace gvt {
 		mShipDisp.raiseEvent({mSpaceships + 1, mSpaceships});
 	}
 
+	void GameInfo::resetSpaceships() {
+		auto oldSpaceships = mSpaceships;
+		mSpaceships = 0;
+
+		mShipDisp.raiseEvent({oldSpaceships, mSpaceships});
+	}
+
 	void GameInfo::upgradeScore (unsigned deltaScore) {
 		mScore += deltaScore;
 
