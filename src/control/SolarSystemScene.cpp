@@ -42,7 +42,8 @@ namespace gvt {
 			planet->surface()->insert(game->acquireSpaceship());
 			game->pushScene(std::make_shared<PlanetSurfaceScene>(planet));
 
-			ship->acceleration({0, 0});
+			ship->rotation(0);
+			ship->velocity(ship->speed() * Vectord(M_PI / 2.0));
 			ship->position({planet->surface()->width() / 2.0, 1});
 		}
 	}
