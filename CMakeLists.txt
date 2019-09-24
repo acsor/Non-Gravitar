@@ -80,6 +80,9 @@ target_link_libraries(ShapeGroup Shape)
 add_library(CollisionGroup "${DIR_SHAPE_GROUP}/CollisionGroup.cpp")
 target_link_libraries(CollisionGroup ShapeGroup)
 
+add_library(PlanetBuilder "${DIR_SHAPE_GROUP}/PlanetBuilder.cpp")
+target_link_libraries(PlanetBuilder Planet PlanetSurface)
+
 add_library(SolarSystem "${DIR_SHAPE_GROUP}/SolarSystem.cpp")
 target_link_libraries(SolarSystem PlanetSurface)
 
