@@ -37,14 +37,14 @@ TEST_CASE("Bunker::shoot() missiles have to be cyclic", "[Bunker]") {
 }
 
 TEST_CASE(
-	"Bunker::shoot() missiles velocity must have norm equal to 1", "[Bunker]"
+	"Bunker::shoot() missiles velocity norm must equal parameter", "[Bunker]"
 ) {
 	size_t const samples = 100;
 
 	for (size_t i = 0; i < samples; i++) {
 		auto b = gvt::Bunker({0, 0}, 3);
 
-		REQUIRE(b.shoot(0, 0, 0)->velocity().norm() == 1.0);
+		REQUIRE(b.shoot(10, 1, 1)->velocity().norm() - 10.0 <= 1E-6);
 	}
 }
 
@@ -56,7 +56,7 @@ TEST_CASE(
 
 	while (samples-- > 0) {
 		auto b = gvt::Bunker({0, 0}, 3);
-		auto m = b.shoot(0, 0, 0);
+		auto m = b.shoot(10, 1, 1);
 
 		// If we fix the rotation at 0, we need only test that the velocity
 		// angle is comprised in the [180, 360) range
