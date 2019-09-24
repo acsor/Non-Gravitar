@@ -22,16 +22,20 @@
 #ifndef NON_GRAVITAR_CIRCLE_HPP
 #define NON_GRAVITAR_CIRCLE_HPP
 
-#include "Shape2D.hpp"
+#include "ClosedShape.hpp"
 
 
 namespace gvt {
-	class Circle: public Shape2D {
+	class Circle: public ClosedShape {
 		private:
 			static unsigned const constexpr COLLISION_PRECISION = 8;
+
+			BoundingPolygon polygonFactory(double radius) const;
 		protected:
 			double mRadius;
 		public:
+			using ClosedShape::clashes;
+
 			Circle(Vectord position, double radius);
 
 			inline double width() const override;
@@ -43,7 +47,6 @@ namespace gvt {
 			bool clashes(Circle const &o) const;
 
 			void accept (ShapeVisitor &visitor) override;
-			BoundingPolygon collisionPolygon() const override;
 			bool operator== (Shape const &o) const override;
 	};
 }

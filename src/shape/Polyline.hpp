@@ -56,7 +56,7 @@ namespace gvt {
 			// compared to std::list
 			std::vector<Vectord> mVertices;
 
-			bool clashes (Shape2D const &other) const;
+			bool clashes (ClosedShape const &other) const;
 			bool clashes (Polyline const &other) const;
 		public:
 			/**
@@ -91,9 +91,9 @@ namespace gvt {
 			 * at the beginning, @c 0 .5 at the middle and @c 1 at the very end
 			 * of the segment. Defaults to @c 0.5.
 			 */
-			void align (unsigned line, Shape2D &shape, double offset = 0.5);
+			void align (unsigned line, ClosedShape &shape, double offset = 0.5);
 			inline void align (
-				unsigned line, std::shared_ptr<Shape2D> const &shape,
+				unsigned line, std::shared_ptr<ClosedShape> const &shape,
 				double offset = 0.5
 			);
 			inline iterator begin();
@@ -102,7 +102,7 @@ namespace gvt {
 			void accept (ShapeVisitor &v) override;
 			/**
 			 * Detects a collision again this object and @c other. If other
-			 * is of type @c Shape2D, than the control is made against its
+			 * is of type @c ClosedShape, then the control is made against its
 			 * own bounding polygon and all the lines comprising this polyline.
 			 *
 			 * @return @c true if @c *this clashes with @c other, @c false
@@ -139,7 +139,7 @@ namespace gvt {
 	}
 
 	void Polyline::align (
-			unsigned line, shared_ptr<Shape2D> const &shape, double offset
+			unsigned line, shared_ptr<ClosedShape> const &shape, double offset
 	) {
 		align(line, *shape, offset);
 	}

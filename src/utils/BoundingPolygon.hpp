@@ -98,6 +98,11 @@ namespace gvt {
 			 * than 2.
 			 */
 			BoundingPolygon(iterator begin, iterator end);
+			/**
+			 * Constructs a @c BoundingPolygon with the specified initial
+			 * number of default-constructed vertices.
+			 */
+			explicit BoundingPolygon(unsigned vertices);
 
 			/**
 			 * Sets the absolute position of this @c BoundingPolygon.
@@ -131,11 +136,13 @@ namespace gvt {
 			 */
 			bool intersects(BoundingPolygon const &o) const;
 
+			Vertex& operator[] (unsigned i);
 			/**
 			 * @return The "list" of vertices comprising this @c
 			 * BoundingPolygon.
 			 */
 			std::vector<Vertex> vertices () const;
+			unsigned size() const;
 			/**
 			 * @return The mean point of this @c BoundingPolygon in its
 			 * <b>local</b> coordinate space.

@@ -22,11 +22,11 @@
 #include <stdexcept>
 #include <utility>
 #include "Polyline.hpp"
-#include "Shape2D.hpp"
+#include "ClosedShape.hpp"
 
 
 namespace gvt {
-	void Polyline::align (unsigned line, Shape2D &shape, double offset) {
+	void Polyline::align (unsigned line, ClosedShape &shape, double offset) {
         if (line >= mVertices.size() - 1)
         	throw std::domain_error("line argument out of bounds");
         if (offset < 0 || offset > 1)
@@ -60,7 +60,7 @@ namespace gvt {
 		visitor.visitPolyline(*this);
 	}
 
-	bool Polyline::clashes (Shape2D const &other) const {
+	bool Polyline::clashes (ClosedShape const &other) const {
 		auto polygon = other.collisionPolygon();
 
 		for (size_t i = 0; i < mVertices.size() - 1; i++) {
@@ -97,8 +97,8 @@ namespace gvt {
 	}
 
 	bool Polyline::clashes (Shape const &other) const {
-		if (auto shape2d = dynamic_cast<Shape2D const *>(&other)) {
-			return clashes(*shape2d);
+		if (auto closed = dynamic_cast<ClosedShape const *>(&other)) {
+			return clashes(*closed);
 		}  else if (auto polyline = dynamic_cast<Polyline const *>(&other)) {
 			return clashes(*polyline);
 		} else {

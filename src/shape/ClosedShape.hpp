@@ -19,8 +19,8 @@
 // LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
-#ifndef NON_GRAVITAR_SHAPE2D_HPP
-#define NON_GRAVITAR_SHAPE2D_HPP
+#ifndef NON_GRAVITAR_CLOSEDSHAPE_HPP
+#define NON_GRAVITAR_CLOSEDSHAPE_HPP
 
 #include "utils/BoundingPolygon.hpp"
 #include "Shape.hpp"
@@ -29,15 +29,28 @@
 
 namespace gvt {
 	/**
-	 * A @c Shape occupying a well defined rectangular region on the coordinate
-	 * space.
+	 * A @c Shape capable of being represented as a closed curve. Its
+	 * interface distinguishes from ClosedShape primarily for the presence of
+	 * @c collisionPolygon() function.
 	 */
-	class Shape2D: public Shape {
+	class ClosedShape: public Shape {
 		protected:
-			inline explicit Shape2D(Vectord position);
+			BoundingPolygon mPolygon;
+
+			/**
+			 * @param pos
+			 * @param cp Collision polygon to approximate this shape with.
+			 */
+			ClosedShape(Vectord pos, BoundingPolygon cp);
 		public:
+			using Shape::position;
+			using Shape::rotation;
+
 			virtual double width() const = 0;
 			virtual double height() const = 0;
+
+			void position(Vectord p) override;
+			void rotation(double r) override;
 
 			/**
 			 * @return The center point of this @c Shape <b>relative</b> to
@@ -50,31 +63,15 @@ namespace gvt {
 			 * accounted for are <i>global</i>, that is are measured against
 			 * the global coordinate system.
 			 */
-			virtual BoundingPolygon collisionPolygon() const = 0;
-			inline bool clashes(Shape const &o) const override;
+			BoundingPolygon collisionPolygon() const;
+			bool clashes(Shape const &o) const override;
 	};
 }
 
 
 namespace gvt {
-	Shape2D::Shape2D(Vectord position): Shape(position) {
-	}
-
-	Vectord Shape2D::rotationCenter() const {
+	Vectord ClosedShape::rotationCenter() const {
 		return Vectord{width() / 2.0, height() / 2.0};
-	}
-
-	bool Shape2D::clashes(Shape const &o) const {
-        auto other = dynamic_cast<Shape2D const *>(&o);
-
-        // If `o' is an instance of Shape2D, we know how to detect collisions
-        if (other) {
-        	return collisionPolygon().intersects(other->collisionPolygon());
-		// otherwise, we delegate the task to `o', which might know more
-		// about this all
-        } else {
-        	return o.clashes(*this);
-        }
 	}
 }
 

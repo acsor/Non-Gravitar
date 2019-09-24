@@ -26,7 +26,7 @@
 
 
 namespace gvt {
-	SceneChangedEvent::SceneChangedEvent(
+	SceneChangeEvent::SceneChangeEvent(
 			shared_ptr<Scene> old, shared_ptr<Scene> _new
 	): oldScene{std::move(old)}, newScene{std::move(_new)} {
 	}
@@ -35,7 +35,7 @@ namespace gvt {
 	// Game class section
 	Game* Game::sInstance = nullptr;
 
-	void Game::onShipMoved(shared_ptr<PositionEvent> e) {
+	void Game::onShipMoved(PositionEvent e) {
 		auto sceneSize = mCurrScene->size() - Vectord{
 				mShip->width(), mShip->height()
 		};
@@ -44,10 +44,10 @@ namespace gvt {
 			mCurrScene->onExitBoundaries(mShip);
 	}
 
-	void Game::toggleDebug (std::shared_ptr<sf::Event> const &e) {
+	void Game::toggleDebug (sf::Event e) {
 		if (
-			e->type == sf::Event::KeyPressed && e->key.control &&
-			e->key.code == sf::Keyboard::Key::B
+			e.type == sf::Event::KeyPressed && e.key.control &&
+			e.key.code == sf::Keyboard::Key::B
 		) {
 			mCurrScene->mShapesView->setDebug(
 					!mCurrScene->mShapesView->isDebug()
@@ -56,21 +56,21 @@ namespace gvt {
 	}
 
 	Game::Game () {
-		auto _1 = std::placeholders::_1;
-
-		mShip.reset(new Spaceship(Vectord{0, 0}, 1000));
+		mShip.reset(new Spaceship(Vectord{0, 0}, 50));
 		mSceneFrame.reset(new SceneFrame(this, mShip));
 
 		mInfo.reset(new GameInfo(0, 3));
 		mInfoView.reset(new GameInfoView(mInfo, mShip));
 
 		mShip->positionDispatcher().addCallback(
-				std::bind(&Game::onShipMoved, this, _1)
+			[this] (PositionEvent e) -> void { onShipMoved(e); }
 		);
 		mViewEvents.addCallback(
-				MoveShipCallback(this, mShip, 150.0, deg2rad(10))
+			MoveShipCallback(this, mShip, 150.0, deg2rad(10))
 		);
-		mViewEvents.addCallback(std::bind(&Game::toggleDebug, this, _1));
+		mViewEvents.addCallback(
+			[this] (sf::Event e) -> void { toggleDebug(e); }
+		);
 	}
 
 	Game::~Game () {
@@ -109,7 +109,7 @@ namespace gvt {
 	}
 
 	void Game::pushScene (shared_ptr<Scene> scene) {
-		auto e = std::make_shared<SceneChangedEvent>(mCurrScene, scene);
+		auto e = SceneChangeEvent(mCurrScene, scene);
 
 		mCurrScene = std::move(scene);
 		mSceneStack.push(mCurrScene);
@@ -121,12 +121,12 @@ namespace gvt {
 		if (mSceneStack.empty()) {
 			throw std::logic_error("No scene to pop out from the stack");
 		} else {
-			auto e = std::make_shared<SceneChangedEvent>(mCurrScene, nullptr);
+			auto e = SceneChangeEvent(mCurrScene, nullptr);
 
 			mSceneStack.pop();
 			mCurrScene = mSceneStack.top();
 
-			e->newScene = mCurrScene;
+			e.newScene = mCurrScene;
 			raiseEvent(e);
 		}
 
@@ -153,9 +153,9 @@ namespace gvt {
 
 
 	// SceneFrame class section
-	void SceneFrame::onWindowResized(shared_ptr<sf::Event> const &e) {
-		if (e->type == sf::Event::Resized) {
-			auto windowSize = Vectord(e->size.width, 0.8 * e->size.height);
+	void SceneFrame::onWindowResized(sf::Event e) {
+		if (e.type == sf::Event::Resized) {
+			auto windowSize = Vectord(e.size.width, 0.8 * e.size.height);
 
 			mView.setSize(windowSize.x, windowSize.y);
 
@@ -164,11 +164,11 @@ namespace gvt {
 		}
 	}
 
-	void SceneFrame::onSceneChanged(shared_ptr<SceneChangedEvent> e) {
-		mMax = e->newScene->size() - mMin;
+	void SceneFrame::onSceneChanged(SceneChangeEvent e) {
+		mMax = e.newScene->size() - mMin;
 	}
 
-	void SceneFrame::onShipMoved (shared_ptr<PositionEvent> e) {
+	void SceneFrame::onShipMoved (PositionEvent e) {
 		auto position = mShip->position() + mShip->rotationCenter();
 
 		position.x = std::max(mMin.x, position.x);
@@ -181,24 +181,23 @@ namespace gvt {
 
 	SceneFrame::SceneFrame(Game *game, shared_ptr<Spaceship> ship):
 			mGame{game}, mShip{std::move(ship)} {
-		auto _1 = std::placeholders::_1;
-
 		mView.setViewport({0.0, 0.2, 1, 0.8});
-		mResizeHandle = mGame->viewEventsDispatcher().addCallback(
-			std::bind(&SceneFrame::onWindowResized, this, _1)
+
+		mResizeCbk = mGame->viewEventsDispatcher().addCallback(
+			[this] (sf::Event e) -> void { onWindowResized(e); }
 		);
-		mSceneHandle = mGame->addCallback(
-			std::bind(&SceneFrame::onSceneChanged, this, _1)
+		mSceneCbk = mGame->addCallback(
+			[this] (SceneChangeEvent e) -> void { onSceneChanged (e); }
 		);
-		mShipHandle = mShip->positionDispatcher().addCallback(
-			std::bind(&SceneFrame::onShipMoved, this, _1)
+		mShipCbk = mShip->positionDispatcher().addCallback(
+			[this] (PositionEvent e) -> void { onShipMoved (e); }
 		);
 	}
 
 	SceneFrame::~SceneFrame() {
-		mGame->viewEventsDispatcher().removeCallback(mResizeHandle);
-		mGame->removeCallback(mSceneHandle);
-		mShip->positionDispatcher().removeCallback(mShipHandle);
+		mGame->viewEventsDispatcher().removeCallback(mResizeCbk);
+		mGame->removeCallback(mSceneCbk);
+		mShip->positionDispatcher().removeCallback(mShipCbk);
 	}
 
 
@@ -210,12 +209,12 @@ namespace gvt {
 		mAngleStep = angle;
 	}
 
-	void MoveShipCallback::operator() (shared_ptr<sf::Event> e) {
+	void MoveShipCallback::operator() (sf::Event e) {
 		auto accelIncrement = mAccelStep * Vectord(mShip->rotation());
 		accelIncrement.rotate(M_PI / -2.0);
 
-		if (e->type == sf::Event::KeyPressed) {
-			switch (e->key.code) {
+		if (e.type == sf::Event::KeyPressed) {
+			switch (e.key.code) {
 				case (sf::Keyboard::Key::A):
 					mShip->rotate(-mAngleStep);
 					break;
@@ -248,8 +247,8 @@ namespace gvt {
 				default:
 					break;
 			}
-		} else if (e->type == sf::Event::KeyReleased) {
-			if (e->key.code == sf::Keyboard::Key::W) {
+		} else if (e.type == sf::Event::KeyReleased) {
+			if (e.key.code == sf::Keyboard::Key::W) {
 				mShip->acceleration(Vectord{0, 0});
 			}
 		}

@@ -19,64 +19,55 @@
 // LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
-#include <random>
 #include <cmath>
 #include <ctime>
 #include "Bunker.hpp"
+#include "utils/Random.hpp"
 #include "utils/BoundingPolygon.hpp"
 
-using Bunker = gvt::Bunker;
-using Rectangle = gvt::Rectangle;
-using RoundMissile = gvt::RoundMissile;
-using Shape = gvt::Shape;
 
-
-Bunker::Bunker(Vectord position, size_t directions):
-		Shape2D(position), mPaths{directions} {
-	std::uniform_real_distribution<double> angles {
-		mRotation + M_PI, mRotation + 2 * M_PI
-	};
-	std::default_random_engine e(time(NULL));
-
-	while (directions > 0) {
-		mPaths[directions - 1] = Vectord(angles(e));
-
-		directions--;
+namespace gvt {
+	gvt::BoundingPolygon Bunker::polygonFactory() const {
+		return BoundingPolygon::rectangle({0, 0}, {WIDTH, HEIGHT});
 	}
-}
 
-shared_ptr<RoundMissile>
-Bunker::shoot(double speed, long lifespan, double radius) {
-	auto m = std::make_shared<RoundMissile>(Vectord{0, 0}, lifespan, radius);
-	auto initPos = Vectord{width() / 2.0, -20.0};
+	Bunker::Bunker(Vectord position, size_t directions):
+			ClosedShape(position, polygonFactory()), mPaths{directions} {
+		UniRandom<double> angles {mRotation + M_PI, mRotation + 2 * M_PI};
 
-	initPos.rotate(rotation(), rotationCenter());
+		while (directions > 0) {
+			mPaths[directions - 1] = Vectord(angles());
 
-	m->position(mPosition + initPos);
-	m->velocity(speed * mPaths[mCurr]);
-	mCurr = (mCurr + 1) % mPaths.size();
+			directions--;
+		}
+	}
 
-	return m;
-}
+	shared_ptr<RoundMissile>
+	Bunker::shoot(double speed, long lifespan, double radius) {
+		auto m = std::make_shared<RoundMissile>(
+				Vectord{0, 0}, lifespan, radius
+		);
+		auto initPos = Vectord{width() / 2.0, -20.0};
 
-void Bunker::accept (ShapeVisitor &visitor) {
-	visitor.visitBunker(*this);
-}
+		initPos.rotate(mRotation, rotationCenter());
 
-gvt::BoundingPolygon Bunker::collisionPolygon() const {
-    auto r = BoundingPolygon::rectangle({0, 0}, {WIDTH, HEIGHT});
+		m->position(mPosition + initPos);
+		m->velocity(speed * mPaths[mCurr]);
+		mCurr = (mCurr + 1) % mPaths.size();
 
-    r.position(mPosition);
-    r.rotate(mRotation, r.center());
+		return m;
+	}
 
-    return r;
-}
+	void Bunker::accept (ShapeVisitor &visitor) {
+		visitor.visitBunker(*this);
+	}
 
-bool Bunker::operator== (Shape const &o) const {
-	auto other = dynamic_cast<Bunker const *>(&o);
+	bool Bunker::operator== (Shape const &o) const {
+		auto other = dynamic_cast<Bunker const *>(&o);
 
-	if (other)
-		return mPaths == other->mPaths && Shape::operator==(o);
+		if (other)
+			return mPaths == other->mPaths && Shape::operator==(o);
 
-	return false;
+		return false;
+	}
 }

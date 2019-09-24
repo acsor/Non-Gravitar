@@ -23,18 +23,14 @@
 #define NON_GRAVITAR_FUEL_VIEW_HPP
 
 #include "shape/Fuel.hpp"
-#include "Shape2DView.hpp"
+#include "ClosedShapeView.hpp"
 
 
 namespace gvt {
-	class FuelView: public Shape2DView {
+	class FuelView: public ClosedShapeView {
 		private:
 			sf::Sprite mSprite;
-			sf::Texture mTexture;
-			sf::Font mFont;
 			sf::Text mText;
-
-			static const std::string TEXTURE_PATH;
 		protected:
 			void draw (sf::RenderTarget &t, sf::RenderStates s) const override;
 		public:

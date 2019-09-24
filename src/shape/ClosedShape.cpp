@@ -19,29 +19,43 @@
 // LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
-#ifndef NON_GRAVITAR_PLANET_VIEW_HPP
-#define NON_GRAVITAR_PLANET_VIEW_HPP
-
-#include <SFML/Graphics.hpp>
-#include "shape/Planet.hpp"
-#include "ClosedShapeView.hpp"
+#include "ClosedShape.hpp"
 
 
 namespace gvt {
-	class PlanetView: public ClosedShapeView {
-		private:
-			sf::Text mBonus;
-			sf::VertexArray mPolygon;
-			sf::Color mOutlineColor;
+	ClosedShape::ClosedShape(Vectord pos, BoundingPolygon cp):
+			Shape(pos), mPolygon{std::move(cp)} {
+		mPolygon.position(pos);
+	}
 
-			static const std::vector<sf::Color> OUTLINE_COLORS;
-			static const constexpr unsigned BONUS_FONT_SIZE = 20;
+	void ClosedShape::position(Vectord p) {
+		Shape::position(p);
 
-			void draw(sf::RenderTarget &t, sf::RenderStates s) const override;
-		public:
-			explicit PlanetView (shared_ptr<Planet> const &planet);
-	};
+		mPolygon.position(p);
+	}
+
+	void ClosedShape::rotation(double r) {
+		auto oldRotation = mRotation;
+
+		Shape::rotation(r);
+
+		mPolygon.rotate(r - oldRotation, rotationCenter());
+	}
+
+	bool ClosedShape::clashes(Shape const &o) const {
+		auto closed = dynamic_cast<ClosedShape const *>(&o);
+
+		// If `o' is an instance of ClosedShape, we know how to detect collisions
+		if (closed) {
+			return collisionPolygon().intersects(closed->collisionPolygon());
+			// otherwise, we delegate the task to `o', which might know more
+			// about this all
+		} else {
+			return o.clashes(*this);
+		}
+	}
+
+	BoundingPolygon ClosedShape::collisionPolygon() const {
+		return mPolygon;
+	}
 }
-
-
-#endif

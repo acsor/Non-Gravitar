@@ -19,29 +19,39 @@
 // LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
-#include "TractorBeamView.hpp"
+#include "GraphicAssets.hpp"
 #include "utils/Utils.hpp"
 
 
 namespace gvt {
-	const sf::Color TractorBeamView::BEAM_COLOR = sf::Color::Magenta;
+	GraphicAssets* GraphicAssets::sInstance = nullptr;
 
-	void TractorBeamView::draw (sf::RenderTarget &t, sf::RenderStates s) const {
-		ClosedShapeView::draw(t, s);
+	GraphicAssets::GraphicAssets() {
+		auto s = gvt::staticsGet;
 
-		t.draw(mTriangle, mTranslation * mRotation);
+		if (!defaultFont.loadFromFile(s("fonts/Hyperspace.otf")))
+			throw std::runtime_error("Could not load Hyperspace.otf");
+
+		if (!spaceshipTexture.loadFromFile(s("graphics/spaceship.png")))
+			throw std::runtime_error("Could not load spaceship.png texture");
+		if (!spaceshipTextureAccel.loadFromFile(s("graphics/spaceship-accelerating.png")))
+			throw std::runtime_error("Could not load spaceship-accelerating.png texture");
+		if (!fuelTexture.loadFromFile(s("graphics/fuel.png")))
+			throw std::runtime_error("Could not load fuel.png texture");
+		if (!bunker2Texture.loadFromFile(s("graphics/bunker-2.png")))
+			throw std::runtime_error("Could not load bunker-2.png texture");
+		if (!bunker3Texture.loadFromFile(s("graphics/bunker-3.png")))
+			throw std::runtime_error("Could not load bunker-3.png texture");
+
+		spaceshipTexture.setSmooth(true);
+		spaceshipTextureAccel.setSmooth(true);
 	}
 
-	TractorBeamView::TractorBeamView (shared_ptr<TractorBeam> const &beam):
-			ClosedShapeView(beam) {
-		mTriangle = sf::VertexArray(sf::LineStrip, 4);
+	GraphicAssets* GraphicAssets::getInstance() {
+		if (sInstance == nullptr) {
+			sInstance = new GraphicAssets();
+		}
 
-		for (size_t i = 0; i < mTriangle.getVertexCount(); i++)
-			mTriangle[i].color = BEAM_COLOR;
-
-		mTriangle[0].position = {0, (float) beam->height()};
-		mTriangle[1].position = {(float) (beam->width() / 2.0), 0};
-		mTriangle[2].position = {(float) beam->width(), (float) beam->height()};
-		mTriangle[3].position = {0, (float) beam->height()};
+		return sInstance;
 	}
 }

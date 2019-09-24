@@ -21,16 +21,15 @@
 // SOFTWARE.
 #include "control/Game.hpp"
 #include "GameInfoView.hpp"
-#include "SpaceshipView.hpp"
 #include "utils/Utils.hpp"
 
 
 namespace gvt {
-	const sf::Color GameInfoView::TEXT_COLOR = sf::Color(0, 111, 109);
+	const sf::Color GameInfoView::TEXT_COLOR = sf::Color::Cyan;
 
 	void GameInfoView::updateText() {
 		mText.setString(
-			"SCORE\t" + std::to_string(mInfo->score()) +
+			"SCORE " + std::to_string(mInfo->score()) +
 			"\nFUEL " + std::to_string(mShip->fuel())
 		);
 		auto const bounds = mText.getLocalBounds();
@@ -46,7 +45,7 @@ namespace gvt {
 		// We need to add spaceships, not remove them
 		if (toDelete < 0) {
 			while (toDelete < 0) {
-				auto ship = sf::Sprite(mShipTexture);
+				auto ship = sf::Sprite(mAssets->spaceshipTexture);
 
 				if (mShipSprites.empty()) {
 					ship.setPosition(0, 0);
@@ -70,18 +69,15 @@ namespace gvt {
 		}
 	}
 
-	void GameInfoView::onFuelChanged (shared_ptr<gvt::Event> const &e) {
-		auto fuelEvent = std::dynamic_pointer_cast<FuelEvent>(e);
-
-		if (fuelEvent)
-			updateText();
-	}
-
-	void GameInfoView::onScoreChanged (shared_ptr<gvt::Event> const &e) {
+	void GameInfoView::onFuelChanged (FuelEvent e) {
 		updateText();
 	}
 
-	void GameInfoView::onShipsChanged (shared_ptr<gvt::Event> const &e) {
+	void GameInfoView::onScoreChanged (ScoreEvent e) {
+		updateText();
+	}
+
+	void GameInfoView::onShipsChanged (SpaceshipCountEvent e) {
 		updateShips();
 	}
 
@@ -99,29 +95,20 @@ namespace gvt {
 	GameInfoView::GameInfoView (
 		shared_ptr<GameInfo> gameInfo, shared_ptr<Spaceship> ship
 	): mInfo{std::move(gameInfo)}, mShip{std::move(ship)} {
-		auto _1 = std::placeholders::_1;
-		auto shipTexturePath = staticsGet(SpaceshipView::SHIP_TEXTURE);
+		mAssets = GraphicAssets::getInstance();
 
 		mFuelCbk = mShip->fuelDispatcher().addCallback(
-			std::bind(&GameInfoView::onFuelChanged, this, _1)
+			[this] (FuelEvent e) -> void { onFuelChanged(e); }
 		);
 		mScoreCbk = mInfo->scoreDispatcher().addCallback(
-			std::bind(&GameInfoView::onScoreChanged, this, _1)
+			[this] (ScoreEvent e) -> void { onScoreChanged(e); }
 		);
 		mShipCbk = mInfo->shipCountDispatcher().addCallback(
-			std::bind(&GameInfoView::onShipsChanged, this, _1)
+			[this] (SpaceshipCountEvent e) -> void { onShipsChanged (e); }
 		);
 
-		if (!mShipTexture.loadFromFile(shipTexturePath))
-			throw std::runtime_error {
-					"Could not load spaceship texture from disk"
-			};
-		if (!mFont.loadFromFile(ShapeView::DEFAULT_FONT))
-			throw std::runtime_error ("Could not load font from disk");
-
-		mShipTexture.setSmooth(true);
-
-		mText = sf::Text("", mFont);
+		mText = sf::Text("", mAssets->defaultFont);
+		mText.setLetterSpacing(2.5);
 		mText.setFillColor(TEXT_COLOR);
 		mText.setPosition(0, 0);
 

@@ -48,7 +48,14 @@ namespace gvt {
 		public:
 			GameInfo (unsigned score, unsigned spaceships);
 
+			/**
+			 * Decrements the spaceships count of @c 1.
+			 */
 			void decrementSpaceships();
+			/**
+			 * Brings the spaceships count down to @c 0.
+			 */
+			void resetSpaceships();
 			inline unsigned spaceships() const;
 
 			void upgradeScore (unsigned deltaScore);

@@ -19,28 +19,49 @@
 // LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
-#ifndef NON_GRAVITAR_PLANET_VIEW_HPP
-#define NON_GRAVITAR_PLANET_VIEW_HPP
+#ifndef NON_GRAVITAR_CRPOLYGON_HPP
+#define NON_GRAVITAR_CRPOLYGON_HPP
 
-#include <SFML/Graphics.hpp>
-#include "shape/Planet.hpp"
-#include "ClosedShapeView.hpp"
+#include "ClosedShape.hpp"
 
 
 namespace gvt {
-	class PlanetView: public ClosedShapeView {
+	/**
+	 * A convex, regular polygon.
+	 */
+	class CRPolygon: public ClosedShape {
 		private:
-			sf::Text mBonus;
-			sf::VertexArray mPolygon;
-			sf::Color mOutlineColor;
-
-			static const std::vector<sf::Color> OUTLINE_COLORS;
-			static const constexpr unsigned BONUS_FONT_SIZE = 20;
-
-			void draw(sf::RenderTarget &t, sf::RenderStates s) const override;
+			BoundingPolygon polygonFactory(
+					double radius, unsigned vertices
+			) const;
+		protected:
+			double mRadius;
+			mutable BoundingPolygon mPolygon;
 		public:
-			explicit PlanetView (shared_ptr<Planet> const &planet);
+			CRPolygon(Vectord position, double radius, unsigned vertices);
+
+			inline double radius() const;
+			inline double width() const override;
+			inline double height() const override;
+
+			Vectord rotationCenter() const override;
+			bool operator== (Shape const &other) const override;
 	};
+}
+
+
+namespace gvt {
+	double CRPolygon::width() const {
+		return 2.0 * mRadius;
+	}
+
+	double CRPolygon::height() const {
+		return 2.0 * mRadius;
+	}
+
+	double CRPolygon::radius() const {
+		return mRadius;
+	}
 }
 
 

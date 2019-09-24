@@ -25,27 +25,17 @@
 #include <string>
 #include <memory>
 #include <SFML/Graphics.hpp>
-#include "Shape2DView.hpp"
-#include "../shape/Bunker.hpp"
-
-template<typename T> using weak_ptr = std::weak_ptr<T>;
-template<typename T> using shared_ptr = std::shared_ptr<T>;
-using RenderStates = sf::RenderStates;
-using RenderTarget = sf::RenderTarget;
-using Texture = sf::Texture;
+#include "ClosedShapeView.hpp"
+#include "shape/Bunker.hpp"
 
 
 namespace gvt {
-	class BunkerView: public Shape2DView {
+	class BunkerView: public ClosedShapeView {
 		private:
 			sf::Sprite mSprite;
-			Texture mTexture;
 		protected:
-			void draw(RenderTarget &target, RenderStates state) const override;
+			void draw(sf::RenderTarget &t, sf::RenderStates s) const override;
 		public:
-			static const std::string BUNKER2D_GRAPHICS;
-			static const std::string BUNKER3D_GRAPHICS;
-
 			explicit BunkerView(const shared_ptr<Bunker> &bunker);
 	};
 }

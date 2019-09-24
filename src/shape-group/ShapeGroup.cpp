@@ -25,9 +25,7 @@
 
 namespace gvt {
 	ShapeGroup::~ShapeGroup() {
-		mDestrDisp.raiseEvent(
-				std::make_shared<ShapeGroupDestructionEvent>(this)
-		);
+		mDestrDisp.raiseEvent(ShapeGroupDestructionEvent(this));
 	}
 
 	void ShapeGroup::insert(shared_ptr<Shape> shape) {
@@ -37,9 +35,7 @@ namespace gvt {
 		mShapes.push_front(shape);
 		onInsertShape(shape);
 
-		mInsertionDisp.raiseEvent(
-				std::make_shared<ShapeInsertionEvent>(this, shape)
-		);
+		mInsertionDisp.raiseEvent(ShapeInsertionEvent(this, shape));
 	}
 
 	void ShapeGroup::remove(shared_ptr<Shape> shape) {
@@ -49,9 +45,7 @@ namespace gvt {
 			onRemoveShape(*toRemove);
 			mShapes.erase(toRemove);
 
-			mRemovalDisp.raiseEvent(
-					std::make_shared<ShapeRemovalEvent> (this, *toRemove)
-			);
+			mRemovalDisp.raiseEvent(ShapeRemovalEvent(this, *toRemove));
 		}
 	}
 
@@ -60,7 +54,7 @@ namespace gvt {
 	) {
 		for (auto i = mShapes.begin(); i != mShapes.end(); i++) {
 			if (predicate(*i)) {
-				auto e = std::make_shared<ShapeRemovalEvent>(this, *i);
+				auto e = ShapeRemovalEvent(this, *i);
 
 				onRemoveShape(*i);
 				i = mShapes.erase(i);

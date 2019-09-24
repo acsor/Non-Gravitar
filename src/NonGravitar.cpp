@@ -31,7 +31,7 @@
 using sf_callback = gvt::Callback<sf::Event>;
 
 
-void closeWindow (sf::RenderWindow &w, shared_ptr<sf::Event> e);
+void closeWindow (sf::RenderWindow &w, sf::Event e);
 
 
 int main () {
@@ -50,13 +50,12 @@ int main () {
 	solarSystem->insert(game->acquireSpaceship());
 	game->pushScene(rootScene);
 	game->viewEventsDispatcher().addCallback(
-			[&w] (shared_ptr<sf::Event> const &e) -> void { closeWindow(w, e); }
+			[&w] (sf::Event const &e) -> void { closeWindow(w, e); }
 	);
 
 	while (w.isOpen()) {
 		while (w.pollEvent(e))
-			game->viewEventsDispatcher().raiseEvent(
-					std::make_shared<sf::Event>(e));
+			game->viewEventsDispatcher().raiseEvent(e);
 
 		game->updateGameLoop();
 
@@ -69,7 +68,7 @@ int main () {
 }
 
 
-void closeWindow (sf::RenderWindow &w, shared_ptr<sf::Event> e) {
-	if (e->type == sf::Event::Closed)
+void closeWindow (sf::RenderWindow &w, sf::Event e) {
+	if (e.type == sf::Event::Closed)
 		w.close();
 }

@@ -64,8 +64,13 @@ namespace gvt {
 		 */
 		double inline distance(Vector const &other) const;
 		Vector<T> midpoint (Vector<T> const &other) const;
+		/**
+		 * Sets the angle this vector forms with the x-axis.
+		 * @param rad Radians value, in the [0, 2π) range.
+		 */
+		void inline angle(double rad);
 		/*
-		 * @return The angle this vector forms with the x axis.
+		 * @return The angle this vector forms with the x-axis.
 		 */
 		double inline angle() const;
 		/**

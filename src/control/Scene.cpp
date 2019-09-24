@@ -19,7 +19,6 @@
 // LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
-#include <utility>
 #include "Scene.hpp"
 #include "Game.hpp"
 #include "shape-group/CollisionGroup.hpp"
@@ -44,20 +43,23 @@ namespace gvt {
 			mSize{size}, mShapes{std::move(shapes)} {
 		mGame = Game::getInstance();
 		mShapesView.reset(new ShapeGroupView(mShapes));
-		auto _1 = std::placeholders::_1;
 
 		initializeDestroyGraph();
 
 		mCollisionCbk = mShapes->collisionDispatcher().addCallback(
-			std::bind(&Scene::onCollision, this, _1)
+			[this] (PairCollisionEvent e) -> void { onCollision(e); }
+		);
+		mFuelCbk = mGame->spaceship()->fuelDispatcher().addCallback(
+			[this] (FuelEvent e) -> void { onFuelChanged(e); }
 		);
 		mDestroyCbk = mShapes->removalDispatcher().addCallback(
-			std::bind(&Scene::onShapeRemoved, this, _1)
+			[this] (ShapeRemovalEvent e) -> void { onShapeRemoved(e); }
 		);
 	}
 
 	Scene::~Scene() {
 		mShapes->removalDispatcher().removeCallback(mDestroyCbk);
+		mGame->spaceship()->fuelDispatcher().removeCallback(mFuelCbk);
 		mShapes->collisionDispatcher().removeCallback(mCollisionCbk);
 	}
 
@@ -96,30 +98,40 @@ namespace gvt {
 			);
 	}
 
-	void Scene::onCollision (shared_ptr<PairCollisionEvent> e) {
-		auto first = TypeVertex(typeid(*e->first));
-		auto second = TypeVertex(typeid(*e->second));
+	void Scene::onCollision (PairCollisionEvent e) {
+		auto first = TypeVertex(typeid(*e.first));
+		auto second = TypeVertex(typeid(*e.second));
 
 		if (mDestroyGraph.containsEdge(first, second))
-			e->second->destroyed(true);
+			e.second->destroyed(true);
 		if (mDestroyGraph.containsEdge(second, first))
-			e->first->destroyed(true);
+			e.first->destroyed(true);
 	}
 
-	void Scene::onShapeRemoved (shared_ptr<ShapeRemovalEvent> e) {
-		if (e->shape->destroyed()) {
-			if (std::dynamic_pointer_cast<Bunker>(e->shape)) {
+	void Scene::onFuelChanged (FuelEvent e) {
+		if (e.newAmount <= 0) {
+			mGame->gameInfo()->resetSpaceships();
+			mGame->spaceship()->destroyed(true);
+		}
+	}
+
+	void Scene::onShapeRemoved (ShapeRemovalEvent e) {
+		if (e.shape->destroyed()) {
+			if (std::dynamic_pointer_cast<Bunker>(e.shape)) {
 				mGame->gameInfo()->upgradeScore(BUNKER_SCORE);
-			} else if (auto s = std::dynamic_pointer_cast<Spaceship>(e->shape)) {
+			} else if (auto s = std::dynamic_pointer_cast<Spaceship>(e.shape)) {
 				onSpaceshipDestroyed(s);
-			} else if (auto f = std::dynamic_pointer_cast<Fuel>(e->shape)) {
+			} else if (auto f = std::dynamic_pointer_cast<Fuel>(e.shape)) {
 				mGame->spaceship()->rechargeFuel(*f);
 			}
 		}
 	}
 
 	void Scene::onSpaceshipDestroyed (shared_ptr<Spaceship> ship) {
-		mGame->gameInfo()->decrementSpaceships();
+		auto info = mGame->gameInfo();
+
+		if (info->spaceships() > 0)
+			mGame->gameInfo()->decrementSpaceships();
 	}
 
 	void Scene::onUpdateGame (double seconds) {

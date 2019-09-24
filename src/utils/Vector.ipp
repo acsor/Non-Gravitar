@@ -57,7 +57,7 @@ namespace gvt {
 	template<typename T> void Vector<T>::rotate(double rad, Vector center) {
 		// partial represents the `(v - c)' vector rotated by `rad' radians
 		// around the center
-		Vector<T> partial = (*this - center);
+		auto partial = (*this - center);
 
 		partial.rotate(rad);
 
@@ -77,6 +77,13 @@ namespace gvt {
 	template<typename T>
 	Vector<T> Vector<T>::midpoint (Vector<T> const &other) const {
 		return Vector<T>{(x + other.x) / 2.0, (y + other.y) / 2.0};
+	}
+
+	template<typename T> void Vector<T>::angle(double rad) {
+		auto n = norm();
+
+		x = n * cos(rad);
+		y = n * sin(rad);
 	}
 
 	template<typename T> double Vector<T>::angle() const {

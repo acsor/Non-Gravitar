@@ -38,6 +38,16 @@ namespace gvt {
 	};
 
 	template<>
+	class UniRandom<float> {
+		private:
+			std::uniform_real_distribution<float> mDist;
+			std::default_random_engine mEngine;
+		public:
+			inline UniRandom(float low, float high);
+			inline float operator()();
+	};
+
+	template<>
 	class UniRandom<double> {
 		private:
             std::uniform_real_distribution<double> mDist;

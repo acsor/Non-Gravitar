@@ -21,11 +21,10 @@
 // SOFTWARE.
 #include "Planet.hpp"
 
-#include <utility>
-
 
 namespace gvt {
-	Planet::Planet (Vectord position, double radius): Circle(position, radius) {
+	Planet::Planet (Vectord position, double radius):
+			CRPolygon(position, radius, 8) {
 	}
 
 	void Planet::surface(shared_ptr<PlanetSurface> s) {
@@ -41,10 +40,10 @@ namespace gvt {
 	}
 
 	bool Planet::operator== (Shape const &o) const {
-        auto other = dynamic_cast<Planet const *>(&o);
+		auto other = dynamic_cast<Planet const *>(&o);
 
-        if (other)
-        	return Circle::operator==(o);
+		if (other)
+			return CRPolygon::operator==(o);
 
         return false;
 	}

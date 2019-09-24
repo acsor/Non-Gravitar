@@ -41,10 +41,10 @@ namespace gvt {
 	/**
 	 * Event issued when a new @c Scene is pushed/popped out of the game.
 	 */
-	struct SceneChangedEvent: public gvt::Event {
+	struct SceneChangeEvent: public gvt::Event {
 			shared_ptr<Scene> oldScene, newScene;
 
-			SceneChangedEvent(
+			SceneChangeEvent(
 					shared_ptr<Scene> old, shared_ptr<Scene> _new
 			);
 	};
@@ -54,7 +54,7 @@ namespace gvt {
 	 * instance will manage an unique instance of @c Spaceship, making it
 	 * available for subsequent scenes via appropriate accessor functions.
 	 */
-	class Game: public sf::Drawable, public EventDispatcher<SceneChangedEvent> {
+	class Game: public sf::Drawable, public EventDispatcher<SceneChangeEvent> {
 		private:
 			static Game* sInstance;
 
@@ -72,8 +72,8 @@ namespace gvt {
 			sf::Clock mClock;
 			EventDispatcher<sf::Event> mViewEvents;
 
-			void onShipMoved(shared_ptr<PositionEvent> e);
-			void toggleDebug (shared_ptr<sf::Event> const &e);
+			void onShipMoved(PositionEvent e);
+			void toggleDebug(sf::Event e);
 
 			Game();
 		public:
@@ -137,13 +137,13 @@ namespace gvt {
 			Vectord mMin, mMax;
 			shared_ptr<Spaceship> mShip;
 
-			shared_ptr<Callback<sf::Event>> mResizeHandle;
-			shared_ptr<Callback<SceneChangedEvent>> mSceneHandle;
-			shared_ptr<Callback<PositionEvent>> mShipHandle;
+			shared_ptr<Callback<sf::Event>> mResizeCbk;
+			shared_ptr<Callback<SceneChangeEvent>> mSceneCbk;
+			shared_ptr<Callback<PositionEvent>> mShipCbk;
 
-			void onWindowResized(shared_ptr<sf::Event> const &e);
-			void onSceneChanged(shared_ptr<SceneChangedEvent> e);
-			void onShipMoved (shared_ptr<PositionEvent> e);
+			void onWindowResized(sf::Event e);
+			void onSceneChanged(SceneChangeEvent e);
+			void onShipMoved (PositionEvent e);
 		public:
 			SceneFrame(Game *game, shared_ptr<Spaceship> ship);
 			~SceneFrame ();
@@ -176,7 +176,7 @@ namespace gvt {
 				double angle
 			);
 
-			void operator() (shared_ptr<sf::Event> e);
+			void operator() (sf::Event e);
 	};
 }
 

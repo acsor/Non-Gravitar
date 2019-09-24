@@ -34,7 +34,7 @@ namespace gvt {
 	 */
 	class SolarSystemScene: public Scene {
 		private:
-			void onCollision (shared_ptr<PairCollisionEvent> e) override;
+			void onCollision (PairCollisionEvent e) override;
 			void onSpaceshipDestroyed (shared_ptr<Spaceship> ship) override;
 		public:
 			explicit SolarSystemScene (shared_ptr<SolarSystem> const &system);

@@ -53,17 +53,14 @@ void Rectangle::accept (ShapeVisitor &visitor) {
 	visitor.visitRectangle(*this);
 }
 
-gvt::BoundingPolygon Rectangle::collisionPolygon() const {
-	auto r = BoundingPolygon::rectangle({0, 0}, {width(), height()});
-
-	r.position(mPosition);
-	r.rotate(mRotation, rotationCenter());
-
-    return r;
+gvt::BoundingPolygon
+Rectangle::polygonFactory(Vectord topLeft, Vectord bottomRight) const {
+	return BoundingPolygon::rectangle({0, 0}, bottomRight - topLeft);
 }
 
 Rectangle::Rectangle(Vectord topLeft, Vectord bottomRight):
-		Shape2D(topLeft), mEnd{bottomRight} {
+		ClosedShape(topLeft, polygonFactory(topLeft, bottomRight)),
+		mEnd{bottomRight} {
 }
 
 bool Rectangle::operator==(Shape const &o) const {

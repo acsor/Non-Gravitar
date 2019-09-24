@@ -19,22 +19,21 @@
 // LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
-#include <functional>
 #include "ShapeGroupView.hpp"
 #include "view/SpaceshipView.hpp"
 
 
 namespace gvt {
-	void ShapeGroupView::onShapeInserted (shared_ptr<ShapeInsertionEvent> e) {
-		mViews[e->shape] = shared_ptr<ShapeView>(mFactory(e->shape));
+	void ShapeGroupView::onShapeInserted (ShapeInsertionEvent e) {
+		mViews[e.shape] = shared_ptr<ShapeView>(mFactory(e.shape));
 	}
 
-	void ShapeGroupView::onShapeRemoved (shared_ptr<ShapeRemovalEvent> e) {
-		mViews.erase(e->shape);
+	void ShapeGroupView::onShapeRemoved (ShapeRemovalEvent e) {
+		mViews.erase(e.shape);
 	}
 
 	void ShapeGroupView::onShapeGroupDestroyed (
-			shared_ptr<ShapeGroupDestructionEvent> e
+			ShapeGroupDestructionEvent e
 	) {
 		mViews.clear();
 		mGroup.reset();
@@ -50,16 +49,14 @@ namespace gvt {
 
 	ShapeGroupView::ShapeGroupView(const shared_ptr<ShapeGroup> &group):
 			mGroup{group} {
-		auto _1 = std::placeholders::_1;
-
 		mAttachCbk = group->insertionDispatcher().addCallback(
-				std::bind(&ShapeGroupView::onShapeInserted, this, _1)
+			[this] (ShapeInsertionEvent e) -> void { onShapeInserted (e); }
 		);
 		mRemovalCbk = group->removalDispatcher().addCallback(
-				std::bind(&ShapeGroupView::onShapeRemoved, this, _1)
+			[this] (ShapeRemovalEvent e) -> void { onShapeRemoved(e); }
 		);
 		mDestrCbk = group->destructionDispatcher().addCallback(
-			std::bind(&ShapeGroupView::onShapeGroupDestroyed, this, _1)
+			[this] (ShapeGroupDestructionEvent e) -> void { onShapeGroupDestroyed (e); }
 		);
 
 		for (auto const &shape: *group)
@@ -79,10 +76,14 @@ namespace gvt {
 			mView.second->setDebug(state);
 	}
 
+	shared_ptr<ShapeView> ShapeGroupView::viewFor (shared_ptr<Shape> shape) {
+		return mViews[shape];
+	}
+
 	void ShapeGroupView::draw(
-			sf::RenderTarget &target, sf::RenderStates state
+			sf::RenderTarget &t, sf::RenderStates s
 	) const {
 		for (auto &view: mViews)
-			view.second->draw(target, state);
+			view.second->draw(t, s);
 	}
 }

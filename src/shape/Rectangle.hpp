@@ -23,7 +23,7 @@
 #define NON_GRAVITAR_RECTANGLE_HPP
 
 #include <ostream>
-#include "Shape2D.hpp"
+#include "ClosedShape.hpp"
 #include "utils/Vector.hpp"
 #include "ShapeVisitor.hpp"
 
@@ -47,7 +47,7 @@ namespace std {
 
 
 namespace gvt {
-    class Rectangle: public Shape2D {
+    class Rectangle: public ClosedShape {
 		using ostream = std::ostream;
 
 		friend struct std::hash<Rectangle>;
@@ -57,6 +57,9 @@ namespace gvt {
 
 		private:
 			Vectord mEnd{0, 0};
+
+			BoundingPolygon
+			polygonFactory(Vectord topLeft, Vectord bottomRight) const;
     	public:
     		/**
     		 * @brief Constructs a @c Rectangle with width > 0 and height > 0.
@@ -65,7 +68,6 @@ namespace gvt {
 			Rectangle(Vectord topLeft, Vectord bottomRight);
 
 			void accept (ShapeVisitor &visitor) override;
-			BoundingPolygon collisionPolygon() const override;
 			bool operator==(Shape const &o) const override;
 
 			double width() const override;

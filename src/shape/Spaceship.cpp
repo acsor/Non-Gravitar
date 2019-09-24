@@ -31,53 +31,39 @@ namespace gvt {
 	}
 
 
+	BoundingPolygon Spaceship::polygonFactory() const {
+		return BoundingPolygon::triangle(
+				Vectord{0, BOUNDING_HEIGHT}, Vectord{BOUNDING_WIDTH / 2.0, 0},
+				Vectord{BOUNDING_WIDTH, BOUNDING_HEIGHT}
+		);
+	}
+
 	Spaceship::Spaceship(Vectord position, unsigned fuel):
-			Shape2D::Shape2D(position), mFuel{fuel} {
-		mBeam.reset(new TractorBeam(Vectord{0, height()}, *this));
+			ClosedShape::ClosedShape(position, polygonFactory()), mFuel{fuel} {
+		mBeam = std::make_shared<TractorBeam>(Vectord{0, height()}, *this);
 	}
 
 	void Spaceship::position(Vectord position) {
-		Shape2D::position(position);
+		ClosedShape::position(position);
 		auto widthDiff = width() - mBeam->width();
 
 		mBeam->position(position + Vectord{widthDiff / 2.0, height()});
 	}
 
-	Vectord Spaceship::position() const {
-		return Shape2D::position();
-	}
-
 	void Spaceship::rotation(double r) {
-		Shape2D::rotation(r);
+		ClosedShape::rotation(r);
 
 		mBeam->rotation(r);
 	}
 
-	double Spaceship::rotation() const {
-		return Shape2D::rotation();
-	}
-
 	void Spaceship::destroyed(bool destroyed) {
-		Shape2D::destroyed(destroyed);
+		ClosedShape::destroyed(destroyed);
 
 		mBeam->destroyed(destroyed);
 	}
 
-	bool Spaceship::destroyed() const {
-		return Shape2D::destroyed();
-	}
-
-	BoundingPolygon Spaceship::collisionPolygon() const {
-		auto t = BoundingPolygon::triangle(
-			Vectord{0, BOUNDING_HEIGHT},
-			Vectord{BOUNDING_WIDTH / 2.0, 0},
-			Vectord{BOUNDING_WIDTH, BOUNDING_HEIGHT}
-		);
-
-		t.position(mPosition);
-		t.rotate(mRotation, rotationCenter());
-
-		return t;
+	Vectord Spaceship::rotationCenter() const {
+		return {BOUNDING_WIDTH / 2.0, BOUNDING_HEIGHT / 2.0};
 	}
 
 	unsigned Spaceship::fuel() const {
@@ -85,10 +71,10 @@ namespace gvt {
 	}
 
 	void Spaceship::rechargeFuel(Fuel &fuel) {
-		auto e = std::make_shared<FuelEvent>(mFuel, 0);
+		auto e = FuelEvent(mFuel, 0);
 
 		mFuel += fuel.fuel();
-		e->newAmount = mFuel;
+		e.newAmount = mFuel;
 
 		fuel.empty();
 
@@ -96,14 +82,14 @@ namespace gvt {
 	}
 
 	void Spaceship::dischargeFuel(unsigned amount) {
-		auto e = std::make_shared<FuelEvent>(mFuel, 0);
+		auto e = FuelEvent(mFuel, 0);
 
 		if (amount > mFuel)
 			mFuel = 0;
 		else
 			mFuel -= amount;
 
-		e->newAmount = mFuel;
+		e.newAmount = mFuel;
 
 		mFuelDisp.raiseEvent(e);
 	}

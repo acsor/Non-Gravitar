@@ -37,7 +37,7 @@ namespace gvt {
 			virtual ~Event() = default;
     };
 
-	template<typename E> using Callback = std::function<void (shared_ptr<E>)>;
+	template<typename E> using Callback = std::function<void (E)>;
 
 	/**
 	 * Class transmitting events to registered objects. Such events will be 
@@ -75,7 +75,7 @@ namespace gvt {
 			/**
 			 * Notify registered callbacks the rising of @c event.
 			 */
-			void raiseEvent(shared_ptr<E> event);
+			void raiseEvent(E event);
 
 			size_t callbacksCount() const;
 		private:

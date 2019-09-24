@@ -46,8 +46,8 @@ namespace gvt {
 			shared_ptr<Callback<PositionEvent>> mPosCallback;
 			shared_ptr<Callback<RotationEvent>> mRotCallback;
 
-			void onShapeMoved (shared_ptr<ShapeEvent> e);
-			void onShapeRotated (shared_ptr<RotationEvent> e);
+			void onShapeMoved (ShapeEvent e);
+			void onShapeRotated (RotationEvent e);
 
 			void updateCollisions();
 		protected:

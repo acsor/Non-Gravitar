@@ -19,14 +19,14 @@
 // LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
-#include "Shape2DView.hpp"
+#include "ClosedShapeView.hpp"
 #include "shape/Rectangle.hpp"
 #include "utils/Utils.hpp"
 
 
 namespace gvt {
-	void Shape2DView::onCreateDebugView() {
-		auto vertices = mShape2D->collisionPolygon().vertices();
+	void ClosedShapeView::onCreateDebugView() {
+		auto vertices = mClosedShape->collisionPolygon().vertices();
 
 		mBounds = sf::VertexArray(sf::LineStrip, vertices.size() + 1);
 		size_t i = 0;
@@ -37,13 +37,13 @@ namespace gvt {
 		mBounds[i] = sf::Vector2f(vertices[0].x, vertices[0].y);
 	}
 
-	void Shape2DView::onUpdateDebugColor() {
+	void ClosedShapeView::onUpdateDebugColor() {
         for (size_t i = 0; i < mBounds.getVertexCount(); i++)
         	mBounds[i].color = mDebugColor;
 	}
 
-	Shape2DView::Shape2DView(shared_ptr<Shape2D> const &shape):
-			ShapeView{shape}, mShape2D{shape} {
+	ClosedShapeView::ClosedShapeView(shared_ptr<ClosedShape> const &shape):
+			ShapeView{shape}, mClosedShape{shape} {
 		onCreateDebugView();
 		debugColor(
 			mShape->collided() ? COLLISION_DEBUG_COLOR: DEFAULT_DEBUG_COLOR
@@ -51,14 +51,14 @@ namespace gvt {
 		updateRotationTransform();
 	}
 
-	void Shape2DView::updateRotationTransform() {
-		auto center = mShape2D->rotationCenter();
+	void ClosedShapeView::updateRotationTransform() {
+		auto center = mClosedShape->rotationCenter();
 
 		mRotation = sf::Transform::Identity;
 		mRotation.rotate(rad2deg(mShape->rotation()), center.x, center.y);
 	}
 
-	void Shape2DView::onShapeCollided(shared_ptr<CollisionEvent> e) {
+	void ClosedShapeView::onShapeCollided(CollisionEvent e) {
 		ShapeView::onShapeCollided(e);
 
 		debugColor(
@@ -66,7 +66,7 @@ namespace gvt {
 		);
 	}
 
-	void Shape2DView::draw(RenderTarget &target, RenderStates s) const {
+	void ClosedShapeView::draw(sf::RenderTarget &target, sf::RenderStates s) const {
 		if (mDebug)
 			target.draw(mBounds, mTranslation * mRotation);
 	}

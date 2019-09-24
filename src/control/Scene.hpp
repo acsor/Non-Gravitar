@@ -52,7 +52,9 @@ namespace gvt {
 	class Scene: public sf::Drawable {
 		private:
 			ALGraph<std::type_index> mDestroyGraph;
+
 			shared_ptr<Callback<ShapeRemovalEvent>> mDestroyCbk;
+			shared_ptr<Callback<FuelEvent>> mFuelCbk;
 			shared_ptr<Callback<PairCollisionEvent>> mCollisionCbk;
 		protected:
 			static const constexpr double BUNKER_SCORE = 50;
@@ -73,9 +75,10 @@ namespace gvt {
 			 * clashing with an object of type v destroys the latter.
 			 */
 			void initializeDestroyGraph();
-			virtual void onCollision (shared_ptr<PairCollisionEvent> e);
+			virtual void onCollision (PairCollisionEvent e);
+			void onFuelChanged (FuelEvent e);
 
-			void onShapeRemoved (shared_ptr<ShapeRemovalEvent> e);
+			void onShapeRemoved (ShapeRemovalEvent e);
 			virtual void onSpaceshipDestroyed (shared_ptr<Spaceship> ship);
 			/**
 			 * Called when the game spaceship exits the active scene boundaries.

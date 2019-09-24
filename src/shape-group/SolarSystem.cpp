@@ -20,7 +20,6 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 #include <memory>
-#include <random>
 #include "PlanetSurface.hpp"
 #include "SolarSystem.hpp"
 
@@ -30,11 +29,11 @@ namespace gvt {
 		CollisionGroup::onInsertShape(shape);
 
 		auto const pos = shape->position();
-		auto shape2d = std::dynamic_pointer_cast<Shape2D>(shape);
+		auto closed = std::dynamic_pointer_cast<ClosedShape>(shape);
 
-		if (shape2d) {
-			mWidth = std::max(mWidth, pos.x + shape2d->width());
-			mHeight = std::max(mHeight, pos.y + shape2d->height());
+		if (closed) {
+			mWidth = std::max(mWidth, pos.x + closed->width());
+			mHeight = std::max(mHeight, pos.y + closed->height());
 		} else {
 			mWidth = std::max(mWidth, pos.x);
 			mHeight = std::max(mHeight, pos.y);
@@ -46,23 +45,22 @@ namespace gvt {
 		Vectord maxPos
 	) {
         std::shared_ptr<SolarSystem> system {new SolarSystem()};
-        std::default_random_engine e;
-		std::uniform_real_distribution<double> radius{minRadius, maxRadius};
-        std::uniform_real_distribution<double>
-				xCoord{minPos.x, maxPos.x}, yCoord{minPos.y, maxPos.y};
-
-        e.seed(time(nullptr));
+		UniRandom<double> radius{minRadius, maxRadius};
+        UniRandom<double> xCoord{minPos.x, maxPos.x};
+		UniRandom<double> yCoord{minPos.y, maxPos.y};
+        UniRandom<unsigned> bonus{1, 8};
 
         while (planets > 0) {
 			auto p = std::make_shared<Planet>(
-				Vectord{xCoord(e), yCoord(e)}, radius(e)
+				Vectord{xCoord(), yCoord()}, radius()
 			);
 			auto surface = std::make_shared<PlanetSurface>();
 
 			surface->mountains(MountainChain::randomChain({0, 600}, 20));
 			surface->randomBunkers(5);
-			surface->randomFuel(2, Vector<unsigned>{100, 500});
+			surface->randomFuel(2, Vector<unsigned>{1, 5});
 			p->surface(surface);
+			p->bonus(1000 * bonus());
 
 			system->insert(p);
 

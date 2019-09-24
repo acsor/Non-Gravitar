@@ -25,7 +25,12 @@
 
 
 namespace gvt {
-	Fuel::Fuel(Vectord position, unsigned initialCapacity): Shape2D(position) {
+	BoundingPolygon Fuel::polygonFactory() const {
+		return BoundingPolygon::rectangle({0, 0}, {WIDTH, HEIGHT});
+	}
+	
+	Fuel::Fuel(Vectord position, unsigned initialCapacity):
+			ClosedShape(position, polygonFactory()) {
 		mFuel = initialCapacity;
 	}
 
@@ -42,20 +47,11 @@ namespace gvt {
 	}
 
 	double Fuel::width() const {
-		return Fuel::WIDTH;
+		return WIDTH;
 	}
 
 	double Fuel::height() const {
-		return Fuel::HEIGHT;
-	}
-
-	BoundingPolygon Fuel::collisionPolygon() const {
-		auto r = BoundingPolygon::rectangle({0, 0}, {WIDTH, HEIGHT});
-
-		r.position(mPosition);
-		r.rotate(mRotation, rotationCenter());
-
-		return r;
+		return HEIGHT;
 	}
 
 	bool Fuel::operator== (Shape const &o) const {

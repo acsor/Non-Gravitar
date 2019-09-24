@@ -60,7 +60,9 @@ namespace gvt {
 
 			/**
 			 * Adds a specified number of @c Fuel objects to this planet
-			 * surface, with a random capacity and position.
+			 * surface, with a random capacity and position. <b>Note</b>: the
+			 * @c capRange vector is to be specified in hundreds, i.e. the
+			 * random values herein generated will be multiplied by @c 100.
 			 *
 			 * @param fuels Number of fuels to add
 			 * @param capRange Capacity range in these random fuels

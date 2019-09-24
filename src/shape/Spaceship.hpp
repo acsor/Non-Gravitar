@@ -24,7 +24,7 @@
 
 #include "Fuel.hpp"
 #include "TractorBeam.hpp"
-#include "Shape2D.hpp"
+#include "ClosedShape.hpp"
 #include "Rectangle.hpp"
 #include "ShapeVisitor.hpp"
 #include "utils/BoundingPolygon.hpp"
@@ -37,7 +37,7 @@ namespace gvt {
 			FuelEvent(unsigned old, unsigned _new);
 	};
 
-	class Spaceship: public Shape2D {
+	class Spaceship: public ClosedShape {
 		private:
 			// Represents the current fuel amount in the ship
 			unsigned mFuel;
@@ -59,7 +59,13 @@ namespace gvt {
 			// polygon (which needs not necessarily be a rectangle).
 			static unsigned const constexpr BOUNDING_WIDTH = 46;
 			static unsigned const constexpr BOUNDING_HEIGHT = 42;
+
+			BoundingPolygon polygonFactory() const;
 		public:
+			using Shape::position;
+			using Shape::rotation;
+			using Shape::destroyed;
+
 			Spaceship(Vectord position, unsigned fuel);
 
 			unsigned fuel() const;
@@ -86,15 +92,12 @@ namespace gvt {
 			inline shared_ptr<TractorBeam> tractorBeam();
 
 			void position(Vectord position) override;
-			Vectord position() const;
 			void rotation(double r) override;
-			double rotation() const;
 			void destroyed(bool destroyed) override;
-			bool destroyed() const;
 
 			inline double width() const override;
 			inline double height() const override;
-			BoundingPolygon collisionPolygon() const override;
+			Vectord rotationCenter() const override;
 
 			EventDispatcher<FuelEvent>& fuelDispatcher();
 
@@ -117,7 +120,6 @@ namespace gvt {
 		return HEIGHT;
 	}
 }
-
 
 
 #endif

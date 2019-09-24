@@ -86,13 +86,17 @@ namespace gvt {
 		mVertices.assign(vertices);
 	}
 
+	BoundingPolygon::BoundingPolygon (unsigned vertices) {
+		mVertices.resize(vertices);
+	}
+
 	void BoundingPolygon::rotate(float_type rad) {
-		for (Vector<float_type>& v: mVertices)
+		for (auto &v: mVertices)
 			v.rotate(rad);
 	}
 
 	void BoundingPolygon::rotate(float_type rad, Vertex center) {
-		for (Vertex &v: mVertices)
+		for (auto &v: mVertices)
 			v.rotate(rad, center);
 	}
 
@@ -111,12 +115,20 @@ namespace gvt {
 		return true;
 	}
 
+	Vertex& BoundingPolygon::operator[] (unsigned i) {
+		return mVertices[i];
+	}
+
 	std::vector<Vertex> BoundingPolygon::vertices () const {
 		return mVertices;
 	}
 
+	unsigned BoundingPolygon::size() const {
+		return mVertices.size();
+	}
+
 	BoundingPolygon::Vertex BoundingPolygon::center () const {
-		Vertex center = mVertices[0];
+		auto center = mVertices[0];
 
 		for (size_t i = 1; i < mVertices.size(); i++)
             center += mVertices[i];

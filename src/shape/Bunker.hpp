@@ -23,7 +23,7 @@
 #define NON_GRAVITAR_BUNKER_HPP
 
 #include <vector>
-#include "Shape2D.hpp"
+#include "ClosedShape.hpp"
 #include "Rectangle.hpp"
 #include "RoundMissile.hpp"
 #include "ShapeVisitor.hpp"
@@ -32,7 +32,7 @@ template<typename T> using vector = std::vector<T>;
 
 
 namespace gvt {
-	class Bunker: public Shape2D {
+	class Bunker: public ClosedShape {
 		private:
 			double mDelay{0};
 			vector<Vectord> mPaths;
@@ -40,6 +40,8 @@ namespace gvt {
 
 			static unsigned const constexpr WIDTH = 66;
 			static unsigned const constexpr HEIGHT = 45;
+
+			BoundingPolygon polygonFactory() const;
 		public:
 			Bunker(Vectord position, size_t directions);
 
@@ -65,8 +67,6 @@ namespace gvt {
 			inline unsigned directions() const;
 
 			void accept (ShapeVisitor &visitor) override;
-
-			BoundingPolygon collisionPolygon() const override;
 			bool operator==(Shape const &o) const override;
 	};
 }

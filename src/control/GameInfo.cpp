@@ -46,17 +46,20 @@ namespace gvt {
 			);
 		mSpaceships--;
 
-		mShipDisp.raiseEvent(std::make_shared<SpaceshipCountEvent>(
-				mSpaceships + 1, mSpaceships
-		));
+		mShipDisp.raiseEvent({mSpaceships + 1, mSpaceships});
+	}
+
+	void GameInfo::resetSpaceships() {
+		auto oldSpaceships = mSpaceships;
+		mSpaceships = 0;
+
+		mShipDisp.raiseEvent({oldSpaceships, mSpaceships});
 	}
 
 	void GameInfo::upgradeScore (unsigned deltaScore) {
 		mScore += deltaScore;
 
-		mScoreDisp.raiseEvent(std::make_shared<ScoreEvent>(
-				mScore - deltaScore, mScore
-		));
+		mScoreDisp.raiseEvent({mScore - deltaScore, mScore});
 	}
 
 

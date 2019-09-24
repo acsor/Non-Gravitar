@@ -22,17 +22,20 @@
 #ifndef NON_GRAVITAR_PLANET_HPP
 #define NON_GRAVITAR_PLANET_HPP
 
-#include "Circle.hpp"
+#include "CRPolygon.hpp"
 #include "utils/Vector.hpp"
 
 
 namespace gvt {
 	class PlanetSurface;
 
-	class Planet: public Circle {
+	class Planet: public CRPolygon {
 		protected:
+			unsigned mBonus{0};
 			shared_ptr<PlanetSurface> mSurface;
 		public:
+			using Shape::position;
+
 			Planet (Vectord position, double radius);
 
 			void surface(shared_ptr<PlanetSurface> s);
@@ -43,9 +46,30 @@ namespace gvt {
 			 */
 			shared_ptr<PlanetSurface> surface();
 
+			/**
+			 * Setter method of bonus().
+			 */
+			inline void bonus(unsigned bonus);
+			/**
+			 * @return Bonus points received upon the destruction of this
+			 * planet.
+			 */
+			inline unsigned bonus() const;
+
 			void accept (ShapeVisitor &visitor) override;
 			bool operator== (Shape const &o) const override;
 	};
+}
+
+
+namespace gvt {
+	void Planet::bonus(unsigned bonus) {
+		mBonus = bonus;
+	}
+
+	unsigned Planet::bonus() const {
+		return mBonus;
+	}
 }
 
 

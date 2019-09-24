@@ -40,7 +40,7 @@ namespace gvt {
 
 			void onCreateView();
 			void updateRotationTransform() override;
-			void draw(RenderTarget &t, RenderStates s) const override;
+			void draw(sf::RenderTarget &t, sf::RenderStates s) const override;
 		public:
 			explicit PolylineView(shared_ptr<Polyline> shape);
 

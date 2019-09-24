@@ -24,8 +24,6 @@
 #include "utils/Event.hpp"
 #include "catch.hpp"
 
-using Event = gvt::Event;
-
 
 namespace gvt {
 	struct SimpleEvent: public Event {
@@ -33,7 +31,7 @@ namespace gvt {
 
 		SimpleEvent::Type type;
 
-		SimpleEvent(SimpleEvent::Type type) {
+		explicit SimpleEvent(SimpleEvent::Type type) {
 			this->type = type;
 		}
 	};
@@ -42,19 +40,15 @@ namespace gvt {
 		public:
 			unsigned eventA{0}, eventB{0};
 
-			void operator() (shared_ptr<gvt::Event> e) {
-                auto event = std::dynamic_pointer_cast<SimpleEvent>(e);
-
-                if (event) {
-					if (event->type == SimpleEvent::Type::a) {
-						eventA++;
-					} else if (event->type == SimpleEvent::Type::b) {
-						eventB++;
-					} else {
-						throw std::domain_error(
+			void operator() (SimpleEvent e) {
+				if (e.type == SimpleEvent::Type::a) {
+					eventA++;
+				} else if (e.type == SimpleEvent::Type::b) {
+					eventB++;
+				} else {
+					throw std::domain_error(
 							"Unrecognized type of SimpleEvent"
-						);
-					}
+					);
 				}
 			}
 	};
@@ -66,7 +60,6 @@ TEST_CASE("EventHandler::handle(), EventDispatcher::raiseEvent()", "[Event]") {
 
 	gvt::EventDispatcher<gvt::SimpleEvent> s;
     gvt::SimpleCallback l;
-	SE a{SE::Type::a}, b{SE::Type::b};
 	unsigned const repeatA = 43, repeatB = 55;
     auto callback = s.addCallback(
 		std::bind(&gvt::SimpleCallback::operator(), &l, std::placeholders::_1)
@@ -75,10 +68,10 @@ TEST_CASE("EventHandler::handle(), EventDispatcher::raiseEvent()", "[Event]") {
 	REQUIRE(s.callbacksCount() == 1);
 
 	for (unsigned i = 0; i < repeatA; i++)
-		s.raiseEvent(std::make_shared<SE>(SE::Type::a));
+		s.raiseEvent(gvt::SimpleEvent(SE::Type::a));
 
 	for (unsigned i = 0; i < repeatB; i++)
-		s.raiseEvent(std::make_shared<SE>(SE::Type::b));
+		s.raiseEvent(gvt::SimpleEvent(SE::Type::b));
 
 	REQUIRE(l.eventA == repeatA);
 	REQUIRE(l.eventB == repeatB);
