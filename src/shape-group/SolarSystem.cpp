@@ -20,7 +20,6 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 #include <memory>
-#include <random>
 #include "PlanetSurface.hpp"
 #include "SolarSystem.hpp"
 
@@ -30,11 +29,11 @@ namespace gvt {
 		CollisionGroup::onInsertShape(shape);
 
 		auto const pos = shape->position();
-		auto shape2d = std::dynamic_pointer_cast<Shape2D>(shape);
+		auto closed = std::dynamic_pointer_cast<ClosedShape>(shape);
 
-		if (shape2d) {
-			mWidth = std::max(mWidth, pos.x + shape2d->width());
-			mHeight = std::max(mHeight, pos.y + shape2d->height());
+		if (closed) {
+			mWidth = std::max(mWidth, pos.x + closed->width());
+			mHeight = std::max(mHeight, pos.y + closed->height());
 		} else {
 			mWidth = std::max(mWidth, pos.x);
 			mHeight = std::max(mHeight, pos.y);

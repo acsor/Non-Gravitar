@@ -25,12 +25,12 @@
 #include <string>
 #include <memory>
 #include <SFML/Graphics.hpp>
-#include "Shape2DView.hpp"
+#include "ClosedShapeView.hpp"
 #include "shape/Bunker.hpp"
 
 
 namespace gvt {
-	class BunkerView: public Shape2DView {
+	class BunkerView: public ClosedShapeView {
 		private:
 			sf::Sprite mSprite;
 		protected:

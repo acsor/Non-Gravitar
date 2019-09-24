@@ -24,7 +24,7 @@
 
 #include "Fuel.hpp"
 #include "TractorBeam.hpp"
-#include "Shape2D.hpp"
+#include "ClosedShape.hpp"
 #include "Rectangle.hpp"
 #include "ShapeVisitor.hpp"
 #include "utils/BoundingPolygon.hpp"
@@ -37,7 +37,7 @@ namespace gvt {
 			FuelEvent(unsigned old, unsigned _new);
 	};
 
-	class Spaceship: public Shape2D {
+	class Spaceship: public ClosedShape {
 		private:
 			// Represents the current fuel amount in the ship
 			unsigned mFuel;

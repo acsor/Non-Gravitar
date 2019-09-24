@@ -22,11 +22,11 @@
 #ifndef NON_GRAVITAR_CIRCLE_HPP
 #define NON_GRAVITAR_CIRCLE_HPP
 
-#include "Shape2D.hpp"
+#include "ClosedShape.hpp"
 
 
 namespace gvt {
-	class Circle: public Shape2D {
+	class Circle: public ClosedShape {
 		private:
 			static unsigned const constexpr COLLISION_PRECISION = 8;
 
@@ -34,7 +34,7 @@ namespace gvt {
 		protected:
 			double mRadius;
 		public:
-			using Shape2D::clashes;
+			using ClosedShape::clashes;
 
 			Circle(Vectord position, double radius);
 

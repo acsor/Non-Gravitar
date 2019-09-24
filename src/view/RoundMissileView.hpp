@@ -22,12 +22,12 @@
 #ifndef NON_GRAVITAR_MISSILE_VIEW_HPP
 #define NON_GRAVITAR_MISSILE_VIEW_HPP
 
-#include "Shape2DView.hpp"
+#include "ClosedShapeView.hpp"
 #include "shape/RoundMissile.hpp"
 
 
 namespace gvt {
-	class RoundMissileView: public Shape2DView {
+	class RoundMissileView: public ClosedShapeView {
 		private:
 			sf::CircleShape mCircle;
 

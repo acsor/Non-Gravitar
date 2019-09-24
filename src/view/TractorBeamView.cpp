@@ -27,13 +27,13 @@ namespace gvt {
 	const sf::Color TractorBeamView::BEAM_COLOR = sf::Color::Magenta;
 
 	void TractorBeamView::draw (sf::RenderTarget &t, sf::RenderStates s) const {
-		Shape2DView::draw(t, s);
+		ClosedShapeView::draw(t, s);
 
 		t.draw(mTriangle, mTranslation * mRotation);
 	}
 
 	TractorBeamView::TractorBeamView (shared_ptr<TractorBeam> const &beam):
-			Shape2DView(beam) {
+			ClosedShapeView(beam) {
 		mTriangle = sf::VertexArray(sf::LineStrip, 4);
 
 		for (size_t i = 0; i < mTriangle.getVertexCount(); i++)

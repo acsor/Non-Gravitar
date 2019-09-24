@@ -32,7 +32,7 @@ namespace gvt {
 	};
 
 	PlanetView::PlanetView (shared_ptr<Planet> const &planet):
-			Shape2DView{planet} {
+			ClosedShapeView{planet} {
 		auto a = GraphicAssets::getInstance();
 		auto cPolygon = planet->collisionPolygon();
 
@@ -63,7 +63,7 @@ namespace gvt {
 	}
 
 	void PlanetView::draw(sf::RenderTarget &t, sf::RenderStates s) const {
-		Shape2DView::draw(t, s);
+		ClosedShapeView::draw(t, s);
 
 		t.draw(mPolygon, mTranslation * mRotation);
 		t.draw(mBonus, mTranslation * mRotation);

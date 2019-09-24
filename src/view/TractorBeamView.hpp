@@ -22,12 +22,12 @@
 #ifndef NON_GRAVITAR_TRACTOR_BEAM_VIEW_HPP
 #define NON_GRAVITAR_TRACTOR_BEAM_VIEW_HPP
 
-#include "Shape2DView.hpp"
+#include "ClosedShapeView.hpp"
 #include "shape/TractorBeam.hpp"
 
 
 namespace gvt {
-	class TractorBeamView: public Shape2DView {
+	class TractorBeamView: public ClosedShapeView {
 		private:
 			sf::VertexArray mTriangle;
 

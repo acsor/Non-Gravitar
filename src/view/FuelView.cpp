@@ -26,13 +26,13 @@
 
 namespace gvt {
 	void FuelView::draw (sf::RenderTarget &t, sf::RenderStates s) const {
-		Shape2DView::draw(t, s);
+		ClosedShapeView::draw(t, s);
 
 		t.draw(mSprite, mTranslation * mRotation);
 		t.draw(mText, mTranslation * mRotation);
 	}
 
-	FuelView::FuelView (shared_ptr<Fuel> const &fuel): Shape2DView(fuel) {
+	FuelView::FuelView (shared_ptr<Fuel> const &fuel): ClosedShapeView(fuel) {
 		auto a = GraphicAssets::getInstance();
 		mSprite.setTexture(a->fuelTexture);
 

@@ -32,7 +32,7 @@ namespace gvt {
 	}
 
 	Bunker::Bunker(Vectord position, size_t directions):
-			Shape2D(position, polygonFactory()), mPaths{directions} {
+			ClosedShape(position, polygonFactory()), mPaths{directions} {
 		UniRandom<double> angles {mRotation + M_PI, mRotation + 2 * M_PI};
 
 		while (directions > 0) {

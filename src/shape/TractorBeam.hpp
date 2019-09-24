@@ -22,7 +22,7 @@
 #ifndef NON_GRAVITAR_TRACTOR_BEAM_HPP
 #define NON_GRAVITAR_TRACTOR_BEAM_HPP
 
-#include "Shape2D.hpp"
+#include "ClosedShape.hpp"
 #include "Spaceship.hpp"
 
 
@@ -31,7 +31,7 @@ namespace gvt {
 	 * A tractor beam is associated to a @c Spaceship, having the ability to
 	 * lead fuel from land areas to it.
 	 */
-	class TractorBeam: public Shape2D {
+	class TractorBeam: public ClosedShape {
 		private:
 			static const constexpr unsigned WIDTH = 40;
 			static const constexpr unsigned HEIGHT = 50;

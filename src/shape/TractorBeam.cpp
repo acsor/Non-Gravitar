@@ -30,7 +30,7 @@ namespace gvt {
 	}
 
 	TractorBeam::TractorBeam (Vectord position, Spaceship &spaceship):
-			Shape2D(position, polygonFactory()), mSpaceship(spaceship) {
+			ClosedShape(position, polygonFactory()), mSpaceship(spaceship) {
 	}
 
 	Vectord TractorBeam::rotationCenter() const {
@@ -45,7 +45,7 @@ namespace gvt {
 		auto b = dynamic_cast<TractorBeam const *>(&o);
 
 		if (b)
-			return Shape2D::operator==(o);
+			return ClosedShape::operator==(o);
 
 		return false;
 	}

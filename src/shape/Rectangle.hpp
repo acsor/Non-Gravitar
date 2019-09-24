@@ -23,7 +23,7 @@
 #define NON_GRAVITAR_RECTANGLE_HPP
 
 #include <ostream>
-#include "Shape2D.hpp"
+#include "ClosedShape.hpp"
 #include "utils/Vector.hpp"
 #include "ShapeVisitor.hpp"
 
@@ -47,7 +47,7 @@ namespace std {
 
 
 namespace gvt {
-    class Rectangle: public Shape2D {
+    class Rectangle: public ClosedShape {
 		using ostream = std::ostream;
 
 		friend struct std::hash<Rectangle>;

@@ -25,14 +25,14 @@ using SpaceshipView = gvt::SpaceshipView;
 
 
 SpaceshipView::SpaceshipView(shared_ptr<Spaceship> const &spaceship):
-		Shape2DView(spaceship), mShip{spaceship} {
+		ClosedShapeView(spaceship), mShip{spaceship} {
 	mAssets = GraphicAssets::getInstance();
 
 	mSprite.setTexture(mAssets->spaceshipTexture);
 }
 
 void SpaceshipView::draw(sf::RenderTarget &target, sf::RenderStates s) const {
-	Shape2DView::draw(target, s);
+	ClosedShapeView::draw(target, s);
 
 	if (mAccel) {
 		mSprite.setTexture(mAssets->spaceshipTextureAccel);
@@ -44,7 +44,7 @@ void SpaceshipView::draw(sf::RenderTarget &target, sf::RenderStates s) const {
 }
 
 void SpaceshipView::onShapeMoved(PositionEvent e) {
-	Shape2DView::onShapeMoved(e);
+	ClosedShapeView::onShapeMoved(e);
 
 	mAccel = mShip->acceleration().norm() != 0;
 }

@@ -24,11 +24,11 @@
 
 #include <SFML/Graphics.hpp>
 #include "shape/Planet.hpp"
-#include "Shape2DView.hpp"
+#include "ClosedShapeView.hpp"
 
 
 namespace gvt {
-	class PlanetView: public Shape2DView {
+	class PlanetView: public ClosedShapeView {
 		private:
 			sf::Text mBonus;
 			sf::VertexArray mPolygon;

@@ -28,14 +28,14 @@ namespace gvt {
 	);
 
 	RoundMissileView::RoundMissileView (shared_ptr<RoundMissile> missile):
-		Shape2DView(missile), mMissile(std::move(missile)) {
+			ClosedShapeView(missile), mMissile(std::move(missile)) {
 		mCircle = sf::CircleShape(mMissile->radius());
 		mCircle.setFillColor(DEFAULT_MISSILE_COLOR);
 	}
 
 
 	void RoundMissileView::draw(sf::RenderTarget &t, sf::RenderStates s) const {
-		Shape2DView::draw(t, s);
+		ClosedShapeView::draw(t, s);
 
 		t.draw(mCircle, mTranslation * mRotation);
 	}

@@ -19,8 +19,8 @@
 // LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
-#ifndef NON_GRAVITAR_SHAPE2D_HPP
-#define NON_GRAVITAR_SHAPE2D_HPP
+#ifndef NON_GRAVITAR_CLOSEDSHAPE_HPP
+#define NON_GRAVITAR_CLOSEDSHAPE_HPP
 
 #include "utils/BoundingPolygon.hpp"
 #include "Shape.hpp"
@@ -29,10 +29,11 @@
 
 namespace gvt {
 	/**
-	 * A @c Shape occupying a well defined rectangular region on the coordinate
-	 * space.
+	 * A @c Shape capable of being represented as a closed curve. Its
+	 * interface distinguishes from ClosedShape primarily for the presence of
+	 * @c collisionPolygon() function.
 	 */
-	class Shape2D: public Shape {
+	class ClosedShape: public Shape {
 		protected:
 			BoundingPolygon mPolygon;
 
@@ -40,7 +41,7 @@ namespace gvt {
 			 * @param pos
 			 * @param cp Collision polygon to approximate this shape with.
 			 */
-			Shape2D(Vectord pos, BoundingPolygon cp);
+			ClosedShape(Vectord pos, BoundingPolygon cp);
 		public:
 			using Shape::position;
 			using Shape::rotation;
@@ -69,7 +70,7 @@ namespace gvt {
 
 
 namespace gvt {
-	Vectord Shape2D::rotationCenter() const {
+	Vectord ClosedShape::rotationCenter() const {
 		return Vectord{width() / 2.0, height() / 2.0};
 	}
 }

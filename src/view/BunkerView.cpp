@@ -26,12 +26,12 @@ using BunkerView = gvt::BunkerView;
 
 
 void BunkerView::draw(sf::RenderTarget &t, sf::RenderStates s) const {
-	Shape2DView::draw(t, s);
+	ClosedShapeView::draw(t, s);
 
 	t.draw(mSprite, mTranslation * mRotation);
 }
 
-BunkerView::BunkerView(const shared_ptr<Bunker>& bunker): Shape2DView(bunker) {
+BunkerView::BunkerView(const shared_ptr<Bunker>& bunker): ClosedShapeView(bunker) {
 	auto a = GraphicAssets::getInstance();
 
 	// TODO Add a further texture for bunkers having 4 or more directions

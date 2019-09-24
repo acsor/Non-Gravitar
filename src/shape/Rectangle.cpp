@@ -59,7 +59,7 @@ Rectangle::polygonFactory(Vectord topLeft, Vectord bottomRight) const {
 }
 
 Rectangle::Rectangle(Vectord topLeft, Vectord bottomRight):
-		Shape2D(topLeft, polygonFactory(topLeft, bottomRight)),
+		ClosedShape(topLeft, polygonFactory(topLeft, bottomRight)),
 		mEnd{bottomRight} {
 }
 

@@ -39,7 +39,7 @@ namespace gvt {
 	}
 
 	Circle::Circle(Vectord position, double radius):
-			Shape2D{position, polygonFactory(radius)}, mRadius{radius} {
+			ClosedShape{position, polygonFactory(radius)}, mRadius{radius} {
 	}
 
 	bool Circle::clashes(Circle const &o) const {

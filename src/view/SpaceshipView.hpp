@@ -27,12 +27,12 @@
 #include <SFML/Graphics.hpp>
 #include "shape/Spaceship.hpp"
 #include "utils/Event.hpp"
-#include "Shape2DView.hpp"
+#include "ClosedShapeView.hpp"
 #include "GraphicAssets.hpp"
 
 
 namespace gvt {
-	class SpaceshipView: public Shape2DView {
+	class SpaceshipView: public ClosedShapeView {
 		private:
 			shared_ptr<Spaceship> mShip;
 			sf::Sprite mutable mSprite;

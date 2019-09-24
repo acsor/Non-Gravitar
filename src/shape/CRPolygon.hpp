@@ -22,14 +22,14 @@
 #ifndef NON_GRAVITAR_CRPOLYGON_HPP
 #define NON_GRAVITAR_CRPOLYGON_HPP
 
-#include "Shape2D.hpp"
+#include "ClosedShape.hpp"
 
 
 namespace gvt {
 	/**
 	 * A convex, regular polygon.
 	 */
-	class CRPolygon: public Shape2D {
+	class CRPolygon: public ClosedShape {
 		private:
 			BoundingPolygon polygonFactory(
 					double radius, unsigned vertices

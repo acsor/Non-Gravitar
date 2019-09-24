@@ -39,25 +39,25 @@ namespace gvt {
 	}
 
 	Spaceship::Spaceship(Vectord position, unsigned fuel):
-			Shape2D::Shape2D(position, polygonFactory()), mFuel{fuel} {
+			ClosedShape::ClosedShape(position, polygonFactory()), mFuel{fuel} {
 		mBeam = std::make_shared<TractorBeam>(Vectord{0, height()}, *this);
 	}
 
 	void Spaceship::position(Vectord position) {
-		Shape2D::position(position);
+		ClosedShape::position(position);
 		auto widthDiff = width() - mBeam->width();
 
 		mBeam->position(position + Vectord{widthDiff / 2.0, height()});
 	}
 
 	void Spaceship::rotation(double r) {
-		Shape2D::rotation(r);
+		ClosedShape::rotation(r);
 
 		mBeam->rotation(r);
 	}
 
 	void Spaceship::destroyed(bool destroyed) {
-		Shape2D::destroyed(destroyed);
+		ClosedShape::destroyed(destroyed);
 
 		mBeam->destroyed(destroyed);
 	}

@@ -23,18 +23,18 @@
 #define NON_GRAVITAR_SHAPE_VIEW
 
 #include "view/ShapeView.hpp"
-#include "shape/Shape2D.hpp"
+#include "shape/ClosedShape.hpp"
 
 
 namespace gvt {
-	class Shape2DView: public ShapeView {
+	class ClosedShapeView: public ShapeView {
 		private:
 			// Debugs bounds used for the 'debug view'
 			sf::VertexArray mBounds;
 		protected:
-			shared_ptr<Shape2D> mShape2D;
+			shared_ptr<ClosedShape> mClosedShape;
 
-			explicit Shape2DView(std::shared_ptr<Shape2D> const &shape);
+			explicit ClosedShapeView(std::shared_ptr<ClosedShape> const &shape);
 
 			void updateRotationTransform() override;
 			void onCreateDebugView() override;

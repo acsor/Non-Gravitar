@@ -23,7 +23,7 @@
 #define NON_GRAVITAR_BUNKER_HPP
 
 #include <vector>
-#include "Shape2D.hpp"
+#include "ClosedShape.hpp"
 #include "Rectangle.hpp"
 #include "RoundMissile.hpp"
 #include "ShapeVisitor.hpp"
@@ -32,7 +32,7 @@ template<typename T> using vector = std::vector<T>;
 
 
 namespace gvt {
-	class Bunker: public Shape2D {
+	class Bunker: public ClosedShape {
 		private:
 			double mDelay{0};
 			vector<Vectord> mPaths;

@@ -36,7 +36,7 @@ namespace gvt {
 	}
 
 	CRPolygon::CRPolygon(Vectord position, double radius, unsigned vertices):
-			Shape2D(position, polygonFactory(radius, vertices)), mRadius{radius},
+			ClosedShape(position, polygonFactory(radius, vertices)), mRadius{radius},
 			mPolygon{vertices} {
 	}
 
@@ -48,7 +48,7 @@ namespace gvt {
 		auto o = dynamic_cast<CRPolygon const *>(&other);
 
 		if (o)
-			return mRadius == o->mRadius && Shape2D::operator==(other);
+			return mRadius == o->mRadius && ClosedShape::operator==(other);
 
 		return false;
 	}

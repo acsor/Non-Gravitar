@@ -27,7 +27,7 @@
 #include <SFML/Graphics.hpp>
 #include "utils/Event.hpp"
 #include "shape-group/ShapeGroup.hpp"
-#include "view/Shape2DView.hpp"
+#include "view/ClosedShapeView.hpp"
 #include "ShapeViewFactory.hpp"
 #include "DebuggableView.hpp"
 

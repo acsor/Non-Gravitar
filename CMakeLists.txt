@@ -36,8 +36,8 @@ add_library(BoundingPolygon "${DIR_UTILS}/BoundingPolygon.cpp")
 # Shapes section
 add_library(Shape "${DIR_SHAPE}/Shape.cpp")
 
-add_library(Shape2D "${DIR_SHAPE}/Shape2D.cpp")
-target_link_libraries(Shape2D Shape)
+add_library(ClosedShape "${DIR_SHAPE}/ClosedShape.cpp")
+target_link_libraries(ClosedShape Shape)
 
 add_library(Polyline "${DIR_SHAPE}/Polyline.cpp")
 target_link_libraries(Polyline Shape)
@@ -46,16 +46,16 @@ add_library(MountainChain "${DIR_SHAPE}/MountainChain.cpp")
 target_link_libraries(MountainChain Polyline)
 
 add_library(Circle "${DIR_SHAPE}/Circle.cpp")
-target_link_libraries(Circle Shape2D Rectangle)
+target_link_libraries(Circle ClosedShape Rectangle)
 
 add_library(CRPolygon "${DIR_SHAPE}/CRPolygon.cpp")
-target_link_libraries(CRPolygon Shape2D BoundingPolygon)
+target_link_libraries(CRPolygon ClosedShape BoundingPolygon)
 
 add_library(Planet "${DIR_SHAPE}/Planet.cpp")
 target_link_libraries(Planet CRPolygon)
 
 add_library(Rectangle "${DIR_SHAPE}/Rectangle.cpp")
-target_link_libraries(Rectangle Shape2D BoundingPolygon)
+target_link_libraries(Rectangle ClosedShape BoundingPolygon)
 
 add_library(Spaceship "${DIR_SHAPE}/Spaceship.cpp")
 target_link_libraries(Spaceship Fuel BoundingPolygon)
@@ -96,29 +96,29 @@ add_library(DebuggableView "${DIR_VIEWS}/DebuggableView.cpp")
 add_library(ShapeView "${DIR_VIEWS}/ShapeView.cpp")
 target_link_libraries(ShapeView Shape DebuggableView GraphicAssets)
 
-add_library(Shape2DView "${DIR_VIEWS}/Shape2DView.cpp")
-target_link_libraries(Shape2DView Shape2D ShapeView)
+add_library(ClosedShapeView "${DIR_VIEWS}/ClosedShapeView.cpp")
+target_link_libraries(ClosedShapeView ClosedShape ShapeView)
 
 add_library(PlanetView "${DIR_VIEWS}/PlanetView.cpp")
-target_link_libraries(PlanetView Planet Shape2DView)
+target_link_libraries(PlanetView Planet ClosedShapeView)
 
 add_library(PolylineView "${DIR_VIEWS}/PolylineView.cpp")
 target_link_libraries(PolylineView Polyline ShapeView)
 
 add_library(RoundMissileView "${DIR_VIEWS}/RoundMissileView.cpp")
-target_link_libraries(RoundMissileView RoundMissile Shape2DView)
+target_link_libraries(RoundMissileView RoundMissile ClosedShapeView)
 
 add_library(FuelView "${DIR_VIEWS}/FuelView.cpp")
-target_link_libraries(FuelView Fuel Shape2DView)
+target_link_libraries(FuelView Fuel ClosedShapeView)
 
 add_library(BunkerView "${DIR_VIEWS}/BunkerView.cpp")
-target_link_libraries(BunkerView Bunker Shape2DView Utils)
+target_link_libraries(BunkerView Bunker ClosedShapeView Utils)
 
 add_library(ShapeGroupView "${DIR_VIEWS}/ShapeGroupView.cpp")
 target_link_libraries(ShapeGroupView ShapeGroup ShapeViewFactory)
 
 add_library(TractorBeamView "${DIR_VIEWS}/TractorBeamView.cpp")
-target_link_libraries(TractorBeamView TractorBeam Shape2DView)
+target_link_libraries(TractorBeamView TractorBeam ClosedShapeView)
 
 add_library(ShapeViewFactory "${DIR_VIEWS}/ShapeViewFactory.cpp")
 target_link_libraries(
@@ -127,7 +127,7 @@ target_link_libraries(
 )
 
 add_library(SpaceshipView "${DIR_VIEWS}/SpaceshipView.cpp")
-target_link_libraries(SpaceshipView Spaceship Shape2DView Utils)
+target_link_libraries(SpaceshipView Spaceship ClosedShapeView Utils)
 
 add_library(GameInfoView "${DIR_VIEWS}/GameInfoView.cpp")
 target_link_libraries(GameInfoView GameInfo SpaceshipView)

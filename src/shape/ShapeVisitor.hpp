@@ -10,7 +10,7 @@ namespace gvt {
 	class Polyline;
 	class Rectangle;
 	class RoundMissile;
-	class Shape2D;
+	class ClosedShape;
 	class Spaceship;
 	class TractorBeam;
 
@@ -31,7 +31,7 @@ namespace gvt {
 			virtual void visitPolyline(Polyline &polyline) {};
 			virtual void visitRectangle(Rectangle &rectangle) {};
 			virtual void visitRoundMissile(RoundMissile &missile) {};
-			virtual void visitShape2D(Shape2D &shape) {};
+			virtual void visitClosedShape(ClosedShape &shape) {};
 			virtual void visitSpaceship(Spaceship &spaceship) {};
 			virtual void visitTractorBeam(TractorBeam &beam) {};
 	};

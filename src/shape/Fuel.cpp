@@ -30,7 +30,7 @@ namespace gvt {
 	}
 	
 	Fuel::Fuel(Vectord position, unsigned initialCapacity):
-			Shape2D(position, polygonFactory()) {
+			ClosedShape(position, polygonFactory()) {
 		mFuel = initialCapacity;
 	}
 
