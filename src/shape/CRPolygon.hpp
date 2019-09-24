@@ -19,33 +19,50 @@
 // LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
-#include "Planet.hpp"
+#ifndef NON_GRAVITAR_CRPOLYGON_HPP
+#define NON_GRAVITAR_CRPOLYGON_HPP
+
+#include "Shape2D.hpp"
 
 
 namespace gvt {
-	Planet::Planet (Vectord position, double radius):
-			CRPolygon(position, radius, 8) {
+	/**
+	 * A convex, regular polygon.
+	 */
+	class CRPolygon: public Shape2D {
+		private:
+			BoundingPolygon polygonFactory(
+					double radius, unsigned vertices
+			) const;
+		protected:
+			double mRadius;
+			mutable BoundingPolygon mPolygon;
+		public:
+			CRPolygon(Vectord position, double radius, unsigned vertices);
+
+			inline double radius() const;
+			inline double width() const override;
+			inline double height() const override;
+
+			Vectord rotationCenter() const override;
+			bool operator== (Shape const &other) const override;
+	};
+}
+
+
+namespace gvt {
+	double CRPolygon::width() const {
+		return 2.0 * mRadius;
 	}
 
-	void Planet::surface(shared_ptr<PlanetSurface> s) {
-		mSurface = std::move(s);
+	double CRPolygon::height() const {
+		return 2.0 * mRadius;
 	}
 
-	shared_ptr<PlanetSurface> Planet::surface() {
-		return mSurface;
-	}
-
-	void Planet::accept (ShapeVisitor &visitor) {
-		visitor.visitPlanet(*this);
-	}
-
-	bool Planet::operator== (Shape const &o) const {
-		auto other = dynamic_cast<Planet const *>(&o);
-
-		if (other)
-			return CRPolygon::operator==(o);
-
-        return false;
+	double CRPolygon::radius() const {
+		return mRadius;
 	}
 }
 
+
+#endif

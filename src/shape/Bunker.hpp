@@ -40,6 +40,8 @@ namespace gvt {
 
 			static unsigned const constexpr WIDTH = 66;
 			static unsigned const constexpr HEIGHT = 45;
+
+			BoundingPolygon polygonFactory() const;
 		public:
 			Bunker(Vectord position, size_t directions);
 
@@ -65,8 +67,6 @@ namespace gvt {
 			inline unsigned directions() const;
 
 			void accept (ShapeVisitor &visitor) override;
-
-			BoundingPolygon collisionPolygon() const override;
 			bool operator==(Shape const &o) const override;
 	};
 }

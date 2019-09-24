@@ -91,12 +91,12 @@ namespace gvt {
 	}
 
 	void BoundingPolygon::rotate(float_type rad) {
-		for (Vector<float_type>& v: mVertices)
+		for (auto &v: mVertices)
 			v.rotate(rad);
 	}
 
 	void BoundingPolygon::rotate(float_type rad, Vertex center) {
-		for (Vertex &v: mVertices)
+		for (auto &v: mVertices)
 			v.rotate(rad, center);
 	}
 
@@ -128,7 +128,7 @@ namespace gvt {
 	}
 
 	BoundingPolygon::Vertex BoundingPolygon::center () const {
-		Vertex center = mVertices[0];
+		auto center = mVertices[0];
 
 		for (size_t i = 1; i < mVertices.size(); i++)
             center += mVertices[i];

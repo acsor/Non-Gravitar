@@ -19,33 +19,37 @@
 // LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
-#include "Planet.hpp"
+#include "CRPolygon.hpp"
 
 
 namespace gvt {
-	Planet::Planet (Vectord position, double radius):
-			CRPolygon(position, radius, 8) {
+	BoundingPolygon CRPolygon::polygonFactory(
+			double radius, unsigned vertices
+	) const {
+		auto polygon = BoundingPolygon(vertices);
+		double factor = 2.0 * M_PI / vertices;
+
+		for (unsigned vertex = 0; vertex < vertices; vertex++)
+			polygon[vertex] = radius * Vectord(factor * vertex);
+
+		return polygon;
 	}
 
-	void Planet::surface(shared_ptr<PlanetSurface> s) {
-		mSurface = std::move(s);
+	CRPolygon::CRPolygon(Vectord position, double radius, unsigned vertices):
+			Shape2D(position, polygonFactory(radius, vertices)), mRadius{radius},
+			mPolygon{vertices} {
 	}
 
-	shared_ptr<PlanetSurface> Planet::surface() {
-		return mSurface;
+	Vectord CRPolygon::rotationCenter() const {
+		return {mRadius, mRadius};
 	}
 
-	void Planet::accept (ShapeVisitor &visitor) {
-		visitor.visitPlanet(*this);
-	}
+	bool CRPolygon::operator== (Shape const &other) const {
+		auto o = dynamic_cast<CRPolygon const *>(&other);
 
-	bool Planet::operator== (Shape const &o) const {
-		auto other = dynamic_cast<Planet const *>(&o);
+		if (o)
+			return mRadius == o->mRadius && Shape2D::operator==(other);
 
-		if (other)
-			return CRPolygon::operator==(o);
-
-        return false;
+		return false;
 	}
 }
-

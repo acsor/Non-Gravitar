@@ -37,6 +37,8 @@ namespace gvt {
 			static const constexpr unsigned HEIGHT = 50;
 
 			Spaceship &mSpaceship;
+
+			BoundingPolygon polygonFactory() const;
 		public:
 			TractorBeam(Vectord position, Spaceship &spaceship);
 
@@ -47,7 +49,6 @@ namespace gvt {
 			inline double height() const override;
 
 			void accept(ShapeVisitor &visitor) override;
-			BoundingPolygon collisionPolygon() const override;
 			bool operator== (Shape const &o) const override;
 	};
 }

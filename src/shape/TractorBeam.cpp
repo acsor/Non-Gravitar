@@ -23,23 +23,18 @@
 
 
 namespace gvt {
+	BoundingPolygon TractorBeam::polygonFactory() const {
+		return BoundingPolygon::triangle(
+				{0, HEIGHT}, {WIDTH / 2.0, 0}, {WIDTH, HEIGHT}
+		);
+	}
+
 	TractorBeam::TractorBeam (Vectord position, Spaceship &spaceship):
-			Shape2D(position), mSpaceship(spaceship) {
+			Shape2D(position, polygonFactory()), mSpaceship(spaceship) {
 	}
 
 	Vectord TractorBeam::rotationCenter() const {
 		return Vectord{0, -mSpaceship.height()} + mSpaceship.rotationCenter();
-	}
-
-	BoundingPolygon TractorBeam::collisionPolygon() const {
-		auto t = BoundingPolygon::triangle(
-				{0, HEIGHT}, {WIDTH / 2.0, 0}, {WIDTH, HEIGHT}
-		);
-
-		t.position(mPosition);
-		t.rotate(mRotation, rotationCenter());
-
-		return t;
 	}
 
 	void TractorBeam::accept(ShapeVisitor &visitor) {

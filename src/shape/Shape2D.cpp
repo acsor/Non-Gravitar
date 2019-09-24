@@ -19,33 +19,43 @@
 // LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
-#include "Planet.hpp"
+#include "Shape2D.hpp"
 
 
 namespace gvt {
-	Planet::Planet (Vectord position, double radius):
-			CRPolygon(position, radius, 8) {
+	Shape2D::Shape2D(Vectord pos, BoundingPolygon cp):
+			Shape(pos), mPolygon{std::move(cp)} {
+		mPolygon.position(pos);
 	}
 
-	void Planet::surface(shared_ptr<PlanetSurface> s) {
-		mSurface = std::move(s);
+	void Shape2D::position(Vectord p) {
+		Shape::position(p);
+
+		mPolygon.position(p);
 	}
 
-	shared_ptr<PlanetSurface> Planet::surface() {
-		return mSurface;
+	void Shape2D::rotation(double r) {
+		auto oldRotation = mRotation;
+
+		Shape::rotation(r);
+
+		mPolygon.rotate(r - oldRotation, rotationCenter());
 	}
 
-	void Planet::accept (ShapeVisitor &visitor) {
-		visitor.visitPlanet(*this);
+	bool Shape2D::clashes(Shape const &o) const {
+		auto shape2d = dynamic_cast<Shape2D const *>(&o);
+
+		// If `o' is an instance of Shape2D, we know how to detect collisions
+		if (shape2d) {
+			return collisionPolygon().intersects(shape2d->collisionPolygon());
+			// otherwise, we delegate the task to `o', which might know more
+			// about this all
+		} else {
+			return o.clashes(*this);
+		}
 	}
 
-	bool Planet::operator== (Shape const &o) const {
-		auto other = dynamic_cast<Planet const *>(&o);
-
-		if (other)
-			return CRPolygon::operator==(o);
-
-        return false;
+	BoundingPolygon Shape2D::collisionPolygon() const {
+		return mPolygon;
 	}
 }
-

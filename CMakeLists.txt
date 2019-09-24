@@ -36,6 +36,9 @@ add_library(BoundingPolygon "${DIR_UTILS}/BoundingPolygon.cpp")
 # Shapes section
 add_library(Shape "${DIR_SHAPE}/Shape.cpp")
 
+add_library(Shape2D "${DIR_SHAPE}/Shape2D.cpp")
+target_link_libraries(Shape2D Shape)
+
 add_library(Polyline "${DIR_SHAPE}/Polyline.cpp")
 target_link_libraries(Polyline Shape)
 
@@ -43,13 +46,16 @@ add_library(MountainChain "${DIR_SHAPE}/MountainChain.cpp")
 target_link_libraries(MountainChain Polyline)
 
 add_library(Circle "${DIR_SHAPE}/Circle.cpp")
-target_link_libraries(Circle Shape Rectangle)
+target_link_libraries(Circle Shape2D Rectangle)
+
+add_library(CRPolygon "${DIR_SHAPE}/CRPolygon.cpp")
+target_link_libraries(CRPolygon Shape2D BoundingPolygon)
 
 add_library(Planet "${DIR_SHAPE}/Planet.cpp")
-target_link_libraries(Planet Circle)
+target_link_libraries(Planet CRPolygon)
 
 add_library(Rectangle "${DIR_SHAPE}/Rectangle.cpp")
-target_link_libraries(Rectangle Shape BoundingPolygon)
+target_link_libraries(Rectangle Shape2D BoundingPolygon)
 
 add_library(Spaceship "${DIR_SHAPE}/Spaceship.cpp")
 target_link_libraries(Spaceship Fuel BoundingPolygon)
@@ -91,7 +97,7 @@ add_library(ShapeView "${DIR_VIEWS}/ShapeView.cpp")
 target_link_libraries(ShapeView Shape DebuggableView GraphicAssets)
 
 add_library(Shape2DView "${DIR_VIEWS}/Shape2DView.cpp")
-target_link_libraries(Shape2DView ShapeView)
+target_link_libraries(Shape2DView Shape2D ShapeView)
 
 add_library(PlanetView "${DIR_VIEWS}/PlanetView.cpp")
 target_link_libraries(PlanetView Planet Shape2DView)

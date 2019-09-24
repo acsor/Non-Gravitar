@@ -27,8 +27,19 @@
 
 
 namespace gvt {
+	BoundingPolygon Circle::polygonFactory(double radius) const {
+		auto polygon = BoundingPolygon(8);
+		auto const center = Vectord{radius, radius};
+		auto const step = 2.0 * M_PI / COLLISION_PRECISION;
+
+		for (unsigned vertex = 0; vertex < COLLISION_PRECISION; vertex++)
+			polygon[vertex] = center + radius * Vectord(step * vertex);
+
+		return polygon;
+	}
+
 	Circle::Circle(Vectord position, double radius):
-			Shape2D{position}, mRadius{radius} {
+			Shape2D{position, polygonFactory(radius)}, mRadius{radius} {
 	}
 
 	bool Circle::clashes(Circle const &o) const {
@@ -40,23 +51,6 @@ namespace gvt {
 
 	void Circle::accept (ShapeVisitor &visitor) {
 		visitor.visitCircle(*this);
-	}
-
-	gvt::BoundingPolygon Circle::collisionPolygon() const {
-        std::vector<Vectord> vertices {COLLISION_PRECISION};
-        Vectord const center = Vectord{mRadius, mRadius};
-        double const step = 2.0 * M_PI / COLLISION_PRECISION;
-
-        for (unsigned i = 0; i < COLLISION_PRECISION; i++) {
-        	vertices[i] = center + mRadius * Vectord(
-				cos(mRotation + i * step), sin(mRotation + i * step)
-			);
-        }
-
-        auto p = BoundingPolygon(vertices.begin(), vertices.end());
-        p.position(mPosition);
-
-        return p;
 	}
 
 	bool Circle::operator== (Shape const &o) const {

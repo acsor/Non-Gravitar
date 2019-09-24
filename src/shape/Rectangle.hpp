@@ -57,6 +57,9 @@ namespace gvt {
 
 		private:
 			Vectord mEnd{0, 0};
+
+			BoundingPolygon
+			polygonFactory(Vectord topLeft, Vectord bottomRight) const;
     	public:
     		/**
     		 * @brief Constructs a @c Rectangle with width > 0 and height > 0.
@@ -65,7 +68,6 @@ namespace gvt {
 			Rectangle(Vectord topLeft, Vectord bottomRight);
 
 			void accept (ShapeVisitor &visitor) override;
-			BoundingPolygon collisionPolygon() const override;
 			bool operator==(Shape const &o) const override;
 
 			double width() const override;

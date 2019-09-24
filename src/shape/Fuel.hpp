@@ -32,14 +32,12 @@ namespace gvt {
 	class Fuel: public Shape2D {
 		private:
 			unsigned mFuel;
-		public:
-			/**
-			 * @brief Width and height measures derived from
-			 * @i static/graphics/.
-			 */
+
 			static unsigned const constexpr WIDTH = 41;
 			static unsigned const constexpr HEIGHT = 43;
 
+			BoundingPolygon polygonFactory() const;
+		public:
 			Fuel(Vectord position, unsigned initialCapacity);
 			/**
 			 * @return The current fuel amount.
@@ -54,7 +52,6 @@ namespace gvt {
 			double width() const override;
 			double height() const override;
 
-			BoundingPolygon collisionPolygon() const override;
 			bool operator== (Shape const &o) const override;
 	};
 }

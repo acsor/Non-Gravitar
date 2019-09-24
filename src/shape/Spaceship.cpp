@@ -31,9 +31,16 @@ namespace gvt {
 	}
 
 
+	BoundingPolygon Spaceship::polygonFactory() const {
+		return BoundingPolygon::triangle(
+				Vectord{0, BOUNDING_HEIGHT}, Vectord{BOUNDING_WIDTH / 2.0, 0},
+				Vectord{BOUNDING_WIDTH, BOUNDING_HEIGHT}
+		);
+	}
+
 	Spaceship::Spaceship(Vectord position, unsigned fuel):
-			Shape2D::Shape2D(position), mFuel{fuel} {
-		mBeam.reset(new TractorBeam(Vectord{0, height()}, *this));
+			Shape2D::Shape2D(position, polygonFactory()), mFuel{fuel} {
+		mBeam = std::make_shared<TractorBeam>(Vectord{0, height()}, *this);
 	}
 
 	void Spaceship::position(Vectord position) {
@@ -43,18 +50,10 @@ namespace gvt {
 		mBeam->position(position + Vectord{widthDiff / 2.0, height()});
 	}
 
-	Vectord Spaceship::position() const {
-		return Shape2D::position();
-	}
-
 	void Spaceship::rotation(double r) {
 		Shape2D::rotation(r);
 
 		mBeam->rotation(r);
-	}
-
-	double Spaceship::rotation() const {
-		return Shape2D::rotation();
 	}
 
 	void Spaceship::destroyed(bool destroyed) {
@@ -65,23 +64,6 @@ namespace gvt {
 
 	Vectord Spaceship::rotationCenter() const {
 		return {BOUNDING_WIDTH / 2.0, BOUNDING_HEIGHT / 2.0};
-	}
-
-	bool Spaceship::destroyed() const {
-		return Shape2D::destroyed();
-	}
-
-	BoundingPolygon Spaceship::collisionPolygon() const {
-		auto t = BoundingPolygon::triangle(
-			Vectord{0, BOUNDING_HEIGHT},
-			Vectord{BOUNDING_WIDTH / 2.0, 0},
-			Vectord{BOUNDING_WIDTH, BOUNDING_HEIGHT}
-		);
-
-		t.position(mPosition);
-		t.rotate(mRotation, rotationCenter());
-
-		return t;
 	}
 
 	unsigned Spaceship::fuel() const {

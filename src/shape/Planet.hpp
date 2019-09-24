@@ -22,21 +22,20 @@
 #ifndef NON_GRAVITAR_PLANET_HPP
 #define NON_GRAVITAR_PLANET_HPP
 
-#include "Shape2D.hpp"
+#include "CRPolygon.hpp"
 #include "utils/Vector.hpp"
 
 
 namespace gvt {
 	class PlanetSurface;
 
-	class Planet: public Shape2D {
+	class Planet: public CRPolygon {
 		protected:
-			double mRadius;
-			mutable BoundingPolygon mPolygon;
 			unsigned mBonus{0};
-
 			shared_ptr<PlanetSurface> mSurface;
 		public:
+			using Shape::position;
+
 			Planet (Vectord position, double radius);
 
 			void surface(shared_ptr<PlanetSurface> s);
@@ -47,9 +46,6 @@ namespace gvt {
 			 */
 			shared_ptr<PlanetSurface> surface();
 
-			inline double width() const override;
-			inline double height() const override;
-			inline double radius() const;
 			/**
 			 * Setter method of bonus().
 			 */
@@ -60,7 +56,6 @@ namespace gvt {
 			 */
 			inline unsigned bonus() const;
 
-			BoundingPolygon collisionPolygon() const override;
 			void accept (ShapeVisitor &visitor) override;
 			bool operator== (Shape const &o) const override;
 	};
@@ -68,18 +63,6 @@ namespace gvt {
 
 
 namespace gvt {
-	double Planet::width() const {
-		return mRadius / 2.0;
-	}
-
-	double Planet::height() const {
-		return mRadius / 2.0;
-	}
-
-	double Planet::radius() const {
-		return mRadius;
-	}
-
 	void Planet::bonus(unsigned bonus) {
 		mBonus = bonus;
 	}
