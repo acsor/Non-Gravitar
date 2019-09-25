@@ -36,7 +36,6 @@ namespace gvt {
 
 			explicit ClosedShapeView(std::shared_ptr<ClosedShape> const &shape);
 
-			void updateRotationTransform() override;
 			void onCreateDebugView() override;
 			void onUpdateDebugColor() override;
 			void onShapeCollided(CollisionEvent e) override;

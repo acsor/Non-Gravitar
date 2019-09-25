@@ -29,9 +29,11 @@
 
 namespace gvt {
 	/**
-	 * A @c Shape capable of being represented as a closed curve. Its
-	 * interface distinguishes from ClosedShape primarily for the presence of
-	 * @c collisionPolygon() function.
+	 * A closed-curve shape.
+	 *
+	 * This class is distinguished from @c Shape primarily for the presence
+	 * of a "collision polygon", i.e. a convex polygon matching or
+	 * approximating its area for which collisions can be checked against.
 	 */
 	class ClosedShape: public Shape {
 		protected:
@@ -46,17 +48,9 @@ namespace gvt {
 			using Shape::position;
 			using Shape::rotation;
 
-			virtual double width() const = 0;
-			virtual double height() const = 0;
-
 			void position(Vectord p) override;
 			void rotation(double r) override;
 
-			/**
-			 * @return The center point of this @c Shape <b>relative</b> to
-			 * this object position (i.e. expressed in local coordinates).
-			 */
-			virtual inline Vectord rotationCenter() const;
 			/**
 			 * @return A @c Rectangle object representing the bounds used to
 			 * detect collisions with another @c Shape. The coordinates
@@ -66,13 +60,6 @@ namespace gvt {
 			BoundingPolygon collisionPolygon() const;
 			bool clashes(Shape const &o) const override;
 	};
-}
-
-
-namespace gvt {
-	Vectord ClosedShape::rotationCenter() const {
-		return Vectord{width() / 2.0, height() / 2.0};
-	}
 }
 
 

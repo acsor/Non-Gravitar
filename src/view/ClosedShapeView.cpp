@@ -48,14 +48,6 @@ namespace gvt {
 		debugColor(
 			mShape->collided() ? COLLISION_DEBUG_COLOR: DEFAULT_DEBUG_COLOR
 		);
-		updateRotationTransform();
-	}
-
-	void ClosedShapeView::updateRotationTransform() {
-		auto center = mClosedShape->rotationCenter();
-
-		mRotation = sf::Transform::Identity;
-		mRotation.rotate(rad2deg(mShape->rotation()), center.x, center.y);
 	}
 
 	void ClosedShapeView::onShapeCollided(CollisionEvent e) {

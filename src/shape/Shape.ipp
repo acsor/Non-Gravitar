@@ -58,4 +58,8 @@ namespace gvt {
 	bool Shape::destroyed() const {
 		return mDestroyed;
 	}
+
+	Vectord Shape::rotationCenter() const {
+		return Vectord{width() / 2.0, height() / 2.0};
+	}
 }

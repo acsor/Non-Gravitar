@@ -111,6 +111,20 @@ namespace gvt {
 			 */
 			inline Vectord acceleration() const;
 			/**
+			 * @return The width measure of this shape.
+			 */
+			virtual double width() const = 0;
+			/**
+			 * @return The height measure of this shape.
+			 */
+			virtual double height() const = 0;
+			/**
+			 * @return The point of this @c Shape <b>relative</b> to
+			 * this object position (i.e. expressed in local coordinates)
+			 * around which rotations should be performed.
+			 */
+			virtual inline Vectord rotationCenter() const;
+			/**
 			 * @return @c true if this @c Shape currently overlaps with
 			 * another one, @c false otherwise.
 			 */
