@@ -158,6 +158,11 @@ target_link_libraries(SolarSystemScene SolarSystem PlanetSurfaceScene)
 add_library(PlanetSurfaceScene "${DIR_CONTROL}/PlanetSurfaceScene.cpp")
 target_link_libraries(PlanetSurfaceScene Scene PlanetSurface MountainChain)
 
+add_library(RandomSSFactory "${DIR_CONTROL}/RandomSSFactory.cpp")
+target_link_libraries(
+		RandomSSFactory SolarSystem PlanetBuilder RoundShapeLayout
+)
+
 
 # Samples section
 add_executable(SFMLCollision "${DIR_SAMPLES}/SFMLCollision.cpp")
