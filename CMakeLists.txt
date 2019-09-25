@@ -77,6 +77,9 @@ target_link_libraries(TractorBeam Spaceship)
 add_library(ShapeGroup "${DIR_SHAPE_GROUP}/ShapeGroup.cpp")
 target_link_libraries(ShapeGroup Shape)
 
+add_library(GridShapeLayout "${DIR_SHAPE_GROUP}/GridShapeLayout.cpp")
+target_link_libraries(GridShapeLayout Shape)
+
 add_library(CollisionGroup "${DIR_SHAPE_GROUP}/CollisionGroup.cpp")
 target_link_libraries(CollisionGroup ShapeGroup)
 
