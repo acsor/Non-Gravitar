@@ -30,6 +30,7 @@ namespace gvt {
 
 		auto const pos = shape->position();
 		auto closed = std::dynamic_pointer_cast<ClosedShape>(shape);
+		auto planet = std::dynamic_pointer_cast<Planet>(shape);
 
 		if (closed) {
 			mWidth = std::max(mWidth, pos.x + closed->width());
@@ -38,35 +39,18 @@ namespace gvt {
 			mWidth = std::max(mWidth, pos.x);
 			mHeight = std::max(mHeight, pos.y);
 		}
+
+		if (planet) {
+			mPlanets.push_front(planet);
+		}
 	}
 
-	std::shared_ptr<SolarSystem> SolarSystem::makeRandom (
-		unsigned planets, double minRadius, double maxRadius, Vectord minPos,
-		Vectord maxPos
-	) {
-        std::shared_ptr<SolarSystem> system {new SolarSystem()};
-		UniRandom<double> radius{minRadius, maxRadius};
-        UniRandom<double> xCoord{minPos.x, maxPos.x};
-		UniRandom<double> yCoord{minPos.y, maxPos.y};
-        UniRandom<unsigned> bonus{1, 8};
+	void SolarSystem::onRemoveShape (shared_ptr<Shape> shape) {
+		CollisionGroup::onRemoveShape(shape);
+		auto planet = std::dynamic_pointer_cast<Planet>(shape);
 
-        while (planets > 0) {
-			auto p = std::make_shared<Planet>(
-				Vectord{xCoord(), yCoord()}, radius()
-			);
-			auto surface = std::make_shared<PlanetSurface>();
-
-			surface->mountains(MountainChain::randomChain({0, 600}, 20));
-			surface->randomBunkers(5);
-			surface->randomFuel(2, Vector<unsigned>{1, 5});
-			p->surface(surface);
-			p->bonus(1000 * bonus());
-
-			system->insert(p);
-
-        	planets--;
-        }
-
-        return system;
+		if (planet) {
+			mPlanets.remove(planet);
+		}
 	}
 }
