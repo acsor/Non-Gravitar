@@ -80,6 +80,9 @@ target_link_libraries(ShapeGroup Shape)
 add_library(GridShapeLayout "${DIR_SHAPE_GROUP}/GridShapeLayout.cpp")
 target_link_libraries(GridShapeLayout Shape)
 
+add_library(RoundLayout "${DIR_SHAPE_GROUP}/RoundLayout.cpp")
+target_link_libraries(RoundLayout Shape)
+
 add_library(CollisionGroup "${DIR_SHAPE_GROUP}/CollisionGroup.cpp")
 target_link_libraries(CollisionGroup ShapeGroup)
 
