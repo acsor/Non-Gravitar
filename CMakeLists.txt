@@ -80,14 +80,14 @@ target_link_libraries(ShapeGroup Shape)
 add_library(GridShapeLayout "${DIR_SHAPE_GROUP}/GridShapeLayout.cpp")
 target_link_libraries(GridShapeLayout Shape)
 
-add_library(RoundLayout "${DIR_SHAPE_GROUP}/RoundLayout.cpp")
-target_link_libraries(RoundLayout Shape)
+add_library(RoundShapeLayout "${DIR_SHAPE_GROUP}/RoundShapeLayout.cpp")
+target_link_libraries(RoundShapeLayout Shape)
 
 add_library(CollisionGroup "${DIR_SHAPE_GROUP}/CollisionGroup.cpp")
 target_link_libraries(CollisionGroup ShapeGroup)
 
 add_library(PlanetBuilder "${DIR_SHAPE_GROUP}/PlanetBuilder.cpp")
-target_link_libraries(PlanetBuilder Planet PlanetSurface)
+target_link_libraries(PlanetBuilder Planet PlanetSurface MountainChain)
 
 add_library(SolarSystem "${DIR_SHAPE_GROUP}/SolarSystem.cpp")
 target_link_libraries(SolarSystem PlanetSurface)
@@ -144,7 +144,9 @@ target_link_libraries(GameInfoView GameInfo SpaceshipView)
 
 # Game and scenes section
 add_library(Game "${DIR_CONTROL}/Game.cpp")
-target_link_libraries(Game Spaceship GameInfoView SolarSystemScene)
+target_link_libraries(
+		Game Spaceship GameInfoView SolarSystemScene RandomSSFactory
+)
 
 add_library(GameInfo "${DIR_CONTROL}/GameInfo.cpp")
 target_link_libraries(GameInfo SpaceshipView)

@@ -23,10 +23,9 @@
 #include <memory>
 #include <SFML/Graphics.hpp>
 #include <SFML/Window.hpp>
+#include "shape-group/GridShapeLayout.hpp"
 #include "control/Game.hpp"
 #include "control/SolarSystemScene.hpp"
-#include "shape-group/SolarSystem.hpp"
-#include "shape-group/PlanetSurface.hpp"
 
 using sf_callback = gvt::Callback<sf::Event>;
 
@@ -40,18 +39,19 @@ int main () {
 	sf::Event e;
 
 	gvt::Game *game = gvt::Game::getInstance();
-	auto solarSystem = gvt::SolarSystem::makeRandom(
-			8, 30, 50, {0, 0}, {3000, 2000}
+	auto rootScene = std::make_shared<gvt::SolarSystemScene>(
+			game->solarSystemFactory()()
 	);
-	auto rootScene = std::make_shared<gvt::SolarSystemScene>(solarSystem);
 
 	w.setFramerateLimit(60);
 
-	solarSystem->insert(game->acquireSpaceship());
 	game->pushScene(rootScene);
 	game->viewEventsDispatcher().addCallback(
 			[&w] (sf::Event const &e) -> void { closeWindow(w, e); }
 	);
+
+	game->spaceship()->position({500, 500});
+	rootScene->shapes()->insert(game->acquireSpaceship());
 
 	while (w.isOpen()) {
 		while (w.pollEvent(e))
