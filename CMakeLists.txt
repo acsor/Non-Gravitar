@@ -135,11 +135,14 @@ target_link_libraries(TractorBeamView TractorBeam ClosedShapeView)
 add_library(ShapeViewFactory "${DIR_VIEWS}/ShapeViewFactory.cpp")
 target_link_libraries(
 		ShapeViewFactory BunkerView FuelView PolylineView
-		PlanetView RoundMissileView SpaceshipView TractorBeamView
+		PlanetView RoundMissileView SpaceshipView SpawnAreaView TractorBeamView
 )
 
 add_library(SpaceshipView "${DIR_VIEWS}/SpaceshipView.cpp")
 target_link_libraries(SpaceshipView Spaceship ClosedShapeView Utils)
+
+add_library(SpawnAreaView "${DIR_VIEWS}/SpawnAreaView.cpp")
+target_link_libraries(SpawnAreaView SpawnArea ClosedShapeView)
 
 add_library(GameInfoView "${DIR_VIEWS}/GameInfoView.cpp")
 target_link_libraries(GameInfoView GameInfo SpaceshipView)
