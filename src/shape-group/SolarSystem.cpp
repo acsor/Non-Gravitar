@@ -29,28 +29,25 @@ namespace gvt {
 		CollisionGroup::onInsertShape(shape);
 
 		auto const pos = shape->position();
-		auto closed = std::dynamic_pointer_cast<ClosedShape>(shape);
-		auto planet = std::dynamic_pointer_cast<Planet>(shape);
 
-		if (closed) {
-			mWidth = std::max(mWidth, pos.x + closed->width());
-			mHeight = std::max(mHeight, pos.y + closed->height());
-		} else {
-			mWidth = std::max(mWidth, pos.x);
-			mHeight = std::max(mHeight, pos.y);
-		}
+		mWidth = std::max(mWidth, pos.x + shape->width());
+		mHeight = std::max(mHeight, pos.y + shape->height());
 
-		if (planet) {
+		if (auto planet = std::dynamic_pointer_cast<Planet>(shape)) {
 			mPlanets.push_front(planet);
+		} else if (auto area = std::dynamic_pointer_cast<SpawnArea>(shape)) {
+			mSpawnArea = std::move(area);
 		}
 	}
 
 	void SolarSystem::onRemoveShape (shared_ptr<Shape> shape) {
 		CollisionGroup::onRemoveShape(shape);
-		auto planet = std::dynamic_pointer_cast<Planet>(shape);
 
-		if (planet) {
+		if (auto planet = std::dynamic_pointer_cast<Planet>(shape)) {
 			mPlanets.remove(planet);
+		} else if (auto area = std::dynamic_pointer_cast<SpawnArea>(shape)) {
+			if (mSpawnArea == area)
+				mSpawnArea.reset();
 		}
 	}
 }

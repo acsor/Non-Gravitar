@@ -36,11 +36,15 @@ namespace gvt {
 			) const;
 		protected:
 			double mRadius;
-			mutable BoundingPolygon mPolygon;
+			unsigned mVertices;
 		public:
 			CRPolygon(Vectord position, double radius, unsigned vertices);
 
 			inline double radius() const;
+			/**
+			 * @return The vertices number of this polygon.
+			 */
+			inline unsigned vertices() const;
 			inline double width() const override;
 			inline double height() const override;
 
@@ -51,16 +55,20 @@ namespace gvt {
 
 
 namespace gvt {
+	double CRPolygon::radius() const {
+		return mRadius;
+	}
+
+	unsigned CRPolygon::vertices() const {
+		return mVertices;
+	}
+
 	double CRPolygon::width() const {
 		return 2.0 * mRadius;
 	}
 
 	double CRPolygon::height() const {
 		return 2.0 * mRadius;
-	}
-
-	double CRPolygon::radius() const {
-		return mRadius;
 	}
 }
 

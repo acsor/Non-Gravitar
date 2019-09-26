@@ -12,6 +12,7 @@ namespace gvt {
 	class RoundMissile;
 	class ClosedShape;
 	class Spaceship;
+	class SpawnArea;
 	class TractorBeam;
 
 	/**
@@ -33,6 +34,7 @@ namespace gvt {
 			virtual void visitRoundMissile(RoundMissile &missile) {};
 			virtual void visitClosedShape(ClosedShape &shape) {};
 			virtual void visitSpaceship(Spaceship &spaceship) {};
+			virtual void visitSpawnArea(SpawnArea &area) {};
 			virtual void visitTractorBeam(TractorBeam &beam) {};
 	};
 }

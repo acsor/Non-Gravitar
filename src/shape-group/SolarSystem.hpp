@@ -25,6 +25,7 @@
 #include <forward_list>
 #include <memory>
 #include "shape/Planet.hpp"
+#include "shape/SpawnArea.hpp"
 #include "CollisionGroup.hpp"
 
 
@@ -32,6 +33,7 @@ namespace gvt {
 	class SolarSystem: public CollisionGroup {
 		private:
 			double mWidth{0}, mHeight{0};
+			shared_ptr<SpawnArea> mSpawnArea;
 			std::forward_list<shared_ptr<Planet>> mPlanets;
 
 			/**
@@ -50,6 +52,7 @@ namespace gvt {
 			inline double height() const;
 			inline double width() const;
 
+			inline shared_ptr<SpawnArea> spawnArea() const;
 			/**
 			 * @return The begin iterator of the planets list.
 			 */
@@ -69,6 +72,10 @@ namespace gvt {
 
 	double SolarSystem::width() const {
 		return mWidth;
+	}
+
+	shared_ptr<SpawnArea> SolarSystem::spawnArea() const {
+		return mSpawnArea;
 	}
 
 	SolarSystem::iterator SolarSystem::planetsBegin() {

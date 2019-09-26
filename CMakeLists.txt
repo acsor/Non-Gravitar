@@ -60,6 +60,9 @@ target_link_libraries(Rectangle ClosedShape BoundingPolygon)
 add_library(Spaceship "${DIR_SHAPE}/Spaceship.cpp")
 target_link_libraries(Spaceship Fuel BoundingPolygon)
 
+add_library(SpawnArea "${DIR_SHAPE}/SpawnArea.cpp")
+target_link_libraries(SpawnArea CRPolygon)
+
 add_library(Fuel "${DIR_SHAPE}/Fuel.cpp")
 target_link_libraries(Fuel Spaceship BoundingPolygon)
 
@@ -90,7 +93,7 @@ add_library(PlanetBuilder "${DIR_SHAPE_GROUP}/PlanetBuilder.cpp")
 target_link_libraries(PlanetBuilder Planet PlanetSurface MountainChain)
 
 add_library(SolarSystem "${DIR_SHAPE_GROUP}/SolarSystem.cpp")
-target_link_libraries(SolarSystem PlanetSurface)
+target_link_libraries(SolarSystem PlanetSurface SpawnArea)
 
 add_library(PlanetSurface "${DIR_SHAPE_GROUP}/PlanetSurface.cpp")
 target_link_libraries(PlanetSurface Planet CollisionGroup)

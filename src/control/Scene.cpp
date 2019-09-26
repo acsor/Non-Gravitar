@@ -24,6 +24,7 @@
 #include "shape-group/CollisionGroup.hpp"
 #include "shape/MountainChain.hpp"
 #include "shape/Planet.hpp"
+#include "shape/SpawnArea.hpp"
 
 using type_index = std::type_index;
 
@@ -90,6 +91,7 @@ namespace gvt {
 		mDestroyGraph.insertVertex(TypeVertex(typeid(Planet)));
 		mDestroyGraph.insertVertex(TypeVertex(typeid(RoundMissile)));
 		mDestroyGraph.insertVertex(TypeVertex(typeid(Spaceship)));
+		mDestroyGraph.insertVertex(TypeVertex(typeid(SpawnArea)));
 		mDestroyGraph.insertVertex(TypeVertex(typeid(TractorBeam)));
 
 		for (auto const &pair: destroyPair)
