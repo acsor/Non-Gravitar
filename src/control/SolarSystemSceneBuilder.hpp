@@ -19,34 +19,38 @@
 // LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
-#ifndef NON_GRAVITAR_RANDOM_SS_FACTORY_HPP
-#define NON_GRAVITAR_RANDOM_SS_FACTORY_HPP
+#ifndef NON_GRAVITAR_SOLAR_SYSTEM_SCENE_BUILDER
+#define NON_GRAVITAR_SOLAR_SYSTEM_SCENE_BUILDER
 
 #include "shape-group/SolarSystem.hpp"
 #include "shape-group/RoundShapeLayout.hpp"
 #include "shape-group/PlanetBuilder.hpp"
+#include "SolarSystemScene.hpp"
 
 
 namespace gvt {
-	/**
-	 * A random SolarSystem factory, gathering code for constructing a
-	 * specific, narrow type of solar systems featuring:
-	 * <ul>
-	 * 		<li>A round alignment of planets</li>
-	 * 		<li>A specified number of planets</li>
-	 * </ul>
-	 */
-	class RandomSSFactory {
+	class SolarSystemSceneBuilder {
 		private:
+			Vectord mCenter;
+			unsigned mPlanets;
 			shared_ptr<PlanetBuilder> mBuilder;
-			RoundShapeLayout mLayout{{500, 500}, 450, 9};
-			unsigned const mPlanetNum;
+			shared_ptr<ShapeLayout> mLayout;
 		public:
-			explicit RandomSSFactory(shared_ptr<PlanetBuilder>, unsigned);
+			SolarSystemSceneBuilder& centerPosition(Vectord center);
+			SolarSystemSceneBuilder& planetsNumber(unsigned planetsNum);
+			/**
+			 * Sets the layout used for aligning the planets this builder
+			 * will produce.
+			 */
+			SolarSystemSceneBuilder& planetsLayout(
+					shared_ptr<ShapeLayout> layout
+			);
+			SolarSystemSceneBuilder & planetBuilder(shared_ptr<PlanetBuilder> b);
 
-			shared_ptr<SolarSystem> operator() ();
+			shared_ptr<SolarSystemScene> operator() ();
 	};
 
 }
+
 
 #endif

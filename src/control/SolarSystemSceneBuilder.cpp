@@ -19,31 +19,60 @@
 // LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
-#include "RandomSSFactory.hpp"
+#include "SolarSystemSceneBuilder.hpp"
+#include "shape/SpawnArea.hpp"
 
 
 namespace gvt {
-	RandomSSFactory::RandomSSFactory(
-			shared_ptr<PlanetBuilder> b, unsigned planetsNum
-	): mPlanetNum{planetsNum} {
-		mBuilder = std::move(b);
+	SolarSystemSceneBuilder& SolarSystemSceneBuilder::centerPosition(
+			Vectord center
+	) {
+		mCenter = center;
+
+		return *this;
 	}
 
-	shared_ptr<SolarSystem> RandomSSFactory::operator() () {
+	SolarSystemSceneBuilder& SolarSystemSceneBuilder::planetsNumber(
+			unsigned planetsNum
+	) {
+		mPlanets = planetsNum;
+
+		return *this;
+	}
+
+	SolarSystemSceneBuilder& SolarSystemSceneBuilder::planetsLayout(
+			shared_ptr<ShapeLayout> layout
+	) {
+		mLayout = std::move(layout);
+
+		return *this;
+	}
+
+	SolarSystemSceneBuilder& SolarSystemSceneBuilder::planetBuilder(
+			shared_ptr<PlanetBuilder> b
+	) {
+		mBuilder = std::move(b);
+
+		return *this;
+	}
+
+	shared_ptr<SolarSystemScene> SolarSystemSceneBuilder::operator() () {
 		auto s = std::make_shared<SolarSystem>();
 
-		for (unsigned i = 0; i < mPlanetNum; i++) {
+		s->insert(std::make_shared<SpawnArea>(mCenter, 50));
+
+		for (unsigned i = 0; i < mPlanets; i++) {
 			mBuilder->buildPlanet();
 			mBuilder->buildMountains();
 			mBuilder->buildBunkers();
 			mBuilder->buildFuelTanks();
 
 			auto p = mBuilder->getPlanet();
-			mLayout(p, i + 1);
+			mLayout->operator()(p, i);
 
 			s->insert(p);
 		}
 
-		return s;
+		return std::make_shared<SolarSystemScene>(2 * mCenter, s);
 	}
 }

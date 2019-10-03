@@ -37,7 +37,7 @@ namespace gvt {
 			void onCollision (PairCollisionEvent e) override;
 			void onSpaceshipDestroyed (shared_ptr<Spaceship> ship) override;
 		public:
-			explicit SolarSystemScene (shared_ptr<SolarSystem> const &system);
+			SolarSystemScene(Vectord size, shared_ptr<SolarSystem> &system);
 
 			shared_ptr<SolarSystem> solarSystem() const;
 	};

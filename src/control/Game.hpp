@@ -29,7 +29,7 @@
 #include <SFML/Graphics.hpp>
 #include "GameInfo.hpp"
 #include "Scene.hpp"
-#include "RandomSSFactory.hpp"
+#include "SolarSystemSceneBuilder.hpp"
 #include "shape/Spaceship.hpp"
 #include "shape-group/ShapeGroup.hpp"
 #include "view/GameInfoView.hpp"
@@ -69,11 +69,6 @@ namespace gvt {
 			shared_ptr<Scene> mCurrScene;
 			std::stack<shared_ptr<Scene>> mSceneStack;
 			shared_ptr<SceneFrame> mSceneFrame;
-			RandomSSFactory mSSFactory{
-				std::make_shared<RandomPlanetBuilder>(
-						Vectord{30, 50}, 30, 5, 2
-				), 8
-			};
 
 			sf::Clock mClock;
 			EventDispatcher<sf::Event> mViewEvents;
@@ -118,7 +113,6 @@ namespace gvt {
 			 * @return Thew @c Scene that should be currently displayed.
 			 */
 			inline shared_ptr<Scene> currentScene();
-			inline RandomSSFactory& solarSystemFactory();
 
 			EventDispatcher<sf::Event>& viewEventsDispatcher();
 
@@ -195,10 +189,6 @@ namespace gvt {
 
 	shared_ptr<Scene> Game::currentScene() {
 		return mCurrScene;
-	}
-
-	RandomSSFactory& Game::solarSystemFactory() {
-		return mSSFactory;
 	}
 
 

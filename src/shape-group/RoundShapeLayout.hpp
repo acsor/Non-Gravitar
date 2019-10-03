@@ -39,7 +39,7 @@ namespace gvt {
 		public:
 			RoundShapeLayout (Vectord center, double radius, unsigned shapesNum);
 
-			Vectord center() const;
+			inline Vectord center() const;
 			Vectord operator() (shared_ptr<Shape>, unsigned) override;
 	};
 }

@@ -151,7 +151,7 @@ target_link_libraries(GameInfoView GameInfo SpaceshipView)
 # Game and scenes section
 add_library(Game "${DIR_CONTROL}/Game.cpp")
 target_link_libraries(
-		Game Spaceship GameInfoView SolarSystemScene RandomSSFactory
+		Game Spaceship GameInfoView SolarSystemScene SolarSystemSceneBuilder
 )
 
 add_library(GameInfo "${DIR_CONTROL}/GameInfo.cpp")
@@ -166,9 +166,9 @@ target_link_libraries(SolarSystemScene SolarSystem PlanetSurfaceScene)
 add_library(PlanetSurfaceScene "${DIR_CONTROL}/PlanetSurfaceScene.cpp")
 target_link_libraries(PlanetSurfaceScene Scene PlanetSurface MountainChain)
 
-add_library(RandomSSFactory "${DIR_CONTROL}/RandomSSFactory.cpp")
+add_library(SolarSystemSceneBuilder "${DIR_CONTROL}/SolarSystemSceneBuilder.cpp")
 target_link_libraries(
-		RandomSSFactory SolarSystem PlanetBuilder RoundShapeLayout
+		SolarSystemSceneBuilder SolarSystem PlanetBuilder RoundShapeLayout
 )
 
 

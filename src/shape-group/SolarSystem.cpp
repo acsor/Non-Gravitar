@@ -28,11 +28,6 @@ namespace gvt {
 	void SolarSystem::onInsertShape (shared_ptr<Shape> shape) {
 		CollisionGroup::onInsertShape(shape);
 
-		auto const pos = shape->position();
-
-		mWidth = std::max(mWidth, pos.x + shape->width());
-		mHeight = std::max(mHeight, pos.y + shape->height());
-
 		if (auto planet = std::dynamic_pointer_cast<Planet>(shape)) {
 			mPlanets.push_front(planet);
 		} else if (auto area = std::dynamic_pointer_cast<SpawnArea>(shape)) {
