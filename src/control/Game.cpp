@@ -229,18 +229,18 @@ namespace gvt {
 					mBeamOn = !mBeamOn;
 
 					if (mBeamOn) {
-						mGame->currentScene()->shapes()->insert(
+						mGame->currentScene()->shapeGroup()->insert(
 								mShip->tractorBeam()
 						);
 					} else {
-						mGame->currentScene()->shapes()->remove(
+						mGame->currentScene()->shapeGroup()->remove(
 								mShip->tractorBeam()
 						);
 					}
 
 					break;
 				case (sf::Keyboard::Key::Space):
-					mGame->currentScene()->shapes()->insert(
+					mGame->currentScene()->shapeGroup()->insert(
 							mShip->shoot(6, 700, 2000)
 					);
 					break;

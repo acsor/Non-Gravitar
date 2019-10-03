@@ -38,7 +38,10 @@ namespace gvt {
 			void onSpaceshipDestroyed (shared_ptr<Spaceship> ship) override;
 		public:
 			explicit SolarSystemScene (shared_ptr<SolarSystem> const &system);
+
+			shared_ptr<SolarSystem> solarSystem() const;
 	};
 }
+
 
 #endif

@@ -94,14 +94,14 @@ namespace gvt {
 			 */
 			virtual void onUpdateGame (double seconds);
 
-			inline shared_ptr<ShapeGroup> shapes();
+			inline shared_ptr<ShapeGroup> shapeGroup();
 			inline Vectord size() const;
 	};
 }
 
 
 namespace gvt {
-	shared_ptr<ShapeGroup> Scene::shapes() {
+	shared_ptr<ShapeGroup> Scene::shapeGroup() {
 		return mShapes;
 	}
 

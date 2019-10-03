@@ -63,5 +63,8 @@ namespace gvt {
 
 	SolarSystemScene::SolarSystemScene (shared_ptr<SolarSystem> const &system):
 			Scene({system->width(), system->height()}, system) {
+
+	shared_ptr<SolarSystem> SolarSystemScene::solarSystem() const {
+		return std::dynamic_pointer_cast<SolarSystem>(mShapes);
 	}
 }

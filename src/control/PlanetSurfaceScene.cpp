@@ -35,7 +35,7 @@ namespace gvt {
 		);
 
 		// game->currentScene() will be a SolarSystemScene
-		game->currentScene()->shapes()->insert(ship);
+		game->currentScene()->shapeGroup()->insert(ship);
 	}
 
 	void PlanetSurfaceScene::onExitBoundaries(shared_ptr<Spaceship> ship) {
