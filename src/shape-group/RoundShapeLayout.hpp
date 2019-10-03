@@ -28,7 +28,6 @@
 namespace gvt {
 	/**
 	 * A shape layout capable of arranging its shapes around a circumference.
-	 * The position at index @c 0 is by convention the center of this circle.
 	 * This layout has a predetermined number of cells, exceeding which
 	 * causes an exception to be thrown.
 	 */
@@ -39,8 +38,18 @@ namespace gvt {
 			unsigned mShapesNum;
 		public:
 			RoundShapeLayout (Vectord center, double radius, unsigned shapesNum);
+
+			Vectord center() const;
 			Vectord operator() (shared_ptr<Shape>, unsigned) override;
 	};
 }
+
+
+namespace gvt {
+	Vectord RoundShapeLayout::center() const {
+		return mCenter;
+	}
+}
+
 
 #endif

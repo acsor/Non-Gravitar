@@ -24,25 +24,24 @@
 
 
 namespace gvt {
-	RoundShapeLayout::RoundShapeLayout (Vectord center, double radius, unsigned shapesNum):
-		mCenter{center}, mRadius{radius}, mShapesNum{shapesNum} {
+	RoundShapeLayout::RoundShapeLayout (
+			Vectord center, double radius, unsigned shapesNum
+	): mCenter{center}, mRadius{radius}, mShapesNum{shapesNum} {
 		mFactor = 2 * M_PI / shapesNum;
 	}
 
 	Vectord RoundShapeLayout::operator() (shared_ptr<Shape> shape, unsigned pos) {
-		Vectord retval;
+		Vectord retpos;
 		auto shapeCenter = Vectord{shape->width(), shape->height()} / 2.0;
 
 		if (pos > mShapesNum) {
 			throw std::domain_error("Layout position index exceeded");
-		} else if (pos == 0) {
-			retval = mCenter - shapeCenter;
 		} else {
-			retval = mCenter + mRadius * Vectord(mFactor * pos) - shapeCenter;
+			retpos = mCenter + mRadius * Vectord(mFactor * pos) - shapeCenter;
 		}
 
-		shape->position(retval);
+		shape->position(retpos);
 
-		return retval;
+		return retpos;
 	}
 }
