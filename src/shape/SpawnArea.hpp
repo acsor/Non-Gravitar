@@ -29,6 +29,8 @@ namespace gvt {
 	/**
 	 * @c SpawnArea represents an area in the game (typically in a solar
 	 * system) where the spaceship can be regenerated after a loss.
+	 *
+	 * The position vector of @c SpawnArea is its own (absolute) center.
 	 */
 	class SpawnArea: public CRPolygon {
 		public:

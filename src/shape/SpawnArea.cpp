@@ -28,9 +28,9 @@ namespace gvt {
 	}
 
 	void SpawnArea::centerShape(Shape &shape) const {
-		auto areaCenter = Vectord{mRadius, mRadius};
+		auto shapeCenter = Vectord{shape.width(), shape.height()} / 2.0;
 
-		shape.position(mPosition);
+		shape.position(mPosition - shapeCenter);
 	}
 
 	void SpawnArea::centerShape(shared_ptr<Shape> shape) const {
