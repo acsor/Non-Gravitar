@@ -151,8 +151,12 @@ target_link_libraries(GameInfoView GameInfo SpaceshipView)
 # Game and scenes section
 add_library(Game "${DIR_CONTROL}/Game.cpp")
 target_link_libraries(
-		Game Spaceship GameInfoView SolarSystemScene SolarSystemSceneBuilder
+		Game SceneFrame Spaceship GameInfoView SolarSystemScene
+		SolarSystemSceneBuilder
 )
+
+add_library(SceneFrame "${DIR_CONTROL}/SceneFrame.cpp")
+target_link_libraries(SceneFrame Game Spaceship)
 
 add_library(GameInfo "${DIR_CONTROL}/GameInfo.cpp")
 target_link_libraries(GameInfo SpaceshipView)

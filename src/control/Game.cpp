@@ -141,6 +141,7 @@ namespace gvt {
 		auto targetSize = target.getSize();
 		sf::View infoFrame;
 
+		// TODO Optimize -- move infoFrame into a member variable
 		infoFrame.setSize(targetSize.x, .2f * targetSize.y);
 		infoFrame.setCenter(.5f * targetSize.x, .1f * targetSize.y);
 		infoFrame.setViewport({0, 0, 1, .2});
@@ -149,55 +150,6 @@ namespace gvt {
 
 		target.setView(mSceneFrame->sceneView());
 		target.draw(*mCurrScene, states);
-	}
-
-
-	// SceneFrame class section
-	void SceneFrame::onWindowResized(sf::Event e) {
-		if (e.type == sf::Event::Resized) {
-			auto windowSize = Vectord(e.size.width, 0.8 * e.size.height);
-
-			mView.setSize(windowSize.x, windowSize.y);
-
-			mMin = windowSize / 2.0;
-			mMax = mGame->currentScene()->size() - mMin;
-		}
-	}
-
-	void SceneFrame::onSceneChanged(SceneChangeEvent e) {
-		mMax = e.newScene->size() - mMin;
-	}
-
-	void SceneFrame::onShipMoved (PositionEvent e) {
-		auto position = mShip->position() + mShip->rotationCenter();
-
-		position.x = std::max(mMin.x, position.x);
-		position.x = std::min(mMax.x, position.x);
-		position.y = std::max(mMin.y, position.y);
-		position.y = std::min(mMax.y, position.y);
-
-		mView.setCenter(position.x, position.y);
-	}
-
-	SceneFrame::SceneFrame(Game *game, shared_ptr<Spaceship> ship):
-			mGame{game}, mShip{std::move(ship)} {
-		mView.setViewport({0.0, 0.2, 1, 0.8});
-
-		mResizeCbk = mGame->viewEventsDispatcher().addCallback(
-			[this] (sf::Event e) -> void { onWindowResized(e); }
-		);
-		mSceneCbk = mGame->addCallback(
-			[this] (SceneChangeEvent e) -> void { onSceneChanged (e); }
-		);
-		mShipCbk = mShip->positionDispatcher().addCallback(
-			[this] (PositionEvent e) -> void { onShipMoved (e); }
-		);
-	}
-
-	SceneFrame::~SceneFrame() {
-		mGame->viewEventsDispatcher().removeCallback(mResizeCbk);
-		mGame->removeCallback(mSceneCbk);
-		mShip->positionDispatcher().removeCallback(mShipCbk);
 	}
 
 

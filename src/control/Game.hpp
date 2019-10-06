@@ -29,6 +29,7 @@
 #include <SFML/Graphics.hpp>
 #include "GameInfo.hpp"
 #include "Scene.hpp"
+#include "SceneFrame.hpp"
 #include "SolarSystemSceneBuilder.hpp"
 #include "shape/Spaceship.hpp"
 #include "shape-group/ShapeGroup.hpp"
@@ -37,8 +38,6 @@
 
 
 namespace gvt {
-	class SceneFrame;
-
 	/**
 	 * Event issued when a new @c Scene is pushed/popped out of the game.
 	 */
@@ -125,38 +124,6 @@ namespace gvt {
 	};
 
 	/**
-	 * Wrapper class responsible for managing the sf::View instance into
-	 * which the current Game scene is shown, performing operations like
-	 * resizing and recentering.
-	 */
-	class SceneFrame {
-		private:
-			Game *mGame;
-			sf::View mView;
-			// Variables representing the min and max values mView center
-			// point can assume
-			Vectord mMin, mMax;
-			shared_ptr<Spaceship> mShip;
-
-			shared_ptr<Callback<sf::Event>> mResizeCbk;
-			shared_ptr<Callback<SceneChangeEvent>> mSceneCbk;
-			shared_ptr<Callback<PositionEvent>> mShipCbk;
-
-			void onWindowResized(sf::Event e);
-			void onSceneChanged(SceneChangeEvent e);
-			void onShipMoved (PositionEvent e);
-		public:
-			SceneFrame(Game *game, shared_ptr<Spaceship> ship);
-			~SceneFrame ();
-
-			/**
-			 * @return The @c sf::View instance inside which the current @c
-			 * Scene is displayed.
-			 */
-			inline sf::View& sceneView();
-	};
-
-	/**
 	 * Moves the given @c Spaceship instance as key events from the view
 	 * library arise.
 	 */
@@ -189,11 +156,6 @@ namespace gvt {
 
 	shared_ptr<Scene> Game::currentScene() {
 		return mCurrScene;
-	}
-
-
-	sf::View& SceneFrame::sceneView() {
-		return mView;
 	}
 }
 
