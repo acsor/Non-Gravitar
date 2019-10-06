@@ -28,7 +28,7 @@ namespace gvt {
 		if (e.type == sf::Event::Resized) {
 			auto windowSize = Vectord(e.size.width, 0.8 * e.size.height);
 
-			mView.setSize(windowSize.x, windowSize.y);
+			setSize(windowSize.x, windowSize.y);
 
 			mMin = windowSize / 2.0;
 			mMax = mGame->currentScene()->size() - mMin;
@@ -47,12 +47,12 @@ namespace gvt {
 		position.y = std::max(mMin.y, position.y);
 		position.y = std::min(mMax.y, position.y);
 
-		mView.setCenter(position.x, position.y);
+		setCenter(position.x, position.y);
 	}
 
 	SceneFrame::SceneFrame(Game *game, shared_ptr<Spaceship> ship):
 			mGame{game}, mShip{std::move(ship)} {
-		mView.setViewport({0.0, 0.2, 1, 0.8});
+		setViewport({0.0, 0.2, 1, 0.8});
 
 		mResizeCbk = mGame->viewEventsDispatcher().addCallback(
 				[this] (sf::Event e) -> void { onWindowResized(e); }

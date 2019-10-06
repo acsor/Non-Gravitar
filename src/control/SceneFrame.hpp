@@ -38,10 +38,9 @@ namespace gvt {
 	 * which the current Game scene is shown, performing operations like
 	 * resizing and recentering.
 	 */
-	class SceneFrame {
+	class SceneFrame: public sf::View {
 		private:
 			Game *mGame;
-			sf::View mView;
 			// Variables representing the min and max values mView center
 			// point can assume
 			Vectord mMin, mMax;
@@ -57,20 +56,7 @@ namespace gvt {
 		public:
 			SceneFrame(Game *game, shared_ptr<Spaceship> ship);
 			~SceneFrame ();
-
-			/**
-			 * @return The @c sf::View instance inside which the current @c
-			 * Scene is displayed.
-			 */
-			inline sf::View& sceneView();
 	};
-}
-
-
-namespace gvt {
-	sf::View& SceneFrame::sceneView() {
-		return mView;
-	}
 }
 
 

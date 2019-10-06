@@ -148,7 +148,7 @@ namespace gvt {
 		target.setView(infoFrame);
 		target.draw(*mInfoView, states);
 
-		target.setView(mSceneFrame->sceneView());
+		target.setView(*mSceneFrame);
 		target.draw(*mCurrScene, states);
 	}
 
