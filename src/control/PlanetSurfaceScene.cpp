@@ -30,10 +30,6 @@ namespace gvt {
 		auto ship = game->acquireSpaceship();
 
 		game->popScene();
-		ship->position(
-			mPlanet->position() + mPlanet->rotationCenter() - Vectord{0, 100}
-		);
-
 		// game->currentScene() will be a SolarSystemScene
 		game->currentScene()->shapeGroup()->insert(ship);
 	}

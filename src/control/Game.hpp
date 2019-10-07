@@ -61,8 +61,6 @@ namespace gvt {
 			shared_ptr<GameInfo> mInfo;
 			shared_ptr<GameInfoView> mInfoView;
 
-			// By virtue of the fact that Game is a singleton instance, mShip
-			// is too
 			shared_ptr<Spaceship> mShip;
 
 			shared_ptr<Scene> mCurrScene;

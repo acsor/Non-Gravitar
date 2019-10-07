@@ -61,9 +61,41 @@ namespace gvt {
 		}
 	}
 
+	void SolarSystemScene::onSceneChanged (SceneChangeEvent e) {
+		auto planetScene = std::dynamic_pointer_cast<PlanetSurfaceScene>(
+				e.oldScene
+		);
+		auto systemScene = std::dynamic_pointer_cast<SolarSystemScene>(
+				e.newScene
+		);
+
+		// If we are transitioning from a planet surface scene back to the
+		// starting solar system scene:
+		if (planetScene && systemScene) {
+			auto ship = Game::getInstance()->spaceship();
+			auto planetCenter = planetScene->planet()->position();
+			auto spawnAreaCenter = mSystem->spawnArea()->position();
+			auto diff = spawnAreaCenter - planetCenter;
+
+			diff.normalize();
+			diff = (planetScene->planet()->radius() + ship->height()) * diff;
+
+			ship->position(planetCenter - ship->rotationCenter() + diff);
+			ship->rotation(diff.angle() + M_PI / 2.0);
+			ship->velocity(ship->speed() * Vectord(diff.angle()));
+		}
+	}
+
 	SolarSystemScene::SolarSystemScene(
 			Vectord size, shared_ptr<SolarSystem> &system
-	): Scene(size, system) {
+	): Scene(size, system), mSystem{std::move(system)} {
+		mSceneCbk = Game::getInstance()->addCallback(
+			[this] (SceneChangeEvent e) -> void { onSceneChanged(e); }
+		);
+	}
+
+	SolarSystemScene::~SolarSystemScene() {
+		Game::getInstance()->removeCallback(mSceneCbk);
 	}
 
 	shared_ptr<SolarSystem> SolarSystemScene::solarSystem() const {

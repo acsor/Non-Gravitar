@@ -55,7 +55,19 @@ namespace gvt {
 			explicit PlanetSurfaceScene(shared_ptr<Planet> const &planet);
 
 			void onUpdateGame (double seconds) override;
+
+			/**
+			 * @return The planet this scene is a representation for.
+			 */
+			inline shared_ptr<Planet> planet() const;
 	};
+}
+
+
+namespace gvt {
+	shared_ptr<Planet> PlanetSurfaceScene::planet() const {
+		return mPlanet;
+	}
 }
 
 
