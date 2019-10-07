@@ -23,6 +23,7 @@
 #include "utils/Utils.hpp"
 #include "Game.hpp"
 #include "SolarSystemScene.hpp"
+#include "MoveShipCallback.hpp"
 
 
 namespace gvt {
@@ -150,59 +151,5 @@ namespace gvt {
 
 		target.setView(*mSceneFrame);
 		target.draw(*mCurrScene, states);
-	}
-
-
-	// MoveShipCallback class section
-	MoveShipCallback::MoveShipCallback (
-			Game *game, shared_ptr<Spaceship> ship, double accel, double angle
-	): mGame{game}, mShip(std::move(ship)) {
-		mAccelStep = accel;
-		mAngleStep = angle;
-	}
-
-	void MoveShipCallback::operator() (sf::Event e) {
-		auto accelIncrement = mAccelStep * Vectord(mShip->rotation());
-		accelIncrement.rotate(M_PI / -2.0);
-
-		if (e.type == sf::Event::KeyPressed) {
-			switch (e.key.code) {
-				case (sf::Keyboard::Key::A):
-					mShip->rotate(-mAngleStep);
-					break;
-				case (sf::Keyboard::Key::W):
-					mShip->acceleration(accelIncrement);
-					mShip->dischargeFuel(1);
-					break;
-				case (sf::Keyboard::Key::D):
-					mShip->rotate(mAngleStep);
-					break;
-				case (sf::Keyboard::Key::K):
-					mBeamOn = !mBeamOn;
-
-					if (mBeamOn) {
-						mGame->currentScene()->shapeGroup()->insert(
-								mShip->tractorBeam()
-						);
-					} else {
-						mGame->currentScene()->shapeGroup()->remove(
-								mShip->tractorBeam()
-						);
-					}
-
-					break;
-				case (sf::Keyboard::Key::Space):
-					mGame->currentScene()->shapeGroup()->insert(
-							mShip->shoot(6, 700, 2000)
-					);
-					break;
-				default:
-					break;
-			}
-		} else if (e.type == sf::Event::KeyReleased) {
-			if (e.key.code == sf::Keyboard::Key::W) {
-				mShip->acceleration(Vectord{0, 0});
-			}
-		}
 	}
 }

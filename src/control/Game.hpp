@@ -122,30 +122,6 @@ namespace gvt {
 				sf::RenderTarget &target, sf::RenderStates states
 			) const override;
 	};
-
-	/**
-	 * Moves the given @c Spaceship instance as key events from the view
-	 * library arise.
-	 */
-	class MoveShipCallback {
-		private:
-			Game *mGame;
-			shared_ptr<Spaceship> mShip;
-			/**
-			 * @c true if the spaceship is currently emitting its tractor
-			 * beam, @c false otherwise.
-			 */
-			bool mBeamOn{false};
-
-			double mAngleStep, mAccelStep;
-		public:
-			MoveShipCallback (
-				Game *game, shared_ptr<Spaceship> ship, double accel,
-				double angle
-			);
-
-			void operator() (sf::Event e);
-	};
 }
 
 
