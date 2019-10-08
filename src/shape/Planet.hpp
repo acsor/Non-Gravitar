@@ -56,6 +56,7 @@ namespace gvt {
 			 */
 			inline unsigned bonus() const;
 
+			bool destroyed() const override;
 			void accept (ShapeVisitor &visitor) override;
 			bool operator== (Shape const &o) const override;
 	};

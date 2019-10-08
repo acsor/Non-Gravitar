@@ -50,9 +50,10 @@ namespace gvt {
 
 	void SolarSystemScene::onShapeDestroyed (shared_ptr<Shape> shape) {
 		Scene::onShapeDestroyed(shape);
+		auto info = mGame->gameInfo();
 
 		if (auto ship = std::dynamic_pointer_cast<Spaceship>(shape)) {
-			if (mGame->gameInfo()->spaceships() > 0) {
+			if (info->spaceships() > 0) {
 				shape->position({0, 0});
 				shape->velocity({0, 0});
 				shape->rotation(M_PI / 2.0);
@@ -60,6 +61,8 @@ namespace gvt {
 
 				mShapes->insert(ship);
 			}
+		} else if (auto planet = std::dynamic_pointer_cast<Planet>(shape)) {
+			info->upgradeScore(planet->bonus());
 		}
 	}
 
