@@ -36,13 +36,11 @@ namespace gvt {
 			unsigned fuelTanks
 	): mRadius{radiusRange.x, radiusRange.y}, mMountainPieces{mountainPieces},
 	   mBunkers{bunkers}, mTanks{fuelTanks} {
-		mTaken.resize(mountainPieces);
 	}
 
 	void RandomPlanetBuilder::buildPlanet() {
 		mPlanet.reset(new Planet({0, 0}, mRadius()));
 
-		mTaken.assign(mTaken.size(), false);
 		mPlanet->surface(std::make_shared<PlanetSurface>());
 		mPlanet->bonus(1000 * mBonus());
 	}
@@ -50,6 +48,10 @@ namespace gvt {
 	void RandomPlanetBuilder::buildMountains() {
 		mPlanet->surface()->insert(
 				MountainChain::randomChain({0, 1200}, mMountainPieces)
+		);
+
+		mTaken = std::vector<bool>(
+				mPlanet->surface()->mountains()->size() - 2, false
 		);
 	}
 
