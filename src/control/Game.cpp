@@ -61,7 +61,7 @@ namespace gvt {
 		mSceneFrame.reset(new SceneFrame(this, mShip));
 
 		mInfo.reset(new GameInfo(0, 3));
-		mInfoView.reset(new GameInfoView(mInfo, mShip));
+		mInfoView.reset(new GameInfoView(this, mShip));
 
 		mShip->positionDispatcher().addCallback(
 			[this] (PositionEvent e) -> void { onShipMoved(e); }

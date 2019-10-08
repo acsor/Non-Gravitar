@@ -23,6 +23,7 @@
 #define NON_GRAVITAR_GAME_INFO_VIEW_HPP
 
 #include <SFML/Graphics.hpp>
+#include <utils/Utils.hpp>
 #include "control/GameInfo.hpp"
 #include "shape/Spaceship.hpp"
 #include "GraphicAssets.hpp"
@@ -35,6 +36,7 @@ namespace gvt {
 		private:
 			static constexpr const unsigned SHIP_MARGIN = 10;
 
+			Game *mGame;
 			shared_ptr<GameInfo> mInfo;
 			shared_ptr<Spaceship> mShip;
 			GraphicAssets *mAssets;
@@ -49,6 +51,12 @@ namespace gvt {
 			static const sf::Color TEXT_COLOR;
 
 			void updateText();
+			/**
+			 * @return A text signaling the destruction of all bunkers in a
+			 * given planet if they have been effectively destroyed, or an empty
+			 * string otherwise.
+			 */
+			string missionCompleteText();
 			void updateShips();
 
 			void onFuelChanged (FuelEvent e);
@@ -57,9 +65,7 @@ namespace gvt {
 		protected:
 			void draw (sf::RenderTarget &t, sf::RenderStates s) const override;
 		public:
-			GameInfoView (
-					shared_ptr<GameInfo> gameInfo, shared_ptr<Spaceship> ship
-			);
+			GameInfoView (Game *game, shared_ptr<Spaceship> ship);
 			~GameInfoView () override;
 	};
 }

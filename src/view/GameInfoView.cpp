@@ -20,6 +20,7 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 #include "control/Game.hpp"
+#include "control/PlanetSurfaceScene.hpp"
 #include "GameInfoView.hpp"
 #include "utils/Utils.hpp"
 
@@ -30,11 +31,26 @@ namespace gvt {
 	void GameInfoView::updateText() {
 		mText.setString(
 			"SCORE " + std::to_string(mInfo->score()) +
-			"\nFUEL " + std::to_string(mShip->fuel())
+			"\nFUEL " + std::to_string(mShip->fuel()) +
+			missionCompleteText()
 		);
 		auto const bounds = mText.getLocalBounds();
 
 		mText.setOrigin(bounds.width / 2.0f, 0);
+	}
+
+	string GameInfoView::missionCompleteText() {
+		auto planetScene = std::dynamic_pointer_cast<PlanetSurfaceScene>(
+			mGame->currentScene()
+		);
+
+		if (planetScene) {
+			if (planetScene->planet()->destroyed()) {
+				return "\nMISSION COMPLETE";
+			}
+		}
+
+		return "";
 	}
 
 	void GameInfoView::updateShips() {
@@ -92,9 +108,8 @@ namespace gvt {
 		t.draw(mText, s);
 	}
 
-	GameInfoView::GameInfoView (
-		shared_ptr<GameInfo> gameInfo, shared_ptr<Spaceship> ship
-	): mInfo{std::move(gameInfo)}, mShip{std::move(ship)} {
+	GameInfoView::GameInfoView (Game *game, shared_ptr<Spaceship> ship):
+			mGame{game}, mInfo{game->gameInfo()}, mShip{std::move(ship)} {
 		mAssets = GraphicAssets::getInstance();
 
 		mFuelCbk = mShip->fuelDispatcher().addCallback(
