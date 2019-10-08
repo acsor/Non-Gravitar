@@ -48,16 +48,18 @@ namespace gvt {
 		}
 	}
 
-	void SolarSystemScene::onSpaceshipDestroyed (shared_ptr<Spaceship> ship) {
-		Scene::onSpaceshipDestroyed(ship);
+	void SolarSystemScene::onShapeDestroyed (shared_ptr<Shape> shape) {
+		Scene::onShapeDestroyed(shape);
 
-		if (mGame->gameInfo()->spaceships() > 0) {
-			ship->position({0, 0});
-			ship->velocity({0, 0});
-			ship->rotation(M_PI / 2.0);
-			ship->destroyed(false);
+		if (auto ship = std::dynamic_pointer_cast<Spaceship>(shape)) {
+			if (mGame->gameInfo()->spaceships() > 0) {
+				shape->position({0, 0});
+				shape->velocity({0, 0});
+				shape->rotation(M_PI / 2.0);
+				shape->destroyed(false);
 
-			mShapes->insert(ship);
+				mShapes->insert(ship);
+			}
 		}
 	}
 

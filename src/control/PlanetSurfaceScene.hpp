@@ -48,7 +48,7 @@ namespace gvt {
 			void exitPlanet();
 
 			void onExitBoundaries(shared_ptr<Spaceship> ship) override;
-			void onSpaceshipDestroyed (shared_ptr<Spaceship> ship) override;
+			void onShapeDestroyed (shared_ptr<Shape> shape) override;
 
 			explicit PlanetSurfaceScene(shared_ptr<PlanetSurface> const &s);
 		public:

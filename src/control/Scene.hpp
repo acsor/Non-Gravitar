@@ -78,8 +78,16 @@ namespace gvt {
 			virtual void onCollision (PairCollisionEvent e);
 			void onFuelChanged (FuelEvent e);
 
+			/**
+			 * Invoked when a shape is removed, but not yet (logically)
+			 * destroyed from the shape group this scene is related to.
+			 */
 			void onShapeRemoved (ShapeRemovalEvent e);
-			virtual void onSpaceshipDestroyed (shared_ptr<Spaceship> ship);
+			/**
+			 * Invoked when @c shape is both removed and destroyed from the
+			 * respective shape group of this scene.
+			 */
+			virtual void onShapeDestroyed (shared_ptr<Shape> shape);
 			/**
 			 * Called when the game spaceship exits the active scene boundaries.
 			 */

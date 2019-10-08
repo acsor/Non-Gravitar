@@ -40,7 +40,7 @@ namespace gvt {
 			shared_ptr<Callback<SceneChangeEvent>> mSceneCbk;
 
 			void onCollision (PairCollisionEvent e) override;
-			void onSpaceshipDestroyed (shared_ptr<Spaceship> ship) override;
+			void onShapeDestroyed (shared_ptr<Shape> shape) override;
 			void onSceneChanged (SceneChangeEvent e);
 		public:
 			SolarSystemScene(Vectord size, shared_ptr<SolarSystem> &system);
