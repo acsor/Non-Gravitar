@@ -24,6 +24,7 @@
 
 #include <SFML/Graphics.hpp>
 #include "shape/Spaceship.hpp"
+#include "Scene.hpp"
 
 
 namespace gvt {
@@ -38,10 +39,14 @@ namespace gvt {
 			Game *mGame;
 			shared_ptr<Spaceship> mShip;
 			/**
-			 * @c true if the spaceship is currently emitting its tractor
-			 * beam, @c false otherwise.
+			 * @c mLastScene holds a pointer to the last scene where the
+			 * spaceship tractor beam was inserted. It acts as a boolean
+			 * variable indicating whether the tractor beam is already on,
+			 * and permits the tractor beam removal when transitioning from an
+			 * old scene to a newer one, where the user command to power it off
+			 * is issued.
 			 */
-			bool mBeamOn{false};
+			shared_ptr<Scene> mLastScene;
 
 			double mAngleStep, mAccelStep;
 		public:

@@ -48,18 +48,10 @@ namespace gvt {
 					mShip->rotate(mAngleStep);
 					break;
 				case (sf::Keyboard::Key::K):
-					mBeamOn = !mBeamOn;
-
-					if (mBeamOn) {
-						mGame->currentScene()->shapeGroup()->insert(
-								mShip->tractorBeam()
-						);
-					} else {
-						mGame->currentScene()->shapeGroup()->remove(
-								mShip->tractorBeam()
-						);
+					if (!mLastScene) {
+						mLastScene = mGame->currentScene();
+						mLastScene->shapeGroup()->insert(mShip->tractorBeam());
 					}
-
 					break;
 				case (sf::Keyboard::Key::Space):
 					mGame->currentScene()->shapeGroup()->insert(
@@ -70,8 +62,18 @@ namespace gvt {
 					break;
 			}
 		} else if (e.type == sf::Event::KeyReleased) {
-			if (e.key.code == sf::Keyboard::Key::W) {
-				mShip->acceleration(Vectord{0, 0});
+			switch (e.key.code) {
+				case sf::Keyboard::Key::W:
+					mShip->acceleration(Vectord{0, 0});
+					break;
+				case sf::Keyboard::Key::K:
+					if (mLastScene) {
+						mLastScene->shapeGroup()->remove(mShip->tractorBeam());
+						mLastScene = nullptr;
+					}
+					break;
+				default:
+					break;
 			}
 		}
 	}
