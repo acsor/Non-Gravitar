@@ -22,7 +22,6 @@
 #include <SFML/Graphics.hpp>
 #include "utils/Utils.hpp"
 #include "Game.hpp"
-#include "SolarSystemScene.hpp"
 #include "MoveShipCallback.hpp"
 
 
@@ -58,7 +57,9 @@ namespace gvt {
 
 	Game::Game () {
 		mShip.reset(new Spaceship(Vectord{0, 0}, 50));
+
 		mSceneFrame.reset(new SceneFrame(this, mShip));
+		mInfoFrame.setViewport({0, 0, 1, .2});
 
 		mInfo.reset(new GameInfo(0, 3));
 		mInfoView.reset(new GameInfoView(this, mShip));
@@ -140,13 +141,10 @@ namespace gvt {
 
 	void Game::draw(sf::RenderTarget &target, sf::RenderStates states) const {
 		auto targetSize = target.getSize();
-		sf::View infoFrame;
 
-		// TODO Optimize -- move infoFrame into a member variable
-		infoFrame.setSize(targetSize.x, .2f * targetSize.y);
-		infoFrame.setCenter(.5f * targetSize.x, .1f * targetSize.y);
-		infoFrame.setViewport({0, 0, 1, .2});
-		target.setView(infoFrame);
+		mInfoFrame.setSize(targetSize.x, .2f * targetSize.y);
+		mInfoFrame.setCenter(.5f * targetSize.x, .1f * targetSize.y);
+		target.setView(mInfoFrame);
 		target.draw(*mInfoView, states);
 
 		target.setView(*mSceneFrame);

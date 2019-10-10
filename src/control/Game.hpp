@@ -65,7 +65,9 @@ namespace gvt {
 
 			shared_ptr<Scene> mCurrScene;
 			std::stack<shared_ptr<Scene>> mSceneStack;
+
 			shared_ptr<SceneFrame> mSceneFrame;
+			mutable sf::View mInfoFrame;
 
 			sf::Clock mClock;
 			EventDispatcher<sf::Event> mViewEvents;
