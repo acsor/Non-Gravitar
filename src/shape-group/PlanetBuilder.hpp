@@ -49,7 +49,7 @@ namespace gvt {
 	class RandomPlanetBuilder: public PlanetBuilder {
 		private:
 			UniRandom<double> mRadius;
-			UniRandom<unsigned> mBonus {0, 8};
+			UniRandom<unsigned> mBonus {1, 5};
 			unsigned const mMountainPieces, mBunkers, mTanks;
 
 			std::vector<bool> mTaken;

@@ -39,7 +39,7 @@ int main () {
 
 	auto game = gvt::Game::getInstance();
 	auto centerPos = gvt::Vectord({1000, 700});
-	unsigned planetsNum = 8;
+	unsigned planetsNum = 5;
 	auto ssBuilder = gvt::SolarSystemSceneBuilder().
 			centerPosition(centerPos).
 			planetsNumber(planetsNum).

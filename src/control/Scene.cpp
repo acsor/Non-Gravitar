@@ -128,7 +128,7 @@ namespace gvt {
 		} else if (auto f = std::dynamic_pointer_cast<Fuel>(shape)) {
 			mGame->spaceship()->rechargeFuel(*f);
 		} else if (
-				auto s = std::dynamic_pointer_cast<Spaceship>(shape) &&
+				std::dynamic_pointer_cast<Spaceship>(shape) &&
 				mGame->gameInfo()->spaceships() > 0
 		) {
 			mGame->gameInfo()->decrementSpaceships();
