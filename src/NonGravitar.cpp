@@ -25,7 +25,6 @@
 #include <SFML/Window.hpp>
 #include "shape-group/GridShapeLayout.hpp"
 #include "control/Game.hpp"
-#include "control/SolarSystemScene.hpp"
 #include "control/SolarSystemSceneBuilder.hpp"
 
 

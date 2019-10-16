@@ -67,17 +67,17 @@ namespace gvt {
 		mShip->positionDispatcher().addCallback(
 			[this] (PositionEvent e) -> void { onShipMoved(e); }
 		);
-		mViewEvents.addCallback(
+		mViewDisp.addCallback(
 			MoveShipCallback(this, mShip, 150.0, deg2rad(10))
 		);
-		mViewEvents.addCallback(
+		mViewDisp.addCallback(
 			[this] (sf::Event e) -> void { toggleDebug(e); }
 		);
 	}
 
 	Game::~Game () {
 		mShip->positionDispatcher().clearCallbacks();
-		mViewEvents.clearCallbacks();
+		mViewDisp.clearCallbacks();
 	}
 
 	Game* Game::getInstance () {
@@ -116,7 +116,7 @@ namespace gvt {
 		mCurrScene = std::move(scene);
 		mSceneStack.push(mCurrScene);
 
-		raiseEvent(e);
+		mSceneDisp.raiseEvent(e);
 	}
 
 	shared_ptr<Scene> Game::popScene () {
@@ -129,14 +129,14 @@ namespace gvt {
 			mCurrScene = mSceneStack.top();
 
 			e.newScene = mCurrScene;
-			raiseEvent(e);
+			mSceneDisp.raiseEvent(e);
 		}
 
 		return mCurrScene;
 	}
 
 	EventDispatcher<sf::Event>& Game::viewEventsDispatcher() {
-		return mViewEvents;
+		return mViewDisp;
 	}
 
 	void Game::draw(sf::RenderTarget &target, sf::RenderStates states) const {

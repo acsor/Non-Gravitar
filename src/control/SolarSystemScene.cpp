@@ -94,13 +94,13 @@ namespace gvt {
 	SolarSystemScene::SolarSystemScene(
 			Vectord size, shared_ptr<SolarSystem> &system
 	): Scene(size, system), mSystem{std::move(system)} {
-		mSceneCbk = Game::getInstance()->addCallback(
+		mSceneCbk = Game::getInstance()->sceneChangeDispatcher().addCallback(
 			[this] (SceneChangeEvent e) -> void { onSceneChanged(e); }
 		);
 	}
 
 	SolarSystemScene::~SolarSystemScene() {
-		Game::getInstance()->removeCallback(mSceneCbk);
+		Game::getInstance()->sceneChangeDispatcher().removeCallback(mSceneCbk);
 	}
 
 	shared_ptr<SolarSystem> SolarSystemScene::solarSystem() const {

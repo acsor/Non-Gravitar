@@ -57,7 +57,7 @@ namespace gvt {
 		mResizeCbk = mGame->viewEventsDispatcher().addCallback(
 				[this] (sf::Event e) -> void { onWindowResized(e); }
 		);
-		mSceneCbk = mGame->addCallback(
+		mSceneCbk = mGame->sceneChangeDispatcher().addCallback(
 				[this] (SceneChangeEvent e) -> void { onSceneChanged (e); }
 		);
 		mShipCbk = mShip->positionDispatcher().addCallback(
@@ -67,7 +67,7 @@ namespace gvt {
 
 	SceneFrame::~SceneFrame() {
 		mGame->viewEventsDispatcher().removeCallback(mResizeCbk);
-		mGame->removeCallback(mSceneCbk);
+		mGame->sceneChangeDispatcher().removeCallback(mSceneCbk);
 		mShip->positionDispatcher().removeCallback(mShipCbk);
 	}
 }

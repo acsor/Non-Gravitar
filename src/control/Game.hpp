@@ -54,7 +54,7 @@ namespace gvt {
 	 * instance will manage an unique instance of @c Spaceship, making it
 	 * available for subsequent scenes via appropriate accessor functions.
 	 */
-	class Game: public sf::Drawable, public EventDispatcher<SceneChangeEvent> {
+	class Game: public sf::Drawable {
 		private:
 			static Game* sInstance;
 
@@ -65,12 +65,13 @@ namespace gvt {
 
 			shared_ptr<Scene> mCurrScene;
 			std::stack<shared_ptr<Scene>> mSceneStack;
+			EventDispatcher<SceneChangeEvent> mSceneDisp;
 
 			shared_ptr<SceneFrame> mSceneFrame;
 			mutable sf::View mInfoFrame;
 
 			sf::Clock mClock;
-			EventDispatcher<sf::Event> mViewEvents;
+			EventDispatcher<sf::Event> mViewDisp;
 
 			void onShipMoved(PositionEvent e);
 			void toggleDebug(sf::Event e);
@@ -112,6 +113,11 @@ namespace gvt {
 			 * @return Thew @c Scene that should be currently displayed.
 			 */
 			inline shared_ptr<Scene> currentScene();
+			/**
+			 * @return A specialized @c EventDispatcher instance used for
+			 * transmitting scene change events.
+			 */
+			inline EventDispatcher<SceneChangeEvent>& sceneChangeDispatcher();
 
 			EventDispatcher<sf::Event>& viewEventsDispatcher();
 
@@ -126,6 +132,10 @@ namespace gvt {
 
 
 namespace gvt {
+	EventDispatcher<SceneChangeEvent>& Game::sceneChangeDispatcher () {
+		return mSceneDisp;
+	}
+
 	shared_ptr<GameInfo> Game::gameInfo() {
 		return mInfo;
 	}
