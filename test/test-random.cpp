@@ -19,37 +19,27 @@
 // LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
-#include "CRPolygon.hpp"
+#include <set>
+#include "catch.hpp"
+#include "utils/Random.hpp"
 
 
-namespace gvt {
-	BoundingPolygon CRPolygon::polygonFactory(
-			double radius, unsigned vertices
-	) const {
-		auto polygon = BoundingPolygon(vertices);
-		double factor = 2.0 * M_PI / vertices;
+TEST_CASE(
+		"UniRandom must produce all values in the given range", "[UniRandom]"
+) {
+	unsigned const bottom = 0, top = 100;
+	gvt::UniRandom<unsigned> r {bottom, top};
+	std::set<unsigned> actual, expected;
+	unsigned trials = 1E3;
 
-		for (unsigned vertex = 0; vertex < vertices; vertex++)
-			polygon[vertex] = radius * Vectord(factor * vertex);
+	for (auto i = bottom; i <= top; i++)
+		expected.insert(i);
 
-		return polygon;
+	while (trials > 0) {
+		actual.insert(r());
+
+		trials--;
 	}
 
-	CRPolygon::CRPolygon(Vectord position, double radius, unsigned vertices):
-			ClosedShape(position, polygonFactory(radius, vertices)),
-			mRadius{radius}, mVertices{vertices} {
-	}
-
-	Vectord CRPolygon::rotationCenter() const {
-		return {mRadius, mRadius};
-	}
-
-	bool CRPolygon::operator== (Shape const &other) const {
-		auto o = dynamic_cast<CRPolygon const *>(&other);
-
-		if (o)
-			return mRadius == o->mRadius && ClosedShape::operator==(other);
-
-		return false;
-	}
+	REQUIRE(actual == expected);
 }

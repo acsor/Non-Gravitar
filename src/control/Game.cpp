@@ -22,7 +22,7 @@
 #include <SFML/Graphics.hpp>
 #include "utils/Utils.hpp"
 #include "Game.hpp"
-#include "SolarSystemScene.hpp"
+#include "MoveShipCallback.hpp"
 
 
 namespace gvt {
@@ -57,25 +57,27 @@ namespace gvt {
 
 	Game::Game () {
 		mShip.reset(new Spaceship(Vectord{0, 0}, 50));
+
 		mSceneFrame.reset(new SceneFrame(this, mShip));
+		mInfoFrame.setViewport({0, 0, 1, .2});
 
 		mInfo.reset(new GameInfo(0, 3));
-		mInfoView.reset(new GameInfoView(mInfo, mShip));
+		mInfoView.reset(new GameInfoView(this, mShip));
 
 		mShip->positionDispatcher().addCallback(
 			[this] (PositionEvent e) -> void { onShipMoved(e); }
 		);
-		mViewEvents.addCallback(
+		mViewDisp.addCallback(
 			MoveShipCallback(this, mShip, 150.0, deg2rad(10))
 		);
-		mViewEvents.addCallback(
+		mViewDisp.addCallback(
 			[this] (sf::Event e) -> void { toggleDebug(e); }
 		);
 	}
 
 	Game::~Game () {
 		mShip->positionDispatcher().clearCallbacks();
-		mViewEvents.clearCallbacks();
+		mViewDisp.clearCallbacks();
 	}
 
 	Game* Game::getInstance () {
@@ -99,6 +101,10 @@ namespace gvt {
 
 	void Game::updateGameLoop () {
 		auto elapsed = mClock.restart().asSeconds();
+
+		if (mCurrScene->hasNextScene())
+			swapScene(mCurrScene->nextScene());
+
 		// If the current scene is not hold as a separate variable, some
 		// code might pop it out and remove the only references to it (both
 		// on stack and on mCurrScene). At that point, that scene object
@@ -114,7 +120,16 @@ namespace gvt {
 		mCurrScene = std::move(scene);
 		mSceneStack.push(mCurrScene);
 
-		raiseEvent(e);
+		mSceneDisp.raiseEvent(e);
+	}
+
+	void Game::swapScene (shared_ptr<Scene> newScene) {
+		auto e = SceneChangeEvent(mCurrScene, newScene);
+
+		mCurrScene = std::move(newScene);
+		mSceneStack.top() = mCurrScene;
+
+		mSceneDisp.raiseEvent(e);
 	}
 
 	shared_ptr<Scene> Game::popScene () {
@@ -127,130 +142,25 @@ namespace gvt {
 			mCurrScene = mSceneStack.top();
 
 			e.newScene = mCurrScene;
-			raiseEvent(e);
+			mSceneDisp.raiseEvent(e);
 		}
 
 		return mCurrScene;
 	}
 
 	EventDispatcher<sf::Event>& Game::viewEventsDispatcher() {
-		return mViewEvents;
+		return mViewDisp;
 	}
 
 	void Game::draw(sf::RenderTarget &target, sf::RenderStates states) const {
 		auto targetSize = target.getSize();
-		sf::View infoFrame;
 
-		infoFrame.setSize(targetSize.x, .2f * targetSize.y);
-		infoFrame.setCenter(.5f * targetSize.x, .1f * targetSize.y);
-		infoFrame.setViewport({0, 0, 1, .2});
-		target.setView(infoFrame);
+		mInfoFrame.setSize(targetSize.x, .2f * targetSize.y);
+		mInfoFrame.setCenter(.5f * targetSize.x, .1f * targetSize.y);
+		target.setView(mInfoFrame);
 		target.draw(*mInfoView, states);
 
-		target.setView(mSceneFrame->sceneView());
+		target.setView(*mSceneFrame);
 		target.draw(*mCurrScene, states);
-	}
-
-
-	// SceneFrame class section
-	void SceneFrame::onWindowResized(sf::Event e) {
-		if (e.type == sf::Event::Resized) {
-			auto windowSize = Vectord(e.size.width, 0.8 * e.size.height);
-
-			mView.setSize(windowSize.x, windowSize.y);
-
-			mMin = windowSize / 2.0;
-			mMax = mGame->currentScene()->size() - mMin;
-		}
-	}
-
-	void SceneFrame::onSceneChanged(SceneChangeEvent e) {
-		mMax = e.newScene->size() - mMin;
-	}
-
-	void SceneFrame::onShipMoved (PositionEvent e) {
-		auto position = mShip->position() + mShip->rotationCenter();
-
-		position.x = std::max(mMin.x, position.x);
-		position.x = std::min(mMax.x, position.x);
-		position.y = std::max(mMin.y, position.y);
-		position.y = std::min(mMax.y, position.y);
-
-		mView.setCenter(position.x, position.y);
-	}
-
-	SceneFrame::SceneFrame(Game *game, shared_ptr<Spaceship> ship):
-			mGame{game}, mShip{std::move(ship)} {
-		mView.setViewport({0.0, 0.2, 1, 0.8});
-
-		mResizeCbk = mGame->viewEventsDispatcher().addCallback(
-			[this] (sf::Event e) -> void { onWindowResized(e); }
-		);
-		mSceneCbk = mGame->addCallback(
-			[this] (SceneChangeEvent e) -> void { onSceneChanged (e); }
-		);
-		mShipCbk = mShip->positionDispatcher().addCallback(
-			[this] (PositionEvent e) -> void { onShipMoved (e); }
-		);
-	}
-
-	SceneFrame::~SceneFrame() {
-		mGame->viewEventsDispatcher().removeCallback(mResizeCbk);
-		mGame->removeCallback(mSceneCbk);
-		mShip->positionDispatcher().removeCallback(mShipCbk);
-	}
-
-
-	// MoveShipCallback class section
-	MoveShipCallback::MoveShipCallback (
-			Game *game, shared_ptr<Spaceship> ship, double accel, double angle
-	): mGame{game}, mShip(std::move(ship)) {
-		mAccelStep = accel;
-		mAngleStep = angle;
-	}
-
-	void MoveShipCallback::operator() (sf::Event e) {
-		auto accelIncrement = mAccelStep * Vectord(mShip->rotation());
-		accelIncrement.rotate(M_PI / -2.0);
-
-		if (e.type == sf::Event::KeyPressed) {
-			switch (e.key.code) {
-				case (sf::Keyboard::Key::A):
-					mShip->rotate(-mAngleStep);
-					break;
-				case (sf::Keyboard::Key::W):
-					mShip->acceleration(accelIncrement);
-					mShip->dischargeFuel(1);
-					break;
-				case (sf::Keyboard::Key::D):
-					mShip->rotate(mAngleStep);
-					break;
-				case (sf::Keyboard::Key::K):
-					mBeamOn = !mBeamOn;
-
-					if (mBeamOn) {
-						mGame->currentScene()->shapes()->insert(
-								mShip->tractorBeam()
-						);
-					} else {
-						mGame->currentScene()->shapes()->remove(
-								mShip->tractorBeam()
-						);
-					}
-
-					break;
-				case (sf::Keyboard::Key::Space):
-					mGame->currentScene()->shapes()->insert(
-							mShip->shoot(6, 700, 2000)
-					);
-					break;
-				default:
-					break;
-			}
-		} else if (e.type == sf::Event::KeyReleased) {
-			if (e.key.code == sf::Keyboard::Key::W) {
-				mShip->acceleration(Vectord{0, 0});
-			}
-		}
 	}
 }

@@ -70,12 +70,11 @@ namespace gvt {
 			 * Constructs a @c Polyline with the given number of
 			 * default-constructed vertices.
 			 */
-			Polyline (unsigned vertices);
+			explicit Polyline (unsigned vertices);
 
 			inline size_t size() const;
 
-			inline Vectord& operator[] (size_t index);
-			inline const Vectord& operator[] (size_t index) const;
+			inline Vectord operator[] (size_t index);
 
 			/**
 			 * Orients @c shape in such a way as to align it to the @c line-th
@@ -122,11 +121,7 @@ namespace gvt {
 		return mVertices.size();
 	}
 
-	Vectord &Polyline::operator[](size_t index) {
-		return mVertices[index];
-	}
-
-	const Vectord &Polyline::operator[](size_t index) const {
+	Vectord Polyline::operator[](size_t index) {
 		return mVertices[index];
 	}
 

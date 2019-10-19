@@ -28,16 +28,16 @@
 #include <typeinfo>
 #include <SFML/Graphics.hpp>
 #include "GameInfo.hpp"
-#include "view/GameInfoView.hpp"
 #include "Scene.hpp"
-#include "shape-group/ShapeGroup.hpp"
+#include "SceneFrame.hpp"
+#include "SolarSystemSceneBuilder.hpp"
 #include "shape/Spaceship.hpp"
+#include "shape-group/ShapeGroup.hpp"
+#include "view/GameInfoView.hpp"
 #include "view/ShapeGroupView.hpp"
 
 
 namespace gvt {
-	class SceneFrame;
-
 	/**
 	 * Event issued when a new @c Scene is pushed/popped out of the game.
 	 */
@@ -54,23 +54,24 @@ namespace gvt {
 	 * instance will manage an unique instance of @c Spaceship, making it
 	 * available for subsequent scenes via appropriate accessor functions.
 	 */
-	class Game: public sf::Drawable, public EventDispatcher<SceneChangeEvent> {
+	class Game: public sf::Drawable {
 		private:
 			static Game* sInstance;
 
 			shared_ptr<GameInfo> mInfo;
 			shared_ptr<GameInfoView> mInfoView;
 
-			// By virtue of the fact that Game is a singleton instance, mShip
-			// is too
 			shared_ptr<Spaceship> mShip;
 
 			shared_ptr<Scene> mCurrScene;
 			std::stack<shared_ptr<Scene>> mSceneStack;
+			EventDispatcher<SceneChangeEvent> mSceneDisp;
+
 			shared_ptr<SceneFrame> mSceneFrame;
+			mutable sf::View mInfoFrame;
 
 			sf::Clock mClock;
-			EventDispatcher<sf::Event> mViewEvents;
+			EventDispatcher<sf::Event> mViewDisp;
 
 			void onShipMoved(PositionEvent e);
 			void toggleDebug(sf::Event e);
@@ -107,11 +108,21 @@ namespace gvt {
 			 * @return The @c Scene object which was being shown prior to this
 			 * call.
 			 */
+
+			/**
+			 * Substitutes the current scene with @c newScene.
+			 */
+		 	void swapScene (shared_ptr<Scene> newScene);
 			shared_ptr<Scene> popScene ();
 			/**
 			 * @return Thew @c Scene that should be currently displayed.
 			 */
 			inline shared_ptr<Scene> currentScene();
+			/**
+			 * @return A specialized @c EventDispatcher instance used for
+			 * transmitting scene change events.
+			 */
+			inline EventDispatcher<SceneChangeEvent>& sceneChangeDispatcher();
 
 			EventDispatcher<sf::Event>& viewEventsDispatcher();
 
@@ -122,77 +133,20 @@ namespace gvt {
 				sf::RenderTarget &target, sf::RenderStates states
 			) const override;
 	};
-
-	/**
-	 * Wrapper class responsible for managing the sf::View instance into
-	 * which the current Game scene is shown, performing operations like
-	 * resizing and recentering.
-	 */
-	class SceneFrame {
-		private:
-			Game *mGame;
-			sf::View mView;
-			// Variables representing the min and max values mView center
-			// point can assume
-			Vectord mMin, mMax;
-			shared_ptr<Spaceship> mShip;
-
-			shared_ptr<Callback<sf::Event>> mResizeCbk;
-			shared_ptr<Callback<SceneChangeEvent>> mSceneCbk;
-			shared_ptr<Callback<PositionEvent>> mShipCbk;
-
-			void onWindowResized(sf::Event e);
-			void onSceneChanged(SceneChangeEvent e);
-			void onShipMoved (PositionEvent e);
-		public:
-			SceneFrame(Game *game, shared_ptr<Spaceship> ship);
-			~SceneFrame ();
-
-			/**
-			 * @return The @c sf::View instance inside which the current @c
-			 * Scene is displayed.
-			 */
-			inline sf::View& sceneView();
-	};
-
-	/**
-	 * Moves the given @c Spaceship instance as key events from the view
-	 * library arise.
-	 */
-	class MoveShipCallback {
-		private:
-			Game *mGame;
-			shared_ptr<Spaceship> mShip;
-			/**
-			 * @c true if the spaceship is currently emitting its tractor
-			 * beam, @c false otherwise.
-			 */
-			bool mBeamOn{false};
-
-			double mAngleStep, mAccelStep;
-		public:
-			MoveShipCallback (
-				Game *game, shared_ptr<Spaceship> ship, double accel,
-				double angle
-			);
-
-			void operator() (sf::Event e);
-	};
 }
 
 
 namespace gvt {
+	EventDispatcher<SceneChangeEvent>& Game::sceneChangeDispatcher () {
+		return mSceneDisp;
+	}
+
 	shared_ptr<GameInfo> Game::gameInfo() {
 		return mInfo;
 	}
 
 	shared_ptr<Scene> Game::currentScene() {
 		return mCurrScene;
-	}
-
-
-	sf::View& SceneFrame::sceneView() {
-		return mView;
 	}
 }
 

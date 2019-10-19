@@ -19,37 +19,42 @@
 // LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
-#include "CRPolygon.hpp"
+#include "SpawnAreaView.hpp"
 
 
 namespace gvt {
-	BoundingPolygon CRPolygon::polygonFactory(
-			double radius, unsigned vertices
-	) const {
-		auto polygon = BoundingPolygon(vertices);
-		double factor = 2.0 * M_PI / vertices;
+	sf::Color const SpawnAreaView::OUTER_COLOR = sf::Color(205, 205, 205);
+	sf::Color const SpawnAreaView::INNER_COLOR = sf::Color(80, 0, 232);
 
-		for (unsigned vertex = 0; vertex < vertices; vertex++)
-			polygon[vertex] = radius * Vectord(factor * vertex);
+	void SpawnAreaView::draw(sf::RenderTarget& s, sf::RenderStates t) const {
+		ClosedShapeView::draw(s, t);
 
-		return polygon;
+		s.draw(mOuter, mTranslation * mRotation);
+		s.draw(mInner, mTranslation * mRotation);
 	}
 
-	CRPolygon::CRPolygon(Vectord position, double radius, unsigned vertices):
-			ClosedShape(position, polygonFactory(radius, vertices)),
-			mRadius{radius}, mVertices{vertices} {
-	}
+	SpawnAreaView::SpawnAreaView(shared_ptr<SpawnArea> area):
+			ClosedShapeView(area) {
+		auto cPolygon = area->collisionPolygon();
+		unsigned i;
 
-	Vectord CRPolygon::rotationCenter() const {
-		return {mRadius, mRadius};
-	}
+		mOuter = sf::VertexArray(sf::LineStrip, area->vertices() + 1);
+		mInner = sf::VertexArray(sf::LineStrip, area->vertices() + 1);
 
-	bool CRPolygon::operator== (Shape const &other) const {
-		auto o = dynamic_cast<CRPolygon const *>(&other);
+		for (i = 0; i < area->vertices(); i++) {
+			auto v = cPolygon[i];
 
-		if (o)
-			return mRadius == o->mRadius && ClosedShape::operator==(other);
+			mOuter[i].position = {(float) v.x, (float) v.y};
+			mInner[i].position = 0.8f * mOuter[i].position;
 
-		return false;
+			mOuter[i].color = OUTER_COLOR;
+			mInner[i].color = INNER_COLOR;
+		}
+
+		mOuter[i].position = {(float) cPolygon[0].x, (float) cPolygon[0].y};
+		mInner[i].position = 0.8f * mOuter[i].position;
+
+		mOuter[i].color = OUTER_COLOR;
+		mInner[i].color = INNER_COLOR;
 	}
 }

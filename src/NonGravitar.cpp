@@ -23,34 +23,42 @@
 #include <memory>
 #include <SFML/Graphics.hpp>
 #include <SFML/Window.hpp>
+#include "shape-group/GridShapeLayout.hpp"
 #include "control/Game.hpp"
-#include "control/SolarSystemScene.hpp"
-#include "shape-group/SolarSystem.hpp"
-#include "shape-group/PlanetSurface.hpp"
-
-using sf_callback = gvt::Callback<sf::Event>;
+#include "control/SolarSystemSceneBuilder.hpp"
 
 
 void closeWindow (sf::RenderWindow &w, sf::Event e);
 
 
 int main () {
-	sf::VideoMode const mode = sf::VideoMode::getDesktopMode();
+	auto const mode = sf::VideoMode::getDesktopMode();
 	sf::RenderWindow w{mode, "Non-Gravitar"};
 	sf::Event e;
 
-	gvt::Game *game = gvt::Game::getInstance();
-	auto solarSystem = gvt::SolarSystem::makeRandom(
-			8, 30, 50, {0, 0}, {3000, 2000}
-	);
-	auto rootScene = std::make_shared<gvt::SolarSystemScene>(solarSystem);
+	auto game = gvt::Game::getInstance();
+	auto centerPos = gvt::Vectord({1000, 700});
+	unsigned planetsNum = 5;
+	auto ssBuilder = gvt::SolarSystemSceneBuilder().
+			centerPosition(centerPos).
+			planetsNumber(planetsNum).
+			planetsLayout(std::make_shared<gvt::RoundShapeLayout>(
+				centerPos, 400,	planetsNum
+			)).
+			planetBuilder(std::make_shared<gvt::RandomPlanetBuilder>(
+				gvt::Vectord{30, 50}, 30, 5, 2
+			));
+	auto rootScene = ssBuilder();
 
 	w.setFramerateLimit(60);
 
-	solarSystem->insert(game->acquireSpaceship());
+	rootScene->shapeGroup()->insert(game->spaceship());
 	game->pushScene(rootScene);
+	rootScene->solarSystem()->spawnArea()->centerShape(
+			game->spaceship()
+	);
 	game->viewEventsDispatcher().addCallback(
-			[&w] (sf::Event const &e) -> void { closeWindow(w, e); }
+		[&w] (sf::Event const &e) -> void { closeWindow(w, e); }
 	);
 
 	while (w.isOpen()) {

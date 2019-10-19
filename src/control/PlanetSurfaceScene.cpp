@@ -30,12 +30,8 @@ namespace gvt {
 		auto ship = game->acquireSpaceship();
 
 		game->popScene();
-		ship->position(
-			mPlanet->position() + mPlanet->rotationCenter() - Vectord{0, 100}
-		);
-
-		// game->currentScene() will be a SolarSystemScene
-		game->currentScene()->shapes()->insert(ship);
+		// game->currentScene() will be a SolarSystemScene instance
+		game->currentScene()->shapeGroup()->insert(ship);
 	}
 
 	void PlanetSurfaceScene::onExitBoundaries(shared_ptr<Spaceship> ship) {
@@ -45,16 +41,18 @@ namespace gvt {
 			Scene::onExitBoundaries(ship);
 	}
 
-	void PlanetSurfaceScene::onSpaceshipDestroyed (shared_ptr<Spaceship> ship) {
-		Scene::onSpaceshipDestroyed(ship);
+	void PlanetSurfaceScene::onShapeDestroyed (shared_ptr<Shape> shape) {
+		Scene::onShapeDestroyed(shape);
 
-		if (mGame->gameInfo()->spaceships() > 0) {
-			ship->position({mSize.x / 2.0, 1});
-			ship->velocity({0, 0});
-			ship->rotation(M_PI);
-			ship->destroyed(false);
+		if (auto ship = std::dynamic_pointer_cast<Spaceship>(shape)) {
+			if (mGame->gameInfo()->spaceships() > 0) {
+				shape->position({mSize.x / 2.0, 1});
+				shape->velocity({0, 0});
+				shape->rotation(M_PI);
+				shape->destroyed(false);
 
-			mShapes->insert(ship);
+				mShapes->insert(shape);
+			}
 		}
 	}
 

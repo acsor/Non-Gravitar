@@ -19,37 +19,45 @@
 // LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
-#include "CRPolygon.hpp"
+#ifndef NON_GRAVITAR_SCENE_FRAME_HPP
+#define NON_GRAVITAR_SCENE_FRAME_HPP
+
+#include <memory>
+#include <SFML/Graphics.hpp>
+#include "shape/Spaceship.hpp"
+#include "utils/Event.hpp"
+#include "utils/Vector.hpp"
 
 
 namespace gvt {
-	BoundingPolygon CRPolygon::polygonFactory(
-			double radius, unsigned vertices
-	) const {
-		auto polygon = BoundingPolygon(vertices);
-		double factor = 2.0 * M_PI / vertices;
+	class Game;
+	class SceneChangeEvent;
 
-		for (unsigned vertex = 0; vertex < vertices; vertex++)
-			polygon[vertex] = radius * Vectord(factor * vertex);
+	/**
+	 * Wrapper class responsible for managing the sf::View instance into
+	 * which the current Game scene is shown, performing operations like
+	 * resizing and recentering.
+	 */
+	class SceneFrame: public sf::View {
+		private:
+			Game *mGame;
+			// Variables representing the min and max values mView center
+			// point can assume
+			Vectord mMin, mMax;
+			shared_ptr<Spaceship> mShip;
 
-		return polygon;
-	}
+			shared_ptr<Callback<sf::Event>> mResizeCbk;
+			shared_ptr<Callback<SceneChangeEvent>> mSceneCbk;
+			shared_ptr<Callback<PositionEvent>> mShipCbk;
 
-	CRPolygon::CRPolygon(Vectord position, double radius, unsigned vertices):
-			ClosedShape(position, polygonFactory(radius, vertices)),
-			mRadius{radius}, mVertices{vertices} {
-	}
-
-	Vectord CRPolygon::rotationCenter() const {
-		return {mRadius, mRadius};
-	}
-
-	bool CRPolygon::operator== (Shape const &other) const {
-		auto o = dynamic_cast<CRPolygon const *>(&other);
-
-		if (o)
-			return mRadius == o->mRadius && ClosedShape::operator==(other);
-
-		return false;
-	}
+			void onWindowResized(sf::Event e);
+			void onSceneChanged(SceneChangeEvent e);
+			void onShipMoved (PositionEvent e);
+		public:
+			SceneFrame(Game *game, shared_ptr<Spaceship> ship);
+			~SceneFrame ();
+	};
 }
+
+
+#endif

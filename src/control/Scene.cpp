@@ -24,6 +24,7 @@
 #include "shape-group/CollisionGroup.hpp"
 #include "shape/MountainChain.hpp"
 #include "shape/Planet.hpp"
+#include "shape/SpawnArea.hpp"
 
 using type_index = std::type_index;
 
@@ -90,6 +91,7 @@ namespace gvt {
 		mDestroyGraph.insertVertex(TypeVertex(typeid(Planet)));
 		mDestroyGraph.insertVertex(TypeVertex(typeid(RoundMissile)));
 		mDestroyGraph.insertVertex(TypeVertex(typeid(Spaceship)));
+		mDestroyGraph.insertVertex(TypeVertex(typeid(SpawnArea)));
 		mDestroyGraph.insertVertex(TypeVertex(typeid(TractorBeam)));
 
 		for (auto const &pair: destroyPair)
@@ -116,22 +118,21 @@ namespace gvt {
 	}
 
 	void Scene::onShapeRemoved (ShapeRemovalEvent e) {
-		if (e.shape->destroyed()) {
-			if (std::dynamic_pointer_cast<Bunker>(e.shape)) {
-				mGame->gameInfo()->upgradeScore(BUNKER_SCORE);
-			} else if (auto s = std::dynamic_pointer_cast<Spaceship>(e.shape)) {
-				onSpaceshipDestroyed(s);
-			} else if (auto f = std::dynamic_pointer_cast<Fuel>(e.shape)) {
-				mGame->spaceship()->rechargeFuel(*f);
-			}
-		}
+		if (e.shape->destroyed())
+			onShapeDestroyed(e.shape);
 	}
 
-	void Scene::onSpaceshipDestroyed (shared_ptr<Spaceship> ship) {
-		auto info = mGame->gameInfo();
-
-		if (info->spaceships() > 0)
+	void Scene::onShapeDestroyed (shared_ptr<Shape> shape) {
+		if (std::dynamic_pointer_cast<Bunker>(shape)) {
+			mGame->gameInfo()->upgradeScore(BUNKER_SCORE);
+		} else if (auto f = std::dynamic_pointer_cast<Fuel>(shape)) {
+			mGame->spaceship()->rechargeFuel(*f);
+		} else if (
+				std::dynamic_pointer_cast<Spaceship>(shape) &&
+				mGame->gameInfo()->spaceships() > 0
+		) {
 			mGame->gameInfo()->decrementSpaceships();
+		}
 	}
 
 	void Scene::onUpdateGame (double seconds) {

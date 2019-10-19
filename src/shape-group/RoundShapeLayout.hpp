@@ -19,37 +19,37 @@
 // LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
-#include "CRPolygon.hpp"
+#ifndef NON_GRAVITAR_ROUND_SHAPE_LAYOUT_HPP
+#define NON_GRAVITAR_ROUND_SHAPE_LAYOUT_HPP
+
+#include "ShapeLayout.hpp"
 
 
 namespace gvt {
-	BoundingPolygon CRPolygon::polygonFactory(
-			double radius, unsigned vertices
-	) const {
-		auto polygon = BoundingPolygon(vertices);
-		double factor = 2.0 * M_PI / vertices;
+	/**
+	 * A shape layout capable of arranging its shapes around a circumference.
+	 * This layout has a predetermined number of cells, exceeding which
+	 * causes an exception to be thrown.
+	 */
+	class RoundShapeLayout: public ShapeLayout {
+		private:
+			Vectord mCenter;
+			double mRadius, mFactor;
+			unsigned mShapesNum;
+		public:
+			RoundShapeLayout (Vectord center, double radius, unsigned shapesNum);
 
-		for (unsigned vertex = 0; vertex < vertices; vertex++)
-			polygon[vertex] = radius * Vectord(factor * vertex);
+			inline Vectord center() const;
+			Vectord operator() (shared_ptr<Shape>, unsigned) override;
+	};
+}
 
-		return polygon;
-	}
 
-	CRPolygon::CRPolygon(Vectord position, double radius, unsigned vertices):
-			ClosedShape(position, polygonFactory(radius, vertices)),
-			mRadius{radius}, mVertices{vertices} {
-	}
-
-	Vectord CRPolygon::rotationCenter() const {
-		return {mRadius, mRadius};
-	}
-
-	bool CRPolygon::operator== (Shape const &other) const {
-		auto o = dynamic_cast<CRPolygon const *>(&other);
-
-		if (o)
-			return mRadius == o->mRadius && ClosedShape::operator==(other);
-
-		return false;
+namespace gvt {
+	Vectord RoundShapeLayout::center() const {
+		return mCenter;
 	}
 }
+
+
+#endif

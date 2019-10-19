@@ -22,39 +22,56 @@
 #ifndef NON_GRAVITAR_SOLAR_SYSTEM_HPP
 #define NON_GRAVITAR_SOLAR_SYSTEM_HPP
 
+#include <forward_list>
 #include <memory>
 #include "shape/Planet.hpp"
+#include "shape/SpawnArea.hpp"
 #include "CollisionGroup.hpp"
 
 
 namespace gvt {
 	class SolarSystem: public CollisionGroup {
 		private:
-			double mWidth, mHeight;
+			shared_ptr<SpawnArea> mSpawnArea;
+			std::forward_list<shared_ptr<Planet>> mPlanets;
 
 			/**
-			 * Updates height and width values upon insertion of a new @c Shape.
+			 * Updates height, width and mPlanets values upon insertion of a new
+			 * @c Shape.
 			 */
 			void onInsertShape (shared_ptr<Shape> shape) override;
+			/**
+			 * Updates height, width and mPlanets values upon removal of an old
+			 * @c Shape.
+			 */
+			void onRemoveShape (shared_ptr<Shape> shape) override;
 		public:
-			static std::shared_ptr<SolarSystem> makeRandom (
-				unsigned planets, double minRadius, double maxRadius,
-				Vectord minPos, Vectord maxPos
-			);
+			using iterator = std::forward_list<shared_ptr<Planet>>::iterator;
 
-			inline double height() const;
-			inline double width() const;
+			inline shared_ptr<SpawnArea> spawnArea() const;
+			/**
+			 * @return The begin iterator of the planets list.
+			 */
+			inline iterator planetsBegin();
+			/**
+			 * @return The end iterator of the planets list.
+			 */
+			inline iterator planetsEnd();
 	};
 }
 
 
 namespace gvt {
-	double SolarSystem::height() const {
-		return mHeight;
+	shared_ptr<SpawnArea> SolarSystem::spawnArea() const {
+		return mSpawnArea;
 	}
 
-	double SolarSystem::width() const {
-		return mWidth;
+	SolarSystem::iterator SolarSystem::planetsBegin() {
+		return mPlanets.begin();
+	}
+
+	SolarSystem::iterator SolarSystem::planetsEnd() {
+		return mPlanets.end();
 	}
 }
 

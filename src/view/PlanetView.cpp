@@ -37,7 +37,7 @@ namespace gvt {
 		auto cPolygon = planet->collisionPolygon();
 
 		auto bonusAngle = UniRandom<float>(0, 2 * M_PI)();
-		auto bonusRadius = (float) (planet->radius()) + 40;
+		float bonusRadius = 2.0f * planet->radius();
 		auto bonusText = std::to_string(planet->bonus());
 
 		auto randomColor = UniRandom<int>(0, OUTLINE_COLORS.size() - 1);

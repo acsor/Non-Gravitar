@@ -19,37 +19,45 @@
 // LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
-#include "CRPolygon.hpp"
+#ifndef NON_GRAVITAR_MOVE_SHIP_CALLBACK_HPP
+#define NON_GRAVITAR_MOVE_SHIP_CALLBACK_HPP
+
+#include <SFML/Graphics.hpp>
+#include "shape/Spaceship.hpp"
+#include "Scene.hpp"
 
 
 namespace gvt {
-	BoundingPolygon CRPolygon::polygonFactory(
-			double radius, unsigned vertices
-	) const {
-		auto polygon = BoundingPolygon(vertices);
-		double factor = 2.0 * M_PI / vertices;
+	class Game;
 
-		for (unsigned vertex = 0; vertex < vertices; vertex++)
-			polygon[vertex] = radius * Vectord(factor * vertex);
+	/**
+	 * Moves the given @c Spaceship instance as key events from the view
+	 * library arise.
+	 */
+	class MoveShipCallback {
+		private:
+			Game *mGame;
+			shared_ptr<Spaceship> mShip;
+			/**
+			 * @c mLastScene holds a pointer to the last scene where the
+			 * spaceship tractor beam was inserted. It acts as a boolean
+			 * variable indicating whether the tractor beam is already on,
+			 * and permits the tractor beam removal when transitioning from an
+			 * old scene to a newer one, where the user command to power it off
+			 * is issued.
+			 */
+			shared_ptr<Scene> mLastScene;
 
-		return polygon;
-	}
+			double mAngleStep, mAccelStep;
+		public:
+			MoveShipCallback (
+					Game *game, shared_ptr<Spaceship> ship, double accel,
+					double angle
+			);
 
-	CRPolygon::CRPolygon(Vectord position, double radius, unsigned vertices):
-			ClosedShape(position, polygonFactory(radius, vertices)),
-			mRadius{radius}, mVertices{vertices} {
-	}
-
-	Vectord CRPolygon::rotationCenter() const {
-		return {mRadius, mRadius};
-	}
-
-	bool CRPolygon::operator== (Shape const &other) const {
-		auto o = dynamic_cast<CRPolygon const *>(&other);
-
-		if (o)
-			return mRadius == o->mRadius && ClosedShape::operator==(other);
-
-		return false;
-	}
+			void operator() (sf::Event e);
+	};
 }
+
+
+#endif

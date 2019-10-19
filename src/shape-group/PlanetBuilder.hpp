@@ -19,37 +19,52 @@
 // LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
-#include "CRPolygon.hpp"
+#ifndef NON_GRAVITAR_PLANET_BUILDER_HPP
+#define NON_GRAVITAR_PLANET_BUILDER_HPP
+
+#include "shape/Planet.hpp"
+#include "PlanetSurface.hpp"
 
 
 namespace gvt {
-	BoundingPolygon CRPolygon::polygonFactory(
-			double radius, unsigned vertices
-	) const {
-		auto polygon = BoundingPolygon(vertices);
-		double factor = 2.0 * M_PI / vertices;
+	/**
+	 * A builder class aiding in the construction of @c Planet objects.
+	 *
+	 * @see https://en.wikipedia.org/wiki/Builder_pattern
+	 */
+	class PlanetBuilder {
+		protected:
+			shared_ptr<Planet> mPlanet;
 
-		for (unsigned vertex = 0; vertex < vertices; vertex++)
-			polygon[vertex] = radius * Vectord(factor * vertex);
+			PlanetBuilder() = default;
+		public:
+			virtual void buildPlanet() {};
+			virtual void buildMountains() {};
+			virtual void buildBunkers() {};
+			virtual void buildFuelTanks() {};
 
-		return polygon;
-	}
+			shared_ptr<Planet> getPlanet();
+	};
 
-	CRPolygon::CRPolygon(Vectord position, double radius, unsigned vertices):
-			ClosedShape(position, polygonFactory(radius, vertices)),
-			mRadius{radius}, mVertices{vertices} {
-	}
+	class RandomPlanetBuilder: public PlanetBuilder {
+		private:
+			UniRandom<double> mRadius;
+			UniRandom<unsigned> mBonus {1, 5};
+			unsigned const mMountainPieces, mBunkers, mTanks;
 
-	Vectord CRPolygon::rotationCenter() const {
-		return {mRadius, mRadius};
-	}
+			std::vector<bool> mTaken;
+		public:
+			RandomPlanetBuilder(
+				Vectord radiusRange, unsigned mountainPieces, unsigned bunkers,
+				unsigned fuelTanks
+			);
 
-	bool CRPolygon::operator== (Shape const &other) const {
-		auto o = dynamic_cast<CRPolygon const *>(&other);
-
-		if (o)
-			return mRadius == o->mRadius && ClosedShape::operator==(other);
-
-		return false;
-	}
+			void buildPlanet() override;
+			void buildMountains() override;
+			void buildBunkers() override;
+			void buildFuelTanks() override;
+	};
 }
+
+
+#endif

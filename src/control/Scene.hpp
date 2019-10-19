@@ -78,8 +78,16 @@ namespace gvt {
 			virtual void onCollision (PairCollisionEvent e);
 			void onFuelChanged (FuelEvent e);
 
+			/**
+			 * Invoked when a shape is removed, but not yet (logically)
+			 * destroyed from the shape group this scene is related to.
+			 */
 			void onShapeRemoved (ShapeRemovalEvent e);
-			virtual void onSpaceshipDestroyed (shared_ptr<Spaceship> ship);
+			/**
+			 * Invoked when @c shape is both removed and destroyed from the
+			 * respective shape group of this scene.
+			 */
+			virtual void onShapeDestroyed (shared_ptr<Shape> shape);
 			/**
 			 * Called when the game spaceship exits the active scene boundaries.
 			 */
@@ -94,14 +102,29 @@ namespace gvt {
 			 */
 			virtual void onUpdateGame (double seconds);
 
-			inline shared_ptr<ShapeGroup> shapes();
+			/**
+			 * @return @c true if this scene has a next scene, to be
+			 * displayed after this one has completed.
+			 */
+			virtual bool hasNextScene() const = 0;
+			/**
+			 *
+			 * @return the next scene after this one, to be displayed when it
+			 * has completed.
+			 */
+			virtual shared_ptr<Scene> nextScene() = 0;
+
+			/**
+			 * @return The r/w @c ShapeGroup instance associated to this scene.
+			 */
+			inline shared_ptr<ShapeGroup> shapeGroup();
 			inline Vectord size() const;
 	};
 }
 
 
 namespace gvt {
-	shared_ptr<ShapeGroup> Scene::shapes() {
+	shared_ptr<ShapeGroup> Scene::shapeGroup() {
 		return mShapes;
 	}
 

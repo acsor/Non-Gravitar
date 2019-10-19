@@ -60,6 +60,9 @@ target_link_libraries(Rectangle ClosedShape BoundingPolygon)
 add_library(Spaceship "${DIR_SHAPE}/Spaceship.cpp")
 target_link_libraries(Spaceship Fuel BoundingPolygon)
 
+add_library(SpawnArea "${DIR_SHAPE}/SpawnArea.cpp")
+target_link_libraries(SpawnArea CRPolygon)
+
 add_library(Fuel "${DIR_SHAPE}/Fuel.cpp")
 target_link_libraries(Fuel Spaceship BoundingPolygon)
 
@@ -77,11 +80,20 @@ target_link_libraries(TractorBeam Spaceship)
 add_library(ShapeGroup "${DIR_SHAPE_GROUP}/ShapeGroup.cpp")
 target_link_libraries(ShapeGroup Shape)
 
+add_library(GridShapeLayout "${DIR_SHAPE_GROUP}/GridShapeLayout.cpp")
+target_link_libraries(GridShapeLayout Shape)
+
+add_library(RoundShapeLayout "${DIR_SHAPE_GROUP}/RoundShapeLayout.cpp")
+target_link_libraries(RoundShapeLayout Shape)
+
 add_library(CollisionGroup "${DIR_SHAPE_GROUP}/CollisionGroup.cpp")
 target_link_libraries(CollisionGroup ShapeGroup)
 
+add_library(PlanetBuilder "${DIR_SHAPE_GROUP}/PlanetBuilder.cpp")
+target_link_libraries(PlanetBuilder Planet PlanetSurface MountainChain)
+
 add_library(SolarSystem "${DIR_SHAPE_GROUP}/SolarSystem.cpp")
-target_link_libraries(SolarSystem PlanetSurface)
+target_link_libraries(SolarSystem PlanetSurface SpawnArea)
 
 add_library(PlanetSurface "${DIR_SHAPE_GROUP}/PlanetSurface.cpp")
 target_link_libraries(PlanetSurface Planet CollisionGroup)
@@ -123,11 +135,14 @@ target_link_libraries(TractorBeamView TractorBeam ClosedShapeView)
 add_library(ShapeViewFactory "${DIR_VIEWS}/ShapeViewFactory.cpp")
 target_link_libraries(
 		ShapeViewFactory BunkerView FuelView PolylineView
-		PlanetView RoundMissileView SpaceshipView TractorBeamView
+		PlanetView RoundMissileView SpaceshipView SpawnAreaView TractorBeamView
 )
 
 add_library(SpaceshipView "${DIR_VIEWS}/SpaceshipView.cpp")
 target_link_libraries(SpaceshipView Spaceship ClosedShapeView Utils)
+
+add_library(SpawnAreaView "${DIR_VIEWS}/SpawnAreaView.cpp")
+target_link_libraries(SpawnAreaView SpawnArea ClosedShapeView)
 
 add_library(GameInfoView "${DIR_VIEWS}/GameInfoView.cpp")
 target_link_libraries(GameInfoView GameInfo SpaceshipView)
@@ -135,7 +150,16 @@ target_link_libraries(GameInfoView GameInfo SpaceshipView)
 
 # Game and scenes section
 add_library(Game "${DIR_CONTROL}/Game.cpp")
-target_link_libraries(Game Spaceship GameInfoView SolarSystemScene)
+target_link_libraries(
+		Game SceneFrame MoveShipCallback GameInfoView SolarSystemScene
+		SolarSystemSceneBuilder
+)
+
+add_library(MoveShipCallback "${DIR_CONTROL}/MoveShipCallback.cpp")
+target_link_libraries(MoveShipCallback Game)
+
+add_library(SceneFrame "${DIR_CONTROL}/SceneFrame.cpp")
+target_link_libraries(SceneFrame Game Spaceship)
 
 add_library(GameInfo "${DIR_CONTROL}/GameInfo.cpp")
 target_link_libraries(GameInfo SpaceshipView)
@@ -144,10 +168,17 @@ add_library(Scene "${DIR_CONTROL}/Scene.cpp")
 target_link_libraries(Scene ShapeGroup ShapeGroupView)
 
 add_library(SolarSystemScene "${DIR_CONTROL}/SolarSystemScene.cpp")
-target_link_libraries(SolarSystemScene SolarSystem PlanetSurfaceScene)
+target_link_libraries(
+	SolarSystemScene SolarSystem SolarSystemSceneBuilder PlanetSurfaceScene
+)
 
 add_library(PlanetSurfaceScene "${DIR_CONTROL}/PlanetSurfaceScene.cpp")
 target_link_libraries(PlanetSurfaceScene Scene PlanetSurface MountainChain)
+
+add_library(SolarSystemSceneBuilder "${DIR_CONTROL}/SolarSystemSceneBuilder.cpp")
+target_link_libraries(
+		SolarSystemSceneBuilder SolarSystem PlanetBuilder RoundShapeLayout
+)
 
 
 # Samples section

@@ -25,6 +25,7 @@
 #include "PlanetView.hpp"
 #include "RoundMissileView.hpp"
 #include "SpaceshipView.hpp"
+#include "SpawnAreaView.hpp"
 #include "TractorBeamView.hpp"
 
 
@@ -42,6 +43,8 @@ namespace gvt {
 			return new RoundMissileView(m);
 		} else if (auto ship = std::dynamic_pointer_cast<Spaceship>(shape)) {
 			return new SpaceshipView(ship);
+		} else if (auto spawn = std::dynamic_pointer_cast<SpawnArea>(shape)) {
+			return new SpawnAreaView(spawn);
 		} else if (auto t = std::dynamic_pointer_cast<TractorBeam>(shape)) {
 			return new TractorBeamView(t);
 		} else {

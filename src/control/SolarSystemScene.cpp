@@ -48,20 +48,77 @@ namespace gvt {
 		}
 	}
 
-	void SolarSystemScene::onSpaceshipDestroyed (shared_ptr<Spaceship> ship) {
-		Scene::onSpaceshipDestroyed(ship);
+	void SolarSystemScene::onShapeDestroyed (shared_ptr<Shape> shape) {
+		Scene::onShapeDestroyed(shape);
+		auto info = mGame->gameInfo();
 
-		if (mGame->gameInfo()->spaceships() > 0) {
-			ship->position({0, 0});
-			ship->velocity({0, 0});
-			ship->rotation(M_PI / 2.0);
-			ship->destroyed(false);
+		if (auto ship = std::dynamic_pointer_cast<Spaceship>(shape)) {
+			if (info->spaceships() > 0) {
+				shape->position({0, 0});
+				shape->velocity({0, 0});
+				shape->rotation(M_PI / 2.0);
+				shape->destroyed(false);
 
-			mShapes->insert(ship);
+				mShapes->insert(ship);
+			}
+		} else if (auto planet = std::dynamic_pointer_cast<Planet>(shape)) {
+			info->upgradeScore(planet->bonus());
 		}
 	}
 
-	SolarSystemScene::SolarSystemScene (shared_ptr<SolarSystem> const &system):
-			Scene({system->width(), system->height()}, system) {
+	void SolarSystemScene::onSceneChanged (SceneChangeEvent e) {
+		auto planetScene = std::dynamic_pointer_cast<PlanetSurfaceScene>(
+				e.oldScene
+		);
+		auto systemScene = std::dynamic_pointer_cast<SolarSystemScene>(
+				e.newScene
+		);
+
+		// If we are transitioning from a planet surface scene back to the
+		// starting solar system scene:
+		if (planetScene && systemScene) {
+			auto ship = Game::getInstance()->spaceship();
+			auto planetCenter = planetScene->planet()->position();
+			auto spawnAreaCenter = mSystem->spawnArea()->position();
+			auto diff = spawnAreaCenter - planetCenter;
+
+			diff.normalize();
+			diff = (planetScene->planet()->radius() + ship->height()) * diff;
+
+			ship->position(planetCenter - ship->rotationCenter() + diff);
+			ship->rotation(diff.angle() + M_PI / 2.0);
+			ship->velocity(ship->speed() * Vectord(diff.angle()));
+		}
+	}
+
+	SolarSystemScene::SolarSystemScene(
+			Vectord size, shared_ptr<SolarSystem> &system,
+			factory nextSceneFactory
+	): Scene(size, system), mSystem{std::move(system)},
+	   mFactory{std::move(nextSceneFactory)} {
+		mSceneCbk = Game::getInstance()->sceneChangeDispatcher().addCallback(
+			[this] (SceneChangeEvent e) -> void { onSceneChanged(e); }
+		);
+	}
+
+	SolarSystemScene::~SolarSystemScene() {
+		Game::getInstance()->sceneChangeDispatcher().removeCallback(mSceneCbk);
+	}
+
+	shared_ptr<Scene> SolarSystemScene::nextScene() {
+		auto s = mFactory();
+		auto ship = mGame->acquireSpaceship();
+
+		ship->velocity({0, 0});
+		ship->rotation(0);
+
+		s->shapeGroup()->insert(ship);
+		s->solarSystem()->spawnArea()->centerShape(ship);
+
+		return s;
+	}
+
+	shared_ptr<SolarSystem> SolarSystemScene::solarSystem() const {
+		return std::dynamic_pointer_cast<SolarSystem>(mShapes);
 	}
 }

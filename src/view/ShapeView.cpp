@@ -20,6 +20,7 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 #include "ShapeView.hpp"
+#include "utils/Utils.hpp"
 
 
 namespace gvt {
@@ -28,6 +29,13 @@ namespace gvt {
 
 		mTranslation = sf::Transform::Identity;
 		mTranslation.translate(pos.x, pos.y);
+	}
+
+	void ShapeView::updateRotationTransform() {
+		auto center = mShape->rotationCenter();
+
+		mRotation = sf::Transform::Identity;
+		mRotation.rotate(rad2deg(mShape->rotation()), center.x, center.y);
 	}
 
 	ShapeView::ShapeView(shared_ptr<Shape> shape): mShape(std::move(shape)) {
@@ -44,6 +52,7 @@ namespace gvt {
 		);
 
 		updateTranslationTransform();
+		updateRotationTransform();
 	}
 
 	void ShapeView::onShapeMoved(PositionEvent e) {

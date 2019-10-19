@@ -44,7 +44,7 @@ namespace gvt {
 			 * Updates the rotation sf::Transform, to be efficiently
 			 * exploited by subclasses when rotating the drawn object.
 			 */
-			virtual void updateRotationTransform() = 0;
+			virtual void updateRotationTransform();
 			/**
 			 * Updates the translation sf::Transform, to be efficiently
 			 * exploited by subclasses when moving the drawn object.

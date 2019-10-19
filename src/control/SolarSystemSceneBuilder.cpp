@@ -19,37 +19,60 @@
 // LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
-#include "CRPolygon.hpp"
+#include "SolarSystemSceneBuilder.hpp"
+#include "shape/SpawnArea.hpp"
 
 
 namespace gvt {
-	BoundingPolygon CRPolygon::polygonFactory(
-			double radius, unsigned vertices
-	) const {
-		auto polygon = BoundingPolygon(vertices);
-		double factor = 2.0 * M_PI / vertices;
+	SolarSystemSceneBuilder& SolarSystemSceneBuilder::centerPosition(
+			Vectord center
+	) {
+		mCenter = center;
 
-		for (unsigned vertex = 0; vertex < vertices; vertex++)
-			polygon[vertex] = radius * Vectord(factor * vertex);
-
-		return polygon;
+		return *this;
 	}
 
-	CRPolygon::CRPolygon(Vectord position, double radius, unsigned vertices):
-			ClosedShape(position, polygonFactory(radius, vertices)),
-			mRadius{radius}, mVertices{vertices} {
+	SolarSystemSceneBuilder& SolarSystemSceneBuilder::planetsNumber(
+			unsigned planetsNum
+	) {
+		mPlanets = planetsNum;
+
+		return *this;
 	}
 
-	Vectord CRPolygon::rotationCenter() const {
-		return {mRadius, mRadius};
+	SolarSystemSceneBuilder& SolarSystemSceneBuilder::planetsLayout(
+			shared_ptr<ShapeLayout> layout
+	) {
+		mLayout = std::move(layout);
+
+		return *this;
 	}
 
-	bool CRPolygon::operator== (Shape const &other) const {
-		auto o = dynamic_cast<CRPolygon const *>(&other);
+	SolarSystemSceneBuilder& SolarSystemSceneBuilder::planetBuilder(
+			shared_ptr<PlanetBuilder> b
+	) {
+		mBuilder = std::move(b);
 
-		if (o)
-			return mRadius == o->mRadius && ClosedShape::operator==(other);
+		return *this;
+	}
 
-		return false;
+	shared_ptr<SolarSystemScene> SolarSystemSceneBuilder::operator() () {
+		auto s = std::make_shared<SolarSystem>();
+
+		s->insert(std::make_shared<SpawnArea>(mCenter, 50));
+
+		for (unsigned i = 0; i < mPlanets; i++) {
+			mBuilder->buildPlanet();
+			mBuilder->buildMountains();
+			mBuilder->buildBunkers();
+			mBuilder->buildFuelTanks();
+
+			auto p = mBuilder->getPlanet();
+			mLayout->operator()(p, i);
+
+			s->insert(p);
+		}
+
+		return std::make_shared<SolarSystemScene>(2 * mCenter, s, *this);
 	}
 }

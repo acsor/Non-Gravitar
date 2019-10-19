@@ -20,6 +20,7 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 #include "Planet.hpp"
+#include "shape-group/PlanetSurface.hpp"
 
 
 namespace gvt {
@@ -33,6 +34,10 @@ namespace gvt {
 
 	shared_ptr<PlanetSurface> Planet::surface() {
 		return mSurface;
+	}
+
+	bool Planet::destroyed() const {
+		return mSurface->bunkers().empty();
 	}
 
 	void Planet::accept (ShapeVisitor &visitor) {

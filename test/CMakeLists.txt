@@ -1,5 +1,3 @@
-# TODO Make executable output name end in `.out'
-# TODO Find a shorter way of specifying `test-all' dependencies
 add_executable(
 	test-all
 	$<TARGET_OBJECTS:test-main>
@@ -13,6 +11,7 @@ add_executable(
     $<TARGET_OBJECTS:test-algraph>
 	$<TARGET_OBJECTS:test-event>
     $<TARGET_OBJECTS:test-observer>
+	$<TARGET_OBJECTS:test-random>
 	$<TARGET_OBJECTS:test-utils>
     $<TARGET_OBJECTS:test-vector>
 )
@@ -36,5 +35,6 @@ add_library(test-rectangle OBJECT test-rectangle.cpp)
 add_library(test-algraph OBJECT test-algraph.cpp)
 add_library(test-event OBJECT test-event.cpp)
 add_library(test-observer OBJECT test-observer.cpp)
+add_library(test-random OBJECT test-random.cpp)
 add_library(test-utils OBJECT test-utils.cpp)
 add_library(test-vector OBJECT test-vector.cpp)

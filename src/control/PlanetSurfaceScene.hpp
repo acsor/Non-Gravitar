@@ -48,14 +48,37 @@ namespace gvt {
 			void exitPlanet();
 
 			void onExitBoundaries(shared_ptr<Spaceship> ship) override;
-			void onSpaceshipDestroyed (shared_ptr<Spaceship> ship) override;
+			void onShapeDestroyed (shared_ptr<Shape> shape) override;
 
 			explicit PlanetSurfaceScene(shared_ptr<PlanetSurface> const &s);
 		public:
 			explicit PlanetSurfaceScene(shared_ptr<Planet> const &planet);
 
 			void onUpdateGame (double seconds) override;
+
+			inline bool hasNextScene() const override;
+			inline shared_ptr<Scene> nextScene() override;
+
+			/**
+			 * @return The planet this scene is a representation for.
+			 */
+			inline shared_ptr<Planet> planet() const;
 	};
+}
+
+
+namespace gvt {
+	bool PlanetSurfaceScene::hasNextScene() const {
+		return false;
+	}
+
+	shared_ptr<Scene> PlanetSurfaceScene::nextScene() {
+		return nullptr;
+	}
+
+	shared_ptr<Planet> PlanetSurfaceScene::planet() const {
+		return mPlanet;
+	}
 }
 
 

@@ -39,35 +39,14 @@ namespace gvt {
 			shared_ptr<MountainChain> mMountains;
 			std::forward_list<shared_ptr<Bunker>> mBunkers;
 
+			void onInsertShape (shared_ptr<Shape> s) override;
 			void onRemoveShape (shared_ptr<Shape> s) override;
 		public:
 			inline double height() const;
 			inline double width() const;
 
-			void mountains(shared_ptr<MountainChain> mountains);
 			inline shared_ptr<MountainChain> mountains() const;
-
-			template<typename iter> void bunkers(iter begin, iter end);
 			inline std::forward_list<shared_ptr<Bunker>> bunkers() const;
-			/**
-			 * Allocates the given number of bunkers, aligning them randomly
-			 * along the already set mountain chain instance.
-			 *
-			 * @param bunkers Random bunkers to allocate
-			 * @throws std::logic_error if no mountain chains are set
-			 */
-			void randomBunkers(unsigned bunkers);
-
-			/**
-			 * Adds a specified number of @c Fuel objects to this planet
-			 * surface, with a random capacity and position. <b>Note</b>: the
-			 * @c capRange vector is to be specified in hundreds, i.e. the
-			 * random values herein generated will be multiplied by @c 100.
-			 *
-			 * @param fuels Number of fuels to add
-			 * @param capRange Capacity range in these random fuels
-			 */
-			void randomFuel(unsigned fuels, Vector<unsigned> capRange);
 	};
 }
 
@@ -83,10 +62,6 @@ namespace gvt {
 
 	shared_ptr<MountainChain> PlanetSurface::mountains() const {
 		return mMountains;
-	}
-
-	template<typename iter> void PlanetSurface::bunkers(iter begin, iter end) {
-		mBunkers = std::forward_list<shared_ptr<Bunker>>(begin, end);
 	}
 
 	std::forward_list<shared_ptr<Bunker>> PlanetSurface::bunkers() const {

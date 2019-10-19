@@ -32,11 +32,13 @@ namespace gvt {
 	}
 
 	Bunker::Bunker(Vectord position, size_t directions):
-			ClosedShape(position, polygonFactory()), mPaths{directions} {
-		UniRandom<double> angles {mRotation + M_PI, mRotation + 2 * M_PI};
+			ClosedShape(position, polygonFactory()) {
+		UniRandom<double> angles {0, M_PI};
+
+		mDirections.resize(directions);
 
 		while (directions > 0) {
-			mPaths[directions - 1] = Vectord(angles());
+			mDirections[directions - 1] = angles();
 
 			directions--;
 		}
@@ -47,13 +49,14 @@ namespace gvt {
 		auto m = std::make_shared<RoundMissile>(
 				Vectord{0, 0}, lifespan, radius
 		);
-		auto initPos = Vectord{width() / 2.0, -20.0};
+		auto localPos = Vectord{width() / 2.0, 0} - Vectord{radius, 3 * radius};
+		auto missileDir = Vectord(mDirections[mCurr] + M_PI + mRotation);
 
-		initPos.rotate(mRotation, rotationCenter());
+		localPos.rotate(mRotation, rotationCenter());
 
-		m->position(mPosition + initPos);
-		m->velocity(speed * mPaths[mCurr]);
-		mCurr = (mCurr + 1) % mPaths.size();
+		m->position(mPosition + localPos);
+		m->velocity(speed * missileDir);
+		mCurr = (mCurr + 1) % mDirections.size();
 
 		return m;
 	}
@@ -66,7 +69,7 @@ namespace gvt {
 		auto other = dynamic_cast<Bunker const *>(&o);
 
 		if (other)
-			return mPaths == other->mPaths && Shape::operator==(o);
+			return mDirections == other->mDirections && Shape::operator==(o);
 
 		return false;
 	}

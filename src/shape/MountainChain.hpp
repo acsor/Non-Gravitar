@@ -45,8 +45,8 @@ namespace gvt {
 					Polyline(position, begin, end) {
 			}
 
-			inline double height() const;
-			inline double width() const;
+			inline double height() const override;
+			inline double width() const override;
 
 			/**
 			 * @param position Initial position of the @c MountainChain.
