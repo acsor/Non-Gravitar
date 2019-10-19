@@ -101,6 +101,10 @@ namespace gvt {
 
 	void Game::updateGameLoop () {
 		auto elapsed = mClock.restart().asSeconds();
+
+		if (mCurrScene->hasNextScene())
+			swapScene(mCurrScene->nextScene());
+
 		// If the current scene is not hold as a separate variable, some
 		// code might pop it out and remove the only references to it (both
 		// on stack and on mCurrScene). At that point, that scene object
@@ -115,6 +119,15 @@ namespace gvt {
 
 		mCurrScene = std::move(scene);
 		mSceneStack.push(mCurrScene);
+
+		mSceneDisp.raiseEvent(e);
+	}
+
+	void Game::swapScene (shared_ptr<Scene> newScene) {
+		auto e = SceneChangeEvent(mCurrScene, newScene);
+
+		mCurrScene = std::move(newScene);
+		mSceneStack.top() = mCurrScene;
 
 		mSceneDisp.raiseEvent(e);
 	}

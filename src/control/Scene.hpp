@@ -102,6 +102,21 @@ namespace gvt {
 			 */
 			virtual void onUpdateGame (double seconds);
 
+			/**
+			 * @return @c true if this scene has a next scene, to be
+			 * displayed after this one has completed.
+			 */
+			virtual bool hasNextScene() const = 0;
+			/**
+			 *
+			 * @return the next scene after this one, to be displayed when it
+			 * has completed.
+			 */
+			virtual shared_ptr<Scene> nextScene() = 0;
+
+			/**
+			 * @return The r/w @c ShapeGroup instance associated to this scene.
+			 */
 			inline shared_ptr<ShapeGroup> shapeGroup();
 			inline Vectord size() const;
 	};

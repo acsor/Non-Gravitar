@@ -108,6 +108,11 @@ namespace gvt {
 			 * @return The @c Scene object which was being shown prior to this
 			 * call.
 			 */
+
+			/**
+			 * Substitutes the current scene with @c newScene.
+			 */
+		 	void swapScene (shared_ptr<Scene> newScene);
 			shared_ptr<Scene> popScene ();
 			/**
 			 * @return Thew @c Scene that should be currently displayed.

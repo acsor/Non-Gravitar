@@ -73,6 +73,6 @@ namespace gvt {
 			s->insert(p);
 		}
 
-		return std::make_shared<SolarSystemScene>(2 * mCenter, s);
+		return std::make_shared<SolarSystemScene>(2 * mCenter, s, *this);
 	}
 }

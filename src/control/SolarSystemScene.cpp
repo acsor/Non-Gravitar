@@ -92,8 +92,10 @@ namespace gvt {
 	}
 
 	SolarSystemScene::SolarSystemScene(
-			Vectord size, shared_ptr<SolarSystem> &system
-	): Scene(size, system), mSystem{std::move(system)} {
+			Vectord size, shared_ptr<SolarSystem> &system,
+			factory nextSceneFactory
+	): Scene(size, system), mSystem{std::move(system)},
+	   mFactory{std::move(nextSceneFactory)} {
 		mSceneCbk = Game::getInstance()->sceneChangeDispatcher().addCallback(
 			[this] (SceneChangeEvent e) -> void { onSceneChanged(e); }
 		);
@@ -101,6 +103,19 @@ namespace gvt {
 
 	SolarSystemScene::~SolarSystemScene() {
 		Game::getInstance()->sceneChangeDispatcher().removeCallback(mSceneCbk);
+	}
+
+	shared_ptr<Scene> SolarSystemScene::nextScene() {
+		auto s = mFactory();
+		auto ship = mGame->acquireSpaceship();
+
+		ship->velocity({0, 0});
+		ship->rotation(0);
+
+		s->shapeGroup()->insert(ship);
+		s->solarSystem()->spawnArea()->centerShape(ship);
+
+		return s;
 	}
 
 	shared_ptr<SolarSystem> SolarSystemScene::solarSystem() const {

@@ -29,25 +29,44 @@
 
 namespace gvt {
 	class SceneChangeEvent;
+	class SolarSystemSceneBuilder;
 
 	/**
 	 * A @c SolarSystemScene features a solar system, giving the possibility
 	 * to enter planets which the spaceship runs into.
 	 */
 	class SolarSystemScene: public Scene {
+		public:
+			using factory = std::function<shared_ptr<SolarSystemScene>(void)>;
 		private:
 			shared_ptr<SolarSystem> mSystem;
+			factory mFactory;
 			shared_ptr<Callback<SceneChangeEvent>> mSceneCbk;
 
 			void onCollision (PairCollisionEvent e) override;
 			void onShapeDestroyed (shared_ptr<Shape> shape) override;
 			void onSceneChanged (SceneChangeEvent e);
 		public:
-			SolarSystemScene(Vectord size, shared_ptr<SolarSystem> &system);
+			SolarSystemScene(
+				Vectord size, shared_ptr<SolarSystem> &system,
+				factory nextSceneFactory
+			);
 			~SolarSystemScene() override;
+
+			inline bool hasNextScene() const override;
+			shared_ptr<Scene> nextScene() override;
 
 			shared_ptr<SolarSystem> solarSystem() const;
 	};
+}
+
+
+namespace gvt {
+	bool SolarSystemScene::hasNextScene() const {
+		return std::distance(
+				mSystem->planetsBegin(), mSystem->planetsEnd()
+		) == 0;
+	}
 }
 
 

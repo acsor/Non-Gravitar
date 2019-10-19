@@ -168,7 +168,9 @@ add_library(Scene "${DIR_CONTROL}/Scene.cpp")
 target_link_libraries(Scene ShapeGroup ShapeGroupView)
 
 add_library(SolarSystemScene "${DIR_CONTROL}/SolarSystemScene.cpp")
-target_link_libraries(SolarSystemScene SolarSystem PlanetSurfaceScene)
+target_link_libraries(
+	SolarSystemScene SolarSystem SolarSystemSceneBuilder PlanetSurfaceScene
+)
 
 add_library(PlanetSurfaceScene "${DIR_CONTROL}/PlanetSurfaceScene.cpp")
 target_link_libraries(PlanetSurfaceScene Scene PlanetSurface MountainChain)

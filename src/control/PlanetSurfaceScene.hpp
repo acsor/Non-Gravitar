@@ -56,6 +56,9 @@ namespace gvt {
 
 			void onUpdateGame (double seconds) override;
 
+			inline bool hasNextScene() const override;
+			inline shared_ptr<Scene> nextScene() override;
+
 			/**
 			 * @return The planet this scene is a representation for.
 			 */
@@ -65,6 +68,14 @@ namespace gvt {
 
 
 namespace gvt {
+	bool PlanetSurfaceScene::hasNextScene() const {
+		return false;
+	}
+
+	shared_ptr<Scene> PlanetSurfaceScene::nextScene() {
+		return nullptr;
+	}
+
 	shared_ptr<Planet> PlanetSurfaceScene::planet() const {
 		return mPlanet;
 	}
