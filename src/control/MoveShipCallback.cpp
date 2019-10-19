@@ -55,7 +55,7 @@ namespace gvt {
 					break;
 				case (sf::Keyboard::Key::Space):
 					mGame->currentScene()->shapeGroup()->insert(
-							mShip->shoot(6, 700, 2000)
+							mShip->shoot(6, 700, 1000)
 					);
 					break;
 				default:

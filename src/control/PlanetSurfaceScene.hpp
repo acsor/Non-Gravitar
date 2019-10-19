@@ -35,8 +35,8 @@ namespace gvt {
 			shared_ptr<Planet> mPlanet;
 
 			// New missiles' lifetime, given in seconds
-			static long const constexpr MISSILE_LIFESPAN = 1000;
-			static double const constexpr MISSILE_SPEED = 600.0;
+			static long const constexpr MISSILE_LIFESPAN = 1500;
+			static double const constexpr MISSILE_SPEED = 1000.0;
 			static double const constexpr MISSILE_RADIUS = 6.0;
 			// Time to wait before a new missile is shot, in seconds
 			static double const constexpr MISSILE_DELAY = 4.0;
