@@ -35,7 +35,7 @@ namespace gvt {
 	class Bunker: public ClosedShape {
 		private:
 			double mDelay{0};
-			vector<Vectord> mPaths;
+			vector<double> mDirections;
 			unsigned mCurr{0};
 
 			static unsigned const constexpr WIDTH = 66;
@@ -91,7 +91,7 @@ namespace gvt {
 	}
 
 	unsigned Bunker::directions() const {
-		return mPaths.size();
+		return mDirections.size();
 	}
 }
 

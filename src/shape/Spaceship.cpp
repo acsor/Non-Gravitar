@@ -104,12 +104,12 @@ namespace gvt {
 		auto missile = std::make_shared<RoundMissile> (
 			Vectord{0, 0}, lifespan, radius
 		);
-		auto localPos = Vectord{width() / 2.0, -10.0} - Vectord{
-			missile->radius() / 2.0, missile->radius() / 2.0
+		auto localPos = Vectord{BOUNDING_WIDTH / 2.0, 0} - Vectord{
+			radius, 3 * radius
 		};
 
-		localPos.rotate(Shape::rotation(), rotationCenter());
-		missile->position(Shape::position() + localPos);
+		localPos.rotate(rotation(), rotationCenter());
+		missile->position(position() + localPos);
 		missile->velocity(
 			(speed + this->speed()) * Vectord(Shape::rotation() - M_PI / 2.0)
 		);
