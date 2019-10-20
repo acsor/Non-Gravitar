@@ -19,19 +19,19 @@
 // LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
-#include "MoveShipCallback.hpp"
+#include "SpaceshipController.hpp"
 #include "Game.hpp"
 
 
 namespace gvt {
-	MoveShipCallback::MoveShipCallback (
+	SpaceshipController::SpaceshipController (
 			Game *game, shared_ptr<Spaceship> ship, double accel, double angle
 	): mGame{game}, mShip(std::move(ship)) {
 		mAccelStep = accel;
 		mAngleStep = angle;
 	}
 
-	void MoveShipCallback::operator() (sf::Event e) {
+	void SpaceshipController::operator() (sf::Event e) {
 		auto accelIncrement = mAccelStep * Vectord(mShip->rotation());
 		accelIncrement.rotate(M_PI / -2.0);
 
