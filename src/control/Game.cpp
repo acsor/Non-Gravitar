@@ -1,6 +1,6 @@
 // MIT License
 //
-// Copyright (c) 2018 Oscar B. et al.
+// Copyright (c) 2018 Oscar B.
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -22,7 +22,7 @@
 #include <SFML/Graphics.hpp>
 #include "utils/Utils.hpp"
 #include "Game.hpp"
-#include "MoveShipCallback.hpp"
+#include "SpaceshipController.hpp"
 
 
 namespace gvt {
@@ -68,7 +68,7 @@ namespace gvt {
 			[this] (PositionEvent e) -> void { onShipMoved(e); }
 		);
 		mViewDisp.addCallback(
-			MoveShipCallback(this, mShip, 150.0, deg2rad(10))
+				SpaceshipController(this, mShip, 150.0, deg2rad(10))
 		);
 		mViewDisp.addCallback(
 			[this] (sf::Event e) -> void { toggleDebug(e); }

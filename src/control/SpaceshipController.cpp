@@ -1,6 +1,6 @@
 // MIT License
 //
-// Copyright (c) 2018 Oscar B. et al.
+// Copyright (c) 2018 Oscar B.
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -19,21 +19,24 @@
 // LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
-#include "MoveShipCallback.hpp"
+#include "SpaceshipController.hpp"
 #include "Game.hpp"
 
 
 namespace gvt {
-	MoveShipCallback::MoveShipCallback (
+	SpaceshipController::SpaceshipController (
 			Game *game, shared_ptr<Spaceship> ship, double accel, double angle
 	): mGame{game}, mShip(std::move(ship)) {
 		mAccelStep = accel;
 		mAngleStep = angle;
 	}
 
-	void MoveShipCallback::operator() (sf::Event e) {
+	void SpaceshipController::operator() (sf::Event e) {
 		auto accelIncrement = mAccelStep * Vectord(mShip->rotation());
 		accelIncrement.rotate(M_PI / -2.0);
+
+		if (mGame->gameInfo()->spaceships() <= 0)
+			return;
 
 		if (e.type == sf::Event::KeyPressed) {
 			switch (e.key.code) {

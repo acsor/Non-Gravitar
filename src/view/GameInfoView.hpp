@@ -1,6 +1,6 @@
 // MIT License
 //
-// Copyright (c) 2018 Oscar B. et al.
+// Copyright (c) 2018 Oscar B.
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -51,12 +51,18 @@ namespace gvt {
 			static const sf::Color TEXT_COLOR;
 
 			void updateText();
+
 			/**
 			 * @return A text signaling the destruction of all bunkers in a
 			 * given planet if they have been effectively destroyed, or an empty
 			 * string otherwise.
 			 */
 			string missionCompleteText();
+			/**
+			 * @return A text signaling a state of game over, if that is the
+			 * case, or an empty string otherwise.
+			 */
+			string gameOverText();
 			void updateShips();
 
 			void onFuelChanged (FuelEvent e);

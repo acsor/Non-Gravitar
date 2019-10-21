@@ -1,6 +1,6 @@
 // MIT License
 //
-// Copyright (c) 2018 Oscar B. et al.
+// Copyright (c) 2018 Oscar B.
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -32,12 +32,14 @@ namespace gvt {
 		mText.setString(
 			"SCORE " + std::to_string(mInfo->score()) +
 			"\nFUEL " + std::to_string(mShip->fuel()) +
-			missionCompleteText()
+			missionCompleteText() +
+			gameOverText()
 		);
 		auto const bounds = mText.getLocalBounds();
 
 		mText.setOrigin(bounds.width / 2.0f, 0);
 	}
+
 
 	string GameInfoView::missionCompleteText() {
 		auto planetScene = std::dynamic_pointer_cast<PlanetSurfaceScene>(
@@ -51,6 +53,10 @@ namespace gvt {
 		}
 
 		return "";
+	}
+
+	string GameInfoView::gameOverText() {
+		return mInfo->spaceships() > 0 ? "": "\nGAME OVER";
 	}
 
 	void GameInfoView::updateShips() {
@@ -94,6 +100,7 @@ namespace gvt {
 	}
 
 	void GameInfoView::onShipsChanged (SpaceshipCountEvent e) {
+		updateText();
 		updateShips();
 	}
 
