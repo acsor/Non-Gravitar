@@ -1,7 +1,7 @@
 # Project Non-Gravitar
 !["Gravitar cover"](./gravitar.jpg "Gravitar cover")
 
-University of Bologna 2018/19 Programming project (CS course), aiming to
+University of Bologna 2018/19 CS course Programming project, aiming to
 produce a reduced C++ implementation of the Atari 1982 game
 [Gravitar](https://en.wikipedia.org/wiki/Gravitar).
 
@@ -17,11 +17,11 @@ Non-Gravitar features the following list of commands
 		</tr>
 	</thead>
 	<tbody>
-		<tr><td>`w`</td><td>Accelerate spaceship</td></tr>
-		<tr><td>`a`</td><td>Rotate spaceship counter-clockwise</td></tr>
-		<tr><td>`d`</td><td>Rotate spaceship clockwise</td></tr>
-		<tr><td>`k`</td><td>Activate tractor beam</td></tr>
-		<tr><td>`space bar`</td><td>Shoot missiles</td></tr>
+		<tr><td>w</td><td>Accelerate spaceship</td></tr>
+		<tr><td>a</td><td>Rotate spaceship counter-clockwise</td></tr>
+		<tr><td>d</td><td>Rotate spaceship clockwise</td></tr>
+		<tr><td>k</td><td>Activate tractor beam</td></tr>
+		<tr><td>space bar</td><td>Shoot missiles</td></tr>
 	</tbody>
 <table>
 
@@ -48,7 +48,7 @@ make NonGravitar # (1)
 ```
 
 ## Testing
-This project possesses a reasonable unit-testing suite, written according to
+This project offers a reasonable unit-testing suite, written according to
 [Catch2](https://github.com/catchorg/Catch2). In order to run it, simply
 substitute commands `(1)` and `(2)` above with
 
