@@ -35,6 +35,9 @@ namespace gvt {
 		auto accelIncrement = mAccelStep * Vectord(mShip->rotation());
 		accelIncrement.rotate(M_PI / -2.0);
 
+		if (mGame->gameInfo()->spaceships() <= 0)
+			return;
+
 		if (e.type == sf::Event::KeyPressed) {
 			switch (e.key.code) {
 				case (sf::Keyboard::Key::A):
