@@ -40,9 +40,8 @@ dependencies:
 Once you have completed your setup, simply issue the following commands
 
 ```
-mkdir build
-cd build
-cmake ..
+cd <project root directory>
+cmake .
 make NonGravitar # (1)
 ./NonGravitar # (2)
 ```
