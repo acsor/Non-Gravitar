@@ -57,7 +57,7 @@ namespace gvt {
 	}
 
 	PlanetSurfaceScene::PlanetSurfaceScene(shared_ptr<PlanetSurface> const &s):
-			Scene({s->width(), s->height()}, s) {
+			Scene({s->width(), s->height() + 10}, s) {
 	}
 
 	PlanetSurfaceScene::PlanetSurfaceScene (shared_ptr<Planet> const &planet):
